@@ -149,166 +149,403 @@ eu_ai_act_classification_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "coin",
+   "kind": "table",
    "kicker": "Why it matters",
-   "title": "Getting it wrong is costly",
-   "items": [
+   "title": "Fines: whichever is higher",
+   "columns": [
+    "Breach",
+    "Fixed cap",
+    "Share",
+    "At €1bn turnover"
+   ],
+   "rows": [
     [
-     "Prohibited practices",
-     "Up to €35M or 7%"
+     "Prohibited practice",
+     "€35M",
+     "7%",
+     "€70M"
     ],
     [
-     "Most other obligations",
-     "Up to €15M or 3%"
+     "Other obligations",
+     "€15M",
+     "3%",
+     "€30M"
     ],
     [
-     "Misleading information",
-     "Up to €7.5M or 1%"
+     "Misleading info",
+     "€7.5M",
+     "1%",
+     "€10M"
     ]
    ],
    "beats": [
     {
-     "say": "Misclassifying a system is a common and costly mistake.",
-     "show": 0
+     "say": "Misclassifying a system is a common and costly mistake. Here are the Act's three fine tiers."
     },
     {
-     "say": "The Act sets maximum fines in tiers, whichever is higher of a fixed amount or a share of worldwide annual turnover.",
-     "show": 0
+     "say": "Prohibited practices: up to thirty five million euros, or seven percent of worldwide annual turnover.",
+     "hl": 0
     },
     {
-     "say": "Prohibited practices: up to thirty five million euros, or seven percent.",
-     "show": 1
+     "say": "Most other obligations, including high-risk requirements: fifteen million euros, or three percent.",
+     "hl": 1
     },
     {
-     "say": "Most other obligations, including high-risk requirements: up to fifteen million euros, or three percent.",
-     "show": 2
+     "say": "Misleading information to authorities: seven and a half million euros, or one percent.",
+     "hl": 2
     },
     {
-     "say": "Misleading information to authorities: up to seven and a half million euros, or one percent.",
-     "show": 3
+     "say": "Each cap is whichever is higher: the fixed amount, or the share of turnover.",
+     "sql": "cap = whichever is higher:\nfixed amount OR % of worldwide turnover",
+     "col": 2
+    },
+    {
+     "say": "For example, at one billion euros of turnover, the percentage wins every time: seventy, thirty, and ten million.",
+     "col": 3
     },
     {
      "say": "Smaller companies get lower caps.",
-     "show": 3
+     "col": 3
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "table",
    "kicker": "Concept",
    "title": "The four risk tiers",
-   "items": [
+   "columns": [
+    "Tier",
+    "What happens",
+    "Example"
+   ],
+   "rows": [
     [
      "Unacceptable",
-     "Banned · e.g. social scoring"
+     "Banned outright",
+     "Social scoring"
     ],
     [
      "High",
-     "Heavily regulated · e.g. hiring"
+     "Heavily regulated",
+     "Resume screening"
     ],
     [
      "Limited",
-     "Transparency · e.g. chatbots"
+     "Must disclose it's AI",
+     "Chatbots"
     ],
     [
      "Minimal",
-     "Largely unregulated · e.g. spam filters"
+     "Largely unregulated",
+     "Spam filters"
     ]
    ],
    "beats": [
     {
-     "say": "The Act has four risk tiers.",
-     "show": 0
+     "say": "The Act sorts A I systems into four risk tiers.",
+     "col": 0
     },
     {
      "say": "Unacceptable risk is banned outright, like social scoring.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
      "say": "High risk is heavily regulated: A I in employment, credit scoring, law enforcement, education, and critical infrastructure.",
-     "show": 2
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Limited risk carries transparency duties only. A chatbot must disclose it's an A I.",
-     "show": 3
+     "say": "Limited risk carries transparency duties. A chatbot must disclose it's an A I.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And minimal risk, like spam filters, is largely unregulated.",
-     "show": 4
+     "say": "Minimal risk, like spam filters or A I in video games, is largely unregulated.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Limited risk is its own check. A system that isn't high-risk can still owe transparency.",
+     "hl": 2,
+     "sql": "Check order: Article 5 → Annex III\n→ exception → transparency"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Lab · Steps 3 to 6",
-   "title": "Check in the right order",
-   "steps": [
-    "Article 5: prohibited?",
-    "Annex III: high-risk use?",
-    "Exception: documented, no profiling",
-    "Transparency triggers"
+   "title": "Run a resume screener through the checks",
+   "nodes": [
+    {
+     "id": "sys",
+     "label": "Resume screener",
+     "x": 10,
+     "y": 50,
+     "sub": "ranks job applicants",
+     "art": "idcard"
+    },
+    {
+     "id": "a5",
+     "label": "Article 5",
+     "x": 30,
+     "y": 18,
+     "sub": "a banned practice?",
+     "art": "cross"
+    },
+    {
+     "id": "a3",
+     "label": "Annex III",
+     "x": 50,
+     "y": 50,
+     "sub": "a high-risk use?",
+     "art": "checklist"
+    },
+    {
+     "id": "exc",
+     "label": "Exception",
+     "x": 70,
+     "y": 18,
+     "sub": "Article 6(3)",
+     "art": "doc"
+    },
+    {
+     "id": "tier",
+     "label": "High risk",
+     "x": 90,
+     "y": 50,
+     "sub": "full obligations",
+     "art": "warning"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sys",
+     "to": "a5"
+    },
+    {
+     "from": "a5",
+     "to": "a3"
+    },
+    {
+     "from": "a3",
+     "to": "exc"
+    },
+    {
+     "from": "exc",
+     "to": "tier"
+    }
    ],
    "beats": [
     {
-     "say": "Check in order.",
-     "show": 0
+     "say": "Take the running example: a resume screener that ranks job applicants.",
+     "show": 1,
+     "on": "sys"
     },
     {
-     "say": "First, Article 5 prohibited practices. A banned system can't be brought into compliance at all, so there's no point going further.",
-     "show": 1
+     "say": "Check one: Article 5. Is it a banned practice, like social scoring, or untargeted scraping of faces?",
+     "show": 2,
+     "on": "a5",
+     "send": {
+      "from": "sys",
+      "to": "a5",
+      "label": "resume screener"
+     }
     },
     {
-     "say": "Next, the Annex Three high-risk use cases. A resume screener falls under employment and worker management.",
-     "show": 2
+     "say": "It isn't, so it's cleared. If it were, you'd stop here, because a banned system can't be made compliant.",
+     "show": 3,
+     "on": "a3",
+     "send": {
+      "from": "a5",
+      "to": "a3",
+      "label": "not banned"
+     }
     },
     {
-     "say": "Then the self-assessment exception. You must document it, and still register the system. It never applies to a system that profiles people, so a resume screener can't use it.",
-     "show": 3
+     "say": "Check two: Annex Three. Employment and worker management is on the list, so it matches.",
+     "show": 3,
+     "on": "a3"
     },
     {
-     "say": "Finally, the limited-risk transparency triggers, a separate check of its own.",
-     "show": 4
+     "say": "Check three: the self-assessment exception. It needs a written assessment, and the system must still be registered.",
+     "show": 4,
+     "on": "exc",
+     "send": {
+      "from": "a3",
+      "to": "exc",
+      "label": "Annex III match"
+     }
+    },
+    {
+     "say": "But the screener ranks candidates, which profiles people. The exception never applies to profiling.",
+     "show": 4,
+     "on": "exc"
+    },
+    {
+     "say": "So the result is high risk, with the full set of obligations.",
+     "show": 5,
+     "on": "tier",
+     "send": {
+      "from": "exc",
+      "to": "tier",
+      "label": "no exception"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
-   "kicker": "Lab · Steps 7 and 8",
+   "kind": "diagram",
+   "kicker": "Lab · Step 7",
    "title": "Provider or deployer?",
-   "items": [
-    [
-     "Provider",
-     "Develops and places on the market"
-    ],
-    [
-     "Deployer",
-     "Uses under its own authority"
-    ],
-    [
-     "classification_memo",
-     "Tier + role + reasoning"
-    ]
+   "nodes": [
+    {
+     "id": "prov",
+     "label": "Provider",
+     "x": 15,
+     "y": 50,
+     "sub": "builds, puts on market",
+     "art": "code"
+    },
+    {
+     "id": "dep",
+     "label": "Deployer",
+     "x": 50,
+     "y": 50,
+     "sub": "uses it, own authority",
+     "art": "people"
+    },
+    {
+     "id": "cand",
+     "label": "Applicants",
+     "x": 85,
+     "y": 50,
+     "sub": "affected people",
+     "art": "idcard"
+    }
+   ],
+   "edges": [
+    {
+     "from": "prov",
+     "to": "dep"
+    },
+    {
+     "from": "dep",
+     "to": "cand"
+    }
    ],
    "beats": [
     {
-     "say": "Then decide your role.",
-     "show": 0
-    },
-    {
-     "say": "A provider develops a system and places it on the market. Providers carry most high-risk obligations.",
-     "show": 1
-    },
-    {
-     "say": "A deployer uses a system under its own authority, with narrower but real duties.",
-     "show": 2
-    },
-    {
-     "say": "Write it all up in a classification memo: description, prohibited check, Annex Three analysis, tier, role, and reasoning.",
+     "say": "Next, decide your role. There are two.",
      "show": 3
+    },
+    {
+     "say": "The provider develops the system and places it on the market. Providers carry most high-risk obligations.",
+     "show": 3,
+     "on": "prov",
+     "send": {
+      "from": "prov",
+      "to": "dep",
+      "label": "screener + docs"
+     }
+    },
+    {
+     "say": "The deployer uses it under its own authority, here to screen applicants. Its duties are narrower, but real.",
+     "show": 3,
+     "on": "dep",
+     "send": {
+      "from": "dep",
+      "to": "cand",
+      "label": "ADVANCE/REJECT"
+     }
+    },
+    {
+     "say": "If your company builds the screener and uses it for its own hiring, it's both.",
+     "show": 3,
+     "on": [
+      "prov",
+      "dep"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 8",
+   "title": "Build the classification memo",
+   "values": [
+    "Description",
+    "Article 5",
+    "Annex III",
+    "Risk tier",
+    "Role",
+    "Reasoning"
+   ],
+   "beats": [
+    {
+     "say": "Finally, write it all up in a classification memo, section by section."
+    },
+    {
+     "say": "Describe the system.",
+     "hl": 0,
+     "ok": [
+      0
+     ],
+     "note": "resume screener"
+    },
+    {
+     "say": "Record the prohibited practice check: cleared.",
+     "hl": 1,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "not banned"
+    },
+    {
+     "say": "Then the Annex Three analysis: employment matches.",
+     "hl": 2,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "employment"
+    },
+    {
+     "say": "State the tier: high risk.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "high risk"
+    },
+    {
+     "say": "State your role, provider, deployer, or both.",
+     "hl": 4,
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "provider / deployer"
+    },
+    {
+     "say": "And give your reasoning, so the memo stands on its own as a defensible decision.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "every later module cites this memo"
     }
    ]
   },
@@ -493,177 +730,360 @@ obligation_mapping_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
+   "kind": "array",
    "kicker": "Concept",
-   "title": "High-risk provider obligations",
-   "items": [
-    [
-     "Risk management",
-     "Whole lifecycle"
-    ],
-    [
-     "Data governance",
-     "Relevant, representative data"
-    ],
-    [
-     "Documentation + logging",
-     "Records kept automatically"
-    ],
-    [
-     "Human oversight",
-     "+ accuracy, robustness, security"
-    ],
-    [
-     "Quality management",
-     "System-wide"
-    ]
+   "title": "What high-risk providers must do",
+   "values": [
+    "Risk mgmt",
+    "Data",
+    "Tech docs",
+    "Logging",
+    "Oversight",
+    "Accuracy",
+    "QMS"
    ],
    "beats": [
     {
-     "say": "Articles nine to fifteen set out what providers of high-risk systems must do.",
-     "show": 0
+     "say": "Articles nine to fifteen give providers of high-risk systems seven duties."
     },
     {
      "say": "A risk management system, running across the whole lifecycle.",
-     "show": 1
+     "hl": 0,
+     "note": "continuous, whole lifecycle"
     },
     {
      "say": "Data governance: relevant, representative data, as error-free as possible.",
-     "show": 2
+     "hl": 1,
+     "ok": [
+      0
+     ],
+     "note": "training, validation, test data"
     },
     {
-     "say": "Technical documentation, and automatic record-keeping.",
-     "show": 3
+     "say": "Technical documentation.",
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Bonus Module 3"
     },
     {
-     "say": "Human oversight, plus accuracy, robustness and cybersecurity.",
-     "show": 4
+     "say": "Record-keeping, meaning automatic logging of relevant events.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "automatic logs"
+    },
+    {
+     "say": "Design for human oversight.",
+     "hl": 4,
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "Bonus Module 4"
+    },
+    {
+     "say": "Accuracy, robustness, and cybersecurity.",
+     "hl": 5,
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "plus robustness, security"
     },
     {
      "say": "And a quality management system.",
-     "show": 5
+     "hl": 6,
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "quality management system"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Deployers have duties too",
-   "items": [
+   "columns": [
+    "Deployer duty",
+    "Who",
+    "Article"
+   ],
+   "rows": [
     [
-     "Article 26",
-     "Instructions · oversight · monitor · logs"
+     "Follow instructions",
+     "Every deployer",
+     "26"
     ],
     [
-     "At work",
-     "Inform workers first"
+     "Trained oversight",
+     "Every deployer",
+     "26"
     ],
     [
-     "Article 27",
-     "Some: fundamental-rights impact assessment"
+     "Monitor operation",
+     "Every deployer",
+     "26"
+    ],
+    [
+     "Keep the logs",
+     "Every deployer",
+     "26"
+    ],
+    [
+     "Inform workers first",
+     "AI used at work",
+     "26"
+    ],
+    [
+     "Rights impact check",
+     "Public bodies + more",
+     "27"
     ]
    ],
    "beats": [
     {
-     "say": "Deployers have lighter duties, but real ones, under Article 26.",
-     "show": 0
+     "say": "Deployers have lighter duties than providers, but real ones.",
+     "col": 0
     },
     {
-     "say": "Follow the provider's instructions, assign trained people to oversight, monitor operation, and keep the logs.",
-     "show": 1
+     "say": "Under Article 26, every deployer follows the provider's instructions, assigns trained people to oversight, monitors operation, and keeps the logs.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "At work, inform workers' representatives and affected workers beforehand.",
-     "show": 2
+     "say": "When high-risk A I is used at work, workers' representatives and affected workers are told beforehand.",
+     "hl": 4,
+     "dim": true
     },
     {
-     "say": "And under Article 27, some deployers, like public bodies, must do a fundamental-rights impact assessment before first use.",
-     "show": 3
+     "say": "Under Article 27, some deployers also do a fundamental-rights impact assessment before first use.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "That's public bodies, private organizations providing public services, and those using A I for credit scoring or life and health insurance pricing.",
+     "hl": 5,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Lab · Steps 4 and 5",
-   "title": "The obligation crosswalk",
-   "items": [
+   "title": "The crosswalk, with gaps named",
+   "columns": [
+    "Obligation",
+    "Mapped to",
+    "Status"
+   ],
+   "rows": [
     [
      "Risk management",
-     "Project 1 risk overview"
+     "Risk overview (P1)",
+     "Have it"
     ],
     [
      "Data governance",
-     "Project 3 fairness audit"
+     "Fairness audit (P3)",
+     "Have it"
     ],
     [
-     "Technical documentation",
-     "Project 6 model card"
+     "Tech documentation",
+     "Model card (P6)",
+     "Extend in P10"
+    ],
+    [
+     "Human oversight",
+     "Oversight build (P11)",
+     "To build"
     ],
     [
      "Record-keeping",
-     "Projects 2 and 7"
+     "Logs P2, dashboard P7",
+     "Have it"
+    ],
+    [
+     "Bias / accuracy",
+     "Bias evaluation (P4)",
+     "Have it"
+    ],
+    [
+     "QMS + cybersecurity",
+     "Nothing yet",
+     "Gap"
     ]
    ],
    "beats": [
     {
      "say": "Now map each obligation to work you've already done.",
-     "show": 0
+     "col": 1
     },
     {
-     "say": "Risk management maps to your Project 1 risk overview.",
-     "show": 1
+     "say": "Four are already covered: your risk overview, fairness audit, logging and dashboard, and bias evaluation.",
+     "hl": [
+      0,
+      1,
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Data governance, to the Project 3 dataset fairness audit.",
-     "show": 2
+     "say": "Technical documentation starts from your model card, extended in Bonus Module 3.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Technical documentation, to the Project 6 model card.",
-     "show": 3
+     "say": "Human oversight is built in Bonus Module 4.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Record-keeping, to Project 2 logging and the Project 7 dashboard.",
-     "show": 4
+     "say": "And some rows have nothing: a quality management system, robustness, and cybersecurity. Those are gaps.",
+     "hl": 6,
+     "dim": true,
+     "sql": "gap = obligation with no artifact"
     },
     {
-     "say": "Most of the substance is work you already know. Where nothing maps, name the gap honestly.",
-     "show": 4
+     "say": "Name them honestly. That's where your remaining compliance work goes.",
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "roadmap",
+   "kind": "diagram",
    "kicker": "Lab · Steps 6 to 8",
    "title": "The path to market",
-   "steps": [
-    "Conformity assessment",
-    "CE marking",
-    "EU database registration"
+   "nodes": [
+    {
+     "id": "map",
+     "label": "Obligation map",
+     "x": 10,
+     "y": 50,
+     "sub": "recap, crosswalk, gaps",
+     "art": "checklist"
+    },
+    {
+     "id": "ca",
+     "label": "Conformity check",
+     "x": 32,
+     "y": 18,
+     "sub": "usually self-assessed",
+     "art": "search"
+    },
+    {
+     "id": "ce",
+     "label": "CE marking",
+     "x": 54,
+     "y": 50,
+     "sub": "declares compliance",
+     "art": "shield"
+    },
+    {
+     "id": "db",
+     "label": "EU database",
+     "x": 76,
+     "y": 18,
+     "sub": "a public record",
+     "art": "database"
+    },
+    {
+     "id": "mkt",
+     "label": "On the market",
+     "x": 90,
+     "y": 78,
+     "sub": "deployed",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "map",
+     "to": "ca"
+    },
+    {
+     "from": "ca",
+     "to": "ce"
+    },
+    {
+     "from": "ce",
+     "to": "db"
+    },
+    {
+     "from": "db",
+     "to": "mkt"
+    }
    ],
    "beats": [
     {
-     "say": "Then the formal steps.",
-     "show": 0
+     "say": "Your obligation map ties it together: recap, obligations, crosswalk, gaps, and the path ahead.",
+     "show": 1,
+     "on": "map"
     },
     {
-     "say": "A conformity assessment verifies the system meets its obligations, usually a self-assessment for Annex Three systems.",
-     "show": 1
+     "say": "Next comes the conformity assessment. For most Annex Three systems it's a self-assessment; some categories need a third party.",
+     "show": 2,
+     "on": "ca",
+     "send": {
+      "from": "map",
+      "to": "ca",
+      "label": "evidence"
+     }
     },
     {
-     "say": "Pass it, and the system gets C E marking.",
-     "show": 2
+     "say": "A system that passes gets C E marking, a formal declaration that it complies.",
+     "show": 3,
+     "on": "ce",
+     "send": {
+      "from": "ca",
+      "to": "ce",
+      "label": "passed"
+     }
     },
     {
-     "say": "It's registered in the E U high-risk A I systems database before deployment.",
-     "show": 3
+     "say": "It's registered in the E U high-risk A I systems database.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "ce",
+      "to": "db",
+      "label": "register"
+     }
     },
     {
-     "say": "Your obligation map ties it together: recap, obligations, crosswalk, gaps, and the path to conformity assessment.",
-     "show": 3
+     "say": "Only then is it deployed. Its compliance is now a public record, not just an internal document.",
+     "show": 5,
+     "on": "mkt",
+     "send": {
+      "from": "db",
+      "to": "mkt",
+      "label": "deploy"
+     }
     }
    ]
   },
@@ -838,145 +1258,251 @@ technical_documentation_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "What Article 11 requires",
-   "items": [
+   "title": "Every Article 11 section, and where it comes from",
+   "columns": [
+    "Article 11 section",
+    "Built from"
+   ],
+   "rows": [
     [
-     "Intended purpose",
-     "And what it's not for"
+     "Purpose + description",
+     "Project 1 use case"
     ],
     [
      "Design specifications",
-     "Architecture, algorithms"
+     "Project 4 findings"
     ],
     [
-     "Data",
-     "Requirements and provenance"
+     "Data + provenance",
+     "Project 3 audit"
     ],
     [
-     "Oversight + performance",
-     "Including limitations"
+     "Human oversight",
+     "Project 11 controls"
     ],
     [
-     "Risk + versions",
-     "Change management"
+     "Performance + limits",
+     "Projects 4 and 6"
+    ],
+    [
+     "Risk management",
+     "Risk overview (P1)"
+    ],
+    [
+     "Version history",
+     "New: write it now"
     ]
    ],
    "beats": [
     {
-     "say": "Article 11 documentation has required sections.",
-     "show": 0
+     "say": "Article 11 lists required sections, so you can check completeness against the law.",
+     "col": 0,
+     "sql": "complete = every required section present"
     },
     {
-     "say": "A general description and intended purpose.",
-     "show": 1
+     "say": "The intended purpose grows from your Project 1 use case.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Design specifications: architecture, algorithms, and key choices.",
-     "show": 2
+     "say": "Design specifications explain how outputs are reached, drawing on your Project 4 bias evaluation.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Data requirements and provenance.",
-     "show": 3
+     "say": "For data, reuse your Project 3 audit directly. Article 10 asks for exactly what it evaluated.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Human oversight measures, and performance metrics with known limitations.",
-     "show": 4
+     "say": "Human oversight describes the controls you'll build in Bonus Module 4.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Plus risk management measures, and version history.",
-     "show": 5
+     "say": "Performance and limitations come from your bias evaluation and model card, with real numbers.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "Add your risk management measures, and a version history, which is new work.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
-   "kicker": "Lab · Steps 3 to 5",
-   "title": "Precise, not just descriptive",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Say what it's not for",
+   "columns": [
+    "Use",
+    "In scope?"
+   ],
+   "rows": [
     [
-     "Intended purpose",
-     "Including what it's not for"
+     "Screen SWE resumes",
+     "Intended"
     ],
     [
-     "Design",
-     "How it reaches outputs"
+     "Advise a recruiter",
+     "Intended"
     ],
     [
-     "Data governance",
-     "Reuse the Project 3 audit"
+     "Decide with no human",
+     "Not intended"
+    ],
+    [
+     "Screen other job roles",
+     "Not intended"
+    ],
+    [
+     "Judge protected traits",
+     "Not intended"
     ]
    ],
    "beats": [
     {
-     "say": "Write a formal intended purpose, including what the system is not meant for. Use outside that purpose shifts responsibility.",
-     "show": 1
+     "say": "The intended purpose must be precise. Take the screener from Bonus Module 4, for example."
     },
     {
-     "say": "Describe the design so reviewers understand how outputs are reached, not just that they are.",
-     "show": 2
+     "say": "It helps a recruiter screen applications for a software engineer role.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "For data governance, reuse your Project 3 audit directly. Article 10 asks for exactly what it evaluated.",
-     "show": 3
+     "say": "Then say plainly what it is not for, like making final decisions with no human.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "If someone uses it outside that purpose, say for a sales role, responsibility shifts. So the boundary has to be written down.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Lab · Steps 6 and 7",
-   "title": "No vague claims",
-   "items": [
+   "title": "Vague claims fail",
+   "columns": [
+    "Oversight claim",
+    "Verdict"
+   ],
+   "rows": [
     [
-     "\"A person reviews outputs\"",
-     "Too vague ✗"
+     "\"A person reviews\"",
+     "Vague: fails"
     ],
     [
-     "How to intervene, override, stop",
-     "Concrete ✓"
+     "Override, with reason",
+     "Concrete"
     ],
     [
-     "Limitations with numbers",
-     "Honest ✓"
+     "Emergency stop",
+     "Concrete"
+    ],
+    [
+     "Every event logged",
+     "Concrete"
+    ],
+    [
+     "Limits, with numbers",
+     "Honest"
     ]
    ],
    "beats": [
     {
-     "say": "Oversight must be concrete.",
-     "show": 0
+     "say": "Oversight must be described as concrete mechanisms."
     },
     {
-     "say": "\"A person reviews outputs\" isn't enough.",
-     "show": 1
+     "say": "A person reviews outputs isn't enough. It names no mechanism at all.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Describe exactly how a human can intervene, override, or stop the system.",
-     "show": 2
+     "say": "Say exactly how a human can override a decision, stop the system, and how every event is logged.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "And document limitations honestly, with numbers. Leaving out known weaknesses undermines the documentation itself.",
-     "show": 3
+     "say": "And state limitations honestly, with numbers. Leaving out known weaknesses undermines the documentation itself.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "git",
+   "kind": "table",
    "kicker": "Lab · Step 8",
    "title": "A living document",
-   "quote": "Undocumented changes to a \"compliant\" system can invalidate that compliance.",
+   "columns": [
+    "Version",
+    "Change",
+    "Docs updated?"
+   ],
+   "rows": [
+    [
+     "1.0",
+     "First release",
+     "Yes"
+    ],
+    [
+     "1.1",
+     "Retrained, new data",
+     "Yes"
+    ],
+    [
+     "1.2",
+     "Prompt reworded",
+     "No"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, add a version history.",
-     "show": 0
+     "say": "Finally, a version history. Here's an example.",
+     "col": 0,
+     "sql": "each version: what changed + how the docs were updated"
     },
     {
-     "say": "The documentation is tied to a specific system version. Undocumented changes to a compliant system can invalidate that compliance.",
-     "show": 1
+     "say": "Version one point oh is the first release, documented.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Version one point one is retrained on new data, and the documentation is updated too.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Version one point two changes the prompt, but nobody updates the docs.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The documentation is tied to a specific version. An undocumented change can invalidate that compliance.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
@@ -999,7 +1525,7 @@ technical_documentation_project/
      "show": 0
     },
     {
-     "say": "Why is \"a person reviews outputs\" not enough for the human oversight section?",
+     "say": "Why is a person reviews outputs not enough for the human oversight section?",
      "show": 0
     },
     {
@@ -1347,180 +1873,399 @@ human_oversight_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Four kinds of oversight",
-   "items": [
+   "title": "Four kinds of oversight, each built",
+   "columns": [
+    "Capability",
+    "Built as"
+   ],
+   "rows": [
     [
-     "Understand",
-     "The outputs"
+     "Understand outputs",
+     "One-line reasoning"
     ],
     [
-     "Monitor",
-     "For anomalies"
+     "Monitor operation",
+     "/oversight dashboard"
     ],
     [
-     "Intervene",
-     "Or interrupt"
+     "Intervene, interrupt",
+     "emergency_stop()"
     ],
     [
-     "Override",
-     "Or disregard"
+     "Override, disregard",
+     "human_override()"
     ]
    ],
    "beats": [
     {
-     "say": "Effective oversight usually covers four capabilities.",
-     "show": 0
+     "say": "Effective oversight covers four checkable capabilities.",
+     "col": 0
     },
     {
-     "say": "Fully understand the system's outputs.",
-     "show": 1
+     "say": "Fully understand the outputs. The model must give one sentence of job-related reasoning.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Monitor its operation for anomalies.",
-     "show": 2
+     "say": "Monitor operation for anomalies, on an oversight dashboard.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Intervene, or interrupt it.",
-     "show": 3
+     "say": "Intervene or interrupt, with an emergency stop.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And override or disregard its output when appropriate.",
-     "show": 4
+     "say": "And override or disregard an output, with human override. Let's run each one.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
+   "kind": "walk",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Every recommendation is logged",
+   "file": "oversight_controls.py",
+   "code": "def get_model_recommendation(candidate_data,\n                             model_fn=call_model):\n    check_before_running()\n    recommendation = model_fn(candidate_data)\n    decision = {\n        \"candidate_data\": candidate_data,\n        \"recommendation\": recommendation,\n        \"overridden\": False,\n        \"override_reason\": None,\n    }\n    log_event(\"RECOMMENDATION\", decision)\n    return decision",
+   "beats": [
+    {
+     "say": "The test calls this with a candidate summary, and a stand-in model called fake model, so it costs nothing.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "candidate_data": "\"Candidate: 4 years Python, ...\"",
+      "model_fn": "fake_model"
+     }
+    },
+    {
+     "say": "First, check before running. The system is active, so it carries on.",
+     "line": 3,
+     "vars": {
+      "system_active": true
+     }
+    },
+    {
+     "say": "The stand-in model always answers: reject, fewer years of experience than the role asks for.",
+     "line": 4,
+     "vars": {
+      "recommendation": "\"REJECT. Fewer years of experience...\""
+     }
+    },
+    {
+     "say": "The answer goes into a decision, marked as not overridden.",
+     "line": [
+      5,
+      10
+     ],
+     "vars": {
+      "overridden": false,
+      "override_reason": null
+     }
+    },
+    {
+     "say": "Log event appends a recommendation event to the J S O N L log file.",
+     "line": 11,
+     "vars": {
+      "log lines": 1
+     }
+    },
+    {
+     "say": "The decision comes back, and the test prints what the model said.",
+     "line": 12,
+     "out": "Model said: REJECT. Fewer years of experience than the role asks for."
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab · Step 4",
    "title": "An override that leaves a trail",
    "file": "oversight_controls.py",
-   "code": "def human_override(decision, new_outcome, reason, reviewer):\n    decision[\"original_recommendation\"] = decision[\"recommendation\"]\n    decision[\"recommendation\"] = new_outcome\n    decision[\"overridden\"] = True\n    decision[\"override_reason\"] = reason\n    decision[\"reviewer\"] = reviewer\n    log_event(\"OVERRIDE\", decision)\n    return decision",
+   "code": "def human_override(decision, new_outcome,\n                   reason, reviewer):\n    decision[\"original_recommendation\"] = (\n        decision[\"recommendation\"])\n    decision[\"recommendation\"] = new_outcome\n    decision[\"overridden\"] = True\n    decision[\"override_reason\"] = reason\n    decision[\"reviewer\"] = reviewer\n    log_event(\"OVERRIDE\", decision)\n    return decision",
    "beats": [
     {
-     "say": "First, a log event function writes every oversight event to a J S O N L file.",
-     "show": 0
+     "say": "Now a human reviewer disagrees. The test calls human override with advance, a reason, and a name.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "new_outcome": "\"ADVANCE\"",
+      "reason": "\"Led two backend projects, ...\"",
+      "reviewer": "\"Reviewer A\""
+     }
     },
     {
-     "say": "Then human override.",
-     "show": 1
+     "say": "First, the model's original answer is kept, not thrown away.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "original_recommendation": "\"REJECT. Fewer years of experience...\""
+     }
     },
     {
-     "say": "It keeps the original recommendation, records the new outcome, the reason and the reviewer, and logs it.",
-     "show": 1
+     "say": "Then the recommendation becomes advance.",
+     "line": 5,
+     "vars": {
+      "recommendation": "\"ADVANCE\""
+     }
     },
     {
-     "say": "Nothing is silently absorbed.",
-     "show": 1
+     "say": "It's marked overridden, with the reason and the reviewer recorded.",
+     "line": [
+      6,
+      8
+     ],
+     "vars": {
+      "overridden": true,
+      "override_reason": "\"Led two backend projects, ...\""
+     }
+    },
+    {
+     "say": "And an override event goes into the log. Nothing is silently absorbed.",
+     "line": 9,
+     "vars": {
+      "log lines": 2
+     }
+    },
+    {
+     "say": "The test prints the new outcome.",
+     "line": 10,
+     "out": "After override: ADVANCE"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "warning",
+   "kind": "walk",
    "kicker": "Lab · Step 5",
    "title": "The emergency stop",
    "file": "oversight_controls.py",
-   "code": "def emergency_stop(reason, reviewer):\n    global system_active\n    system_active = False\n    log_event(\"EMERGENCY_STOP\", {\"reason\": reason, \"reviewer\": reviewer})\n\n\ndef check_before_running():\n    if not system_active:\n        raise SystemHaltedError(\"System has been manually stopped for review.\")",
+   "code": "system_active = True\n\ndef emergency_stop(reason, reviewer):\n    global system_active\n    system_active = False\n    log_event(\"EMERGENCY_STOP\",\n        {\"reason\": reason, \"reviewer\": reviewer})\n\ndef check_before_running():\n    if not system_active:\n        raise SystemHaltedError(\n            \"System has been manually stopped \"\n            \"for review.\")",
    "beats": [
     {
-     "say": "Overriding one decision isn't enough when the problem is systemic.",
-     "show": 0
+     "say": "Overriding one decision isn't enough when the problem is systemic. A switch starts on.",
+     "line": 1,
+     "vars": {
+      "system_active": true
+     }
     },
     {
-     "say": "Emergency stop switches the system off, and logs who did it and why.",
-     "show": 1
+     "say": "The reviewer calls emergency stop: override rate spiked, investigating.",
+     "line": 3
     },
     {
-     "say": "Check before running refuses new work while it's stopped. Reactivation is logged too.",
-     "show": 1
+     "say": "The switch flips off.",
+     "line": 5,
+     "vars": {
+      "system_active": false
+     }
     },
     {
-     "say": "This simple version keeps the switch in memory. A real system would store it somewhere shared, like a database.",
-     "show": 1
+     "say": "And who stopped it, and why, is logged.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "log lines": 3
+     }
+    },
+    {
+     "say": "Now the test asks for another recommendation. The first thing it runs is check before running.",
+     "line": 9
+    },
+    {
+     "say": "The system isn't active.",
+     "line": 10
+    },
+    {
+     "say": "So it raises system halted error, and the test passes. The refused call never reached log event.",
+     "line": [
+      11,
+      13
+     ],
+     "out": "PASS: system refused to run: System has been manually stopped for review."
+    },
+    {
+     "say": "Reactivate flips the switch back on and logs it. Then a new recommendation runs and is logged.",
+     "line": 10,
+     "vars": {
+      "system_active": true,
+      "log lines": 5
+     },
+     "out": "PASS: system runs again after reactivation"
+    },
+    {
+     "say": "This simple switch lives in memory. A real system would store it somewhere shared, like a database.",
+     "line": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "dashboard",
+   "kind": "table",
    "kicker": "Lab · Steps 6 and 7",
-   "title": "Test the full loop",
-   "steps": [
-    "Recommend",
-    "Human override",
-    "Emergency stop: refuses",
-    "Reactivate: runs again"
+   "title": "What the dashboard shows",
+   "columns": [
+    "Test step",
+    "event_type",
+    "Note"
    ],
-   "beats": [
-    {
-     "say": "A Flask app shows an oversight page, with the override rate and the event log. A rising override rate is itself a signal.",
-     "show": 0
-    },
-    {
-     "say": "The test uses a stand-in model, so it's free and gives the same answer every run.",
-     "show": 1
-    },
-    {
-     "say": "The model recommends. A human overrides.",
-     "show": 2
-    },
-    {
-     "say": "An emergency stop, and the system must refuse new work.",
-     "show": 3
-    },
-    {
-     "say": "Then reactivate, and it runs again. All four events appear on the dashboard.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab · Step 8",
-   "title": "Conformity readiness checklist",
-   "items": [
+   "rows": [
     [
-     "Classification memo + obligation map",
-     "Bonus Modules 1 and 2"
+     "1",
+     "RECOMMENDATION",
+     "model: REJECT"
     ],
     [
-     "Technical documentation",
-     "Bonus Module 3"
+     "2",
+     "OVERRIDE",
+     "human: ADVANCE"
     ],
     [
-     "Oversight built and tested",
-     "Bonus Module 4"
+     "3",
+     "EMERGENCY_STOP",
+     "refused call: no line"
     ],
     [
-     "Data audit + bias evaluation",
-     "Main course"
+     "4",
+     "REACTIVATED",
+     "investigation done"
+    ],
+    [
+     "4",
+     "RECOMMENDATION",
+     "runs again"
     ]
    ],
    "beats": [
     {
-     "say": "Finally, combine everything into a readiness checklist.",
-     "show": 0
+     "say": "After the test, the log holds five events. The Flask app's oversight page reads them all.",
+     "col": 1
     },
     {
-     "say": "Classification memo, and obligation map.",
-     "show": 1
+     "say": "It counts two recommendations.",
+     "hl": [
+      0,
+      4
+     ],
+     "dim": true,
+     "sql": "recommendations = 2"
     },
     {
-     "say": "Technical documentation.",
-     "show": 2
+     "say": "And one override.",
+     "hl": 1,
+     "dim": true,
+     "sql": "recommendations = 2\noverrides = 1"
     },
     {
-     "say": "Human oversight built and tested.",
-     "show": 3
+     "say": "So the override rate is one out of two: fifty percent.",
+     "hl": [
+      0,
+      1,
+      4
+     ],
+     "dim": true,
+     "sql": "recommendations = 2\noverrides = 1\noverride_rate = 1 / 2 = 50%"
     },
     {
-     "say": "And the data governance audit and bias evaluation.",
-     "show": 4
+     "say": "The stop and the reactivation are there too, newest first on the page.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "A high or rising override rate is itself a signal that the model may be degrading.",
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 8",
+   "title": "Conformity readiness checklist",
+   "values": [
+    "Class. memo",
+    "Obligation map",
+    "Tech docs",
+    "Oversight",
+    "Data audit",
+    "Bias eval"
+   ],
+   "beats": [
+    {
+     "say": "Finally, combine everything into a readiness checklist."
+    },
+    {
+     "say": "The classification memo, and the obligation map, from Bonus Modules 1 and 2.",
+     "hl": [
+      0,
+      1
+     ],
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Bonus Modules 1 and 2"
+    },
+    {
+     "say": "The technical documentation, from Bonus Module 3.",
+     "hl": 2,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "Bonus Module 3"
+    },
+    {
+     "say": "Human oversight, built and tested, from this module.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "built and tested"
+    },
+    {
+     "say": "And the data governance audit and bias evaluation from the main course.",
+     "hl": [
+      4,
+      5
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "main course"
+    },
+    {
+     "say": "That's what you walk through before self-assessing, or calling in a third-party assessor.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "ready for assessment"
     }
    ]
   },

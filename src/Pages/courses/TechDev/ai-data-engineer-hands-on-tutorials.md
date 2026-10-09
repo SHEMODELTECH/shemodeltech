@@ -107,7 +107,7 @@ data_pipeline_map_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "pipeline",
+   "art": "path",
    "kicker": "Project 1 · Map a pipeline",
    "title": "See data as a pipeline",
    "beats": [
@@ -141,75 +141,265 @@ data_pipeline_map_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
-   "kicker": "Step 4",
-   "title": "The five pipeline stages",
-   "steps": [
-    "Ingestion",
-    "Cleaning",
-    "Storage",
-    "Transformation",
-    "Serving"
+   "kind": "diagram",
+   "kicker": "Steps 4 and 7",
+   "title": "Follow one support ticket through five stages",
+   "nodes": [
+    {
+     "id": "src",
+     "label": "Ticket system",
+     "x": 12,
+     "y": 25,
+     "sub": "the data source",
+     "art": "database"
+    },
+    {
+     "id": "ing",
+     "label": "Ingestion",
+     "x": 50,
+     "y": 25,
+     "sub": "pull raw data",
+     "art": "plug"
+    },
+    {
+     "id": "cle",
+     "label": "Cleaning",
+     "x": 88,
+     "y": 25,
+     "sub": "fix or remove bad data",
+     "art": "shield"
+    },
+    {
+     "id": "sto",
+     "label": "Storage",
+     "x": 88,
+     "y": 75,
+     "sub": "where clean data lives",
+     "art": "table"
+    },
+    {
+     "id": "tra",
+     "label": "Transformation",
+     "x": 50,
+     "y": 75,
+     "sub": "labels, embeddings",
+     "art": "gear"
+    },
+    {
+     "id": "ser",
+     "label": "Serving",
+     "x": 12,
+     "y": 75,
+     "sub": "the chatbot reads it",
+     "art": "robot"
+    }
+   ],
+   "edges": [
+    {
+     "from": "src",
+     "to": "ing"
+    },
+    {
+     "from": "ing",
+     "to": "cle"
+    },
+    {
+     "from": "cle",
+     "to": "sto"
+    },
+    {
+     "from": "sto",
+     "to": "tra"
+    },
+    {
+     "from": "tra",
+     "to": "ser"
+    }
    ],
    "beats": [
     {
-     "say": "Data flows through five stages, left to right.",
-     "show": 0
+     "say": "Here's the chatbot's data, starting at its source: the support ticket system.",
+     "show": 1,
+     "on": "src"
     },
     {
-     "say": "Ingestion: pulling raw data from the source.",
-     "show": 1
+     "say": "Ingestion pulls the raw tickets out of the source.",
+     "show": 2,
+     "on": "ing",
+     "send": {
+      "from": "src",
+      "to": "ing",
+      "label": "raw tickets"
+     }
     },
     {
-     "say": "Cleaning: fixing or removing bad data.",
-     "show": 2
+     "say": "Cleaning fixes or removes bad data, like duplicates and empty tickets.",
+     "show": 3,
+     "on": "cle",
+     "send": {
+      "from": "ing",
+      "to": "cle",
+      "label": "raw tickets"
+     }
     },
     {
-     "say": "Storage: where cleaned data lives.",
-     "show": 3
+     "say": "Storage is where the cleaned tickets live.",
+     "show": 4,
+     "on": "sto",
+     "send": {
+      "from": "cle",
+      "to": "sto",
+      "label": "clean tickets"
+     }
     },
     {
-     "say": "Transformation: turning it into a form a model can use, like labels or embeddings.",
-     "show": 4
+     "say": "Transformation turns them into a form a model can use, such as labels or embeddings.",
+     "show": 5,
+     "on": "tra",
+     "send": {
+      "from": "sto",
+      "to": "tra",
+      "label": "clean rows"
+     }
     },
     {
-     "say": "And serving: how the A I application actually accesses the final data.",
-     "show": 5
+     "say": "And Serving is how the chatbot actually gets the final data.",
+     "show": 6,
+     "on": "ser",
+     "send": {
+      "from": "tra",
+      "to": "ser",
+      "label": "labeled data"
+     }
+    },
+    {
+     "say": "Five stages, always in this order. Every later project builds one of them.",
+     "show": 6,
+     "on": [
+      "ing",
+      "cle",
+      "sto",
+      "tra",
+      "ser"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Steps 5 and 6",
-   "title": "Volume, frequency and risks",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "How often data arrives decides what you build",
+   "columns": [
+    "New data arrives",
+    "So you build"
+   ],
+   "rows": [
     [
-     "Volume",
-     "How much data?"
+     "Once",
+     "A one-time script"
     ],
     [
-     "Frequency",
-     "Once, daily, or continuous?"
+     "Daily",
+     "A daily batch job"
     ],
     [
-     "Quality risks",
-     "Duplicates, missing fields, formats, bad labels"
+     "Continuously",
+     "A continuous job"
     ]
    ],
    "beats": [
     {
-     "say": "Next, sketch the volume: how much data is there?",
-     "show": 1
+     "say": "Next, sketch the volume: roughly how much data is there?"
     },
     {
-     "say": "And the frequency: does new data arrive once, daily, or continuously?",
-     "show": 2
+     "say": "Then the frequency: how often does new data arrive?",
+     "col": 0
     },
     {
-     "say": "Then note the quality risks: duplicates, missing fields, inconsistent formats, and mislabeled examples.",
-     "show": 3
+     "say": "If it arrives once, a one-time script is enough.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "If new tickets land every day, you need a job that runs daily. You'll build one in Project 4.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "And a stream that never stops needs a continuous job.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "That's why you estimate both before you build anything.",
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "What could be wrong with support tickets?",
+   "columns": [
+    "Risk",
+    "Example",
+    "Fixed in"
+   ],
+   "rows": [
+    [
+     "Duplicates",
+     "T001 saved twice",
+     "Cleaning"
+    ],
+    [
+     "Missing fields",
+     "A ticket with no text",
+     "Cleaning"
+    ],
+    [
+     "Inconsistent formats",
+     "Billing vs BILLING",
+     "Cleaning"
+    ],
+    [
+     "Mislabeled examples",
+     "A bug filed as billing",
+     "Labeling, Project 5"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Last, note the quality risks. Here are four, each with an example."
+    },
+    {
+     "say": "Duplicates: the same ticket saved twice.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Missing fields: a ticket with no text at all.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Inconsistent formats: the same category written in different cases.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "You'll meet all three in Project 2's practice file, and fix them in the Cleaning stage.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "Mislabeled examples are trickier. Clear labeling rules in Project 5 guard against them.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
     }
    ]
   },
@@ -441,106 +631,288 @@ data_cleaning_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
+   "kind": "walk",
    "kicker": "Step 3",
-   "title": "Load and inspect",
+   "title": "Load and inspect raw_data.csv",
    "file": "data_cleaning_project",
    "code": "import pandas as pd\ndf = pd.read_csv(\"raw_data.csv\")\nprint(df.shape)\nprint(df.isnull().sum())\nprint(df.duplicated().sum())",
    "beats": [
     {
-     "say": "First, load the file with pandas and inspect it.",
-     "show": 0
+     "say": "First, load the practice file with pandas.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Is null, sum, counts the missing values in each column.",
-     "show": 1
+     "say": "Its shape is sixty three rows and five columns: sixty tickets, plus three duplicate rows.",
+     "line": 3,
+     "vars": {
+      "df": "63 rows × 5 columns"
+     },
+     "out": "(63, 5)"
     },
     {
-     "say": "Duplicated, sum, counts exact duplicate rows.",
-     "show": 1
+     "say": "Is null, sum, counts the gaps in each column. Three tickets have no text, and two have no category.",
+     "line": 4,
+     "out": [
+      "ticket_id         0",
+      "text              3",
+      "customer_email    0",
+      "created_at        0",
+      "category          2"
+     ]
+    },
+    {
+     "say": "Notice created at shows zero. Not a date is still a string, so it doesn't count as missing yet.",
+     "line": 4
+    },
+    {
+     "say": "Duplicated, sum, counts exact duplicate rows: three.",
+     "line": 5,
+     "out": "3"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Steps 4 and 5",
-   "title": "Drop, fill, deduplicate",
-   "items": [
+   "title": "Drop, fill, then deduplicate",
+   "columns": [
+    "ticket_id",
+    "text",
+    "category"
+   ],
+   "rows": [
     [
-     "Drop",
-     "Missing text: can't work without it"
+     "T001",
+     "The page freezes…",
+     "bug"
     ],
     [
-     "Fill",
-     "Missing category → \"unknown\""
+     "T004",
+     "(missing)",
+     "bug"
     ],
     [
-     "Deduplicate",
-     "Duplicates bias the model"
+     "T006",
+     "Why did my subscri…",
+     "(missing)"
+    ],
+    [
+     "T018",
+     "(missing)",
+     "billing"
+    ],
+    [
+     "T023",
+     "Notifications show…",
+     "(missing)"
+    ],
+    [
+     "T030",
+     "(missing)",
+     "\" BILLING \""
+    ],
+    [
+     "T001",
+     "The page freezes…",
+     "bug"
     ]
    ],
    "beats": [
     {
-     "say": "Now handle the gaps.",
-     "show": 0
+     "say": "Here are seven of the raw rows, including every row with a gap."
     },
     {
-     "say": "Drop rows missing a column you can't work without, like the ticket text.",
-     "show": 1
+     "say": "The text is the one field you can't work without. Three rows are missing it.",
+     "col": 1,
+     "sql": "df = df.dropna(subset=[\"text\"])",
+     "hl": [
+      1,
+      3,
+      5
+     ],
+     "dim": true
     },
     {
-     "say": "Fill gaps where a placeholder is fine, like a category of unknown.",
-     "show": 2
+     "say": "So they're dropped. Sixty three rows become sixty.",
+     "sql": "df = df.dropna(subset=[\"text\"])   # 63 → 60",
+     "hl": [
+      1,
+      3,
+      5
+     ],
+     "dim": true
     },
     {
-     "say": "Then remove duplicates. Duplicate rows silently bias any model or statistic toward whatever's overrepresented.",
-     "show": 3
+     "say": "Two rows are missing a category. A placeholder is fine there, so they're filled with unknown.",
+     "col": 2,
+     "sql": "df[\"category\"] = df[\"category\"].fillna(\"unknown\")",
+     "hl": [
+      2,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "Ticket T 0 0 1 appears twice, exactly the same.",
+     "sql": "df = df.drop_duplicates()",
+     "hl": [
+      0,
+      6
+     ],
+     "dim": true
+    },
+    {
+     "say": "Drop duplicates removes the extra copies of T 0 0 1, T 0 0 2 and T 0 0 3. Sixty becomes fifty seven.",
+     "sql": "df = df.drop_duplicates()   # 60 → 57",
+     "hl": 6,
+     "dim": true
+    },
+    {
+     "say": "Left in, duplicates would quietly bias a model toward whatever's repeated.",
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
+   "kind": "array",
    "kicker": "Step 6",
-   "title": "Standardize formats",
-   "file": "data_cleaning_project",
-   "code": "df[\"text\"] = df[\"text\"].str.strip()\ndf[\"customer_email\"] = df[\"customer_email\"].str.lower().str.strip()\ndf[\"category\"] = df[\"category\"].str.lower().str.strip()\ndf[\"created_at\"] = pd.to_datetime(df[\"created_at\"], errors=\"coerce\")\nprint(df[\"category\"].value_counts())",
+   "title": "Six spellings become one",
+   "values": [
+    "\"bug\"",
+    "\"Bug \"",
+    "\"BUG\"",
+    "\"billing\"",
+    "\"Billing\"",
+    "\" BILLING \""
+   ],
    "beats": [
     {
-     "say": "Standardizing forces values into one consistent format.",
-     "show": 0
+     "say": "The category column spells the same two values six different ways."
     },
     {
-     "say": "Strip spaces and lowercase, so Billing, billing, and capital BILLING aren't three different values.",
-     "show": 1
+     "say": "To pandas, these are six different categories.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
     },
     {
-     "say": "Errors equals coerce turns a date that can't be read, like not a date, into a missing date, instead of crashing.",
-     "show": 1
+     "say": "First, lowercase everything.",
+     "vals": [
+      "\"bug\"",
+      "\"bug \"",
+      "\"bug\"",
+      "\"billing\"",
+      "\"billing\"",
+      "\" billing \""
+     ],
+     "hl": [
+      1,
+      2,
+      4,
+      5
+     ],
+     "note": "df[\"category\"].str.lower()"
+    },
+    {
+     "say": "Then strip the stray spaces from both ends.",
+     "vals": [
+      "\"bug\"",
+      "\"bug\"",
+      "\"bug\"",
+      "\"billing\"",
+      "\"billing\"",
+      "\"billing\""
+     ],
+     "hl": [
+      1,
+      5
+     ],
+     "note": ".str.strip()"
+    },
+    {
+     "say": "Now there are only two values. Value counts shows bug twenty seven, billing twenty seven, unknown two, and feature request one.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "bug 27 · billing 27 · unknown 2 · feature request 1"
+    },
+    {
+     "say": "The text and emails get the same treatment. And errors equals coerce turns the bad date into N a T, a missing date, instead of crashing.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "\"not a date\" → NaT  (errors=\"coerce\")"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "test",
+   "kind": "walk",
    "kicker": "Steps 7 and 8",
    "title": "Prove it, then save it",
    "file": "data_cleaning_project",
    "code": "assert df.isnull().sum()[\"text\"] == 0\nassert df.duplicated().sum() == 0\nprint(\"Cleaning validated.\")\n\ndf.to_csv(\"cleaned_data.csv\", index=False)",
    "beats": [
     {
-     "say": "An assertion halts the script if a condition isn't met. A cheap, automatic sanity check.",
-     "show": 0
+     "say": "An assertion stops the script if its condition isn't true. A cheap, automatic check.",
+     "line": 1
     },
     {
-     "say": "Check there's no missing text and no duplicates left.",
-     "show": 1
+     "say": "Missing text: zero. The first check passes.",
+     "line": 1,
+     "vars": {
+      "missing text": 0,
+      "rows": 57
+     }
     },
     {
-     "say": "Then save cleaned data dot C S V, and download both files. Projects 4, 5 and 7 use them.",
-     "show": 1
+     "say": "Duplicate rows: zero. The second check passes too.",
+     "line": 2,
+     "vars": {
+      "missing text": 0,
+      "duplicates": 0,
+      "rows": 57
+     }
+    },
+    {
+     "say": "So the cell prints: cleaning validated.",
+     "line": 3,
+     "out": "Cleaning validated."
+    },
+    {
+     "say": "One gap is still there: the bad date is now N a T. These checks don't look at dates. Project 7 will catch it.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "missing text": 0,
+      "duplicates": 0,
+      "rows": 57,
+      "missing created_at": 1
+     }
+    },
+    {
+     "say": "Save the fifty seven clean rows to cleaned data dot C S V, and download both files. Projects 4, 5 and 7 use them.",
+     "line": 5
     }
    ]
   },
@@ -765,92 +1137,244 @@ schema_design_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Steps 2 to 5",
-   "title": "Entities, fields, keys, versions",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Steps 2, 4 and 5",
+   "title": "Entities become linked tables",
+   "nodes": [
+    {
+     "id": "cus",
+     "label": "customers",
+     "x": 14,
+     "y": 50,
+     "sub": "id · name",
+     "art": "idcard"
+    },
+    {
+     "id": "tik",
+     "label": "tickets",
+     "x": 52,
+     "y": 50,
+     "sub": "one row per ticket",
+     "art": "table"
+    },
+    {
+     "id": "run",
+     "label": "Training run",
+     "x": 88,
+     "y": 50,
+     "sub": "reads one version",
+     "art": "neural"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cus",
+     "to": "tik"
+    },
+    {
+     "from": "tik",
+     "to": "run"
+    }
+   ],
+   "beats": [
+    {
+     "say": "An entity is a distinct thing your data describes. For support tickets: customers, and tickets.",
+     "show": 2,
+     "on": [
+      "cus",
+      "tik"
+     ]
+    },
+    {
+     "say": "Each entity becomes its own table, with its own fields.",
+     "show": 2,
+     "on": "tik"
+    },
+    {
+     "say": "Labels could be a third entity. In this schema, label is simply a field on tickets.",
+     "show": 2,
+     "on": "tik"
+    },
+    {
+     "say": "A foreign key links them. Ticket T 0 0 1 stores a customer I D: C one.",
+     "show": 2,
+     "on": "tik",
+     "send": {
+      "from": "tik",
+      "to": "cus",
+      "label": "customer_id C1"
+     }
+    },
+    {
+     "say": "That points at a row in customers: C one is Ada.",
+     "show": 2,
+     "on": "cus",
+     "send": {
+      "from": "cus",
+      "to": "tik",
+      "label": "C1 = Ada"
+     }
+    },
+    {
+     "say": "Versioning fields go on the core table, so a training run can say exactly which rows it used.",
+     "show": 3,
+     "on": "run",
+     "send": {
+      "from": "tik",
+      "to": "run",
+      "label": "version v1"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 3, 5 and 6",
+   "title": "The tickets table, field by field",
+   "columns": [
+    "Field",
+    "Type",
+    "Rule"
+   ],
+   "rows": [
     [
-     "Entities",
-     "tickets, customers, labels"
+     "ticket_id",
+     "TEXT",
+     "PRIMARY KEY"
     ],
     [
-     "Fields + types",
-     "ticket_id (string), created_at (datetime)"
+     "text",
+     "TEXT",
+     "NOT NULL"
     ],
     [
-     "Foreign key",
-     "tickets.customer_id → customers.id"
+     "created_at",
+     "TIMESTAMP",
+     "Versioning: when"
     ],
     [
-     "Versioning",
-     "dataset_version, created_at"
+     "label",
+     "TEXT",
+     ""
+    ],
+    [
+     "customer_id",
+     "TEXT",
+     "REFERENCES customers"
+    ],
+    [
+     "dataset_version",
+     "TEXT",
+     "Versioning: which"
     ]
    ],
    "beats": [
     {
-     "say": "An entity is a distinct thing your data describes, like tickets, customers, and labels.",
-     "show": 1
+     "say": "Here's the core table as S Q L: every field, with its type.",
+     "sql": "CREATE TABLE tickets ( ... );",
+     "col": 1
     },
     {
-     "say": "For each entity, list its fields and their types.",
-     "show": 2
+     "say": "Primary key makes ticket I D unique. No two rows can share one.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "A foreign key is a field that references another table's identifier, like tickets dot customer I D pointing to customers dot I D.",
-     "show": 3
+     "say": "Not null means the text can never be left empty.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And versioning fields mean every row can be traced to exactly when and how it was produced.",
-     "show": 4
+     "say": "References makes customer I D a foreign key, pointing at customers dot I D.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Created at and dataset version trace every row to when and how it was produced.",
+     "hl": [
+      2,
+      5
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And label will hold the labels you make in Project 5.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Step 6",
-   "title": "The schema as S Q L",
-   "file": "schema.sql",
-   "code": "CREATE TABLE customers (\n    id TEXT PRIMARY KEY,\n    name TEXT\n);\n\nCREATE TABLE tickets (\n    ticket_id TEXT PRIMARY KEY,\n    text TEXT NOT NULL,\n    created_at TIMESTAMP,\n    label TEXT,\n    customer_id TEXT REFERENCES customers(id),\n    dataset_version TEXT\n);",
-   "beats": [
-    {
-     "say": "Write the schema as S Q L.",
-     "show": 0
-    },
-    {
-     "say": "Primary key uniquely identifies each row.",
-     "show": 1
-    },
-    {
-     "say": "Not null means the text can't be left empty.",
-     "show": 1
-    },
-    {
-     "say": "References makes customer I D a foreign key pointing at customers.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "shield",
+   "kind": "walk",
    "kicker": "Step 6 · Run it",
    "title": "The schema guards quality too",
    "file": "schema_design_project",
-   "code": "conn = sqlite3.connect(\"schema_test.db\")\nconn.executescript(schema)\n\ntry:\n    conn.execute(\"INSERT INTO tickets (ticket_id, text) VALUES ('T002', NULL)\")\nexcept sqlite3.IntegrityError as error:\n    print(\"Rejected as expected:\", error)",
+   "code": "conn = sqlite3.connect(\"schema_test.db\")\nconn.executescript(schema)\nconn.execute(\"INSERT OR REPLACE INTO customers \"\n             \"VALUES ('C1', 'Ada')\")\nconn.execute(\"INSERT OR REPLACE INTO tickets VALUES\"\n    \" ('T001', 'I was charged twice', \"\n    \"'2026-09-01', 'billing_issue', 'C1', 'v1')\")\ntry:\n    conn.execute(\"INSERT INTO tickets (ticket_id, \"\n        \"text) VALUES ('T002', NULL)\")\nexcept sqlite3.IntegrityError as error:\n    print(\"Rejected as expected:\", error)\nprint(conn.execute(\n    \"SELECT * FROM tickets\").fetchall())",
    "beats": [
     {
      "say": "Run it with Python's built-in S Q Lite module. Nothing to install.",
-     "show": 0
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Insert a valid ticket, then try one with empty text.",
-     "show": 1
+     "say": "Insert Ada as customer C one.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "customers": "1 row"
+     }
     },
     {
-     "say": "It's rejected: not null constraint failed. The schema itself guards data quality, not just your cleaning code.",
-     "show": 1
+     "say": "Then a valid ticket that points at her, version v one.",
+     "line": [
+      5,
+      6,
+      7
+     ],
+     "vars": {
+      "customers": "1 row",
+      "tickets": "1 row"
+     }
+    },
+    {
+     "say": "Now try a ticket whose text is null, inside a try block.",
+     "line": [
+      8,
+      9,
+      10
+     ]
+    },
+    {
+     "say": "When a rule is broken, S Q Lite raises an integrity error, and the except line catches it.",
+     "line": 11
+    },
+    {
+     "say": "The database refuses it: not null constraint failed.",
+     "line": [
+      11,
+      12
+     ],
+     "out": "Rejected as expected: NOT NULL constraint failed: tickets.text"
+    },
+    {
+     "say": "Only the valid ticket is stored. The schema itself guards data quality, not just your cleaning code.",
+     "line": [
+      13,
+      14
+     ],
+     "vars": {
+      "customers": "1 row",
+      "tickets": "1 row"
+     },
+     "out": "[('T001', 'I was charged twice', '2026-09-01', 'billing_issue', 'C1', 'v1')]"
     }
    ]
   },
@@ -1071,7 +1595,7 @@ etl_pipeline_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "pipeline",
+   "art": "loop",
    "kicker": "Project 4 · Batch E T L",
    "title": "Automate raw to stored",
    "beats": [
@@ -1084,75 +1608,331 @@ etl_pipeline_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Step 2",
-   "title": "What E T L means",
-   "steps": [
-    "Extract: pull raw data",
-    "Transform: clean and reshape",
-    "Load: write to storage"
+   "title": "ETL, and ELT",
+   "nodes": [
+    {
+     "id": "src",
+     "label": "raw_data.csv",
+     "x": 12,
+     "y": 50,
+     "sub": "the source",
+     "art": "file"
+    },
+    {
+     "id": "tr",
+     "label": "Transform",
+     "x": 50,
+     "y": 20,
+     "sub": "clean and reshape",
+     "art": "gear"
+    },
+    {
+     "id": "db",
+     "label": "data_store.db",
+     "x": 88,
+     "y": 50,
+     "sub": "storage",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "src",
+     "to": "tr"
+    },
+    {
+     "from": "tr",
+     "to": "db"
+    },
+    {
+     "from": "src",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "E T L stands for three stages.",
-     "show": 0
-    },
-    {
-     "say": "Extract: pull raw data from a source.",
-     "show": 1
-    },
-    {
-     "say": "Transform: clean and reshape it.",
-     "show": 2
-    },
-    {
-     "say": "Load: write it into storage.",
+     "say": "E T L stands for three stages: Extract, Transform, Load.",
      "show": 3
     },
     {
-     "say": "E L T does the same steps in a different order, transforming after loading.",
-     "show": 3
+     "say": "Extract pulls the raw data from its source: sixty three rows.",
+     "on": "src",
+     "send": {
+      "from": "src",
+      "to": "tr",
+      "label": "extract 63 rows"
+     }
+    },
+    {
+     "say": "Transform cleans and reshapes them, with Project 2's rules. Fifty seven rows are left.",
+     "on": "tr"
+    },
+    {
+     "say": "Load writes them into storage.",
+     "on": "db",
+     "send": {
+      "from": "tr",
+      "to": "db",
+      "label": "load 57 rows"
+     }
+    },
+    {
+     "say": "E L T does the same steps in a different order. It loads the raw data first,",
+     "on": "db",
+     "send": {
+      "from": "src",
+      "to": "db",
+      "label": "load 63 raw"
+     }
+    },
+    {
+     "say": "then transforms it afterwards, inside the storage system.",
+     "on": [
+      "db",
+      "tr"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Steps 3 to 6",
-   "title": "Three functions, one pipeline",
+   "title": "Trace one pipeline run",
    "file": "etl_pipeline_project",
-   "code": "def load(df, table_name, engine):\n    df.to_sql(table_name, engine, if_exists=\"append\", index=False)\n\ndef run_pipeline(path, table_name, engine):\n    df = extract(path)\n    df = transform(df)\n    load(df, table_name, engine)\n    print(f\"Loaded {len(df)} rows into {table_name}\")\n\nengine = create_engine(\"sqlite:///data_store.db\")\nrun_pipeline(\"raw_data.csv\", \"tickets\", engine)",
+   "code": "def load(df, table_name, engine):\n    df.to_sql(table_name, engine,\n              if_exists=\"append\", index=False)\n\ndef run_pipeline(path, table_name, engine):\n    df = extract(path)\n    df = transform(df)\n    load(df, table_name, engine)\n    print(f\"Loaded {len(df)} rows into \"\n          f\"{table_name}\")\n\nengine = create_engine(\"sqlite:///data_store.db\")\nrun_pipeline(\"raw_data.csv\", \"tickets\", engine)",
    "beats": [
     {
-     "say": "Each stage is its own function. Transform holds the same cleaning rules as Project 2.",
-     "show": 0
+     "say": "Each stage is its own function. Extract just reads the C S V, and transform holds Project 2's cleaning rules."
     },
     {
-     "say": "Load uses if exists equals append, so new rows are added without erasing existing ones.",
-     "show": 1
+     "say": "Connect to a S Q Lite file called data store dot D B. No server to set up.",
+     "line": 12,
+     "vars": {
+      "engine": "sqlite:///data_store.db"
+     }
     },
     {
-     "say": "Run pipeline wires them together, into a S Q Lite file called data store dot D B. No server to set up.",
-     "show": 1
+     "say": "Run the pipeline on raw data dot C S V, into a table called tickets.",
+     "line": 13,
+     "vars": {
+      "path": "\"raw_data.csv\"",
+      "table_name": "\"tickets\""
+     }
+    },
+    {
+     "say": "Extract reads sixty three rows.",
+     "line": 6,
+     "vars": {
+      "path": "\"raw_data.csv\"",
+      "table_name": "\"tickets\"",
+      "len(df)": 63
+     }
+    },
+    {
+     "say": "Transform drops, fills, deduplicates and standardizes. Fifty seven rows.",
+     "line": 7,
+     "vars": {
+      "path": "\"raw_data.csv\"",
+      "table_name": "\"tickets\"",
+      "len(df)": 57
+     }
+    },
+    {
+     "say": "Load writes them with if exists equals append, which adds rows without erasing existing ones.",
+     "line": [
+      8,
+      1,
+      2,
+      3
+     ],
+     "vars": {
+      "len(df)": 57,
+      "tickets table": "57 rows"
+     }
+    },
+    {
+     "say": "Then it reports what it did.",
+     "line": [
+      9,
+      10
+     ],
+     "out": "Loaded 57 rows into tickets"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Step 7",
-   "title": "Tomorrow's data",
-   "big": "+3 rows",
-   "sub": "Loading the same file twice duplicates every row",
+   "title": "Tomorrow's data, cleaned the same way",
+   "columns": [
+    "ticket_id",
+    "customer_email",
+    "category"
+   ],
+   "rows": [
+    [
+     "T101",
+     "Ada@Example.com",
+     "Billing"
+    ],
+    [
+     "T102",
+     "\"sam@example.com \"",
+     "bug"
+    ],
+    [
+     "T103",
+     "lee@example.com",
+     "\" BILLING\""
+    ]
+   ],
    "beats": [
     {
-     "say": "Now make a small file of tomorrow's data, and run the pipeline on it. The row count grows by three.",
-     "show": 0
+     "say": "Now a small file of tomorrow's data: three new tickets in new data dot C S V."
     },
     {
-     "say": "But careful. Run raw data dot C S V a second time, and append mode adds every row again as duplicates. Real pipelines guard against this, for example by tracking which files were already loaded.",
-     "show": 1
+     "say": "It has the same kinds of mess. Capital letters and a trailing space in the emails.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
+    },
+    {
+     "say": "And two spellings of billing.",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "Run the same pipeline. Transform fixes them: lowercase emails, and billing, bug, billing.",
+     "sql": "run_pipeline(\"new_data.csv\", \"tickets\", engine)",
+     "col": 2
+    },
+    {
+     "say": "Three rows are appended, and the row count grows from fifty seven to sixty.",
+     "sql": "run_pipeline(\"new_data.csv\", \"tickets\", engine)\n→ Loaded 3 rows into tickets · row_count 60"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 7 · Careful",
+   "title": "Append twice, and you duplicate",
+   "nodes": [
+    {
+     "id": "raw",
+     "label": "raw_data.csv",
+     "x": 12,
+     "y": 22,
+     "sub": "Project 2's file",
+     "art": "file"
+    },
+    {
+     "id": "new",
+     "label": "new_data.csv",
+     "x": 12,
+     "y": 78,
+     "sub": "tomorrow's batch",
+     "art": "file"
+    },
+    {
+     "id": "run",
+     "label": "run_pipeline",
+     "x": 50,
+     "y": 50,
+     "sub": "append mode",
+     "art": "pipeline"
+    },
+    {
+     "id": "db",
+     "label": "tickets table",
+     "x": 88,
+     "y": 50,
+     "sub": "data_store.db",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "raw",
+     "to": "run"
+    },
+    {
+     "from": "new",
+     "to": "run"
+    },
+    {
+     "from": "run",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's what the tickets table has seen so far.",
+     "show": 4
+    },
+    {
+     "say": "The first run loaded fifty seven rows.",
+     "on": "raw",
+     "send": {
+      "from": "raw",
+      "to": "run",
+      "label": "raw_data.csv"
+     }
+    },
+    {
+     "say": "Count: fifty seven.",
+     "on": "db",
+     "send": {
+      "from": "run",
+      "to": "db",
+      "label": "append 57"
+     }
+    },
+    {
+     "say": "The new batch added three.",
+     "on": "new",
+     "send": {
+      "from": "new",
+      "to": "run",
+      "label": "new_data.csv"
+     }
+    },
+    {
+     "say": "Count: sixty.",
+     "on": "db",
+     "send": {
+      "from": "run",
+      "to": "db",
+      "label": "append 3"
+     }
+    },
+    {
+     "say": "But run raw data dot C S V a second time,",
+     "on": "raw",
+     "send": {
+      "from": "raw",
+      "to": "run",
+      "label": "raw_data again"
+     }
+    },
+    {
+     "say": "and append mode adds all fifty seven again, as duplicates. Count: one hundred and seventeen.",
+     "on": "db",
+     "send": {
+      "from": "run",
+      "to": "db",
+      "label": "append 57 again"
+     }
+    },
+    {
+     "say": "Real pipelines guard against this, for example by tracking which files were already loaded.",
+     "on": "run"
     }
    ]
   },
@@ -1364,7 +2144,7 @@ labeled_dataset_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "neural",
+   "art": "test",
    "kicker": "Project 5 · Labeled dataset",
    "title": "Ready to train on",
    "beats": [
@@ -1377,68 +2157,362 @@ labeled_dataset_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
-   "kicker": "Steps 3 and 4",
-   "title": "Write the rules, apply the labels",
-   "file": "labeled_dataset_project",
-   "code": "df[\"label\"] = df[\"category\"].map({\"billing\": \"billing_issue\", \"bug\": \"technical_issue\"})\n\nunlabeled = df[\"label\"].isna().sum()\nprint(f\"Dropping {unlabeled} rows with no label\")\ndf = df.dropna(subset=[\"label\"])",
+   "kind": "table",
+   "kicker": "Steps 2 to 5",
+   "title": "Map categories to labels",
+   "columns": [
+    "category",
+    "rows",
+    "label"
+   ],
+   "rows": [
+    [
+     "bug",
+     "27",
+     "technical_issue"
+    ],
+    [
+     "billing",
+     "27",
+     "billing_issue"
+    ],
+    [
+     "unknown",
+     "2",
+     "NaN"
+    ],
+    [
+     "feature request",
+     "1",
+     "NaN"
+    ]
+   ],
    "beats": [
     {
-     "say": "First write a labeling guide: clear rules for each label, with two or three examples each.",
-     "show": 0
+     "say": "Load cleaned data dot C S V: fifty seven tickets, in four categories.",
+     "col": 1
     },
     {
-     "say": "Then apply labels. Here, a simple rule maps billing to billing issue, and bug to technical issue.",
-     "show": 1
+     "say": "First, write a labeling guide: clear rules for each label, with two or three examples each."
     },
     {
-     "say": "Any category not in the map, like unknown or feature request, becomes empty. Drop those rows before splitting.",
-     "show": 1
+     "say": "Then a simple rule maps bug to technical issue, and billing to billing issue.",
+     "sql": "df[\"label\"] = df[\"category\"].map(\n  {\"billing\": \"billing_issue\", \"bug\": \"technical_issue\"})",
+     "col": 2
+    },
+    {
+     "say": "Unknown and feature request aren't in the map, so their label comes back empty: N a N.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The split can't handle missing labels, so those three rows are dropped. Fifty four remain.",
+     "sql": "df = df.dropna(subset=[\"label\"])\n→ Dropping 3 rows with no label",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Now check the distribution: twenty seven of each. No class imbalance, and well over the ten or so each label needs.",
+     "sql": "df[\"label\"].value_counts()",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pie",
-   "kicker": "Steps 5 and 6",
-   "title": "Stratified splits",
-   "file": "labeled_dataset_project",
-   "code": "from sklearn.model_selection import train_test_split\ntrain, temp = train_test_split(df, test_size=0.3, random_state=42, stratify=df[\"label\"])\nval, test = train_test_split(temp, test_size=0.5, random_state=42, stratify=temp[\"label\"])\nprint(len(train), len(val), len(test))",
+   "kind": "diagram",
+   "kicker": "Step 6",
+   "title": "Split 54 rows three ways",
+   "nodes": [
+    {
+     "id": "all",
+     "label": "54 labeled rows",
+     "x": 12,
+     "y": 50,
+     "sub": "after dropping 3",
+     "art": "table"
+    },
+    {
+     "id": "train",
+     "label": "train",
+     "x": 50,
+     "y": 20,
+     "sub": "about 70%",
+     "art": "neural"
+    },
+    {
+     "id": "temp",
+     "label": "temp",
+     "x": 50,
+     "y": 80,
+     "sub": "the other 30%",
+     "art": "boxes"
+    },
+    {
+     "id": "val",
+     "label": "validation",
+     "x": 88,
+     "y": 55,
+     "sub": "used while developing",
+     "art": "test"
+    },
+    {
+     "id": "test",
+     "label": "test",
+     "x": 88,
+     "y": 85,
+     "sub": "held back to the end",
+     "art": "lock"
+    }
+   ],
+   "edges": [
+    {
+     "from": "all",
+     "to": "train"
+    },
+    {
+     "from": "all",
+     "to": "temp"
+    },
+    {
+     "from": "temp",
+     "to": "val"
+    },
+    {
+     "from": "temp",
+     "to": "test"
+    }
+   ],
    "beats": [
     {
-     "say": "Check the label counts for class imbalance. Each label needs at least about ten examples for the split to work.",
-     "show": 0
+     "say": "Start with the fifty four labeled tickets.",
+     "show": 1,
+     "on": "all"
     },
     {
-     "say": "Then split: about seventy percent train, fifteen validation, fifteen test.",
-     "show": 1
+     "say": "The first split keeps seventy percent for training: thirty seven rows.",
+     "show": 3,
+     "on": "train",
+     "send": {
+      "from": "all",
+      "to": "train",
+      "label": "37 rows"
+     }
     },
     {
-     "say": "Stratify keeps each split's label mix close to the full dataset. Validation is for development; test is held back for the final evaluation.",
-     "show": 1
+     "say": "The other thirty percent, seventeen rows, go into a temporary set.",
+     "show": 3,
+     "on": "temp",
+     "send": {
+      "from": "all",
+      "to": "temp",
+      "label": "17 rows"
+     }
+    },
+    {
+     "say": "The second split cuts that in half: eight rows for validation,",
+     "show": 5,
+     "on": "val",
+     "send": {
+      "from": "temp",
+      "to": "val",
+      "label": "8 rows"
+     }
+    },
+    {
+     "say": "and nine for test.",
+     "show": 5,
+     "on": "test",
+     "send": {
+      "from": "temp",
+      "to": "test",
+      "label": "9 rows"
+     }
+    },
+    {
+     "say": "Validation is used while you develop the model. Test is held back until the final evaluation.",
+     "show": 5,
+     "on": [
+      "val",
+      "test"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "warning",
+   "kind": "table",
+   "kicker": "Step 6 · stratify",
+   "title": "Every split keeps the same label mix",
+   "columns": [
+    "Split",
+    "Rows",
+    "billing_issue",
+    "technical_issue"
+   ],
+   "rows": [
+    [
+     "train",
+     "37",
+     "18",
+     "19"
+    ],
+    [
+     "val",
+     "8",
+     "4",
+     "4"
+    ],
+    [
+     "test",
+     "9",
+     "5",
+     "4"
+    ],
+    [
+     "all",
+     "54",
+     "27",
+     "27"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Both splits pass stratify, set to the label column.",
+     "sql": "train_test_split(df, test_size=0.3,\n    random_state=42, stratify=df[\"label\"])"
+    },
+    {
+     "say": "The full dataset is exactly half billing, half technical.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Training gets eighteen and nineteen: still about half and half.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Validation gets four and four. Test gets five and four.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    },
+    {
+     "say": "Without stratify, a small split could end up mostly one label by chance, and its scores would mislead you.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Step 7",
-   "title": "Check for data leakage",
-   "file": "labeled_dataset_project",
-   "code": "id_overlap = set(train[\"ticket_id\"]) & set(test[\"ticket_id\"])\ntext_overlap = set(train[\"text\"]) & set(test[\"text\"])\nassert len(id_overlap) == 0, \"Leakage: the same ticket_id is in train and test!\"\nassert len(text_overlap) == 0, \"Leakage: the same ticket text is in train and test!\"\nprint(\"No leakage found between train and test.\")",
+   "title": "Check the test set for leakage",
+   "values": [
+    "T035",
+    "T015",
+    "T022",
+    "T034",
+    "T045",
+    "T029",
+    "T044",
+    "T025",
+    "T021"
+   ],
    "beats": [
     {
-     "say": "Data leakage is when information from the test set, or the future, accidentally influences training.",
-     "show": 0
+     "say": "Data leakage is when information from the test set, or the future, accidentally influences training."
     },
     {
-     "say": "Check that no ticket I D appears in both train and test.",
-     "show": 1
+     "say": "Here are the nine test tickets. Is any of their I Ds also in train?",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "id_overlap = train ids ∩ test ids"
     },
     {
-     "say": "And check the text too. That catches the same ticket saved twice under different I Ds.",
-     "show": 1
+     "say": "None are. The overlap is empty.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "id_overlap = set()  ✓"
+    },
+    {
+     "say": "Now the same check on the ticket text. Also empty.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "text_overlap = set()  ✓"
+    },
+    {
+     "say": "The text check matters: the same ticket saved twice under different I Ds would slip past the I D check.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "same text, new id → only the text check catches it"
+    },
+    {
+     "say": "Both assertions pass. Save train, val and test as three C S V files.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "No leakage found between train and test."
     }
    ]
   },
@@ -1660,70 +2734,383 @@ vector_store_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "blocks",
+   "kind": "array",
    "kicker": "Step 3",
-   "title": "Chunk with overlap",
-   "file": "vector_store_project",
-   "code": "def chunk_text(text, chunk_size=200, overlap=50):\n    words = text.split()\n    chunks = []\n    for i in range(0, len(words), chunk_size - overlap):\n        chunks.append(\" \".join(words[i:i + chunk_size]))\n        if i + chunk_size >= len(words):  # this chunk reached the end of the text\n            break\n    return chunks",
+   "title": "Chunk a 500-word document",
+   "values": [
+    "0–49",
+    "50–99",
+    "100–149",
+    "150–199",
+    "200–249",
+    "250–299",
+    "300–349",
+    "350–399",
+    "400–449",
+    "450–499"
+   ],
    "beats": [
     {
-     "say": "Chunking splits long documents into smaller pieces.",
-     "show": 0
+     "say": "Picture one document of five hundred words, shown here in blocks of fifty.",
+     "note": "chunk_size=200, overlap=50"
     },
     {
-     "say": "Overlap repeats a few words between chunks, so context isn't lost at the boundary.",
-     "show": 1
+     "say": "The first chunk takes two hundred words, starting at word zero.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "i": 0
+     },
+     "note": "chunk 1: words 0–199"
     },
     {
-     "say": "With these settings, each new chunk starts a hundred and fifty words after the last.",
-     "show": 1
+     "say": "The next chunk starts one hundred and fifty words later: two hundred minus the overlap of fifty.",
+     "hl": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "i": 3
+     },
+     "note": "chunk 2: words 150–349"
+    },
+    {
+     "say": "Words one fifty to one ninety nine are in both chunks. That overlap keeps an idea on the boundary from being cut in half.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "i": 3
+     },
+     "note": "overlap: words 150–199"
+    },
+    {
+     "say": "The third chunk starts at word three hundred, and reaches the end of the text, so the loop stops.",
+     "hl": [
+      6,
+      7,
+      8,
+      9
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ptr": {
+      "i": 6
+     },
+     "note": "300 + 200 ≥ 500 → break"
+    },
+    {
+     "say": "Three chunks. The loading loop also records which file each chunk came from.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "3 chunks · chunk_sources = file names"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "database",
-   "kicker": "Steps 4 and 5",
-   "title": "Embed and store",
-   "file": "vector_store_project",
-   "code": "model = SentenceTransformer(\"all-MiniLM-L6-v2\")\nembeddings = model.encode(chunks)\n\ncollection = client.get_or_create_collection(\"documents\")\ncollection.add(\n    documents=chunks,\n    embeddings=embeddings.tolist(),\n    ids=[f\"chunk_{i}\" for i in range(len(chunks))],\n    metadatas=[{\"source\": name} for name in chunk_sources],\n)",
+   "kind": "diagram",
+   "kicker": "Steps 4 to 6",
+   "title": "Embed, store, and ask",
+   "nodes": [
+    {
+     "id": "doc",
+     "label": "Chunks",
+     "x": 12,
+     "y": 25,
+     "sub": "from documents/",
+     "art": "file"
+    },
+    {
+     "id": "mod",
+     "label": "Embedding model",
+     "x": 50,
+     "y": 50,
+     "sub": "all-MiniLM-L6-v2",
+     "art": "neural"
+    },
+    {
+     "id": "col",
+     "label": "Chroma",
+     "x": 88,
+     "y": 25,
+     "sub": "collection: documents",
+     "art": "database"
+    },
+    {
+     "id": "q",
+     "label": "Your question",
+     "x": 12,
+     "y": 78,
+     "sub": "same model",
+     "art": "chat"
+    }
+   ],
+   "edges": [
+    {
+     "from": "doc",
+     "to": "mod"
+    },
+    {
+     "from": "mod",
+     "to": "col"
+    },
+    {
+     "from": "q",
+     "to": "mod"
+    },
+    {
+     "from": "col",
+     "to": "q"
+    }
+   ],
    "beats": [
     {
-     "say": "An embedding is a list of numbers representing a chunk's meaning. Similar meanings get similar numbers.",
-     "show": 0
+     "say": "Every chunk goes through a sentence transformers model.",
+     "show": 2,
+     "on": "mod",
+     "send": {
+      "from": "doc",
+      "to": "mod",
+      "label": "chunk text"
+     }
     },
     {
-     "say": "Encode every chunk with a sentence transformers model.",
-     "show": 1
+     "say": "Out comes an embedding: a list of numbers that represents the chunk's meaning.",
+     "show": 2,
+     "on": "mod"
     },
     {
-     "say": "Then store them in a Chroma collection. A vector database finds the closest matches to a new query fast. The source metadata records which file each chunk came from.",
-     "show": 1
+     "say": "Chroma stores each embedding with its text, an I D like chunk zero, and its source file.",
+     "show": 3,
+     "on": "col",
+     "send": {
+      "from": "mod",
+      "to": "col",
+      "label": "embedding"
+     }
+    },
+    {
+     "say": "To search, embed the question with the same model.",
+     "show": 4,
+     "on": "q",
+     "send": {
+      "from": "q",
+      "to": "mod",
+      "label": "reset password?"
+     }
+    },
+    {
+     "say": "Chroma finds the three stored embeddings closest to it.",
+     "show": 4,
+     "on": "col",
+     "send": {
+      "from": "mod",
+      "to": "col",
+      "label": "query vector"
+     }
+    },
+    {
+     "say": "Each result comes back with its source file and a distance.",
+     "show": 4,
+     "on": "q",
+     "send": {
+      "from": "col",
+      "to": "q",
+      "label": "top 3 + sources"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "chat",
+   "kind": "chart",
    "kicker": "Step 6",
-   "title": "Ask it a question",
-   "file": "vector_store_project",
-   "code": "query = \"How do I reset my password?\"  # change this to fit your documents\nquery_embedding = model.encode([query])\nresults = collection.query(query_embeddings=query_embedding.tolist(), n_results=3)",
+   "title": "Smaller distance, closer meaning",
+   "points": [
+    [
+     15,
+     20
+    ],
+    [
+     25,
+     35
+    ],
+    [
+     30,
+     15
+    ],
+    [
+     45,
+     50
+    ],
+    [
+     20,
+     70
+    ],
+    [
+     85,
+     20
+    ],
+    [
+     55,
+     30
+    ],
+    [
+     66,
+     72
+    ],
+    [
+     74,
+     66
+    ],
+    [
+     72,
+     78
+    ]
+   ],
+   "xlabel": "meaning (simplified)",
+   "ylabel": "meaning (simplified)",
    "beats": [
     {
-     "say": "Embed the query with the same model, and ask for the three closest chunks.",
-     "show": 0
+     "say": "Here's a sketch of the vector store, flattened to two dimensions. Each dot is one chunk."
     },
     {
-     "say": "Each result shows its source file, and a distance. A smaller distance means a closer match in meaning.",
-     "show": 1
+     "say": "Chunks about similar things sit close together, like these three about passwords.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "The question, how do I reset my password, is embedded with the same model, and lands here.",
+     "marks": [
+      [
+       71,
+       72
+      ]
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "The three nearest chunks are the results. Their distance to the question is small.",
+     "marks": [
+      [
+       71,
+       72
+      ]
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "Everything else is far away, so it isn't returned.",
+     "marks": [
+      [
+       71,
+       72
+      ]
+     ],
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "A different model would place the question in a different number space, so these distances would mean nothing.",
+     "marks": [
+      [
+       71,
+       72
+      ],
+      [
+       20,
+       85
+      ]
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
   {
    "kind": "list",
-   "art": "checklist",
+   "art": "doc",
    "kicker": "Steps 7 and 8",
    "title": "Judge it, write it down",
    "items": [
@@ -1982,114 +3369,360 @@ data_validation_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Steps 2 to 4",
-   "title": "Two kinds of checks",
-   "items": [
-    [
-     "Schema check",
-     "Before transform · required columns"
-    ],
-    [
-     "Value checks",
-     "After transform · dates, text, categories"
-    ]
+   "kind": "array",
+   "kicker": "Step 3",
+   "title": "Schema check: are all the columns there?",
+   "values": [
+    "ticket_id",
+    "text",
+    "customer_email",
+    "created_at",
+    "category"
    ],
    "beats": [
     {
-     "say": "Start by writing rules from your Project 3 schema and Project 2 cleaning checks.",
-     "show": 0
+     "say": "Start by writing validation rules from your Project 3 schema and Project 2 cleaning checks."
     },
     {
-     "say": "The schema check runs on the raw file, before cleaning. Any missing required column, and the file is rejected right away.",
-     "show": 1
+     "say": "The schema check lists the five columns every raw file must have.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "REQUIRED_COLUMNS"
     },
     {
-     "say": "The value checks run on the cleaned data: invalid dates, empty text, and unexpected categories.",
-     "show": 2
+     "say": "New data dot C S V has all five, so it passes.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "new_data.csv → missing = set()  ✓"
     },
     {
-     "say": "They collect every problem first, so one run tells you everything that's wrong.",
-     "show": 2
+     "say": "Now a deliberately broken file, made by dropping the created at column.",
+     "ok": [
+      0,
+      1,
+      2,
+      4
+     ],
+     "gone": 3,
+     "note": "broken_test_data.csv"
+    },
+    {
+     "say": "The missing set isn't empty, so the assert stops it.",
+     "ok": [
+      0,
+      1,
+      2,
+      4
+     ],
+     "gone": 3,
+     "note": "Missing columns: {'created_at'}"
+    },
+    {
+     "say": "It runs on the raw file, before any cleaning, so a file with the wrong shape is rejected right away.",
+     "gone": 3,
+     "note": "before transform"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "trend",
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "Value checks on raw_data.csv, after transform",
+   "columns": [
+    "ticket_id",
+    "created_at",
+    "category"
+   ],
+   "rows": [
+    [
+     "T001",
+     "2026-09-02",
+     "bug"
+    ],
+    [
+     "T006",
+     "2026-09-07",
+     "unknown"
+    ],
+    [
+     "T009",
+     "NaT",
+     "billing"
+    ],
+    [
+     "T013",
+     "2026-09-14",
+     "feature request"
+    ],
+    [
+     "T023",
+     "2026-09-24",
+     "unknown"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The value checks run on the cleaned data. Here are five of the fifty seven rows from Project 2's raw file."
+    },
+    {
+     "say": "Check one: missing or invalid dates. Not a date became N a T, so one row is counted.",
+     "sql": "bad_dates = df[\"created_at\"].isnull().sum()   # 1",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Check two: empty text. Every ticket has text, so nothing is added.",
+     "sql": "(df[\"text\"].str.len() == 0).any()   # False"
+    },
+    {
+     "say": "Check three: categories outside billing, bug and unknown. Feature request is unexpected.",
+     "sql": "set(df[\"category\"]) - ALLOWED_CATEGORIES\n# {'feature request'}",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Unknown is on the allowed list, so the rows Project 2 filled in pass.",
+     "hl": [
+      1,
+      4
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The function collects every problem first, then one assert reports them all together.",
+     "sql": "1 rows have a missing or invalid created_at;\nUnexpected category values: {'feature request'}",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Steps 5 and 6",
    "title": "A simple drift check",
    "file": "data_validation_project",
-   "code": "def check_drift(df, baseline_mean, baseline_std, column, threshold=3):\n    current_mean = df[column].mean()\n    z_score = abs(current_mean - baseline_mean) / baseline_std\n    if z_score > threshold:\n        print(f\"WARNING: Possible drift detected in {column} (z-score {z_score:.1f})\")\n    else:\n        print(f\"No drift detected in {column} (z-score {z_score:.1f})\")",
+   "code": "def check_drift(df, baseline_mean, baseline_std,\n                column, threshold=3):\n    current_mean = df[column].mean()\n    z_score = (abs(current_mean - baseline_mean)\n               / baseline_std)\n    if z_score > threshold:\n        print(f\"WARNING: Possible drift detected \"\n            f\"in {column} (z-score {z_score:.1f})\")\n    else:\n        print(f\"No drift detected in {column} \"\n            f\"(z-score {z_score:.1f})\")\n\ncheck_drift(new_df, baseline_lengths.mean(),\n            baseline_lengths.std(), \"text_length\")",
    "beats": [
     {
-     "say": "Data drift is when incoming data's statistics change over time, even though the schema still validates. Like average text length doubling.",
-     "show": 0
+     "say": "Data drift is when the statistics of incoming data change over time, even though the schema still validates."
     },
     {
-     "say": "This check compares today's average to a trusted baseline, in standard deviations.",
-     "show": 1
+     "say": "The baseline is ticket text length in the cleaned data you trust: thirty eight point seven characters on average, with a standard deviation of five point six.",
+     "line": [
+      13,
+      14
+     ],
+     "vars": {
+      "baseline_mean": 38.7,
+      "baseline_std": 5.6
+     }
     },
     {
-     "say": "Above a z score of three, it warns. A simple rule of thumb, not a full statistical test, but it catches big changes cheaply.",
-     "show": 1
+     "say": "Today's batch has three tickets, thirty three, forty one and forty four characters long. Their mean is thirty nine point three.",
+     "line": 3,
+     "vars": {
+      "baseline_mean": 38.7,
+      "baseline_std": 5.6,
+      "current_mean": 39.3
+     }
+    },
+    {
+     "say": "The z score says how many standard deviations apart the two averages are: about zero point one.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "baseline_mean": 38.7,
+      "baseline_std": 5.6,
+      "current_mean": 39.3,
+      "z_score": 0.1
+     }
+    },
+    {
+     "say": "That's well under the threshold of three, so no drift.",
+     "line": [
+      9,
+      10,
+      11
+     ],
+     "out": "No drift detected in text_length (z-score 0.1)"
+    },
+    {
+     "say": "But if the average text length doubled, to about seventy seven, the z score would be about six point nine, and it would warn.",
+     "line": [
+      6,
+      7,
+      8
+     ],
+     "vars": {
+      "baseline_mean": 38.7,
+      "baseline_std": 5.6,
+      "current_mean": 77.4,
+      "z_score": 6.9
+     },
+     "out": "WARNING: Possible drift detected in text_length (z-score 6.9)"
+    },
+    {
+     "say": "It's a rule of thumb, not a full statistical test, but it catches big changes cheaply.",
+     "line": 6
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "funnel",
-   "kicker": "Step 7",
+   "kind": "diagram",
+   "kicker": "Steps 7 and 8",
    "title": "Validate before you load",
-   "file": "data_validation_project",
-   "code": "def run_pipeline_with_validation(path, table_name, engine):\n    df = extract(path)\n    validate_schema(df, REQUIRED_COLUMNS)\n    df = transform(df)\n    validate_ranges(df)\n    load(df, table_name, engine)\n    print(f\"Validated and loaded {len(df)} rows from {path}\")",
-   "beats": [
+   "nodes": [
     {
-     "say": "Now wire validation into your Project 4 pipeline.",
-     "show": 0
+     "id": "file",
+     "label": "Raw file",
+     "x": 12,
+     "y": 25,
+     "sub": "extract",
+     "art": "file"
     },
     {
-     "say": "Schema check after extract. Value checks after transform.",
-     "show": 1
+     "id": "sch",
+     "label": "Schema check",
+     "x": 50,
+     "y": 25,
+     "sub": "required columns",
+     "art": "checklist"
     },
     {
-     "say": "Both run before load, so bad data never reaches the database.",
-     "show": 1
+     "id": "tr",
+     "label": "Transform",
+     "x": 88,
+     "y": 25,
+     "sub": "Project 4 rules",
+     "art": "gear"
+    },
+    {
+     "id": "val",
+     "label": "Value checks",
+     "x": 88,
+     "y": 75,
+     "sub": "dates, text, categories",
+     "art": "shield"
+    },
+    {
+     "id": "load",
+     "label": "Load",
+     "x": 50,
+     "y": 75,
+     "sub": "append",
+     "art": "pipeline"
+    },
+    {
+     "id": "db",
+     "label": "tickets table",
+     "x": 12,
+     "y": 75,
+     "sub": "data_store.db",
+     "art": "database"
     }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Step 8",
-   "title": "Break it on purpose",
-   "items": [
-    [
-     "✗ Missing column",
-     "Pipeline stopped: Missing columns"
-    ],
-    [
-     "✗ raw_data.csv",
-     "Invalid date + \"feature request\""
-    ]
+   ],
+   "edges": [
+    {
+     "from": "file",
+     "to": "sch"
+    },
+    {
+     "from": "sch",
+     "to": "tr"
+    },
+    {
+     "from": "tr",
+     "to": "val"
+    },
+    {
+     "from": "val",
+     "to": "load"
+    },
+    {
+     "from": "load",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Finally, test it against bad data.",
-     "show": 0
+     "say": "Here's your Project 4 pipeline, with both checks wired in before load.",
+     "show": 6
     },
     {
-     "say": "A file missing the created at column stops with: missing columns.",
-     "show": 1
+     "say": "New data dot C S V goes in. All five columns are there.",
+     "on": "sch",
+     "send": {
+      "from": "file",
+      "to": "sch",
+      "label": "new_data.csv"
+     }
     },
     {
-     "say": "The original messy raw data stops too, naming the invalid date and the unexpected feature request category.",
-     "show": 2
+     "say": "So it moves on to transform.",
+     "on": "tr",
+     "send": {
+      "from": "sch",
+      "to": "tr",
+      "label": "5 columns ✓"
+     }
     },
     {
-     "say": "Decide the right fix, and write your decision in your validation rules.",
-     "show": 2
+     "say": "The cleaned rows pass every value check.",
+     "on": "val",
+     "send": {
+      "from": "tr",
+      "to": "val",
+      "label": "3 clean rows"
+     }
+    },
+    {
+     "say": "Only then are they loaded. Validated and loaded three rows.",
+     "on": "db",
+     "send": {
+      "from": "load",
+      "to": "db",
+      "label": "3 rows"
+     }
+    },
+    {
+     "say": "The broken test file stops at the first gate: missing columns, created at.",
+     "on": "sch",
+     "send": {
+      "from": "file",
+      "to": "sch",
+      "label": "broken file"
+     }
+    },
+    {
+     "say": "Raw data dot C S V passes the schema check, but stops at the value checks, naming the bad date and feature request.",
+     "on": "val",
+     "send": {
+      "from": "tr",
+      "to": "val",
+      "label": "57 rows"
+     }
+    },
+    {
+     "say": "Neither bad file reaches the database. Decide the fix, and write it in your validation rules.",
+     "on": "db"
     }
    ]
   },

@@ -125,130 +125,291 @@ robot_system_diagram_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Concept",
+   "kind": "diagram",
+   "kicker": "Concept · Step 3",
    "title": "The sense-think-act loop",
-   "steps": [
-    "Sense: cameras, LiDAR, encoders",
-    "Think: process and decide",
-    "Act: motors, arm, gripper",
-    "Environment changes → sense again"
+   "nodes": [
+    {
+     "id": "sense",
+     "label": "Sense",
+     "x": 20,
+     "y": 22,
+     "sub": "gather sensor data",
+     "art": "radar"
+    },
+    {
+     "id": "think",
+     "label": "Think",
+     "x": 80,
+     "y": 22,
+     "sub": "process and decide",
+     "art": "chip"
+    },
+    {
+     "id": "act",
+     "label": "Act",
+     "x": 80,
+     "y": 78,
+     "sub": "move the actuators",
+     "art": "arm"
+    },
+    {
+     "id": "env",
+     "label": "Environment",
+     "x": 20,
+     "y": 78,
+     "sub": "the room it's in",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sense",
+     "to": "think"
+    },
+    {
+     "from": "think",
+     "to": "act"
+    },
+    {
+     "from": "act",
+     "to": "env"
+    },
+    {
+     "from": "env",
+     "to": "sense"
+    }
    ],
    "beats": [
     {
-     "say": "Robots run on a repeating cycle.",
-     "show": 0
-    },
-    {
-     "say": "Sense: gather data from sensors.",
-     "show": 1
-    },
-    {
-     "say": "Think: process that data and decide what to do.",
-     "show": 2
-    },
-    {
-     "say": "Act: command the actuators to move.",
+     "say": "Robots run on a repeating cycle with three stages: sense, think, and act.",
      "show": 3
     },
     {
-     "say": "Acting changes the environment, so the robot senses again, and the loop repeats.",
-     "show": 4
+     "say": "Take a small wheeled robot that avoids obstacles. Sense: its sensors report a wall close ahead.",
+     "on": "sense",
+     "send": {
+      "from": "sense",
+      "to": "think",
+      "label": "wall ahead"
+     }
+    },
+    {
+     "say": "Think: it processes that data and decides to turn left.",
+     "on": "think",
+     "send": {
+      "from": "think",
+      "to": "act",
+      "label": "turn left"
+     }
+    },
+    {
+     "say": "Act: it commands its wheel motors, and the robot moves.",
+     "on": "act",
+     "send": {
+      "from": "act",
+      "to": "env",
+      "label": "wheels turn"
+     }
+    },
+    {
+     "say": "Moving changes the environment. The wall is no longer ahead.",
+     "show": 4,
+     "on": "env"
+    },
+    {
+     "say": "So the robot senses again, and the loop repeats, over and over.",
+     "on": "sense",
+     "send": {
+      "from": "env",
+      "to": "sense",
+      "label": "new view"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "camera",
-   "kicker": "Concept",
-   "title": "Sensors and actuators",
-   "items": [
-    [
-     "Camera",
-     "Captures images"
-    ],
-    [
-     "LiDAR",
-     "Distance, from laser pulses"
-    ],
-    [
-     "IMU",
-     "Orientation and acceleration"
-    ],
-    [
-     "Actuators",
-     "Motors, arm joints, gripper"
-    ]
+   "kind": "diagram",
+   "kicker": "Concept · Steps 4 to 6",
+   "title": "Sensors in, actuators out",
+   "nodes": [
+    {
+     "id": "cam",
+     "label": "Camera",
+     "x": 15,
+     "y": 20,
+     "sub": "captures images",
+     "art": "camera"
+    },
+    {
+     "id": "lidar",
+     "label": "LiDAR",
+     "x": 15,
+     "y": 50,
+     "sub": "distance, by laser",
+     "art": "radar"
+    },
+    {
+     "id": "imu",
+     "label": "IMU",
+     "x": 15,
+     "y": 80,
+     "sub": "orientation, accel",
+     "art": "compass"
+    },
+    {
+     "id": "cpu",
+     "label": "Onboard computer",
+     "x": 52,
+     "y": 50,
+     "sub": "the think step",
+     "art": "chip"
+    },
+    {
+     "id": "motors",
+     "label": "Wheel motors",
+     "x": 87,
+     "y": 50,
+     "sub": "an actuator",
+     "art": "gear"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cam",
+     "to": "cpu"
+    },
+    {
+     "from": "lidar",
+     "to": "cpu"
+    },
+    {
+     "from": "imu",
+     "to": "cpu"
+    },
+    {
+     "from": "cpu",
+     "to": "motors"
+    }
    ],
    "beats": [
     {
      "say": "A sensor measures something about the environment.",
-     "show": 0
+     "show": 1,
+     "on": "cam"
     },
     {
      "say": "A camera captures images.",
-     "show": 1
+     "on": "cam",
+     "send": {
+      "from": "cam",
+      "to": "cpu",
+      "label": "images"
+     }
     },
     {
-     "say": "A lidar measures distance using laser pulses.",
-     "show": 2
+     "say": "A lidar measures distance, using laser pulses.",
+     "show": 4,
+     "on": "lidar",
+     "send": {
+      "from": "lidar",
+      "to": "cpu",
+      "label": "distances"
+     }
     },
     {
      "say": "An I M U, an inertial measurement unit, measures orientation and acceleration.",
-     "show": 3
+     "on": "imu",
+     "send": {
+      "from": "imu",
+      "to": "cpu",
+      "label": "tilt, accel"
+     }
     },
     {
-     "say": "An actuator is anything that lets the robot physically act, like wheel motors, arm joints, or a gripper.",
-     "show": 4
+     "say": "All that data goes to the think step. Here it's an onboard computer, but it could be a more powerful remote system.",
+     "on": "cpu"
+    },
+    {
+     "say": "An actuator is anything that lets the robot physically act: wheel motors, arm joints, or a gripper.",
+     "show": 5,
+     "on": "motors",
+     "send": {
+      "from": "cpu",
+      "to": "motors",
+      "label": "speed command"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
-   "kicker": "Lab",
+   "kind": "table",
+   "kicker": "Lab · Steps 2 to 8",
    "title": "Diagram your own robot",
-   "items": [
+   "columns": [
+    "Part",
+    "Example robot"
+   ],
+   "rows": [
     [
      "Task",
-     "One sentence"
+     "Navigate a room"
     ],
     [
-     "Sensors + actuators",
-     "What it senses, how it moves"
+     "Sensors",
+     "LiDAR, camera, IMU"
     ],
     [
      "Think",
-     "Onboard or remote?"
+     "Onboard computer"
     ],
     [
-     "Safety",
-     "Worst case, and what prevents it"
+     "Actuators",
+     "Two wheel motors"
+    ],
+    [
+     "Worst case",
+     "Drives into a person"
+    ],
+    [
+     "Prevention",
+     "Stop when too close"
     ]
    ],
    "beats": [
     {
-     "say": "In your notebook, write one sentence for your robot's task. For example, a small wheeled robot that navigates a room and avoids obstacles.",
-     "show": 1
+     "say": "In your notebook, fill in one row at a time. Here's an example.",
+     "col": 1
     },
     {
-     "say": "List its sensors, and its actuators.",
-     "show": 2
+     "say": "The task, in one sentence: a small wheeled robot that navigates a room and avoids obstacles.",
+     "hl": 0
     },
     {
-     "say": "Note where the thinking happens: an onboard computer, or a more powerful remote system.",
-     "show": 3
+     "say": "What it senses with.",
+     "hl": 1
     },
     {
-     "say": "And write one safety sentence: the worst a bad decision could cause, and what would prevent it.",
-     "show": 4
+     "say": "Where the thinking happens: onboard, or a remote system.",
+     "hl": 2
+    },
+    {
+     "say": "And how it moves.",
+     "hl": 3
+    },
+    {
+     "say": "Then one safety sentence: the worst a bad decision could cause,",
+     "hl": 4
+    },
+    {
+     "say": "and what would prevent it. Your own answers will differ, and that's the point.",
+     "hl": 5
     }
    ]
   },
   {
    "kind": "quote",
-   "art": "graph",
+   "art": "architecture",
    "kicker": "Where you'd use this",
    "title": "Each part becomes a node",
    "quote": "Learn each part in plain Python first, then run it on ROS 2 in Project 8.",
@@ -489,102 +650,617 @@ sensor_processing_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Simulate a noisy sensor",
-   "file": "sensor_processing",
-   "code": "import numpy as np\n\ndef simulate_distance_sensor(num_readings=100):\n    true_distance = 2.0  # meters\n    noise = np.random.normal(0, 0.05, num_readings)\n    return true_distance + noise",
-   "beats": [
-    {
-     "say": "Start by simulating a distance sensor.",
-     "show": 0
-    },
-    {
-     "say": "The true distance is two meters, but each reading adds a little random noise.",
-     "show": 1
-    },
-    {
-     "say": "Real sensors always have noise: small random variation around the true value, even when nothing is changing.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "trend",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "A moving average filter",
-   "file": "sensor_processing",
-   "code": "def moving_average(data, window=5):\n    return np.convolve(data, np.ones(window)/window, mode=\"valid\")\n\nfiltered = moving_average(readings)\nplt.plot(readings, label=\"raw\", alpha=0.5)\nplt.plot(filtered, label=\"filtered\")",
-   "beats": [
-    {
-     "say": "A moving average filter smooths noisy data by averaging each point with its nearby neighbors.",
-     "show": 0
-    },
-    {
-     "say": "Plot the raw and filtered readings together to compare them.",
-     "show": 1
-    },
-    {
-     "say": "A larger window gives a smoother signal, but reacts more slowly to real changes.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Lab · Step 6",
-   "title": "When the sensor drops out",
-   "items": [
+   "kind": "chart",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Every reading wobbles",
+   "xlabel": "reading",
+   "ylabel": "distance (1.8 to 2.2 m)",
+   "points": [
     [
-     "Dropout",
-     "No valid reading → NaN"
+     0,
+     75.5
     ],
     [
-     "The problem",
-     "One NaN spoils every window it touches"
+     5,
+     18.1
+    ],
+    [
+     10,
+     55.2
+    ],
+    [
+     15,
+     42.9
+    ],
+    [
+     20,
+     44.3
+    ],
+    [
+     25,
+     47.3
+    ],
+    [
+     30,
+     24.8
+    ],
+    [
+     35,
+     47.1
+    ],
+    [
+     40,
+     39.2
+    ],
+    [
+     45,
+     91.5
+    ],
+    [
+     50,
+     52.8
+    ],
+    [
+     55,
+     45.6
+    ],
+    [
+     60,
+     46.5
+    ],
+    [
+     65,
+     41.6
+    ],
+    [
+     70,
+     36.8
+    ],
+    [
+     75,
+     45.1
+    ],
+    [
+     80,
+     56.0
+    ],
+    [
+     85,
+     47.0
+    ],
+    [
+     90,
+     62.0
+    ],
+    [
+     95,
+     47.5
     ]
    ],
    "beats": [
     {
-     "say": "Sensors also fail now and then. That's called sensor dropout.",
-     "show": 0
+     "say": "Your code simulates a distance sensor pointed at something exactly two meters away."
     },
     {
-     "say": "Here, a failed reading is stored as N a N, which means not a number.",
-     "show": 1
+     "say": "That true distance never changes. Here it is as a flat line.",
+     "line": [
+      0,
+      50
+     ]
     },
     {
-     "say": "One N a N makes the average of every window it touches N a N too.",
-     "show": 2
+     "say": "But each reading adds a little random noise, so the dots scatter above and below it.",
+     "line": [
+      0,
+      50
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
     },
     {
-     "say": "So gaps must be handled before filtering.",
-     "show": 2
+     "say": "Real sensors always behave like this: small random variation, even when nothing is changing.",
+     "line": [
+      0,
+      50
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · Step 7",
-   "title": "Fill the gaps first",
-   "file": "sensor_processing",
-   "code": "def handle_dropout(data):\n    valid_indices = ~np.isnan(data)\n    return np.interp(np.arange(len(data)), np.arange(len(data))[valid_indices], data[valid_indices])\n\nrepaired = handle_dropout(readings_with_gaps)\nprint(\"Missing after repair:\", np.isnan(repaired).sum())\nsmoothed = moving_average(repaired)",
+   "kind": "array",
+   "kicker": "Lab · Step 4",
+   "title": "A moving average, five readings at a time",
+   "values": [
+    2.04,
+    1.97,
+    2.06,
+    1.95,
+    2.03,
+    1.99,
+    2.08,
+    1.96
+   ],
    "beats": [
     {
-     "say": "Interpolation estimates a missing value from the values around it.",
-     "show": 0
+     "say": "Here are eight readings. The moving average uses a window of five."
     },
     {
-     "say": "The tilde means not, so valid indices marks the readings that aren't N a N.",
-     "show": 1
+     "say": "Average the first five: two point zero one.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "avg = 2.01"
     },
     {
-     "say": "Repair the gaps, check none are left, then smooth.",
-     "show": 1
+     "say": "Slide the window one step right. Now the average is two point zero zero.",
+     "hl": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "avg = 2.00"
+    },
+    {
+     "say": "Again: two point zero two.",
+     "hl": [
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "avg = 2.02"
+    },
+    {
+     "say": "And the last full window: two point zero zero.",
+     "hl": [
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "avg = 2.00"
+    },
+    {
+     "say": "Eight readings give four averages, all much closer to two than the raw readings were.",
+     "note": "8 readings → 4 smoothed values"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 5",
+   "title": "Raw versus filtered",
+   "xlabel": "reading",
+   "ylabel": "distance (1.8 to 2.2 m)",
+   "points": [
+    [
+     0,
+     75.5
+    ],
+    [
+     5,
+     18.1
+    ],
+    [
+     10,
+     55.2
+    ],
+    [
+     15,
+     42.9
+    ],
+    [
+     20,
+     44.3
+    ],
+    [
+     25,
+     47.3
+    ],
+    [
+     30,
+     24.8
+    ],
+    [
+     35,
+     47.1
+    ],
+    [
+     40,
+     39.2
+    ],
+    [
+     45,
+     91.5
+    ],
+    [
+     50,
+     52.8
+    ],
+    [
+     55,
+     45.6
+    ],
+    [
+     60,
+     46.5
+    ],
+    [
+     65,
+     41.6
+    ],
+    [
+     70,
+     36.8
+    ],
+    [
+     75,
+     45.1
+    ],
+    [
+     80,
+     56.0
+    ],
+    [
+     85,
+     47.0
+    ],
+    [
+     90,
+     62.0
+    ],
+    [
+     95,
+     47.5
+    ],
+    [
+     20,
+     47.2
+    ],
+    [
+     25,
+     41.6
+    ],
+    [
+     30,
+     42.9
+    ],
+    [
+     35,
+     41.3
+    ],
+    [
+     40,
+     40.5
+    ],
+    [
+     45,
+     50.0
+    ],
+    [
+     50,
+     51.1
+    ],
+    [
+     55,
+     55.2
+    ],
+    [
+     60,
+     55.1
+    ],
+    [
+     65,
+     55.6
+    ],
+    [
+     70,
+     44.7
+    ],
+    [
+     75,
+     43.1
+    ],
+    [
+     80,
+     45.2
+    ],
+    [
+     85,
+     45.3
+    ],
+    [
+     90,
+     49.4
+    ],
+    [
+     95,
+     51.5
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now plot both. First, highlighted, the raw readings, bouncing around.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "line": [
+      0,
+      50
+     ]
+    },
+    {
+     "say": "Now the filtered signal is highlighted. It hugs the true distance much more closely.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0,
+      50
+     ]
+    },
+    {
+     "say": "A larger window smooths more, but reacts more slowly when the distance really changes.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0,
+      50
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "One gap spoils every window it touches",
+   "values": [
+    "2.04",
+    "NaN",
+    "2.06",
+    "1.95",
+    "2.03",
+    "1.99",
+    "2.08",
+    "1.96"
+   ],
+   "beats": [
+    {
+     "say": "Sensors also fail now and then. That's sensor dropout. A missing reading is stored as N a N, not a number.",
+     "hl": 1
+    },
+    {
+     "say": "The first window contains the N a N, so its average is N a N.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "gone": [
+      1
+     ],
+     "note": "avg = NaN"
+    },
+    {
+     "say": "So is the second. Any window that touches the gap is ruined.",
+     "hl": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "gone": [
+      1
+     ],
+     "note": "avg = NaN"
+    },
+    {
+     "say": "The fix: interpolation. Estimate the gap from its neighbours, two point zero four and two point zero six.",
+     "hl": [
+      0,
+      2
+     ],
+     "note": "(2.04 + 2.06) / 2 = 2.05"
+    },
+    {
+     "say": "The gap becomes two point zero five. Now there are no N a N values left.",
+     "vals": [
+      "2.04",
+      "2.05",
+      "2.06",
+      "1.95",
+      "2.03",
+      "1.99",
+      "2.08",
+      "1.96"
+     ],
+     "ok": [
+      1
+     ],
+     "note": "Missing after repair: 0"
+    },
+    {
+     "say": "And only then do you smooth. So repair first, filter second.",
+     "vals": [
+      "2.04",
+      "2.05",
+      "2.06",
+      "1.95",
+      "2.03",
+      "1.99",
+      "2.08",
+      "1.96"
+     ],
+     "ok": [
+      1
+     ],
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "avg = 2.03"
     }
    ]
   },
@@ -794,7 +1470,7 @@ coordinate_transform_project/
   {
    "kind": "list",
    "art": "target",
-   "kicker": "Concept",
+   "kicker": "Concept · Step 2",
    "title": "Two frames",
    "items": [
     [
@@ -822,71 +1498,173 @@ coordinate_transform_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Robot frame to world frame",
-   "file": "transforms",
-   "code": "def rotation_matrix(theta):\n    return np.array([\n        [np.cos(theta), -np.sin(theta)],\n        [np.sin(theta),  np.cos(theta)]\n    ])\n\ndef robot_to_world(point_robot_frame, robot_position, robot_theta):\n    R = rotation_matrix(robot_theta)\n    return R @ point_robot_frame + robot_position",
-   "beats": [
-    {
-     "say": "A rotation matrix rotates a point by an angle, theta, using basic trigonometry.",
-     "show": 0
-    },
-    {
-     "say": "To go from robot frame to world frame, rotate by the robot's heading, then add the robot's position.",
-     "show": 1
-    },
-    {
-     "say": "The at sign performs matrix multiplication, combining rotation and translation in one step.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "loop",
-   "kicker": "Lab · Step 5",
-   "title": "And back again",
-   "file": "transforms",
-   "code": "def world_to_robot(point_world_frame, robot_position, robot_theta):\n    R = rotation_matrix(robot_theta)\n    return R.T @ (point_world_frame - robot_position)",
-   "beats": [
-    {
-     "say": "Going back, subtract the robot's position first.",
-     "show": 0
-    },
-    {
-     "say": "Then multiply by R dot T, the transpose, which reverses the rotation.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "test",
+   "kind": "chart",
    "kicker": "Lab · Step 6",
-   "title": "Prove it with a round trip",
-   "steps": [
-    "Robot at (5, 3), facing 90°",
-    "Point 2 m ahead → world frame",
-    "Back to robot frame = original"
+   "title": "Where is the point, in the room?",
+   "xlabel": "world x (0 to 10 m)",
+   "ylabel": "world y (0 to 10 m)",
+   "points": [
+    [
+     50,
+     30
+    ],
+    [
+     50,
+     50
+    ]
    ],
    "beats": [
     {
-     "say": "Test with a concrete example.",
-     "show": 0
+     "say": "Here's the room, in world coordinates. The robot sits at five, three.",
+     "groups": [
+      2,
+      3
+     ]
     },
     {
-     "say": "The robot sits at five, three, facing ninety degrees, and sees a point two meters ahead.",
-     "show": 1
+     "say": "It's facing ninety degrees, which points straight up the y axis.",
+     "groups": [
+      2,
+      3
+     ]
     },
     {
-     "say": "Convert that point to the world frame.",
-     "show": 2
+     "say": "Its sensor sees something two meters straight ahead. In the robot's own frame, that's simply two, zero.",
+     "groups": [
+      2,
+      3
+     ]
     },
     {
-     "say": "Then convert it back. It should match the original.",
-     "show": 3
+     "say": "In the room, though, the point lands at five, five: two meters up from the robot.",
+     "groups": [
+      2,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 3 to 6",
+   "title": "The round trip, one operation at a time",
+   "columns": [
+    "Operation",
+    "x",
+    "y"
+   ],
+   "rows": [
+    [
+     "Point, robot frame",
+     "2",
+     "0"
+    ],
+    [
+     "Rotate by 90°",
+     "0",
+     "2"
+    ],
+    [
+     "Add (5, 3)",
+     "5",
+     "5"
+    ],
+    [
+     "Subtract (5, 3)",
+     "0",
+     "2"
+    ],
+    [
+     "Rotate back with R.T",
+     "2",
+     "0"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Start with the point in the robot frame: two, zero.",
+     "hl": 0
+    },
+    {
+     "say": "Robot to world, part one: multiply by the rotation matrix for ninety degrees. Two, zero turns into zero, two.",
+     "sql": "world = R @ point + robot_position",
+     "hl": 1
+    },
+    {
+     "say": "Part two: add the robot's position, five, three. The world point is five, five.",
+     "hl": 2
+    },
+    {
+     "say": "Now go back. World to robot subtracts the robot's position first. Zero, two again.",
+     "sql": "robot = R.T @ (world - robot_position)",
+     "hl": 3
+    },
+    {
+     "say": "Then R dot T, the transpose, undoes the rotation. Two, zero: the original point.",
+     "hl": 4
+    },
+    {
+     "say": "Same start, same finish. That's your proof both functions are right.",
+     "hl": [
+      0,
+      4
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 6",
+   "title": "Run the round trip",
+   "file": "transforms.py",
+   "code": "robot_position = np.array([5.0, 3.0])\nrobot_theta = np.pi / 2  # facing 90 degrees\npoint_in_robot_frame = np.array([2.0, 0.0])\n\nworld_point = robot_to_world(\n    point_in_robot_frame, robot_position,\n    robot_theta)\nprint(\"Point in world frame:\", world_point)\n\nback_to_robot = world_to_robot(\n    world_point, robot_position, robot_theta)\nprint(\"Back to robot frame:\", back_to_robot)",
+   "beats": [
+    {
+     "say": "Set up the example: robot at five, three, facing pi over two radians, which is ninety degrees.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "robot_position": "[5. 3.]",
+      "robot_theta": 1.5708
+     }
+    },
+    {
+     "say": "The point is two meters ahead, in the robot frame.",
+     "line": 3,
+     "vars": {
+      "point_in_robot_frame": "[2. 0.]"
+     }
+    },
+    {
+     "say": "Convert it to the world frame, and print it. Five, five, just as we worked out.",
+     "line": [
+      5,
+      6,
+      7,
+      8
+     ],
+     "vars": {
+      "world_point": "[5. 5.]"
+     },
+     "out": "Point in world frame: [5. 5.]"
+    },
+    {
+     "say": "Now convert it back.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "back_to_robot": "[2. 1.2e-16]"
+     }
+    },
+    {
+     "say": "Two, and a number times ten to the minus sixteen. That's tiny floating point rounding: effectively zero. It matches.",
+     "line": 12,
+     "out": "Back to robot frame: [2.0000000e+00 1.2246468e-16]"
     }
    ]
   },
@@ -1150,93 +1928,811 @@ object_detection_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "palette",
-   "kicker": "Lab · Step 3",
-   "title": "Find red with HSV",
-   "file": "object_detection",
-   "code": "hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\nlower_red = np.array([0, 120, 70])\nupper_red = np.array([10, 255, 255])\nmask = cv2.inRange(hsv, lower_red, upper_red)",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Concept · Steps 2 to 5",
+   "title": "From camera frame to distance",
+   "nodes": [
     {
-     "say": "Open C V stores images as B G R, blue green red, not R G B.",
-     "show": 0
+     "id": "frame",
+     "label": "Camera frame",
+     "x": 12,
+     "y": 25,
+     "sub": "BGR pixels",
+     "art": "camera"
     },
     {
-     "say": "Convert the frame to H S V: hue, saturation, value. Hue separates color from brightness.",
-     "show": 1
+     "id": "hsv",
+     "label": "HSV image",
+     "x": 50,
+     "y": 25,
+     "sub": "hue, sat, value",
+     "art": "palette"
     },
     {
-     "say": "Then in range builds a mask of the pixels inside a red range.",
-     "show": 1
+     "id": "mask",
+     "label": "Red mask",
+     "x": 88,
+     "y": 25,
+     "sub": "white where red",
+     "art": "pixels"
+    },
+    {
+     "id": "cont",
+     "label": "Contour",
+     "x": 88,
+     "y": 75,
+     "sub": "outline of a region",
+     "art": "target"
+    },
+    {
+     "id": "box",
+     "label": "Bounding box",
+     "x": 50,
+     "y": 75,
+     "sub": "smallest rectangle",
+     "art": "boxes"
+    },
+    {
+     "id": "dist",
+     "label": "Distance",
+     "x": 12,
+     "y": 75,
+     "sub": "from apparent size",
+     "art": "calc"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "target",
-   "kicker": "Lab · Step 4",
-   "title": "Contours and a bounding box",
-   "file": "object_detection",
-   "code": "contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\nif contours:\n    largest = max(contours, key=cv2.contourArea)\n    x, y, w, h = cv2.boundingRect(largest)\n    print(f\"Object detected at ({x}, {y}), size {w}x{h}\")\nelse:\n    print(\"No red object found. Check the color range in Step 3.\")",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "A contour is the outline of a connected region in the mask.",
-     "show": 0
+     "from": "frame",
+     "to": "hsv"
     },
     {
-     "say": "Take the largest one, and find its bounding box: the smallest rectangle that contains it.",
-     "show": 1
+     "from": "hsv",
+     "to": "mask"
     },
     {
-     "say": "If nothing is found, check the color range.",
-     "show": 1
+     "from": "mask",
+     "to": "cont"
+    },
+    {
+     "from": "cont",
+     "to": "box"
+    },
+    {
+     "from": "box",
+     "to": "dist"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · Step 5",
-   "title": "Distance from apparent size",
-   "file": "object_detection",
-   "code": "def estimate_distance(pixel_width, known_object_width=0.1, focal_length=500):\n    return (known_object_width * focal_length) / pixel_width",
-   "beats": [
-    {
-     "say": "Objects look smaller the farther away they are.",
-     "show": 0
-    },
-    {
-     "say": "Given the object's real width, ten centimeters here, and the camera's focal length in pixels, you can estimate distance.",
-     "show": 1
-    },
-    {
-     "say": "Five hundred is a rough guess, so treat the result as an estimate until you calibrate it.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "eye",
-   "kicker": "Lab · Steps 6 to 8",
-   "title": "Verify, test, smooth",
-   "steps": [
-    "Draw the box to verify",
-    "Test varied photos",
-    "Smooth across frames"
    ],
    "beats": [
     {
-     "say": "Draw a green box on the frame. It should sit tightly around the object.",
-     "show": 1
+     "say": "The pipeline has six stages. It starts with a camera frame. Open C V stores it as B G R: blue, green, red.",
+     "show": 1,
+     "on": "frame"
     },
     {
-     "say": "Wrap the steps into one function, and test it on photos: close, far, partly hidden, and in different lighting.",
-     "show": 2
+     "say": "Convert it to H S V: hue, saturation, value.",
+     "show": 2,
+     "on": "hsv",
+     "send": {
+      "from": "frame",
+      "to": "hsv",
+      "label": "cvtColor"
+     }
     },
     {
-     "say": "Each frame's distance is a little noisy, so smooth estimates over time with your Project 2 moving average.",
-     "show": 3
+     "say": "Keep only pixels in the red range. That gives a mask: white where it's red, black everywhere else.",
+     "show": 3,
+     "on": "mask",
+     "send": {
+      "from": "hsv",
+      "to": "mask",
+      "label": "inRange"
+     }
+    },
+    {
+     "say": "Find the outline of each white region. That's a contour.",
+     "show": 4,
+     "on": "cont",
+     "send": {
+      "from": "mask",
+      "to": "cont",
+      "label": "findContours"
+     }
+    },
+    {
+     "say": "Wrap the biggest one in the smallest rectangle that contains it: the bounding box.",
+     "show": 5,
+     "on": "box",
+     "send": {
+      "from": "cont",
+      "to": "box",
+      "label": "largest"
+     }
+    },
+    {
+     "say": "And the box's width in pixels gives an estimate of distance.",
+     "show": 6,
+     "on": "dist",
+     "send": {
+      "from": "box",
+      "to": "dist",
+      "label": "width 61 px"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Which pixels count as red?",
+   "columns": [
+    "Pixel",
+    "BGR",
+    "HSV",
+    "Red?"
+   ],
+   "rows": [
+    [
+     "Red square",
+     "0, 0, 255",
+     "0, 255, 255",
+     "yes"
+    ],
+    [
+     "Gray background",
+     "200, 200, 200",
+     "0, 0, 200",
+     "no"
+    ],
+    [
+     "Same red, dim light",
+     "0, 0, 120",
+     "0, 255, 120",
+     "yes"
+    ],
+    [
+     "Deep red",
+     "40, 0, 200",
+     "174, 255, 200",
+     "no"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are four pixels, in Open C V's B G R order, and the same pixels converted to H S V."
+    },
+    {
+     "say": "The rule: hue from zero to ten, saturation at least one twenty, value at least seventy.",
+     "sql": "inRange(hsv, [0, 120, 70], [10, 255, 255])",
+     "col": 2
+    },
+    {
+     "say": "The practice frame's red square passes easily.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "The gray background has zero saturation. No colour at all, so it's out.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "Now the same red in dim light. Its value drops, but its hue stays at zero, so it still counts. That's why H S V helps.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "A deep red has hue one seventy four. Red wraps around the end of the hue scale, so for deep reds, also try one seventy to one seventy nine.",
+     "hl": 3,
+     "col": 2
+    },
+    {
+     "say": "So the mask keeps just the red square.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 3
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Find the box, then the distance",
+   "file": "object_detection.py",
+   "code": "contours, _ = cv2.findContours(\n    mask, cv2.RETR_EXTERNAL,\n    cv2.CHAIN_APPROX_SIMPLE)\nif contours:\n    largest = max(contours, key=cv2.contourArea)\n    x, y, w, h = cv2.boundingRect(largest)\n    print(f\"Object detected at ({x}, {y}), \"\n          f\"size {w}x{h}\")\nelse:\n    print(\"No red object found. \"\n          \"Check the color range in Step 3.\")\nif contours:\n    print(f\"Estimated distance: \"\n          f\"{estimate_distance(w):.2f} m\")",
+   "beats": [
+    {
+     "say": "Run this on the practice frame. find contours returns the outline of every white region in the mask.",
+     "line": [
+      1,
+      2,
+      3
+     ],
+     "vars": {
+      "len(contours)": 1
+     }
+    },
+    {
+     "say": "There's at least one, so keep the largest.",
+     "line": [
+      4,
+      5
+     ]
+    },
+    {
+     "say": "Its bounding box starts at three hundred, two hundred. It's sixty one pixels wide and tall, because the square covers pixels three hundred to three sixty, inclusive.",
+     "line": 6,
+     "vars": {
+      "x": 300,
+      "y": 200,
+      "w": 61,
+      "h": 61
+     }
+    },
+    {
+     "say": "Print it.",
+     "line": [
+      7,
+      8
+     ],
+     "out": "Object detected at (300, 200), size 61x61"
+    },
+    {
+     "say": "If nothing had matched, you'd get the hint to check the colour range instead.",
+     "line": [
+      9,
+      10,
+      11
+     ]
+    },
+    {
+     "say": "Now the distance: real width, zero point one meters, times the focal length, five hundred pixels, divided by sixty one. About zero point eight two meters.",
+     "line": [
+      12,
+      13,
+      14
+     ],
+     "out": "Estimated distance: 0.82 m"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 5",
+   "title": "Smaller in the picture means farther away",
+   "columns": [
+    "Width in pixels",
+    "Distance"
+   ],
+   "rows": [
+    [
+     "100",
+     "0.50 m"
+    ],
+    [
+     "61",
+     "0.82 m"
+    ],
+    [
+     "50",
+     "1.00 m"
+    ],
+    [
+     "25",
+     "2.00 m"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The formula: real width times focal length, divided by the width in pixels.",
+     "sql": "distance = (0.1 * 500) / pixel_width"
+    },
+    {
+     "say": "If the ten centimeter object looks a hundred pixels wide, it's half a meter away.",
+     "hl": 0
+    },
+    {
+     "say": "Our practice square, sixty one pixels: zero point eight two meters.",
+     "hl": 1
+    },
+    {
+     "say": "Half the width, fifty pixels, means twice the distance: one meter.",
+     "hl": 2
+    },
+    {
+     "say": "Half again, twice as far: two meters.",
+     "hl": 3
+    },
+    {
+     "say": "Five hundred is only a rough guess for a phone camera, so treat these as estimates until you calibrate with an object at a measured distance.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 8",
+   "title": "Smooth the distance across frames",
+   "xlabel": "frame (0 to 29)",
+   "ylabel": "distance (0.7 to 2.3 m)",
+   "points": [
+    [
+     0.0,
+     81.3
+    ],
+    [
+     3.4,
+     80.6
+    ],
+    [
+     6.9,
+     75.6
+    ],
+    [
+     10.3,
+     70.3
+    ],
+    [
+     13.8,
+     70.4
+    ],
+    [
+     17.2,
+     65.5
+    ],
+    [
+     20.7,
+     68.6
+    ],
+    [
+     24.1,
+     72.9
+    ],
+    [
+     27.6,
+     61.5
+    ],
+    [
+     31.0,
+     58.8
+    ],
+    [
+     34.5,
+     62.1
+    ],
+    [
+     37.9,
+     59.3
+    ],
+    [
+     41.4,
+     55.9
+    ],
+    [
+     44.8,
+     48.6
+    ],
+    [
+     48.3,
+     50.9
+    ],
+    [
+     51.7,
+     52.4
+    ],
+    [
+     55.2,
+     40.0
+    ],
+    [
+     58.6,
+     42.3
+    ],
+    [
+     62.1,
+     33.0
+    ],
+    [
+     65.5,
+     33.9
+    ],
+    [
+     69.0,
+     28.9
+    ],
+    [
+     72.4,
+     34.8
+    ],
+    [
+     75.9,
+     27.5
+    ],
+    [
+     79.3,
+     33.0
+    ],
+    [
+     82.8,
+     30.3
+    ],
+    [
+     86.2,
+     26.4
+    ],
+    [
+     89.7,
+     12.6
+    ],
+    [
+     93.1,
+     20.4
+    ],
+    [
+     96.6,
+     20.7
+    ],
+    [
+     100.0,
+     19.3
+    ],
+    [
+     13.8,
+     75.6
+    ],
+    [
+     17.2,
+     72.5
+    ],
+    [
+     20.7,
+     70.1
+    ],
+    [
+     24.1,
+     69.5
+    ],
+    [
+     27.6,
+     67.8
+    ],
+    [
+     31.0,
+     65.5
+    ],
+    [
+     34.5,
+     64.8
+    ],
+    [
+     37.9,
+     62.9
+    ],
+    [
+     41.4,
+     59.5
+    ],
+    [
+     44.8,
+     56.9
+    ],
+    [
+     48.3,
+     55.4
+    ],
+    [
+     51.7,
+     53.4
+    ],
+    [
+     55.2,
+     49.6
+    ],
+    [
+     58.6,
+     46.9
+    ],
+    [
+     62.1,
+     43.7
+    ],
+    [
+     65.5,
+     40.3
+    ],
+    [
+     69.0,
+     35.6
+    ],
+    [
+     72.4,
+     34.6
+    ],
+    [
+     75.9,
+     31.6
+    ],
+    [
+     79.3,
+     31.6
+    ],
+    [
+     82.8,
+     30.9
+    ],
+    [
+     86.2,
+     30.4
+    ],
+    [
+     89.7,
+     26.0
+    ],
+    [
+     93.1,
+     24.6
+    ],
+    [
+     96.6,
+     22.1
+    ],
+    [
+     100.0,
+     19.9
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A video is a series of frames. Here a robot drives from two meters to one meter over thirty frames.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "The dots are the per-frame estimates. Each one is a little noisy.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "Your Project 2 moving average smooths them. The smoothed values start at frame four, once there are five frames to average.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "That steadier distance is what the robot should act on.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
     }
    ]
   },
@@ -1259,7 +2755,7 @@ object_detection_project/
      "show": 0
     },
     {
-     "say": "Why convert the image to HSV before looking for a red object?",
+     "say": "Why convert the image to H S V before looking for a red object?",
      "show": 0
     },
     {
@@ -1485,105 +2981,1807 @@ path_planning_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Concept",
-   "title": "A grid and A star",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 3 to 5",
+   "title": "How A star scores a cell",
+   "columns": [
+    "Cell",
+    "g so far",
+    "h left",
+    "f = g + h"
+   ],
+   "rows": [
     [
-     "Grid map",
-     "0 = free, 1 = obstacle"
+     "(0, 0) start",
+     "0",
+     "18",
+     "18"
     ],
     [
-     "A*",
-     "Most promising cells first"
+     "(1, 0)",
+     "1",
+     "17",
+     "18"
     ],
     [
-     "Heuristic",
-     "Estimate of distance left"
+     "(0, 1)",
+     "1",
+     "17",
+     "18"
     ],
     [
-     "Manhattan distance",
-     "|rows| + |columns|"
+     "(4, 4) wall",
+     "",
+     "",
+     "skipped"
+    ],
+    [
+     "(9, 9) goal",
+     "18",
+     "0",
+     "18"
     ]
    ],
    "beats": [
     {
-     "say": "A grid map represents the environment as cells: zero is free space, one is an obstacle.",
-     "show": 1
+     "say": "The map is a ten by ten grid. Zero is free space, one is an obstacle. Start at the top left, zero zero. The goal is nine nine."
     },
     {
-     "say": "A star finds the shortest path by exploring the most promising cells first.",
-     "show": 2
+     "say": "A star scores every cell it reaches. g is the number of moves taken so far.",
+     "col": 1
     },
     {
-     "say": "It's guided by a heuristic, an estimate of the distance left to the goal.",
-     "show": 3
+     "say": "h is the heuristic: an estimate of the moves left. Here it's Manhattan distance, rows apart plus columns apart.",
+     "sql": "h = |row - 9| + |col - 9|",
+     "col": 2
     },
     {
-     "say": "Here that's Manhattan distance: the rows plus the columns between two cells, right for grid moves without diagonals.",
-     "show": 4
+     "say": "From the start, that's nine plus nine, eighteen.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "The start has two free neighbours. Each is one move away, with seventeen left. Both score eighteen.",
+     "sql": "f = g + h",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 3
+    },
+    {
+     "say": "A priority queue always hands back the lowest score next, so the most promising cell is explored first.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 3
+    },
+    {
+     "say": "Obstacle cells are never added at all.",
+     "hl": 3
+    },
+    {
+     "say": "When the goal comes off the queue, the search stops, and it follows the saved steps back to the start.",
+     "hl": 4,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "stack",
-   "kicker": "Lab · Step 5",
-   "title": "The heart of A star",
-   "file": "path_planning",
-   "code": "for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:\n    neighbor = (current[0]+dx, current[1]+dy)\n    if 0 <= neighbor[0] < grid.shape[0] and 0 <= neighbor[1] < grid.shape[1] and grid[neighbor] == 0:\n        tentative_g = g_score[current] + 1\n        if neighbor not in g_score or tentative_g < g_score[neighbor]:\n            g_score[neighbor] = tentative_g\n            f_score = tentative_g + heuristic(neighbor, goal)\n            heapq.heappush(open_set, (f_score, neighbor))\n            came_from[neighbor] = current",
+   "kind": "chart",
+   "kicker": "Lab · Step 6",
+   "title": "The first grid: 18 moves",
+   "xlabel": "column",
+   "ylabel": "row (0 at top)",
+   "points": [
+    [
+     45,
+     65
+    ],
+    [
+     45,
+     55
+    ],
+    [
+     45,
+     45
+    ],
+    [
+     45,
+     35
+    ],
+    [
+     5,
+     95
+    ],
+    [
+     15,
+     95
+    ],
+    [
+     25,
+     95
+    ],
+    [
+     35,
+     95
+    ],
+    [
+     45,
+     95
+    ],
+    [
+     55,
+     95
+    ],
+    [
+     65,
+     95
+    ],
+    [
+     75,
+     95
+    ],
+    [
+     85,
+     95
+    ],
+    [
+     95,
+     95
+    ],
+    [
+     95,
+     85
+    ],
+    [
+     95,
+     75
+    ],
+    [
+     95,
+     65
+    ],
+    [
+     95,
+     55
+    ],
+    [
+     95,
+     45
+    ],
+    [
+     95,
+     35
+    ],
+    [
+     95,
+     25
+    ],
+    [
+     95,
+     15
+    ],
+    [
+     95,
+     5
+    ]
+   ],
    "beats": [
     {
-     "say": "A priority queue, from heap q, always hands back the most promising cell next.",
-     "show": 0
+     "say": "Here's the first grid. The dark dots are a wall, four cells tall, in column four.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     },
     {
-     "say": "Its score is the distance traveled so far, plus the heuristic's estimate of what's left.",
-     "show": 1
+     "say": "A star sets off along the top row.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     },
     {
-     "say": "For each free neighbor, if this route is shorter, record it and push it onto the queue.",
-     "show": 1
+     "say": "Then straight down the right side to the goal.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
+    },
+    {
+     "say": "Eighteen moves: exactly the Manhattan distance from corner to corner, because the wall doesn't block every shortest route.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "flag",
-   "kicker": "Lab · Steps 6 and 7",
-   "title": "18 moves, then a maze",
-   "big": "18 moves",
-   "sub": "then zigzag through a maze, checked by assert",
+   "kind": "chart",
+   "kicker": "Lab · Step 7",
+   "title": "A maze makes it zigzag",
+   "xlabel": "column",
+   "ylabel": "row (0 at top)",
+   "points": [
+    [
+     5,
+     75
+    ],
+    [
+     15,
+     75
+    ],
+    [
+     25,
+     75
+    ],
+    [
+     35,
+     75
+    ],
+    [
+     45,
+     75
+    ],
+    [
+     55,
+     75
+    ],
+    [
+     65,
+     75
+    ],
+    [
+     75,
+     75
+    ],
+    [
+     25,
+     45
+    ],
+    [
+     35,
+     45
+    ],
+    [
+     45,
+     45
+    ],
+    [
+     55,
+     45
+    ],
+    [
+     65,
+     45
+    ],
+    [
+     75,
+     45
+    ],
+    [
+     85,
+     45
+    ],
+    [
+     95,
+     45
+    ],
+    [
+     5,
+     15
+    ],
+    [
+     15,
+     15
+    ],
+    [
+     25,
+     15
+    ],
+    [
+     35,
+     15
+    ],
+    [
+     45,
+     15
+    ],
+    [
+     55,
+     15
+    ],
+    [
+     65,
+     15
+    ],
+    [
+     75,
+     15
+    ],
+    [
+     5,
+     95
+    ],
+    [
+     15,
+     95
+    ],
+    [
+     25,
+     95
+    ],
+    [
+     35,
+     95
+    ],
+    [
+     45,
+     95
+    ],
+    [
+     55,
+     95
+    ],
+    [
+     65,
+     95
+    ],
+    [
+     75,
+     95
+    ],
+    [
+     85,
+     95
+    ],
+    [
+     85,
+     85
+    ],
+    [
+     85,
+     75
+    ],
+    [
+     85,
+     65
+    ],
+    [
+     85,
+     55
+    ],
+    [
+     75,
+     55
+    ],
+    [
+     65,
+     55
+    ],
+    [
+     55,
+     55
+    ],
+    [
+     45,
+     55
+    ],
+    [
+     35,
+     55
+    ],
+    [
+     25,
+     55
+    ],
+    [
+     15,
+     55
+    ],
+    [
+     15,
+     45
+    ],
+    [
+     15,
+     35
+    ],
+    [
+     25,
+     35
+    ],
+    [
+     35,
+     35
+    ],
+    [
+     45,
+     35
+    ],
+    [
+     55,
+     35
+    ],
+    [
+     65,
+     35
+    ],
+    [
+     75,
+     35
+    ],
+    [
+     85,
+     35
+    ],
+    [
+     95,
+     35
+    ],
+    [
+     95,
+     25
+    ],
+    [
+     95,
+     15
+    ],
+    [
+     95,
+     5
+    ]
+   ],
    "beats": [
     {
-     "say": "On the first grid, the shortest path is eighteen moves, corner to corner, because the wall doesn't block every shortest route.",
-     "show": 0
+     "say": "Now a maze: three walls, with gaps on the right, the left, then the right.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     },
     {
-     "say": "Then try a maze. The path zigzags through the gaps, and an assert confirms no step is inside an obstacle.",
-     "show": 1
+     "say": "The path runs right, and drops through the first gap.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
+    },
+    {
+     "say": "Back left, all the way to the second gap.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
+    },
+    {
+     "say": "Then right again, and down to the goal. Thirty two moves.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
+    },
+    {
+     "say": "The assert checks that no cell on the path is an obstacle. It passes.",
+     "groups": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "cross",
+   "kind": "chart",
    "kicker": "Lab · Step 8",
    "title": "When there's no way through",
-   "quote": "Unreachable goal → astar returns None. Check before you move.",
+   "xlabel": "column",
+   "ylabel": "row (0 at top)",
+   "points": [
+    [
+     85,
+     15
+    ],
+    [
+     95,
+     15
+    ],
+    [
+     85,
+     5
+    ],
+    [
+     5,
+     95
+    ],
+    [
+     15,
+     95
+    ],
+    [
+     25,
+     95
+    ],
+    [
+     35,
+     95
+    ],
+    [
+     45,
+     95
+    ],
+    [
+     55,
+     95
+    ],
+    [
+     65,
+     95
+    ],
+    [
+     75,
+     95
+    ],
+    [
+     85,
+     95
+    ],
+    [
+     95,
+     95
+    ],
+    [
+     5,
+     85
+    ],
+    [
+     15,
+     85
+    ],
+    [
+     25,
+     85
+    ],
+    [
+     35,
+     85
+    ],
+    [
+     45,
+     85
+    ],
+    [
+     55,
+     85
+    ],
+    [
+     65,
+     85
+    ],
+    [
+     75,
+     85
+    ],
+    [
+     85,
+     85
+    ],
+    [
+     95,
+     85
+    ],
+    [
+     5,
+     75
+    ],
+    [
+     15,
+     75
+    ],
+    [
+     25,
+     75
+    ],
+    [
+     35,
+     75
+    ],
+    [
+     45,
+     75
+    ],
+    [
+     55,
+     75
+    ],
+    [
+     65,
+     75
+    ],
+    [
+     75,
+     75
+    ],
+    [
+     85,
+     75
+    ],
+    [
+     95,
+     75
+    ],
+    [
+     5,
+     65
+    ],
+    [
+     15,
+     65
+    ],
+    [
+     25,
+     65
+    ],
+    [
+     35,
+     65
+    ],
+    [
+     45,
+     65
+    ],
+    [
+     55,
+     65
+    ],
+    [
+     65,
+     65
+    ],
+    [
+     75,
+     65
+    ],
+    [
+     85,
+     65
+    ],
+    [
+     95,
+     65
+    ],
+    [
+     5,
+     55
+    ],
+    [
+     15,
+     55
+    ],
+    [
+     25,
+     55
+    ],
+    [
+     35,
+     55
+    ],
+    [
+     45,
+     55
+    ],
+    [
+     55,
+     55
+    ],
+    [
+     65,
+     55
+    ],
+    [
+     75,
+     55
+    ],
+    [
+     85,
+     55
+    ],
+    [
+     95,
+     55
+    ],
+    [
+     5,
+     45
+    ],
+    [
+     15,
+     45
+    ],
+    [
+     25,
+     45
+    ],
+    [
+     35,
+     45
+    ],
+    [
+     45,
+     45
+    ],
+    [
+     55,
+     45
+    ],
+    [
+     65,
+     45
+    ],
+    [
+     75,
+     45
+    ],
+    [
+     85,
+     45
+    ],
+    [
+     95,
+     45
+    ],
+    [
+     5,
+     35
+    ],
+    [
+     15,
+     35
+    ],
+    [
+     25,
+     35
+    ],
+    [
+     35,
+     35
+    ],
+    [
+     45,
+     35
+    ],
+    [
+     55,
+     35
+    ],
+    [
+     65,
+     35
+    ],
+    [
+     75,
+     35
+    ],
+    [
+     85,
+     35
+    ],
+    [
+     95,
+     35
+    ],
+    [
+     5,
+     25
+    ],
+    [
+     15,
+     25
+    ],
+    [
+     25,
+     25
+    ],
+    [
+     35,
+     25
+    ],
+    [
+     45,
+     25
+    ],
+    [
+     55,
+     25
+    ],
+    [
+     65,
+     25
+    ],
+    [
+     75,
+     25
+    ],
+    [
+     85,
+     25
+    ],
+    [
+     95,
+     25
+    ],
+    [
+     5,
+     15
+    ],
+    [
+     15,
+     15
+    ],
+    [
+     25,
+     15
+    ],
+    [
+     35,
+     15
+    ],
+    [
+     45,
+     15
+    ],
+    [
+     55,
+     15
+    ],
+    [
+     65,
+     15
+    ],
+    [
+     75,
+     15
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     15,
+     5
+    ],
+    [
+     25,
+     5
+    ],
+    [
+     35,
+     5
+    ],
+    [
+     45,
+     5
+    ],
+    [
+     55,
+     5
+    ],
+    [
+     65,
+     5
+    ],
+    [
+     75,
+     5
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, wall in the goal.",
-     "show": 0
+     "say": "Finally, wall in the goal. Three obstacle cells close off its top and its left.",
+     "groups": [
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     },
     {
-     "say": "A star explores every reachable cell, runs out of options, and returns None, instead of crashing or looping forever.",
-     "show": 1
+     "say": "A star explores every cell it can reach: all ninety six free ones.",
+     "groups": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
+    },
+    {
+     "say": "The queue runs empty, so it returns None, instead of crashing or looping forever.",
+     "groups": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     },
     {
      "say": "Any code that uses the planner must check for None before moving.",
-     "show": 1
+     "groups": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       95
+      ],
+      [
+       95,
+       5
+      ]
+     ]
     }
    ]
   },
@@ -1606,7 +4804,7 @@ path_planning_project/
      "show": 0
     },
     {
-     "say": "What does astar return when the goal is unreachable?",
+     "say": "What does A star return when the goal is unreachable?",
      "show": 0
     },
     {
@@ -1826,122 +5024,596 @@ rl_agent_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Concept",
-   "title": "The R L framing",
-   "items": [
-    [
-     "Agent",
-     "Takes actions"
-    ],
-    [
-     "Reward",
-     "1 for the goal, 0 otherwise"
-    ],
-    [
-     "Policy",
-     "Strategy for choosing actions"
-    ]
+   "kind": "diagram",
+   "kicker": "Concept · Steps 2 and 3",
+   "title": "Agent, environment, reward",
+   "nodes": [
+    {
+     "id": "agent",
+     "label": "Agent",
+     "x": 20,
+     "y": 50,
+     "sub": "Q-table policy",
+     "art": "robot"
+    },
+    {
+     "id": "env",
+     "label": "Frozen Lake",
+     "x": 80,
+     "y": 50,
+     "sub": "4 by 4 grid",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "agent",
+     "to": "env"
+    }
    ],
    "beats": [
     {
-     "say": "An agent takes actions in an environment.",
-     "show": 1
-    },
-    {
-     "say": "After each action, it gets a reward.",
+     "say": "In reinforcement learning, an agent acts in an environment.",
      "show": 2
     },
     {
-     "say": "The goal is to learn a policy, a strategy for choosing actions, that maximizes total reward over time.",
-     "show": 3
+     "say": "Here the environment is Frozen Lake, from Gymnasium: a four by four grid of ice, with holes, and a goal in the far corner.",
+     "on": "env"
     },
     {
-     "say": "You'll use Frozen Lake from Gymnasium: reach the goal and avoid the holes. Reaching the goal scores one, anything else zero.",
-     "show": 3
+     "say": "The agent picks one of four actions: left, down, right, or up.",
+     "on": "agent",
+     "send": {
+      "from": "agent",
+      "to": "env",
+      "label": "action: right"
+     }
+    },
+    {
+     "say": "The environment replies with the new state, one of sixteen squares, and a reward.",
+     "on": "env",
+     "send": {
+      "from": "env",
+      "to": "agent",
+      "label": "state, reward"
+     }
+    },
+    {
+     "say": "Reaching the goal scores one. Anything else scores zero.",
+     "on": "env"
+    },
+    {
+     "say": "The agent's job is to learn a policy, a rule for choosing actions, that collects the most reward over time.",
+     "on": "agent"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "walk",
    "kicker": "Lab · Step 4",
-   "title": "Q-learning",
-   "file": "rl_agent",
-   "code": "q_table = np.zeros((env.observation_space.n, env.action_space.n))\n\n# inside the training loop, after each action:\nfuture = 0 if terminated else discount_factor * np.max(q_table[next_state])\nq_table[state, action] += learning_rate * (reward + future - q_table[state, action])",
+   "title": "One Q-learning update",
+   "file": "rl_agent.py",
+   "code": "action = choose_action(state, epsilon)\n(next_state, reward, terminated,\n truncated, _) = env.step(action)\nfuture = 0 if terminated else (\n    discount_factor * np.max(q_table[next_state]))\nq_table[state, action] += learning_rate * (\n    reward + future - q_table[state, action])\nstate = next_state",
    "beats": [
     {
-     "say": "Q-learning keeps a table of expected future reward for every state and action pair.",
-     "show": 0
+     "say": "The Q-table starts as all zeros: sixteen states by four actions. The agent knows nothing.",
+     "vars": {
+      "q_table[14, 2]": 0.0
+     }
     },
     {
-     "say": "After every action, it nudges that entry toward the reward received, plus the best future value.",
-     "show": 1
+     "say": "In the real run, the first success comes about three hundred episodes in. The agent is on square fourteen, and picks action two: right.",
+     "line": 1,
+     "vars": {
+      "state": 14,
+      "action": 2
+     }
     },
     {
-     "say": "At a terminal state, there's no future reward to add.",
-     "show": 1
+     "say": "It steps onto the goal, square fifteen. Reward one, and the episode has ended.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "next_state": 15,
+      "reward": 1,
+      "terminated": true
+     }
+    },
+    {
+     "say": "At a terminal state there's no future reward to add, so future is zero.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "future": 0
+     }
+    },
+    {
+     "say": "The entry moves part way toward the target: learning rate zero point eight, times one plus zero minus zero. Zero point eight.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "q_table[14, 2]": 0.8
+     }
+    },
+    {
+     "say": "Now suppose the agent later moves right from square thirteen onto fourteen. The reward is zero, but the future is zero point nine five times zero point eight: zero point seven six.",
+     "line": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "vars": {
+      "state": 13,
+      "action": 2,
+      "next_state": 14,
+      "reward": 0,
+      "terminated": false,
+      "future": 0.76
+     }
+    },
+    {
+     "say": "So that entry becomes zero point eight times zero point seven six, about zero point six one. Value flows backwards from the goal.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "q_table[13, 2]": 0.608
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
+   "kind": "chart",
    "kicker": "Lab · Step 5",
-   "title": "Explore or exploit",
-   "items": [
+   "title": "Explore first, then exploit",
+   "xlabel": "episode (0 to 2000)",
+   "ylabel": "epsilon (%)",
+   "points": [
     [
-     "Explore",
-     "Random action, chance = epsilon"
+     0.0,
+     100.0
     ],
     [
-     "Exploit",
-     "Best-known action"
+     5.0,
+     60.6
     ],
     [
-     "Epsilon",
-     "Starts at 1.0, shrinks to 0.05"
+     10.0,
+     36.7
+    ],
+    [
+     15.0,
+     22.2
+    ],
+    [
+     20.0,
+     13.5
+    ],
+    [
+     25.0,
+     8.2
+    ],
+    [
+     30.0,
+     5.0
+    ],
+    [
+     35.0,
+     5.0
+    ],
+    [
+     40.0,
+     5.0
+    ],
+    [
+     45.0,
+     5.0
+    ],
+    [
+     50.0,
+     5.0
+    ],
+    [
+     55.0,
+     5.0
+    ],
+    [
+     60.0,
+     5.0
+    ],
+    [
+     65.0,
+     5.0
+    ],
+    [
+     70.0,
+     5.0
+    ],
+    [
+     75.0,
+     5.0
+    ],
+    [
+     80.0,
+     5.0
+    ],
+    [
+     85.0,
+     5.0
+    ],
+    [
+     90.0,
+     5.0
+    ],
+    [
+     95.0,
+     5.0
+    ],
+    [
+     100.0,
+     5.0
     ]
    ],
    "beats": [
     {
-     "say": "Choosing an action is an epsilon greedy policy.",
-     "show": 0
+     "say": "Choosing an action uses an epsilon greedy policy. With probability epsilon, pick a random action. That's exploration."
     },
     {
-     "say": "With probability epsilon, try a random action. That's exploration.",
-     "show": 1
+     "say": "Otherwise, pick the best known action. That's exploitation, with ties broken at random."
     },
     {
-     "say": "Otherwise, pick the best known action. That's exploitation.",
-     "show": 2
+     "say": "Epsilon starts at one: always random, because the agent knows nothing yet.",
+     "groups": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Epsilon starts at one, because the agent knows nothing, and shrinks after every episode, down to five percent.",
-     "show": 3
+     "say": "After every episode it's multiplied by zero point nine nine five, so it shrinks quickly at first.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "By about episode six hundred, it hits the floor of five percent, and stays there.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       29.9,
+       5
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "growth",
+   "kind": "table",
    "kicker": "Lab · Steps 6 and 7",
-   "title": "Evaluate, then plot",
-   "big": "100%",
-   "sub": "success rate, with no random moves",
+   "title": "What the agent learned",
+   "columns": [
+    "Square",
+    "Best move",
+    "Q value"
+   ],
+   "rows": [
+    [
+     "0 (start)",
+     "down",
+     "0.774"
+    ],
+    [
+     "4",
+     "down",
+     "0.815"
+    ],
+    [
+     "8",
+     "right",
+     "0.857"
+    ],
+    [
+     "9",
+     "down",
+     "0.902"
+    ],
+    [
+     "13",
+     "right",
+     "0.950"
+    ],
+    [
+     "14",
+     "right",
+     "1.000"
+    ]
+   ],
    "beats": [
     {
-     "say": "Evaluate a hundred runs with no random moves, so you measure what the agent actually learned.",
-     "show": 0
+     "say": "After two thousand episodes, here's the best move the trained table holds for each square on the way to the goal."
     },
     {
-     "say": "On the non-slippery lake, a well-trained agent should reach a hundred percent.",
-     "show": 1
+     "say": "Next to the goal, moving right is worth one: the full reward.",
+     "hl": 5,
+     "col": 2
     },
     {
-     "say": "Then plot a moving average of rewards, your Project 2 idea again. The curve starts near zero and rises.",
-     "show": 2
+     "say": "One step further back, it's zero point nine five: the reward, discounted once.",
+     "hl": 4,
+     "col": 2,
+     "sql": "each step back: × 0.95"
+    },
+    {
+     "say": "Each earlier square is worth zero point nine five times the next one.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "col": 2
+    },
+    {
+     "say": "Evaluation always takes the best move, with no random actions, so it measures what the agent learned. Start, down, down, right, down, right, right: the goal in six moves.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "On the non slippery lake, that's a one hundred percent success rate.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "sql": "Success rate: 100%"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 7",
+   "title": "The learning curve",
+   "xlabel": "episode (0 to 2000)",
+   "ylabel": "success rate (%)",
+   "points": [
+    [
+     2.5,
+     0
+    ],
+    [
+     7.5,
+     0
+    ],
+    [
+     12.4,
+     0
+    ],
+    [
+     17.4,
+     42
+    ],
+    [
+     22.4,
+     88
+    ],
+    [
+     27.4,
+     86
+    ],
+    [
+     32.5,
+     96
+    ],
+    [
+     37.5,
+     92
+    ],
+    [
+     42.5,
+     96
+    ],
+    [
+     47.5,
+     98
+    ],
+    [
+     52.5,
+     98
+    ],
+    [
+     57.5,
+     92
+    ],
+    [
+     62.5,
+     96
+    ],
+    [
+     67.5,
+     94
+    ],
+    [
+     72.5,
+     92
+    ],
+    [
+     77.5,
+     94
+    ],
+    [
+     82.5,
+     94
+    ],
+    [
+     87.5,
+     90
+    ],
+    [
+     92.5,
+     96
+    ],
+    [
+     97.5,
+     94
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each training reward is just zero or one, so the curve is a moving average over fifty episodes: your Project 2 idea again."
+    },
+    {
+     "say": "For the first few hundred episodes it sits at zero. The agent is wandering at random.",
+     "groups": [
+      3,
+      3,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "Once it finds the goal, the values spread back, and the success rate climbs fast.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "It levels off a little below one hundred percent, because during training, at least five percent of actions are still random.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
     }
    ]
   },
@@ -2226,126 +5898,285 @@ behavior_testing_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab · Steps 2 and 3",
-   "title": "Measurable success criteria",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "One trial, repeated many times",
+   "nodes": [
+    {
+     "id": "world",
+     "label": "Random world",
+     "x": 15,
+     "y": 25,
+     "sub": "obstacles, start, goal",
+     "art": "blocks"
+    },
+    {
+     "id": "plan",
+     "label": "A* planner",
+     "x": 85,
+     "y": 25,
+     "sub": "from Project 5",
+     "art": "path"
+    },
+    {
+     "id": "move",
+     "label": "Move cell by cell",
+     "x": 85,
+     "y": 75,
+     "sub": "checks every move",
+     "art": "robot"
+    },
+    {
+     "id": "record",
+     "label": "Record outcome",
+     "x": 15,
+     "y": 75,
+     "sub": "success, steps, why",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "world",
+     "to": "plan"
+    },
+    {
+     "from": "plan",
+     "to": "move"
+    },
+    {
+     "from": "move",
+     "to": "record"
+    },
+    {
+     "from": "record",
+     "to": "world"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The behavior under test: plan a path with your Project 5 A star planner, then move along it one cell at a time.",
+     "show": 3,
+     "on": [
+      "plan",
+      "move"
+     ]
+    },
+    {
+     "say": "The pass conditions are measurable: reach the goal within two hundred steps, and never enter an obstacle cell.",
+     "on": "move"
+    },
+    {
+     "say": "One run can succeed by luck, so each trial starts by building a new random world.",
+     "show": 4,
+     "on": "world"
+    },
+    {
+     "say": "The planner gets the grid, a free start, and a free goal.",
+     "on": "plan",
+     "send": {
+      "from": "world",
+      "to": "plan",
+      "label": "grid, endpoints"
+     }
+    },
+    {
+     "say": "The robot follows the path, checking each move.",
+     "on": "move",
+     "send": {
+      "from": "plan",
+      "to": "move",
+      "label": "path"
+     }
+    },
+    {
+     "say": "And the trial records whether it succeeded, how many steps it took, and why it ended.",
+     "on": "record",
+     "send": {
+      "from": "move",
+      "to": "record",
+      "label": "reached goal"
+     }
+    },
+    {
+     "say": "Then a fresh world, and again. Twenty times per setting.",
+     "on": "world",
+     "send": {
+      "from": "record",
+      "to": "world",
+      "label": "next trial"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Same test, three obstacle densities",
+   "columns": [
+    "Obstacles",
+    "Reached goal",
+    "No path found",
+    "Success"
+   ],
+   "rows": [
     [
-     "Reaches the goal",
-     "Within 200 steps"
+     "10%",
+     "20",
+     "0",
+     "100%"
     ],
     [
-     "Never collides",
-     "No obstacle cells, ever"
+     "25%",
+     "18",
+     "2",
+     "90%"
+    ],
+    [
+     "35%",
+     "11",
+     "9",
+     "55%"
+    ],
+    [
+     "All 60",
+     "49",
+     "11",
+     "82%"
     ]
    ],
    "beats": [
     {
-     "say": "The behavior: plan a path with your Project 5 A star planner, then move along it one cell at a time.",
-     "show": 0
+     "say": "Real environments vary, so the suite runs twenty trials at each of three obstacle densities.",
+     "sql": "run_suite(obstacle_density=density)  # seed=1"
     },
     {
-     "say": "Write specific pass or fail conditions.",
-     "show": 0
+     "say": "A fixed seed builds the same worlds every time, so you can compare behaviors on identical tests."
     },
     {
-     "say": "It reaches the goal within two hundred steps.",
-     "show": 1
+     "say": "With ten percent obstacles, every trial reaches the goal.",
+     "hl": 0
     },
     {
-     "say": "And it never enters an obstacle cell.",
-     "show": 2
+     "say": "At twenty five percent, two goals are walled off. No path found.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "At thirty five percent, nine of twenty. More obstacles wall off more goals.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Overall: forty nine of sixty, eighty two percent. Every failure is no path found, never a collision.",
+     "hl": 3,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Many randomized trials",
-   "steps": [
-    "Random world",
-    "Run the behavior",
-    "Record outcome + reason",
-    "Repeat at 3 densities"
-   ],
-   "beats": [
-    {
-     "say": "One run can succeed by luck. So run many.",
-     "show": 0
-    },
-    {
-     "say": "Each trial builds a random world, with a free start and goal.",
-     "show": 1
-    },
-    {
-     "say": "Run the behavior, and record success, steps, and why it ended.",
-     "show": 2
-    },
-    {
-     "say": "Repeat at three obstacle densities. A fixed seed rebuilds the same worlds, so you can compare behaviors on identical tests.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "shield",
+   "kind": "walk",
    "kicker": "Lab · Step 8",
-   "title": "A safety check before moving",
-   "file": "run_tests",
-   "code": "def path_is_safe(grid, path, start, goal):\n    if path is None or path[0] != start or path[-1] != goal:\n        return False\n    if len(path) - 1 > MAX_STEPS:\n        return False\n    for a, b in zip(path, path[1:]):\n        if abs(a[0] - b[0]) + abs(a[1] - b[1]) != 1 or grid[b] == 1:\n            return False\n    return True",
+   "title": "Check the whole plan before moving",
+   "file": "run_tests.py",
+   "code": "def path_is_safe(grid, path, start, goal):\n    if (path is None or path[0] != start\n            or path[-1] != goal):\n        return False\n    if len(path) - 1 > MAX_STEPS:\n        return False\n    for a, b in zip(path, path[1:]):\n        if (abs(a[0] - b[0]) + abs(a[1] - b[1]) != 1\n                or grid[b] == 1):\n            return False\n    return True",
    "beats": [
     {
-     "say": "A planner can have bugs. So check the whole plan before the robot moves.",
-     "show": 0
+     "say": "A planner can have bugs. So this safeguard checks the whole plan before the robot moves."
     },
     {
-     "say": "It must start and end in the right place, fit the step limit, and make only single, obstacle-free moves.",
-     "show": 1
+     "say": "Take a small grid with one obstacle at row one, column two. A buggy straight line planner goes from zero two to two three, right through it.",
+     "line": 1,
+     "vars": {
+      "path": "(0,2) (1,2) (2,2) (2,3)",
+      "grid[1, 2]": 1
+     }
     },
     {
-     "say": "If anything is wrong, stop safely.",
-     "show": 1
+     "say": "The path exists, starts at the start, and ends at the goal. So far so good.",
+     "line": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Three moves is well under the two hundred step limit.",
+     "line": 5,
+     "vars": {
+      "len(path) - 1": 3
+     }
+    },
+    {
+     "say": "Now each move. From zero two to one two: a single step, but cell one two is an obstacle.",
+     "line": [
+      7,
+      8,
+      9
+     ],
+     "vars": {
+      "a": "(0, 2)",
+      "b": "(1, 2)"
+     }
+    },
+    {
+     "say": "So the check returns false, and the robot stops safely instead of driving into it.",
+     "line": 10,
+     "out": "path_is_safe(...) → False"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bug",
+   "kind": "table",
    "kicker": "Lab · Step 8",
    "title": "Prove the safeguard works",
-   "items": [
+   "columns": [
+    "Behavior",
+    "Reached goal",
+    "Other outcome"
+   ],
+   "rows": [
     [
-     "Buggy planner, no safeguard",
-     "Collisions ✗"
+     "Buggy, no safeguard",
+     "5",
+     "15 collided"
     ],
     [
-     "Buggy planner, safeguard",
-     "Safety stops ✓"
+     "Buggy, with safeguard",
+     "5",
+     "15 safety stops"
     ],
     [
-     "A*, safeguard",
-     "Doesn't get in the way ✓"
+     "A*, with safeguard",
+     "18",
+     "2 safety stops"
     ]
    ],
    "beats": [
     {
-     "say": "Then test it with a deliberately buggy planner that walks straight to the goal, ignoring obstacles.",
-     "show": 0
+     "say": "Now run the suite on the same twenty worlds, with twenty five percent obstacles."
     },
     {
-     "say": "Without the safeguard, it collides.",
-     "show": 1
+     "say": "The buggy planner, unprotected, collides fifteen times.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "With it, on the same worlds, those cases become safety stops.",
-     "show": 2
+     "say": "Add the safeguard. Same worlds, and every one of those collisions becomes a safety stop.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "And with A star, it changes nothing except turning no path found into a safety stop.",
-     "show": 3
+     "say": "With A star, the safeguard changes nothing except turning the two no path found results into safety stops.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "So it catches a bad planner, and doesn't get in the way of a good one.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     }
    ]
   },
@@ -3174,105 +7005,453 @@ ros2_lab/
    ]
   },
   {
-   "kind": "list",
-   "art": "graph",
-   "kicker": "Lab · Step 5",
-   "title": "Nodes and topics",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 5 and 9",
+   "title": "Nodes talk through topics",
+   "nodes": [
+    {
+     "id": "sim",
+     "label": "turtlesim",
+     "x": 15,
+     "y": 50,
+     "sub": "simulator node",
+     "art": "robot"
+    },
+    {
+     "id": "pose",
+     "label": "/turtle1/pose",
+     "x": 50,
+     "y": 20,
+     "sub": "position topic",
+     "art": "radar"
+    },
+    {
+     "id": "cmd",
+     "label": "/turtle1/cmd_vel",
+     "x": 50,
+     "y": 80,
+     "sub": "velocity topic",
+     "art": "gauge"
+    },
+    {
+     "id": "ctl",
+     "label": "go_to_goal",
+     "x": 85,
+     "y": 50,
+     "sub": "your Python node",
+     "art": "code"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sim",
+     "to": "pose"
+    },
+    {
+     "from": "pose",
+     "to": "ctl"
+    },
+    {
+     "from": "ctl",
+     "to": "cmd"
+    },
+    {
+     "from": "cmd",
+     "to": "sim"
+    }
+   ],
+   "beats": [
+    {
+     "say": "R O S 2 programs are nodes. Turtlesim is one.",
+     "show": 1,
+     "on": "sim"
+    },
+    {
+     "say": "Nodes publish messages on named topics. Turtlesim publishes the turtle's pose, about sixty times a second.",
+     "show": 2,
+     "on": "pose",
+     "send": {
+      "from": "sim",
+      "to": "pose",
+      "label": "x 5.54, y 5.54"
+     }
+    },
+    {
+     "say": "Your go to goal node subscribes to that topic, and remembers the latest pose. That's sense.",
+     "show": 4,
+     "on": "ctl",
+     "send": {
+      "from": "pose",
+      "to": "ctl",
+      "label": "Pose"
+     }
+    },
+    {
+     "say": "A timer runs your controller twenty times a second. That's think.",
+     "on": "ctl"
+    },
+    {
+     "say": "It publishes a Twist message on the command velocity topic. For a ground robot, only forward speed and turn rate matter. That's act.",
+     "on": "cmd",
+     "send": {
+      "from": "ctl",
+      "to": "cmd",
+      "label": "Twist"
+     }
+    },
+    {
+     "say": "Turtlesim subscribes to it, and moves the turtle. The whole loop, running on R O S 2.",
+     "on": "sim",
+     "send": {
+      "from": "cmd",
+      "to": "sim",
+      "label": "0.0, -4.0"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 7",
+   "title": "One step of the controller",
+   "file": "controller_math.py",
+   "code": "dx = goal_x - x\ndy = goal_y - y\ndistance = math.hypot(dx, dy)\nif distance < tolerance:\n    return 0.0, 0.0, True\nheading_error = wrap_angle(\n    math.atan2(dy, dx) - theta)\nangular = clamp(k_angular * heading_error,\n                max_angular)\nlinear = clamp(k_linear * distance, max_linear)\nif abs(heading_error) > turn_first_angle:\n    linear = 0.0  # turn in place first\nreturn linear, angular, False",
+   "beats": [
+    {
+     "say": "The controller's first step. The turtle starts in the middle, facing right. The goal is eight, two.",
+     "vars": {
+      "x": 5.54,
+      "y": 5.54,
+      "theta": 0.0
+     }
+    },
+    {
+     "say": "The goal is two point four six to the right, and three point five four down.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "dx": 2.46,
+      "dy": -3.54
+     }
+    },
+    {
+     "say": "That's four point three one meters away, so it hasn't arrived yet.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "distance": 4.31
+     }
+    },
+    {
+     "say": "The heading error is minus zero point nine six radians: the goal is clockwise. Wrapping keeps it between minus pi and pi, so the turtle turns the short way.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "heading_error": -0.96
+     }
+    },
+    {
+     "say": "Turn rate is six times the error, capped at the maximum: minus four.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "angular": -4.0
+     }
+    },
+    {
+     "say": "Forward speed is one point five times the distance, capped at two.",
+     "line": 10,
+     "vars": {
+      "linear": 2.0
+     }
+    },
+    {
+     "say": "But the goal is more than half a radian off to the side, so forward speed drops to zero. Turn in place first.",
+     "line": [
+      11,
+      12
+     ],
+     "vars": {
+      "linear": 0.0
+     }
+    },
+    {
+     "say": "It returns zero, minus four, not arrived.",
+     "line": 13,
+     "out": "(0.0, -4.0, False)"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Steps 8 and 11",
+   "title": "The turtle drives to (8, 2)",
+   "xlabel": "x (0 to 11 m)",
+   "ylabel": "y (0 to 11 m)",
+   "points": [
     [
-     "/turtle1/pose",
-     "Turtlesim publishes position"
+     49.9,
+     49.9
     ],
     [
-     "/turtle1/cmd_vel",
-     "Turtlesim listens for commands"
+     51.2,
+     48.7
     ],
     [
-     "Twist",
-     "linear.x and angular.z"
+     54.0,
+     45.1
+    ],
+    [
+     56.5,
+     41.4
+    ],
+    [
+     59.0,
+     37.7
+    ],
+    [
+     61.5,
+     33.9
+    ],
+    [
+     64.0,
+     30.2
+    ],
+    [
+     66.4,
+     26.5
+    ],
+    [
+     68.2,
+     23.7
+    ],
+    [
+     69.4,
+     21.9
+    ],
+    [
+     70.3,
+     20.6
+    ],
+    [
+     70.8,
+     19.8
+    ],
+    [
+     71.2,
+     19.2
+    ],
+    [
+     71.5,
+     18.8
     ]
    ],
    "beats": [
     {
-     "say": "R O S 2 programs are nodes. They publish messages on named topics, and any node can subscribe.",
-     "show": 0
+     "say": "Repeat that step twenty times a second. Here's the path, from the pytest simulation.",
+     "groups": [
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       72,
+       18
+      ]
+     ]
     },
     {
-     "say": "Turtlesim publishes the turtle's position on the pose topic.",
-     "show": 1
+     "say": "First it turns in place, then sets off toward the goal at full speed.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       72,
+       18
+      ]
+     ]
     },
     {
-     "say": "And it subscribes to velocity commands on the cmd vel topic.",
-     "show": 2
+     "say": "As the distance shrinks, so does the speed, so it slows smoothly.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       72,
+       18
+      ]
+     ]
     },
     {
-     "say": "A Twist message holds the velocities. For a ground robot, only forward speed and turn rate matter.",
-     "show": 3
+     "say": "Within ten centimeters, it counts as arrived and stops: at seven point nine five, two point zero eight.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2
+     ],
+     "marks": [
+      [
+       72,
+       18
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "gauge",
-   "kicker": "Lab · Step 7",
-   "title": "A proportional controller",
-   "file": "controller_math.py",
-   "code": "heading_error = wrap_angle(math.atan2(dy, dx) - theta)\nangular = clamp(k_angular * heading_error, max_angular)\nlinear = clamp(k_linear * distance, max_linear)\nif abs(heading_error) > turn_first_angle:\n    linear = 0.0  # facing the wrong way: turn in place first\nreturn linear, angular, False",
+   "kind": "table",
+   "kicker": "Lab · Step 12",
+   "title": "From a grid path to turtle waypoints",
+   "columns": [
+    "Corner (row, col)",
+    "x (m)",
+    "y (m)"
+   ],
+   "rows": [
+    [
+     "(0, 0)",
+     "1",
+     "10"
+    ],
+    [
+     "(0, 8)",
+     "9",
+     "10"
+    ],
+    [
+     "(4, 8)",
+     "9",
+     "6"
+    ],
+    [
+     "(4, 1)",
+     "2",
+     "6"
+    ],
+    [
+     "(6, 1)",
+     "2",
+     "4"
+    ],
+    [
+     "(6, 9)",
+     "10",
+     "4"
+    ],
+    [
+     "(9, 9)",
+     "10",
+     "1"
+    ]
+   ],
    "beats": [
     {
-     "say": "The controller math has no R O S imports, so you can test it with plain Python, and pytest.",
-     "show": 0
+     "say": "Now connect the planner. Your Project 5 maze path has thirty three cells."
     },
     {
-     "say": "Turn rate is a gain times the heading error. Wrapping keeps the error between minus pi and pi, so the turtle always turns the short way.",
-     "show": 1
+     "say": "simplify path keeps only the start, the corners, and the end. Seven cells.",
+     "col": 0
     },
     {
-     "say": "Forward speed is a gain times the distance, capped. If the goal is far off to the side, turn in place first.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "loop",
-   "kicker": "Lab · Step 9",
-   "title": "The go-to-goal node",
-   "file": "go_to_goal.py",
-   "code": "self.cmd_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)\nself.create_subscription(Pose, '/turtle1/pose', self.on_pose, 10)\nself.create_timer(0.05, self.control_step)  # 20 times a second",
-   "beats": [
-    {
-     "say": "The node puts the loop together.",
-     "show": 0
+     "say": "Each cell becomes a point one meter apart. x is one plus the column.",
+     "sql": "x = 1 + col\ny = 1 + (9 - row)",
+     "col": 1
     },
     {
-     "say": "The subscription remembers each new pose. That's sense.",
-     "show": 1
+     "say": "Row zero is the top of your Project 5 plot, so it gets the largest y: ten.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "A timer runs the controller twenty times a second. That's think.",
-     "show": 1
+     "say": "The follower drives to each point in order.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
     },
     {
-     "say": "And the publisher sends a Twist command. That's act.",
-     "show": 1
+     "say": "The last corner, nine nine, lands at ten, one: the bottom right. The turtle draws your maze's zigzag.",
+     "hl": 6
     }
    ]
   },
   {
    "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 10 to 13",
-   "title": "Build, run, follow, launch",
+   "art": "path",
+   "kicker": "Lab · Steps 10, 11 and 13",
+   "title": "Build, source, launch",
    "steps": [
     "Entry points in setup.py",
     "colcon build + source",
-    "Follow the Project 5 path",
     "ros2 launch"
    ],
    "beats": [
     {
-     "say": "Register the nodes in setup dot py.",
+     "say": "Register the nodes as entry points in setup dot py.",
      "show": 1
     },
     {
@@ -3280,12 +7459,8 @@ ros2_lab/
      "show": 2
     },
     {
-     "say": "The waypoint follower reduces your Project 5 maze path to its corners, and the turtle draws the zigzag.",
-     "show": 3
-    },
-    {
      "say": "And one launch file starts turtlesim and the follower together.",
-     "show": 4
+     "show": 3
     }
    ]
   },
@@ -3308,7 +7483,7 @@ ros2_lab/
      "show": 0
     },
     {
-     "say": "Why must you run source install/setup.bash after colcon build?",
+     "say": "Why must you run source install slash setup dot bash after colcon build?",
      "show": 0
     },
     {

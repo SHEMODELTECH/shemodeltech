@@ -125,126 +125,320 @@ automation_opportunity_project/
    ]
   },
   {
-   "kind": "quote",
-   "art": "mess",
-   "kicker": "Step 2",
-   "title": "Pick a real, repetitive workflow",
-   "quote": "Check the inbox → copy new leads into a spreadsheet → email a summary to sales.",
+   "kind": "diagram",
+   "kicker": "Steps 2 and 3",
+   "title": "Map every step, even the small ones",
+   "nodes": [
+    {
+     "id": "trig",
+     "label": "Every morning",
+     "x": 12,
+     "y": 28,
+     "sub": "the trigger",
+     "art": "calendar"
+    },
+    {
+     "id": "inbox",
+     "label": "Shared inbox",
+     "x": 32,
+     "y": 72,
+     "sub": "check for new leads",
+     "art": "mail"
+    },
+    {
+     "id": "dup",
+     "label": "Duplicate check",
+     "x": 52,
+     "y": 28,
+     "sub": "done by eye",
+     "art": "search"
+    },
+    {
+     "id": "sheet",
+     "label": "Spreadsheet",
+     "x": 72,
+     "y": 72,
+     "sub": "copy each new lead",
+     "art": "table"
+    },
+    {
+     "id": "sales",
+     "label": "Sales team",
+     "x": 90,
+     "y": 28,
+     "sub": "gets a summary",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "trig",
+     "to": "inbox"
+    },
+    {
+     "from": "inbox",
+     "to": "dup"
+    },
+    {
+     "from": "dup",
+     "to": "sheet"
+    },
+    {
+     "from": "sheet",
+     "to": "sales"
+    }
+   ],
    "beats": [
     {
-     "say": "Start with a real workflow that people repeat.",
-     "show": 0
+     "say": "Here's the example workflow, one step at a time. It starts every morning.",
+     "show": 1,
+     "on": "trig"
     },
     {
-     "say": "For example: every morning, someone checks a shared inbox, copies new leads into a spreadsheet, and emails a summary to the sales team.",
-     "show": 1
+     "say": "Someone checks a shared inbox for new leads.",
+     "show": 2,
+     "on": "inbox",
+     "send": {
+      "from": "trig",
+      "to": "inbox",
+      "label": "start"
+     }
     },
     {
-     "say": "Then, in a text cell called workflow map, write out every step, including the small ones people skip mentioning, like checking for duplicates by eye.",
-     "show": 1
+     "say": "Here's the small step people forget to mention: they check for duplicates, by eye.",
+     "show": 3,
+     "on": "dup",
+     "send": {
+      "from": "inbox",
+      "to": "dup",
+      "label": "new leads"
+     }
+    },
+    {
+     "say": "Then they copy each new lead into a spreadsheet.",
+     "show": 4,
+     "on": "sheet",
+     "send": {
+      "from": "dup",
+      "to": "sheet",
+      "label": "new leads only"
+     }
+    },
+    {
+     "say": "And they email a summary to the sales team.",
+     "show": 5,
+     "on": "sales",
+     "send": {
+      "from": "sheet",
+      "to": "sales",
+      "label": "summary email"
+     }
+    },
+    {
+     "say": "Write all of it in a text cell called workflow map. A hidden step like the duplicate check is real work your automation must do too.",
+     "show": 5,
+     "on": "dup"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "table",
    "kicker": "Step 4",
    "title": "Score it on automation fit",
-   "items": [
+   "columns": [
+    "Quality",
+    "Ask yourself",
+    "Leads workflow"
+   ],
+   "rows": [
     [
      "Repetitive",
-     "Done often"
+     "Is it done often?",
+     "Every morning"
     ],
     [
      "Rule- or pattern-based",
-     "No deep judgment every time"
+     "No deep judgment?",
+     "Mostly copying fields"
     ],
     [
      "Time-costly",
-     "Worth the effort"
+     "Worth the effort?",
+     "15 minutes a day"
     ]
    ],
    "beats": [
     {
-     "say": "Good automation candidates share three qualities.",
-     "show": 0
+     "say": "Good automation candidates share three qualities. Let's score the leads workflow.",
+     "col": 0
     },
     {
-     "say": "Repetitive: the work is done often.",
-     "show": 1
+     "say": "Repetitive: is it done often? Yes, every single morning.",
+     "hl": 0
     },
     {
-     "say": "Rule-based or pattern-based: it doesn't need deep human judgment every time.",
-     "show": 2
+     "say": "Rule-based or pattern-based: does it need deep judgment every time? Mostly not. It's copying fields.",
+     "hl": 1
     },
     {
-     "say": "And time-costly: it's worth the effort to automate.",
-     "show": 3
+     "say": "Time-costly: is it worth the effort? Fifteen minutes a day adds up, as you'll see next.",
+     "hl": 2
+    },
+    {
+     "say": "Three yeses make a strong candidate.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "stopwatch",
+   "kind": "table",
    "kicker": "Steps 5 and 6",
-   "title": "Triggers, outputs and time saved",
-   "big": "~65 hours/year",
-   "sub": "15 minutes × 5 days a week",
-   "beats": [
-    {
-     "say": "Note what starts the workflow, like a new email, a scheduled time, or a form submission, and what it produces at the end.",
-     "show": 0
-    },
-    {
-     "say": "Then estimate the time it costs. Fifteen minutes, five days a week, is about sixty five hours a year.",
-     "show": 1
-    },
-    {
-     "say": "That number makes the case for automating.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "doc",
-   "kicker": "Steps 7 and 8",
-   "title": "Edge cases, then the summary",
-   "steps": [
-    "Workflow description",
-    "Automation fit score",
-    "Trigger → output",
-    "Time savings",
-    "Known edge cases"
+   "title": "Trigger, output, and time saved",
+   "columns": [
+    "Quantity",
+    "Value"
+   ],
+   "rows": [
+    [
+     "Minutes per run",
+     "15"
+    ],
+    [
+     "Runs per week",
+     "5"
+    ],
+    [
+     "Minutes per week",
+     "75"
+    ],
+    [
+     "Weeks per year",
+     "52"
+    ],
+    [
+     "Minutes per year",
+     "3,900"
+    ],
+    [
+     "Hours per year",
+     "about 65"
+    ]
    ],
    "beats": [
     {
-     "say": "Next, list the edge cases, where someone uses judgment. For example: if the email looks spammy, they don't add it.",
-     "show": 0
+     "say": "First note the trigger, a scheduled time every morning, and the output, a summary email to sales.",
+     "sql": "trigger: every morning  →  output: summary email"
     },
     {
-     "say": "Then write the opportunity summary in this order.",
-     "show": 0
+     "say": "Now the time. The manual run takes fifteen minutes.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "The workflow description.",
-     "show": 1
+     "say": "It happens five days a week.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Its automation fit score.",
-     "show": 2
+     "say": "That's seventy five minutes a week.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "The trigger and output.",
-     "show": 3
+     "say": "Over fifty two weeks, that's three thousand nine hundred minutes.",
+     "hl": [
+      3,
+      4
+     ],
+     "col": 1
     },
     {
-     "say": "The time savings estimate.",
-     "show": 4
+     "say": "Divide by sixty: about sixty five hours a year. That number makes the case for automating.",
+     "sql": "15 min × 5 days × 52 weeks = 3,900 min ≈ 65 hours/year",
+     "hl": 5,
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Steps 7 and 8",
+   "title": "Edge cases, then the summary",
+   "values": [
+    "Description",
+    "Fit score",
+    "Trigger → output",
+    "Time saved",
+    "Edge cases"
+   ],
+   "beats": [
+    {
+     "say": "Step seven: list the edge cases, where someone uses judgment. For example, if the email looks spammy, they don't add it.",
+     "note": "edge case: spammy email → not added"
     },
     {
-     "say": "And the known edge cases.",
-     "show": 5
+     "say": "Then write the opportunity summary, in five parts. First, the workflow description.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     },
+     "note": "Inbox → spreadsheet → summary to sales"
+    },
+    {
+     "say": "Second, its automation fit score.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "Repetitive, rule-based, time-costly"
+    },
+    {
+     "say": "Third, the trigger and the output.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     },
+     "note": "Every morning → summary email"
+    },
+    {
+     "say": "Fourth, the time savings estimate.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     },
+     "note": "About 65 hours a year"
+    },
+    {
+     "say": "And fifth, the known edge cases, so the build knows where it needs special handling or a human check.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "now": 4
+     },
+     "note": "Spammy emails, duplicates"
     }
    ]
   },
@@ -490,106 +684,297 @@ scheduled_automation_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
-   "kicker": "Step 2",
+   "kind": "walk",
+   "kicker": "Steps 2 and 3",
    "title": "The smallest useful script",
    "file": "check_task.py",
-   "code": "LOG_FILE = Path(__file__).resolve().parent / \"log.txt\"\n\ndef log(message):\n    with open(LOG_FILE, \"a\") as f:\n        f.write(f\"{datetime.datetime.now()} {message}\\n\")\n\ndef main():\n    log(\"Ran\")\n\nif __name__ == \"__main__\":\n    main()",
+   "code": "import datetime\nfrom pathlib import Path\nLOG_FILE = (Path(__file__).resolve().parent\n            / \"log.txt\")\n\ndef log(message):\n    with open(LOG_FILE, \"a\") as f:\n        f.write(f\"{datetime.datetime.now()} \"\n                f\"{message}\\n\")\n\ndef main():\n    log(\"Ran\")\nif __name__ == \"__main__\":\n    main()",
    "beats": [
     {
-     "say": "Create check underscore task dot py.",
-     "show": 0
+     "say": "Here's check underscore task dot py. Say cron starts it, from your home folder.",
+     "vars": {
+      "working folder": "\"/Users/you\""
+     }
     },
     {
-     "say": "It writes a timestamped line to log dot txt every time it runs.",
-     "show": 1
+     "say": "Double underscore file is the script's own path. Its parent folder plus log dot txt gives the full path.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "LOG_FILE": "\"/Users/you/scheduled_automation_project/log.txt\""
+     }
     },
     {
-     "say": "The log path is built from the script's own location, using double underscore file. Schedulers start your script from a different folder, so a plain log dot txt would land in the wrong place.",
-     "show": 1
+     "say": "A plain log dot txt would have landed in your home folder instead, the wrong place.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "plain \"log.txt\"": "\"/Users/you/log.txt\""
+     }
     },
     {
-     "say": "Run it by hand first, and check the log shows one line ending in Ran.",
-     "show": 1
+     "say": "The script runs main, which calls log with the word Ran.",
+     "line": [
+      13,
+      14,
+      11,
+      12
+     ],
+     "vars": {
+      "message": "\"Ran\""
+     }
+    },
+    {
+     "say": "Log opens the file in append mode, and writes the date and time, then the message.",
+     "line": [
+      6,
+      7,
+      8,
+      9
+     ],
+     "out": "2026-10-07 09:15:02.123456 Ran"
+    },
+    {
+     "say": "Test it by hand first, with python3 check underscore task dot py. If it fails now, it will fail on schedule too.",
+     "line": [
+      13,
+      14
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
+   "kind": "walk",
    "kicker": "Steps 4 and 5",
-   "title": "Real logic, wrapped in try and except",
+   "title": "Real work, and a failure that gets logged",
    "file": "check_task.py",
-   "code": "def main():\n    INBOX.mkdir(exist_ok=True)\n    files = sorted(p.name for p in INBOX.iterdir() if p.is_file())\n    log(f\"Found {len(files)} file(s) in inbox: {files}\")\n\nif __name__ == \"__main__\":\n    try:\n        main()\n    except Exception as e:\n        log(f\"ERROR: {e}\")",
+   "code": "def main():\n    INBOX.mkdir(exist_ok=True)\n    files = sorted(p.name for p in INBOX.iterdir()\n                   if p.is_file())\n    log(f\"Found {len(files)} file(s) in inbox: \"\n        f\"{files}\")\n\nif __name__ == \"__main__\":\n    try:\n        main()\n    except Exception as e:\n        log(f\"ERROR: {e}\")",
    "beats": [
     {
-     "say": "Now give main real work. This example counts the files in an inbox folder and logs them.",
-     "show": 0
+     "say": "Now main does real work: it looks in an inbox folder. Say you dropped in one test file.",
+     "line": 1,
+     "vars": {
+      "inbox": "[test.txt]"
+     }
     },
     {
-     "say": "Then wrap the call to main in try and except, so a failure is logged instead of lost.",
-     "show": 1
+     "say": "Make the folder if it's missing, then list the names of the files in it, sorted.",
+     "line": [
+      2,
+      3,
+      4
+     ],
+     "vars": {
+      "files": "['test.txt']"
+     }
+    },
+    {
+     "say": "Log how many there are, and their names.",
+     "line": [
+      5,
+      6
+     ],
+     "out": "2026-10-08 08:00:01.204518 Found 1 file(s) in inbox: ['test.txt']"
+    },
+    {
+     "say": "Now say a run fails. For example, the inbox can't be read.",
+     "line": [
+      9,
+      10
+     ],
+     "vars": null
+    },
+    {
+     "say": "Main raises an error, but the except catches it, and writes it to the log instead of crashing silently.",
+     "line": [
+      11,
+      12
+     ],
+     "vars": {
+      "e": "PermissionError(13, 'Permission denied')"
+     },
+     "out": "2026-10-09 08:00:01.087214 ERROR: [Errno 13] Permission denied: '.../inbox'"
     },
     {
      "say": "Nobody is watching a scheduled script, so the log is the only way you'll find out something went wrong.",
-     "show": 1
+     "line": [
+      9,
+      12
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "calendar",
+   "kind": "table",
    "kicker": "Step 6",
-   "title": "Schedule it with cron",
-   "big": "0 8 * * *",
-   "sub": "minute · hour · day of month · month · day of week",
-   "beats": [
-    {
-     "say": "On Mac, Linux or W S L, add one line to your cron table with crontab dash e, using the full paths to Python and your script.",
-     "show": 0
-    },
-    {
-     "say": "Zero, eight, star, star, star runs it every day at eight A M.",
-     "show": 1
-    },
-    {
-     "say": "The five fields are minute, hour, day of month, month, and day of week.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Steps 6 to 8",
-   "title": "Windows, verify, document",
-   "items": [
+   "title": "Read the cron line field by field",
+   "columns": [
+    "Field",
+    "Daily run",
+    "Quick test"
+   ],
+   "rows": [
     [
-     "Task Scheduler",
-     "Windows: Create Basic Task, daily 8:00 AM"
+     "minute",
+     "0",
+     "*/5"
     ],
     [
-     "Verify",
-     "Check log.txt, or */5 * * * * to test"
+     "hour",
+     "8",
+     "*"
     ],
     [
-     "README.md",
-     "The schedule and how to change it"
+     "day of month",
+     "*",
+     "*"
+    ],
+    [
+     "month",
+     "*",
+     "*"
+    ],
+    [
+     "day of week",
+     "*",
+     "*"
     ]
    ],
    "beats": [
     {
-     "say": "On Windows, there's no cron. Use Task Scheduler: create a basic task, daily at eight A M, that starts Python with the full path to your script.",
-     "show": 1
+     "say": "On Mac, Linux or W S L, you add one line to your cron table, with the full paths to Python and your script.",
+     "sql": "0 8 * * * /usr/bin/python3 /Users/you/scheduled_automation_project/check_task.py",
+     "col": 1
     },
     {
-     "say": "Then verify it ran without you. Check log dot txt the next day, or test faster: every five minutes in cron, or right-click and Run in Task Scheduler.",
-     "show": 2
+     "say": "Five fields come first. Minute: zero.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Finally, write a README that explains the schedule and how someone else could change it.",
-     "show": 3
+     "say": "Hour: eight. So, eight A M.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "A star means every. Every day of the month, every month, every day of the week.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "col": 1
+    },
+    {
+     "say": "Put together: run every day at eight A M.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 1
+    },
+    {
+     "say": "To test faster, use star slash five in the minute field, and stars everywhere else: every five minutes. Then change it back.",
+     "sql": "*/5 * * * *  (every 5 minutes, for testing)",
+     "hl": 0,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 6 to 8",
+   "title": "It runs without you",
+   "nodes": [
+    {
+     "id": "sched",
+     "label": "Scheduler",
+     "x": 14,
+     "y": 30,
+     "sub": "cron or Task Scheduler",
+     "art": "calendar"
+    },
+    {
+     "id": "script",
+     "label": "check_task.py",
+     "x": 50,
+     "y": 30,
+     "sub": "full path to Python",
+     "art": "code"
+    },
+    {
+     "id": "log",
+     "label": "log.txt",
+     "x": 86,
+     "y": 30,
+     "sub": "one line per run",
+     "art": "file"
+    },
+    {
+     "id": "you",
+     "label": "You",
+     "x": 86,
+     "y": 80,
+     "sub": "the next day",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sched",
+     "to": "script"
+    },
+    {
+     "from": "script",
+     "to": "log"
+    },
+    {
+     "from": "log",
+     "to": "you"
+    }
+   ],
+   "beats": [
+    {
+     "say": "At eight A M, the scheduler starts your script. On Windows, Task Scheduler does this job: a basic task, daily at eight A M.",
+     "show": 2,
+     "on": "sched",
+     "send": {
+      "from": "sched",
+      "to": "script",
+      "label": "8:00 AM"
+     }
+    },
+    {
+     "say": "The script appends its line to log dot txt.",
+     "show": 3,
+     "on": "script",
+     "send": {
+      "from": "script",
+      "to": "log",
+      "label": "Found 1 file(s)"
+     }
+    },
+    {
+     "say": "Next day, you open the log to confirm it ran without you. In Task Scheduler you can also right-click the task and choose Run.",
+     "show": 4,
+     "on": "you",
+     "send": {
+      "from": "log",
+      "to": "you",
+      "label": "new line, 8:00"
+     }
+    },
+    {
+     "say": "Finally, write a README that records the schedule, what each part means, and how someone else could change the timing.",
+     "show": 4,
+     "on": "sched"
     }
    ]
   },
@@ -850,101 +1235,395 @@ multistep_workflow_project/
    ]
   },
   {
-   "kind": "quote",
-   "art": "plug",
+   "kind": "diagram",
    "kicker": "Step 3",
-   "title": "What's a webhook?",
-   "quote": "A webhook: one system notifies another by sending an HTTP request to a URL when something happens.",
-   "beats": [
+   "title": "Checking versus a webhook",
+   "nodes": [
     {
-     "say": "First, a term you'll meet everywhere in automation.",
-     "show": 0
+     "id": "src",
+     "label": "Lead source",
+     "x": 14,
+     "y": 50,
+     "sub": "inbox or web form",
+     "art": "mail"
     },
     {
-     "say": "A webhook is a way for one system to notify another automatically when something happens, by sending an H T T P request to a U R L.",
-     "show": 1
-    },
-    {
-     "say": "The receiver doesn't have to keep checking. This project checks a source on demand, but in a live system, a webhook could start the workflow.",
-     "show": 1
+     "id": "wf",
+     "label": "Your workflow",
+     "x": 86,
+     "y": 50,
+     "sub": "run_workflow()",
+     "art": "gear"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "blocks",
-   "kicker": "Step 4",
-   "title": "Each step is a function",
-   "steps": [
-    "check_for_new_items",
-    "extract_data",
-    "save_to_destination",
-    "send_notification"
+   ],
+   "edges": [
+    {
+     "from": "src",
+     "to": "wf"
+    }
    ],
    "beats": [
     {
-     "say": "Write each step as its own function, working on a list of five sample messages that stands in for a real inbox.",
-     "show": 0
-    },
-    {
-     "say": "Check for new items, skipping any id already saved in leads dot C S V.",
-     "show": 1
-    },
-    {
-     "say": "Extract data, and reject any item with no sender.",
+     "say": "Two systems: a source of leads, and your workflow.",
      "show": 2
     },
     {
-     "say": "Save to destination, appending a row to leads dot C S V.",
-     "show": 3
+     "say": "Without a webhook, your workflow has to keep checking: anything new?",
+     "on": "wf",
+     "send": {
+      "from": "wf",
+      "to": "src",
+      "label": "anything new?"
+     }
     },
     {
-     "say": "And send notification, which just prints for now.",
+     "say": "Most of the time, the answer is no.",
+     "on": "src",
+     "send": {
+      "from": "src",
+      "to": "wf",
+      "label": "nothing yet"
+     }
+    },
+    {
+     "say": "With a webhook, the source sends an H T T P request to a U R L you give it, the moment something happens.",
+     "on": "src",
+     "send": {
+      "from": "src",
+      "to": "wf",
+      "label": "POST: new lead"
+     }
+    },
+    {
+     "say": "So the receiver never has to keep asking. This project checks on demand, but in a live system, a webhook could start run workflow.",
+     "on": "wf"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 4",
+   "title": "Each step is its own function",
+   "nodes": [
+    {
+     "id": "check",
+     "label": "Check for new",
+     "x": 12,
+     "y": 28,
+     "sub": "skip saved ids",
+     "art": "search"
+    },
+    {
+     "id": "extract",
+     "label": "Extract data",
+     "x": 37,
+     "y": 72,
+     "sub": "reject no sender",
+     "art": "funnel"
+    },
+    {
+     "id": "save",
+     "label": "Save",
+     "x": 63,
+     "y": 28,
+     "sub": "append to leads.csv",
+     "art": "table"
+    },
+    {
+     "id": "notify",
+     "label": "Notify",
+     "x": 88,
+     "y": 72,
+     "sub": "print, for now",
+     "art": "bell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "check",
+     "to": "extract"
+    },
+    {
+     "from": "extract",
+     "to": "save"
+    },
+    {
+     "from": "save",
+     "to": "notify"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Break the workflow into four steps, and write each one as its own function.",
      "show": 4
+    },
+    {
+     "say": "Check for new items returns only items whose i d isn't already saved in leads dot C S V.",
+     "on": "check",
+     "send": {
+      "from": "check",
+      "to": "extract",
+      "label": "new items"
+     }
+    },
+    {
+     "say": "Extract data cleans up the fields, and raises an error if an item has no sender.",
+     "on": "extract",
+     "send": {
+      "from": "extract",
+      "to": "save",
+      "label": "clean fields"
+     }
+    },
+    {
+     "say": "Save to destination appends one row to leads dot C S V, our stand-in for a spreadsheet.",
+     "on": "save",
+     "send": {
+      "from": "save",
+      "to": "notify",
+      "label": "row saved"
+     }
+    },
+    {
+     "say": "And send notification just prints for now. Later, it could be an email or a chat message.",
+     "on": "notify"
+    },
+    {
+     "say": "Separate functions mean each step can be tested and fixed on its own, and an error points to exactly one step.",
+     "on": [
+      "check",
+      "extract",
+      "save",
+      "notify"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Steps 5 and 6",
-   "title": "Per-step error handling",
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "The sample input, with one edge case",
+   "columns": [
+    "id",
+    "sender",
+    "subject",
+    "message"
+   ],
+   "rows": [
+    [
+     "1",
+     "ana@example.com",
+     "Pricing",
+     "Pricing for 10 seats?"
+    ],
+    [
+     "2",
+     "raj@example.com",
+     "Demo",
+     "A demo next week"
+    ],
+    [
+     "3",
+     "li@example.com",
+     "Site down!",
+     "Dashboard down…"
+    ],
+    [
+     "4",
+     "sam@example.com",
+     "Thanks",
+     "Thanks for the reply"
+    ],
+    [
+     "5",
+     "(empty)",
+     "(no subject)",
+     "WIN A FREE PRIZE!!!"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Instead of a real inbox, the source is a list of five sample messages."
+    },
+    {
+     "say": "Four are normal leads and messages, each with a sender.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 1
+    },
+    {
+     "say": "Item five is the edge case: spam, with no sender at all.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "On the first run, leads dot C S V doesn't exist yet, so check for new items returns all five.",
+     "sql": "saved_ids = {}  →  new items: 1, 2, 3, 4, 5",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Steps 6 and 7",
+   "title": "Per-step error handling, item by item",
    "file": "run_workflow",
-   "code": "for item in items:\n    try:\n        data = extract_data(item)\n    except Exception as e:\n        print(f\"FAILED at step 2 (extract_data) for item {item.get('id')}: {e}\")\n        failed += 1\n        continue\n    try:\n        save_to_destination(data)\n        processed += 1\n    except Exception as e:\n        print(f\"FAILED at step 3 (save_to_destination) for item {item['id']}: {e}\")\n        failed += 1",
+   "code": "processed, failed = 0, 0\nfor item in items:\n    try:\n        data = extract_data(item)\n    except Exception as e:\n        print(f\"FAILED at step 2 (extract_data) \"\n              f\"for item {item.get('id')}: {e}\")\n        failed += 1\n        continue\n    try:\n        save_to_destination(data)\n        processed += 1\n    except Exception as e:\n        ...  # print FAILED at step 3; failed += 1",
    "beats": [
     {
-     "say": "Chaining the steps with no error handling means one bad item stops the whole run.",
-     "show": 0
+     "say": "Here's the loop with its own try and except for each step. Both counters start at zero.",
+     "line": 1,
+     "vars": {
+      "items": "[1, 2, 3, 4, 5]",
+      "processed": 0,
+      "failed": 0
+     }
     },
     {
-     "say": "So give each step its own try and except.",
-     "show": 1
+     "say": "Item one: extract data works.",
+     "line": [
+      2,
+      3,
+      4
+     ],
+     "vars": {
+      "item": 1,
+      "data": "{id: 1, sender: ana@…}"
+     }
     },
     {
-     "say": "A failure is printed with the step name, counted, and skipped, and the rest of the items carry on.",
-     "show": 1
+     "say": "It's saved to leads dot C S V, and processed goes to one.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "processed": 1
+     }
+    },
+    {
+     "say": "Items two, three and four go the same way. Processed is four.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "item": 4,
+      "data": "{id: 4, sender: sam@…}",
+      "processed": 4
+     }
+    },
+    {
+     "say": "Item five has no sender, so extract data raises a value error.",
+     "line": [
+      3,
+      4,
+      5
+     ],
+     "vars": {
+      "item": 5,
+      "e": "ValueError('item 5 has no sender')"
+     }
+    },
+    {
+     "say": "The except prints which step failed, and for which item.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "FAILED at step 2 (extract_data) for item 5: item 5 has no sender"
+    },
+    {
+     "say": "Failed goes to one, and continue skips to the next item, so nothing else is lost.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "failed": 1
+     }
+    },
+    {
+     "say": "After the loop, send notification reports the totals.",
+     "line": 1,
+     "out": "NOTIFY: Processed 4 items, 1 failed"
+    },
+    {
+     "say": "Without these try blocks, item five's error would have stopped the whole run, and no summary would be sent.",
+     "line": [
+      3,
+      5
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "test",
+   "kind": "array",
    "kicker": "Step 7",
-   "title": "Test with realistic input",
-   "big": "4 processed · 1 failed",
-   "sub": "Second run: 0 processed, 1 failed",
+   "title": "Run it again: no duplicates",
+   "values": [
+    "id 1",
+    "id 2",
+    "id 3",
+    "id 4",
+    "id 5"
+   ],
    "beats": [
     {
-     "say": "Run the workflow. Item five has no sender, so step two fails for it, and the other four are saved.",
-     "show": 0
+     "say": "Now run the workflow a second time, with the same five items."
     },
     {
-     "say": "You'll see: processed four items, one failed.",
-     "show": 1
+     "say": "Items one to four are already saved in leads dot C S V, so check for new items skips them.",
+     "gone": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "saved_ids = {1, 2, 3, 4}"
     },
     {
-     "say": "Run it again, and it processes zero, because the first four are already saved. Then add an edge case of your own and test again.",
-     "show": 2
+     "say": "Only item five is new, and it still has no sender, so it fails again at step two.",
+     "gone": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "item": 4
+     },
+     "note": "FAILED at step 2 for item 5"
+    },
+    {
+     "say": "The summary says: processed zero items, one failed. No duplicates were added.",
+     "gone": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "note": "NOTIFY: Processed 0 items, 1 failed"
+    },
+    {
+     "say": "To start fresh, delete leads dot C S V. Then add an edge case from your own Project 1 list, and test again.",
+     "note": "LEADS_FILE.unlink(missing_ok=True)"
     }
    ]
   },
@@ -1180,97 +1859,365 @@ ai_decision_step_project/
    ]
   },
   {
-   "kind": "quote",
-   "art": "target",
+   "kind": "table",
    "kicker": "Steps 2 and 3",
-   "title": "One narrow question",
-   "quote": "Is this customer message urgent? Answer only 'yes' or 'no'.",
-   "beats": [
-    {
-     "say": "Look back at your edge cases. Which need judgment a simple rule can't capture, like whether a message sounds urgent?",
-     "show": 0
-    },
-    {
-     "say": "Design the A I decision as one narrow question, with an answer code can parse.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Step 4",
-   "title": "Ask Claude",
-   "file": "is_urgent",
-   "code": "\"max_tokens\": 5,\n\"messages\": [\n    {\"role\": \"user\", \"content\": f\"Is this message urgent? Answer only yes or no.\\n\\n{message_text}\"}\n],\n...\nresponse.raise_for_status()\nanswer = response.json()[\"content\"][0][\"text\"].strip().lower()\nreturn answer.startswith(\"yes\")",
-   "beats": [
-    {
-     "say": "Is urgent posts the message to the Claude A P I.",
-     "show": 0
-    },
-    {
-     "say": "Max tokens is just five, which forces a short, structured answer.",
-     "show": 1
-    },
-    {
-     "say": "Raise for status turns H T T P errors, like a bad key or a rate limit, into exceptions.",
-     "show": 1
-    },
-    {
-     "say": "And starts with yes also accepts answers like Yes with a period. The dashboard message returns True, the thank-you returns False.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Step 5",
-   "title": "A safe fallback",
-   "file": "safe_is_urgent",
-   "code": "def safe_is_urgent(message_text):\n    try:\n        return is_urgent(message_text)\n    except Exception as e:\n        print(f\"AI decision failed ({e}); treating message as not urgent\")\n        return False  # safe default",
-   "beats": [
-    {
-     "say": "A fallback is a safe default used when a step can't be completed normally.",
-     "show": 0
-    },
-    {
-     "say": "If the A I call fails, safe is urgent logs it and treats the message as not urgent, so the workflow doesn't crash.",
-     "show": 1
-    },
-    {
-     "say": "Think about which default is safer for your own workflow. Sometimes urgent is the safer guess.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "merge",
-   "kicker": "Steps 6 to 8",
-   "title": "Wire it in and test it",
-   "steps": [
-    "extract → is it urgent? → save",
-    "1 URGENT notification",
-    "Test ambiguous cases",
-    "Document limits"
+   "title": "A simple rule misses the urgent one",
+   "columns": [
+    "id",
+    "message",
+    "Has \"urgent\"?"
+   ],
+   "rows": [
+    [
+     "1",
+     "Pricing for 10 seats?",
+     "no"
+    ],
+    [
+     "2",
+     "A demo next week",
+     "no"
+    ],
+    [
+     "3",
+     "Dashboard down an hour",
+     "no"
+    ],
+    [
+     "4",
+     "Thanks for the reply",
+     "no"
+    ]
    ],
    "beats": [
     {
-     "say": "Wire the decision into run workflow, between extracting and saving.",
-     "show": 1
+     "say": "Here are the four valid messages from Project 3. Which ones are urgent?"
     },
     {
-     "say": "If a message is urgent, send an urgent notification. With the sample data, you'll see one, for the dashboard down message.",
-     "show": 2
+     "say": "Try a simple rule: flag a message if it contains the word urgent.",
+     "sql": "rule: \"urgent\" in message",
+     "col": 2
     },
     {
-     "say": "Then test ambiguous messages, like: the invoice seems wrong, could you look when you get a chance?",
-     "show": 3
+     "say": "Not one message matches, so the rule flags nothing.",
+     "col": 2,
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     },
     {
-     "say": "And document what the A I decides, how confident you are, and what happens if it's wrong.",
-     "show": 4
+     "say": "But message three, our dashboard has been down for an hour, please help now, is clearly urgent. Spotting that takes judgment.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "So ask an A I one narrow question, with an answer code can parse.",
+     "sql": "Is this message urgent? Answer only yes or no.",
+     "hl": 2,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 4",
+   "title": "Ask Claude one narrow question",
+   "file": "is_urgent",
+   "code": "def is_urgent(message_text):\n    response = requests.post(\n        \"https://api.anthropic.com/v1/messages\",\n        headers={...}, json={\n            \"model\": \"claude-sonnet-5-5\",\n            \"max_tokens\": 5,\n            \"messages\": [{\"role\": \"user\", \"content\":\n              f\"Is this message urgent? Answer only\"\n              f\" yes or no.\\n\\n{message_text}\"}],\n        }, timeout=30)\n    response.raise_for_status()\n    answer = (response.json()[\"content\"][0][\"text\"]\n              .strip().lower())\n    return answer.startswith(\"yes\")",
+   "beats": [
+    {
+     "say": "Is urgent sends the message to the Claude A P I. Start with the dashboard message.",
+     "line": 1,
+     "vars": {
+      "message_text": "\"Our dashboard has been down for an hour. Please help now.\""
+     }
+    },
+    {
+     "say": "The prompt is the narrow question, with the message underneath.",
+     "line": [
+      7,
+      8,
+      9
+     ]
+    },
+    {
+     "say": "Max tokens is just five, which forces a short, structured answer.",
+     "line": 6
+    },
+    {
+     "say": "The reply comes back with status two hundred, so raise for status does nothing.",
+     "line": 11,
+     "vars": {
+      "response.status_code": 200
+     }
+    },
+    {
+     "say": "Pull out the text, for example capital Yes, then strip spaces and make it lower case.",
+     "line": [
+      12,
+      13
+     ],
+     "vars": {
+      "answer": "\"yes\""
+     }
+    },
+    {
+     "say": "It starts with yes, so is urgent returns True. Starts with also accepts Yes with a period.",
+     "line": 14,
+     "out": "True"
+    },
+    {
+     "say": "Now the thank-you message. Say the answer is No. It doesn't start with yes, so False.",
+     "line": [
+      12,
+      13,
+      14
+     ],
+     "vars": {
+      "message_text": "\"Thanks for the quick reply yesterday.\"",
+      "response.status_code": 200,
+      "answer": "\"no\""
+     },
+     "out": "False"
+    },
+    {
+     "say": "Now say the key is wrong.",
+     "line": 1,
+     "vars": null
+    },
+    {
+     "say": "The A P I answers four oh one, and raise for status turns that error status into an exception. Rate limits work the same way.",
+     "line": 11,
+     "vars": {
+      "response.status_code": 401
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 5",
+   "title": "A safe fallback when the A I call fails",
+   "file": "safe_is_urgent",
+   "code": "def safe_is_urgent(message_text):\n    try:\n        return is_urgent(message_text)\n    except Exception as e:\n        print(f\"AI decision failed ({e}); \"\n              \"treating message as not urgent\")\n        return False  # safe default",
+   "beats": [
+    {
+     "say": "A fallback is a safe default used when a step can't be completed normally.",
+     "line": 1
+    },
+    {
+     "say": "Safe is urgent simply tries the real call.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "message_text": "\"Our dashboard has been down for an hour. Please help now.\""
+     }
+    },
+    {
+     "say": "Say the key is wrong. Is urgent raises an H T T P error with status four oh one.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "e": "HTTPError(\"401 Client Error: Unauthorized for url: https://api.anthropic.com/v1/messages\")"
+     }
+    },
+    {
+     "say": "Instead of crashing, it prints what went wrong.",
+     "line": [
+      5,
+      6
+     ],
+     "out": "AI decision failed (401 Client Error: Unauthorized for url: https://api.anthropic.com/v1/messages); treating message as not urgent"
+    },
+    {
+     "say": "And returns False, not urgent, so the workflow keeps going.",
+     "line": 7
+    },
+    {
+     "say": "Think about which default is safer for your own workflow. Sometimes urgent is the safer guess.",
+     "line": 7
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 6",
+   "title": "The decision, wired into the workflow",
+   "nodes": [
+    {
+     "id": "extract",
+     "label": "Extract data",
+     "x": 12,
+     "y": 50,
+     "sub": "step 2",
+     "art": "funnel"
+    },
+    {
+     "id": "ai",
+     "label": "Urgent?",
+     "x": 42,
+     "y": 50,
+     "sub": "the AI decision",
+     "art": "robot"
+    },
+    {
+     "id": "notify",
+     "label": "Notify",
+     "x": 86,
+     "y": 18,
+     "sub": "URGENT from …",
+     "art": "bell"
+    },
+    {
+     "id": "save",
+     "label": "Save",
+     "x": 86,
+     "y": 82,
+     "sub": "leads.csv",
+     "art": "table"
+    }
+   ],
+   "edges": [
+    {
+     "from": "extract",
+     "to": "ai"
+    },
+    {
+     "from": "ai",
+     "to": "notify"
+    },
+    {
+     "from": "ai",
+     "to": "save"
+    },
+    {
+     "from": "save",
+     "to": "notify"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The A I decision sits between extracting and saving.",
+     "show": 4,
+     "on": "ai"
+    },
+    {
+     "say": "Item one, the pricing question, goes to the decision.",
+     "on": "ai",
+     "send": {
+      "from": "extract",
+      "to": "ai",
+      "label": "item 1"
+     }
+    },
+    {
+     "say": "Not urgent, so it's simply saved. Items two and four go the same way.",
+     "on": "save",
+     "send": {
+      "from": "ai",
+      "to": "save",
+      "label": "not urgent"
+     }
+    },
+    {
+     "say": "Item three, the dashboard message, comes through.",
+     "on": "ai",
+     "send": {
+      "from": "extract",
+      "to": "ai",
+      "label": "item 3"
+     }
+    },
+    {
+     "say": "Urgent! An urgent notification goes out, with the sender and the message.",
+     "on": "notify",
+     "send": {
+      "from": "ai",
+      "to": "notify",
+      "label": "URGENT: li@…"
+     }
+    },
+    {
+     "say": "Then it's saved like the others.",
+     "on": "save",
+     "send": {
+      "from": "ai",
+      "to": "save",
+      "label": "item 3"
+     }
+    },
+    {
+     "say": "Item five still fails at extract, so it never reaches the A I. The summary says: processed four items, one failed.",
+     "on": "notify",
+     "send": {
+      "from": "save",
+      "to": "notify",
+      "label": "summary: 4 saved"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 7 and 8",
+   "title": "Test the hard cases, and write down the limits",
+   "columns": [
+    "Message",
+    "Kind",
+    "Expect"
+   ],
+   "rows": [
+    [
+     "Dashboard down an hour",
+     "clearly urgent",
+     "yes"
+    ],
+    [
+     "Thanks for the reply",
+     "clearly not",
+     "no"
+    ],
+    [
+     "Invoice seems wrong…",
+     "ambiguous",
+     "?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now add test messages to the source, each with a new i d."
+    },
+    {
+     "say": "One that's clearly urgent.",
+     "hl": 0
+    },
+    {
+     "say": "One that's clearly not.",
+     "hl": 1
+    },
+    {
+     "say": "And one that's genuinely ambiguous: could you look at this when you get a chance? The invoice seems wrong.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Ambiguous cases are where the A I is most likely to be wrong, so they show you its real limits.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Then, in a text cell called A I decision notes, write what the A I decides, how confident you are, and what happens if it's wrong.",
+     "sql": "ai_decision_notes: what it decides · how confident · what if it's wrong"
     }
    ]
   },
@@ -1582,149 +2529,377 @@ task_agent_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "api",
-   "kicker": "Step 2",
+   "kind": "diagram",
+   "kicker": "Steps 2 and 5",
    "title": "How tool calling works",
-   "steps": [
-    "Model requests a tool",
-    "Your code decides and runs it",
-    "You send the result back"
+   "nodes": [
+    {
+     "id": "user",
+     "label": "Request",
+     "x": 10,
+     "y": 50,
+     "sub": "jo@example.com refund",
+     "art": "mail"
+    },
+    {
+     "id": "loop",
+     "label": "run_agent",
+     "x": 46,
+     "y": 50,
+     "sub": "your code",
+     "art": "code"
+    },
+    {
+     "id": "claude",
+     "label": "Claude",
+     "x": 86,
+     "y": 18,
+     "sub": "picks a tool",
+     "art": "robot"
+    },
+    {
+     "id": "tools",
+     "label": "Your tools",
+     "x": 86,
+     "y": 82,
+     "sub": "only ALLOWED_TOOLS",
+     "art": "gear"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "loop"
+    },
+    {
+     "from": "loop",
+     "to": "claude"
+    },
+    {
+     "from": "loop",
+     "to": "tools"
+    }
    ],
    "beats": [
     {
-     "say": "Tool calling lets an L L M ask to run a function you've defined, with arguments it chooses.",
-     "show": 0
+     "say": "A request comes in: a customer, jo at example dot com, emailed asking for a refund on order forty five twenty one.",
+     "on": "user",
+     "send": {
+      "from": "user",
+      "to": "loop",
+      "label": "refund #4521"
+     }
     },
     {
-     "say": "The model never runs anything itself.",
-     "show": 0
+     "say": "Run agent sends it to Claude, along with the tool definitions.",
+     "on": "loop",
+     "send": {
+      "from": "loop",
+      "to": "claude",
+      "label": "messages + tools"
+     }
     },
     {
-     "say": "It sends back a request.",
-     "show": 1
+     "say": "Claude doesn't run anything. It replies with stop reason tool use, naming a tool and its arguments. For example, create task.",
+     "on": "claude",
+     "send": {
+      "from": "claude",
+      "to": "loop",
+      "label": "tool_use"
+     }
     },
     {
-     "say": "Your code decides whether to run it.",
-     "show": 2
+     "say": "Your code decides whether to run it, and does.",
+     "on": "tools",
+     "send": {
+      "from": "loop",
+      "to": "tools",
+      "label": "create_task"
+     }
     },
     {
-     "say": "And you send the result back.",
-     "show": 3
+     "say": "The result goes back to Claude, in a tool result.",
+     "on": "claude",
+     "send": {
+      "from": "loop",
+      "to": "claude",
+      "label": "tool_result"
+     }
+    },
+    {
+     "say": "When Claude is done, it replies with plain text, and the loop ends.",
+     "on": "loop",
+     "send": {
+      "from": "claude",
+      "to": "loop",
+      "label": "final text"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "lock",
+   "kind": "table",
    "kicker": "Steps 3 and 4",
-   "title": "Tools, an allow-list, and descriptions",
-   "items": [
+   "title": "Three tools, an allow-list, and one that needs a human",
+   "columns": [
+    "Tool",
+    "Description says",
+    "Inputs",
+    "Confirm?"
+   ],
+   "rows": [
     [
-     "send_email · create_task · log_note",
-     "Simulated tools"
+     "send_email",
+     "Only if reply needed",
+     "to, subject, body",
+     "yes"
     ],
     [
-     "ALLOWED_TOOLS",
-     "The only functions the agent may run"
+     "create_task",
+     "To-do for the team",
+     "title, priority",
+     "no"
     ],
     [
-     "NEEDS_CONFIRMATION",
-     "{\"send_email\"}"
-    ],
-    [
-     "name · description · input_schema",
-     "How the model sees each tool"
+     "log_note",
+     "When no action needed",
+     "text",
+     "no"
     ]
    ],
    "beats": [
     {
-     "say": "Define three simulated tools that print instead of acting, so you can test safely.",
-     "show": 0
+     "say": "Three simulated tools. They print instead of really acting, so you can test safely.",
+     "col": 0
     },
     {
-     "say": "Send email, create task, and log note.",
-     "show": 1
+     "say": "They go in a dictionary called allowed tools. The model can only trigger these, never any other function in your notebook.",
+     "sql": "ALLOWED_TOOLS = {send_email, create_task, log_note}",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     },
     {
-     "say": "Put them in an allowed tools dictionary. The model can only trigger those, never any other function in your notebook.",
-     "show": 2
+     "say": "Each tool gets a description. The model uses these words to choose, so make them specific.",
+     "col": 1
     },
     {
-     "say": "Mark send email as needing confirmation, because it has side effects.",
-     "show": 3
+     "say": "And an input schema, in J S O N Schema: the arguments, their types, and which are required. Priority must be low, medium or high.",
+     "col": 2,
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Then describe each tool with a name, a description, and an input schema in J S O N Schema. The model uses the description to choose.",
-     "show": 4
+     "say": "Send email has side effects that can't be undone, so it needs a human's okay first.",
+     "sql": "NEEDS_CONFIRMATION = {\"send_email\"}",
+     "hl": 0,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
+   "kind": "walk",
    "kicker": "Step 6",
-   "title": "Run tools safely",
+   "title": "run_tool: the safety gate",
    "file": "run_tool",
-   "code": "def run_tool(name, args):\n    if name not in ALLOWED_TOOLS:\n        return f\"Unknown tool '{name}'. Not run.\", True\n    if name in NEEDS_CONFIRMATION:\n        confirm = input(\"Allow this? (y/n): \")\n        if confirm.strip().lower() != \"y\":\n            return \"A human declined this action. It was not done.\", True\n    try:\n        return str(ALLOWED_TOOLS[name](**args)), False\n    except Exception as e:\n        return f\"Tool failed: {e}\", True",
+   "code": "def run_tool(name, args):\n    if name not in ALLOWED_TOOLS:\n        return (f\"Unknown tool '{name}'. \"\n                \"Not run.\"), True\n    if name in NEEDS_CONFIRMATION:  # prints args\n        confirm = input(\"Allow this? (y/n): \")\n        if confirm.strip().lower() != \"y\":\n            return (\"A human declined this action. \"\n                    \"It was not done.\"), True\n    try:\n        return (str(ALLOWED_TOOLS[name](**args)),\n                False)\n    except Exception as e:\n        return f\"Tool failed: {e}\", True",
    "beats": [
     {
-     "say": "Run tool is the safety gate.",
-     "show": 0
+     "say": "Every tool request passes through run tool. For example, Claude asks for create task, priority high.",
+     "line": 1,
+     "vars": {
+      "name": "\"create_task\"",
+      "args": "{title: \"Process refund for order #4521\", priority: \"high\"}"
+     }
     },
     {
-     "say": "An unknown tool is refused.",
-     "show": 1
+     "say": "It's on the allow-list, and it doesn't need confirmation.",
+     "line": [
+      2,
+      5
+     ]
     },
     {
-     "say": "For a risky tool, it shows the arguments and asks a human first. If they decline, it's not done.",
-     "show": 1
+     "say": "So it runs, and the result goes back marked as not an error.",
+     "line": [
+      11,
+      12
+     ],
+     "out": [
+      "Creating task: Process refund for order #4521 (priority: high)",
+      "(\"Task 'Process refund for order #4521' created.\", False)"
+     ]
+    },
+    {
+     "say": "Now Claude asks to email jo. That one needs confirmation.",
+     "line": 5,
+     "vars": {
+      "name": "\"send_email\"",
+      "args": "{to: \"jo@example.com\", subject: …, body: …}"
+     }
+    },
+    {
+     "say": "It shows the arguments and asks: allow this? You type n.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "confirm": "\"n\""
+     },
+     "out": "Allow this? (y/n): n"
+    },
+    {
+     "say": "So the email is never sent. The result says a human declined it.",
+     "line": [
+      7,
+      8,
+      9
+     ],
+     "out": "(\"A human declined this action. It was not done.\", True)"
+    },
+    {
+     "say": "Last, say the model asks for a tool you never gave it.",
+     "line": 1,
+     "vars": null
+    },
+    {
+     "say": "It isn't on the allow-list, so it's refused before anything runs.",
+     "line": [
+      2,
+      3,
+      4
+     ],
+     "vars": {
+      "name": "\"delete_order\"",
+      "args": "{…}"
+     },
+     "out": "(\"Unknown tool 'delete_order'. Not run.\", True)"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Steps 6 to 8",
-   "title": "The agent loop, then test it",
-   "items": [
+   "kind": "array",
+   "kicker": "Step 6",
+   "title": "The messages list, turn by turn",
+   "values": [
+    "user: refund request"
+   ],
+   "beats": [
+    {
+     "say": "Run agent keeps a messages list. It starts with the user's request.",
+     "hl": 0,
+     "ptr": {
+      "turn": 0
+     }
+    },
+    {
+     "say": "Claude's whole reply is added. Say it asks for two tools at once: create task and send email.",
+     "vals": [
+      "user: refund request",
+      "assistant: 2 × tool_use"
+     ],
+     "hl": 1,
+     "note": "stop_reason: tool_use"
+    },
+    {
+     "say": "Both results go back in one user message. Each has a tool use i d matching its request, even the declined email.",
+     "vals": [
+      "user: refund request",
+      "assistant: 2 × tool_use",
+      "user: 2 × tool_result"
+     ],
+     "hl": 2,
+     "note": "tool_use_id = the tool_use block's id"
+    },
+    {
+     "say": "Claude reads them, and replies with text: the task is created, but the email wasn't sent.",
+     "vals": [
+      "user: refund request",
+      "assistant: 2 × tool_use",
+      "user: 2 × tool_result",
+      "assistant: final text"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "stop_reason isn't tool_use → return the text"
+    },
+    {
+     "say": "If Claude kept asking for tools, max turns of five would stop the loop instead.",
+     "vals": [
+      "user: refund request",
+      "assistant: 2 × tool_use",
+      "user: 2 × tool_result",
+      "assistant: final text"
+     ],
+     "note": "Stopped: reached the turn limit."
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 7 and 8",
+   "title": "Test it across different situations",
+   "columns": [
+    "Situation",
+    "A good pick"
+   ],
+   "rows": [
     [
-     "tool_use → tool_result",
-     "Matching tool_use_id, always"
+     "Refund for jo, #4521",
+     "task, maybe email"
     ],
     [
-     "max_turns",
-     "Stops endless loops"
+     "Restock blue mugs",
+     "create_task"
     ],
     [
-     "5 test situations",
-     "Including one with no tool"
+     "Courier pickup 3pm",
+     "log_note"
     ],
     [
-     "Answer n",
-     "No email sent, and the agent says so"
+     "What's 2 + 2?",
+     "no tool at all"
+    ],
+    [
+     "Email prompt: answer n",
+     "no email sent"
     ]
    ],
    "beats": [
     {
-     "say": "Run agent asks the model, runs the tools it picks, sends the results back, and repeats until it's done.",
-     "show": 0
+     "say": "Run the agent on five different situations, and note which tool it picked each time."
     },
     {
-     "say": "Every tool use block gets a matching tool result with the same id, even when the action was declined.",
-     "show": 1
+     "say": "Remind the team to restock blue mugs? A task fits.",
+     "hl": 1
     },
     {
-     "say": "Max turns stops a confused agent from looping forever.",
-     "show": 2
+     "say": "The courier changes its pickup time to three P M? Nothing to do, so a note.",
+     "hl": 2
     },
     {
-     "say": "Test five different situations, including one that needs no tool, like what's two plus two.",
-     "show": 3
+     "say": "What's two plus two? No tool is needed at all.",
+     "hl": 3
     },
     {
-     "say": "Then answer n at the email prompt, and check no email was sent, and the agent admits it.",
-     "show": 4
+     "say": "Then test the human check. Answer n at the email prompt.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "Check that no simulated sending email line printed, and that the agent's reply admits the email wasn't sent.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -1989,110 +3164,462 @@ monitoring_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Steps 2 and 3",
-   "title": "Structured logging",
-   "file": "logging",
-   "code": "import logging\nlogging.basicConfig(filename=\"automation.log\", level=logging.INFO,\n                    format=\"%(asctime)s %(levelname)s %(message)s\", force=True)\n\nlogging.info(f\"AI decided: urgent={urgent} for item {data['id']}\")\nlogging.info(f\"Agent selected tool: {name} with input {args}\")",
-   "beats": [
-    {
-     "say": "Structured logging records what happened, when, and at what severity level, instead of scattered print statements.",
-     "show": 0
-    },
-    {
-     "say": "Every entry is timestamped and saved to automation dot log.",
-     "show": 1
-    },
-    {
-     "say": "Then log every key decision: what the A I decided for each item, and which tool the agent selected.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Steps 4 and 5",
-   "title": "Health checks and retries",
-   "items": [
+   "title": "Structured logging tells the story",
+   "columns": [
+    "time",
+    "level",
+    "message"
+   ],
+   "rows": [
     [
-     "Health check",
-     "max_tokens: 1, before the real run"
+     "09:00:01,102",
+     "INFO",
+     "Workflow started"
     ],
     [
-     "Retry ✓",
-     "Network errors, timeouts, 429, 500+"
+     "09:00:02,418",
+     "INFO",
+     "urgent=False, item 1"
     ],
     [
-     "Don't retry ✗",
-     "Bad input, wrong key (401)"
+     "09:00:03,977",
+     "INFO",
+     "urgent=True, item 3"
+    ],
+    [
+     "09:00:09,530",
+     "INFO",
+     "tool: create_task"
+    ],
+    [
+     "09:00:12,061",
+     "ERROR",
+     "Health check failed"
     ]
    ],
    "beats": [
     {
-     "say": "A health check is a lightweight test that a dependency is reachable before the real workflow runs. This one asks for just one token, so it costs almost nothing.",
-     "show": 1
+     "say": "Structured logging writes every event to automation dot log, in the same format.",
+     "sql": "format=\"%(asctime)s %(levelname)s %(message)s\""
     },
     {
-     "say": "A transient failure is temporary, like a network blip or a rate limit, and often succeeds if retried.",
-     "show": 2
+     "say": "Each line starts with the date and time. Here we show just the time.",
+     "col": 0
     },
     {
-     "say": "A permanent failure, like bad input or a wrong A P I key, won't. So call with retry raises those straight away.",
-     "show": 3
+     "say": "Then a severity level: info, warning, or error.",
+     "col": 1
+    },
+    {
+     "say": "Then the message. Unlike a print statement, it's saved to a file, so you can reconstruct what happened later.",
+     "col": 2
+    },
+    {
+     "say": "Log every key decision. For example: what the A I decided for each item.",
+     "sql": "logging.info(f\"AI decided: urgent={urgent} for item {data['id']}\")",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    },
+    {
+     "say": "And which tool the agent selected, with its input.",
+     "sql": "logging.info(f\"Agent selected tool: {name} with input {args}\")",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Problems stand out by level, so you can search for them.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "bell",
-   "kicker": "Step 6",
-   "title": "Alert on repeated failures",
-   "file": "alerting",
-   "code": "def record_failure():\n    global consecutive_failures\n    consecutive_failures += 1\n    if consecutive_failures >= 3:\n        logging.error(f\"ALERT: {consecutive_failures} consecutive failures, needs attention\")\n\ndef record_success():\n    global consecutive_failures\n    consecutive_failures = 0",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Step 4",
+   "title": "Health check first, then the real run",
+   "nodes": [
     {
-     "say": "Count failures in a row.",
-     "show": 0
+     "id": "hc",
+     "label": "health_check()",
+     "x": 14,
+     "y": 50,
+     "sub": "max_tokens: 1",
+     "art": "pulse"
     },
     {
-     "say": "After three, log an alert. Record success resets the counter, so the alert only fires for failures in a row.",
-     "show": 1
+     "id": "api",
+     "label": "Claude API",
+     "x": 50,
+     "y": 16,
+     "sub": "the dependency",
+     "art": "cloud"
     },
     {
-     "say": "Monitored is urgent combines it all: retries, failure tracking, and the same safe default as Project 4.",
-     "show": 1
+     "id": "wf",
+     "label": "Real workflow",
+     "x": 86,
+     "y": 50,
+     "sub": "the urgency check",
+     "art": "gear"
+    },
+    {
+     "id": "log",
+     "label": "automation.log",
+     "x": 50,
+     "y": 84,
+     "sub": "ERROR lines",
+     "art": "doc"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Steps 7 and 8",
-   "title": "Break it on purpose",
-   "steps": [
-    "Set a wrong key",
-    "Call 3 times",
-    "3 ERRORs + ALERT",
-    "Restore the key"
+   ],
+   "edges": [
+    {
+     "from": "hc",
+     "to": "api"
+    },
+    {
+     "from": "hc",
+     "to": "wf"
+    },
+    {
+     "from": "hc",
+     "to": "log"
+    }
    ],
    "beats": [
     {
-     "say": "Now test your failure handling deliberately.",
-     "show": 0
+     "say": "A health check is a lightweight test that a dependency is reachable, before the real workflow runs.",
+     "show": 4,
+     "on": "hc"
     },
     {
-     "say": "Set a wrong key, and call the monitored function three times.",
-     "show": 1
+     "say": "It sends Claude a tiny request, ping, and asks for just one token, so it costs almost nothing.",
+     "on": "api",
+     "send": {
+      "from": "hc",
+      "to": "api",
+      "label": "ping · 1 token"
+     }
     },
     {
-     "say": "Read automation dot log. You should see an error line for each call, and the alert after the third.",
-     "show": 2
+     "say": "Status two hundred means healthy.",
+     "on": "hc",
+     "send": {
+      "from": "api",
+      "to": "hc",
+      "label": "200"
+     }
     },
     {
-     "say": "A wrong key is a permanent error, so no retry warnings appear. Then restore your real key.",
-     "show": 3
+     "say": "So the real workflow is allowed to run.",
+     "on": "wf",
+     "send": {
+      "from": "hc",
+      "to": "wf",
+      "label": "go"
+     }
+    },
+    {
+     "say": "If the A P I is down or the key is wrong, health check returns False instead.",
+     "on": "hc",
+     "send": {
+      "from": "api",
+      "to": "hc",
+      "label": "401"
+     }
+    },
+    {
+     "say": "The run is skipped, and an error line in the log says why.",
+     "on": "log",
+     "send": {
+      "from": "hc",
+      "to": "log",
+      "label": "Skipping run"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 5",
+   "title": "Retry only what's worth retrying",
+   "file": "call_with_retry",
+   "code": "def call_with_retry(func, *args, retries=3, delay=2):\n    for attempt in range(retries):\n        try:\n            return func(*args)\n        except requests.HTTPError as e:\n            code = e.response.status_code\n            if code < 500 and code != 429:\n                raise  # permanent error\n            logging.warning(...)  # Attempt n of 3\n        except requests.RequestException as e:\n            logging.warning(...)  # network, timeout\n        if attempt < retries - 1:\n            time.sleep(delay)\n    raise RuntimeError(f\"All {retries} retries failed\")",
+   "beats": [
+    {
+     "say": "Call with retry wraps is urgent, with up to three attempts.",
+     "line": 1,
+     "vars": {
+      "func": "is_urgent",
+      "retries": 3,
+      "delay": 2
+     }
+    },
+    {
+     "say": "Attempt one: say the A P I answers four twenty nine, too many requests.",
+     "line": [
+      2,
+      4,
+      5
+     ],
+     "vars": {
+      "attempt": 0,
+      "code": 429
+     }
+    },
+    {
+     "say": "Four twenty nine is a rate limit, which is temporary. So no raise: log a warning.",
+     "line": [
+      6,
+      7,
+      9
+     ],
+     "out": "WARNING Attempt 1 of 3 failed: 429 Client Error: Too Many Requests …"
+    },
+    {
+     "say": "Wait two seconds, and go around again.",
+     "line": [
+      12,
+      13
+     ]
+    },
+    {
+     "say": "Attempt two succeeds, and the answer, True, is returned.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "attempt": 1
+     },
+     "out": "→ returns True"
+    },
+    {
+     "say": "Now a fresh call, with a wrong key.",
+     "line": 1,
+     "vars": null
+    },
+    {
+     "say": "Status four oh one. That's below five hundred, and not four twenty nine.",
+     "line": [
+      5,
+      6,
+      7
+     ],
+     "vars": {
+      "attempt": 0,
+      "code": 401
+     }
+    },
+    {
+     "say": "A permanent error, so it's raised straight away. Retrying won't help.",
+     "line": 8,
+     "out": "→ raises 401 Client Error: Unauthorized"
+    },
+    {
+     "say": "Last, say the network is down. Each attempt logs a warning, then waits and tries again.",
+     "line": [
+      10,
+      11,
+      12,
+      13
+     ],
+     "vars": null
+    },
+    {
+     "say": "After the third attempt there's no more waiting. The loop runs out, and it gives up.",
+     "line": [
+      12,
+      14
+     ],
+     "vars": {
+      "attempt": 2
+     },
+     "out": "→ RuntimeError: All 3 retries failed"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 6",
+   "title": "Alert only on failures in a row",
+   "values": [
+    "ok",
+    "fail",
+    "fail",
+    "ok",
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "beats": [
+    {
+     "say": "Here are seven calls to monitored is urgent, some succeeding, some failing. The counter starts at zero.",
+     "note": "consecutive_failures = 0"
+    },
+    {
+     "say": "Call one succeeds. Record success keeps the counter at zero.",
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "call": 0
+     },
+     "note": "consecutive_failures = 0"
+    },
+    {
+     "say": "Calls two and three fail. The counter climbs to two. No alert yet.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "ptr": {
+      "call": 2
+     },
+     "note": "consecutive_failures = 2"
+    },
+    {
+     "say": "Call four succeeds, and record success resets the counter to zero.",
+     "ok": [
+      0,
+      3
+     ],
+     "gone": [
+      1,
+      2
+     ],
+     "ptr": {
+      "call": 3
+     },
+     "note": "consecutive_failures = 0"
+    },
+    {
+     "say": "Calls five, six and seven fail in a row.",
+     "ok": [
+      0,
+      3
+     ],
+     "gone": [
+      1,
+      2
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "ptr": {
+      "call": 6
+     },
+     "note": "consecutive_failures = 3"
+    },
+    {
+     "say": "Three in a row: record failure logs an alert. Each failed call still returns the safe default, not urgent.",
+     "ok": [
+      0,
+      3
+     ],
+     "gone": [
+      1,
+      2
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "ptr": {
+      "call": 6
+     },
+     "note": "ERROR ALERT: 3 consecutive failures, needs attention"
+    },
+    {
+     "say": "Because of the reset, two scattered failures never trigger it. Only a real run of trouble does.",
+     "ok": [
+      0,
+      3
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "isolated failures: no alert"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 7 and 8",
+   "title": "Break it on purpose, then read the log",
+   "columns": [
+    "call",
+    "level",
+    "message"
+   ],
+   "rows": [
+    [
+     "1",
+     "ERROR",
+     "AI decision failed…"
+    ],
+    [
+     "2",
+     "ERROR",
+     "AI decision failed…"
+    ],
+    [
+     "3",
+     "ERROR",
+     "AI decision failed…"
+    ],
+    [
+     "3",
+     "ERROR",
+     "ALERT: 3 consecutive…"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now test deliberately. Set a wrong key, and call the monitored function three times.",
+     "sql": "os.environ[\"ANTHROPIC_API_KEY\"] = \"wrong-key\""
+    },
+    {
+     "say": "Each call fails with a four oh one, and logs an error line.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "After the third, the alert line appears.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Notice there are no warning lines. A wrong key is a permanent error, so nothing was retried.",
+     "col": 1
+    },
+    {
+     "say": "Read it with cat automation dot log, and check it tells a clear story. Then restore your real key.",
+     "sql": "!cat automation.log",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },

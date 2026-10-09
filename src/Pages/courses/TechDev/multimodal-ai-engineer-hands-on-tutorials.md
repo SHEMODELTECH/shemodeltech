@@ -122,125 +122,318 @@ multimodal_survey_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Concept",
+   "kind": "table",
+   "kicker": "Step 2 · Concept",
    "title": "Four modalities",
-   "items": [
+   "columns": [
+    "Modality",
+    "What it is",
+    "In this course"
+   ],
+   "rows": [
     [
      "Text",
-     "Words"
+     "words",
+     "questions, captions"
     ],
     [
      "Image",
-     "Still pictures"
+     "still pictures",
+     "test_image.jpg"
     ],
     [
      "Audio",
-     "Speech and sound"
+     "speech and sound",
+     "test_audio.wav"
     ],
     [
      "Video",
-     "Moving images, often with audio"
+     "moving images + audio",
+     "survey only"
     ]
    ],
    "beats": [
     {
-     "say": "This course covers four modalities.",
-     "show": 0
+     "say": "This course works with four kinds of data, called modalities."
     },
     {
-     "say": "Text: words.",
-     "show": 1
+     "say": "Text: words, like a question or a caption.",
+     "hl": 0
     },
     {
-     "say": "Image: still pictures.",
-     "show": 2
+     "say": "Image: still pictures, like the test photo you'll use from Project 2.",
+     "hl": 1
     },
     {
-     "say": "Audio: speech and sound.",
-     "show": 3
+     "say": "Audio: speech and sound, like the voice clip in Project 3.",
+     "hl": 2
     },
     {
-     "say": "And video: moving images, often with audio.",
-     "show": 4
+     "say": "And video: moving images, often with audio as well.",
+     "hl": 3
     },
     {
-     "say": "A multimodal model processes or generates more than one of these.",
-     "show": 4
+     "say": "A model is multimodal when it takes in or produces more than one of these.",
+     "sql": "multimodal = processes and/or generates 2+ modalities",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "neural",
-   "kicker": "Concept",
-   "title": "Model categories",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Step 3 · Concept",
+   "title": "Model categories: what turns into what",
+   "nodes": [
+    {
+     "id": "img",
+     "label": "Image",
+     "x": 15,
+     "y": 25,
+     "sub": "still picture",
+     "art": "image"
+    },
+    {
+     "id": "txt",
+     "label": "Text",
+     "x": 50,
+     "y": 60,
+     "sub": "words",
+     "art": "chat"
+    },
+    {
+     "id": "aud",
+     "label": "Audio",
+     "x": 85,
+     "y": 25,
+     "sub": "speech",
+     "art": "wave"
+    }
+   ],
+   "edges": [
+    {
+     "from": "img",
+     "to": "txt"
+    },
+    {
+     "from": "txt",
+     "to": "aud"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Sort models by what they turn into what. Here are three modalities.",
+     "show": 3
+    },
+    {
+     "say": "A vision-language model, or V L M, reads an image and text together, and answers in text.",
+     "show": 3,
+     "on": [
+      "img",
+      "txt"
+     ],
+     "send": {
+      "from": "img",
+      "to": "txt",
+      "label": "VLM: describe"
+     }
+    },
+    {
+     "say": "A speech-to-text model, S T T, turns spoken audio into text.",
+     "show": 3,
+     "on": "aud",
+     "send": {
+      "from": "aud",
+      "to": "txt",
+      "label": "STT: transcribe"
+     }
+    },
+    {
+     "say": "Text-to-speech, T T S, goes the other way: text becomes audio.",
+     "show": 3,
+     "on": "txt",
+     "send": {
+      "from": "txt",
+      "to": "aud",
+      "label": "TTS: speak"
+     }
+    },
+    {
+     "say": "And an image generation model creates a new image from a text prompt.",
+     "show": 3,
+     "on": "img",
+     "send": {
+      "from": "txt",
+      "to": "img",
+      "label": "generate"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 4 and 5 · Survey",
+   "title": "Write down what goes in and what comes out",
+   "columns": [
+    "Category",
+    "Example",
+    "Input",
+    "Output"
+   ],
+   "rows": [
     [
-     "Vision-language (VLM)",
-     "Images + text together"
+     "Vision-language",
+     "Claude",
+     "base64 image + text",
+     "text"
     ],
     [
-     "STT and TTS",
-     "Audio ↔ text"
+     "Speech-to-text",
+     "Whisper",
+     "WAV, MP3 or M4A file",
+     "text"
+    ],
+    [
+     "Text-to-speech",
+     "gTTS",
+     "text",
+     "MP3 file"
     ],
     [
      "Image generation",
-     "Images from text prompts"
+     "your pick",
+     "text prompt",
+     "image"
     ]
    ],
    "beats": [
     {
-     "say": "Models fall into categories by what they can do.",
-     "show": 0
+     "say": "In a text cell called model survey, research two or three models per category. Here are ones this course uses later."
     },
     {
-     "say": "Vision-language models, or V L Ms, understand images and text together.",
-     "show": 1
+     "say": "Claude is a vision-language model. It takes a base sixty four image plus text, and returns text.",
+     "hl": 0
     },
     {
-     "say": "Speech-to-text and text-to-speech models convert between audio and text.",
-     "show": 2
+     "say": "Whisper is speech-to-text. It reads an audio file, like a W A V or M P 3, and returns text.",
+     "hl": 1
     },
     {
-     "say": "And image generation models create images from text prompts.",
-     "show": 3
+     "say": "g T T S is text-to-speech. It takes text and saves an M P 3.",
+     "hl": 2
+    },
+    {
+     "say": "For image generation, pick models yourself: the input is a text prompt, the output an image.",
+     "hl": 3
+    },
+    {
+     "say": "These formats matter, because your code must send exactly what each model expects.",
+     "col": 2
+    },
+    {
+     "say": "For each model, also note one differentiator: cost, quality, latency, or licensing.",
+     "sql": "differentiator: cost · quality · latency · licensing",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Lab · Steps 4 to 7",
-   "title": "Build your survey",
-   "steps": [
-    "2 to 3 models per category",
-    "One differentiator each",
-    "Input and output formats",
-    "Size limits",
-    "Comparison summary"
+   "kind": "table",
+   "kicker": "Step 6 · Limits",
+   "title": "Multimodal limits differ from plain text",
+   "columns": [
+    "Limit",
+    "Why it matters",
+    "Course example"
+   ],
+   "rows": [
+    [
+     "Image resolution",
+     "big images cost more",
+     "resize to 1024 px"
+    ],
+    [
+     "Audio length",
+     "long clips are slow",
+     "a 5 to 30 s clip"
+    ],
+    [
+     "Combined tokens",
+     "image + text add up",
+     "short questions"
+    ]
    ],
    "beats": [
     {
-     "say": "In a text cell called model survey, research two or three models per category.",
-     "show": 1
+     "say": "Step six: write down each model's size limits. They're different from plain text models."
     },
     {
-     "say": "For each, note one key differentiator: cost, quality, latency, or licensing.",
-     "show": 2
+     "say": "Image resolution. Large images cost more and can hit the size limit, so in Project 2 you'll shrink them to fit 1024 pixels.",
+     "hl": 0
     },
     {
-     "say": "Write down the input format it expects, like a base64 image or a raw audio file, and what it returns.",
-     "show": 3
+     "say": "Audio length. Project 3 uses a short clip, between five and thirty seconds.",
+     "hl": 1
     },
     {
-     "say": "Note size limits, like image resolution, audio length, or combined token count.",
-     "show": 4
+     "say": "And combined tokens. The image and your text both count toward one total.",
+     "hl": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 7 · Summary",
+   "title": "From notes to a top pick per combination",
+   "values": [
+    "text + image",
+    "speech + text",
+    "text + image gen"
+   ],
+   "beats": [
+    {
+     "say": "Last, in a text cell called comparison summary, pick a winner for each combination."
     },
     {
-     "say": "Then, in a comparison summary, pick your top model for each combination, and say why.",
-     "show": 5
+     "say": "Text plus image: which vision-language model would you build with, and why?",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
+    },
+    {
+     "say": "Speech plus text: which speech model fits your cost and quality needs?",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     }
+    },
+    {
+     "say": "Text plus image generation: your top pick, with a reason.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
+    },
+    {
+     "say": "Three combinations, three reasoned picks. You'll come back to this in every later project.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "your reference for Projects 2 to 7"
     }
    ]
   },
@@ -475,7 +668,7 @@ image_text_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "image",
+   "art": "api",
    "kicker": "Project 2 · Image and text inputs",
    "title": "Two modalities at once",
    "beats": [
@@ -488,114 +681,368 @@ image_text_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Steps 2 and 3",
    "title": "Load and encode an image",
-   "file": "process.py",
-   "code": "from PIL import Image\nimg = Image.open(\"test_image.jpg\")\nprint(img.size, img.format)\n\nimport base64\nwith open(\"test_image.jpg\", \"rb\") as f:\n    image_data = base64.b64encode(f.read()).decode(\"utf-8\")",
+   "file": "image_text_project",
+   "code": "from PIL import Image\nimg = Image.open(\"test_image.jpg\")\nprint(img.size, img.format)\n\nimport base64\nwith open(\"test_image.jpg\", \"rb\") as f:\n    image_data = base64.b64encode(\n        f.read()).decode(\"utf-8\")",
    "beats": [
     {
-     "say": "Open your photo with Pillow and print its size and format.",
-     "show": 0
+     "say": "Pillow opens the photo you dragged into the Files panel.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "img": "<JPEG image>"
+     }
     },
     {
-     "say": "Then base64 encode it.",
-     "show": 1
+     "say": "Say it's a phone photo. Size gives width and height in pixels, and format gives the file type.",
+     "line": 3,
+     "out": "(4032, 3024) JPEG"
     },
     {
-     "say": "Base64 turns the image's binary data into a text string that fits safely inside a J S O N request.",
-     "show": 1
+     "say": "Now open the same file in r b mode, which reads its raw bytes.",
+     "line": [
+      5,
+      6
+     ]
+    },
+    {
+     "say": "Base sixty four turns those bytes into plain text characters. Every J P E G starts the same way.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "image_data": "\"/9j/4AAQSkZJRg…\""
+     }
+    },
+    {
+     "say": "That string can go safely inside a J S O N request.",
+     "line": [
+      7,
+      8
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Lab · Step 4",
-   "title": "The content array",
-   "file": "process.py",
-   "code": "\"messages\": [{\n    \"role\": \"user\",\n    \"content\": [\n        {\"type\": \"image\", \"source\": {\"type\": \"base64\",\n            \"media_type\": \"image/jpeg\", \"data\": image_data}},\n        {\"type\": \"text\", \"text\": \"Describe what's in this image.\"}\n    ]\n}]",
+   "kind": "array",
+   "kicker": "Concept · base64",
+   "title": "Every 3 bytes become 4 text characters",
+   "values": [
+    "FF",
+    "D8",
+    "FF",
+    "E0",
+    "00",
+    "10"
+   ],
    "beats": [
     {
-     "say": "Now post to the Claude messages A P I.",
-     "show": 0
+     "say": "Here are the first six bytes of a J P E G file, written in hex. Bytes like these can't go inside J S O N text."
     },
     {
-     "say": "The message content is a list. It holds an image block and a text block, side by side.",
-     "show": 1
+     "say": "Base sixty four takes them three at a time: F F, D 8, F F. That's twenty four bits.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "3 bytes = 24 bits"
+    },
+    {
+     "say": "It cuts those bits into four groups of six, and each group becomes one safe character.",
+     "vals": [
+      "/",
+      "9",
+      "j",
+      "/",
+      "E0",
+      "00",
+      "10"
+     ],
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "24 bits = 4 × 6 bits → /9j/"
+    },
+    {
+     "say": "The next three bytes become four more characters: four, A, A, Q.",
+     "vals": [
+      "/",
+      "9",
+      "j",
+      "/",
+      "4",
+      "A",
+      "A",
+      "Q"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "E0 00 10 → 4AAQ"
+    },
+    {
+     "say": "So six bytes became eight characters. The text is about a third bigger, but J S O N can carry it.",
+     "vals": [
+      "/",
+      "9",
+      "j",
+      "/",
+      "4",
+      "A",
+      "A",
+      "Q"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "6 bytes → 8 characters"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 4",
+   "title": "One message carries an image and a question",
+   "nodes": [
+    {
+     "id": "nb",
+     "label": "Your notebook",
+     "x": 12,
+     "y": 50,
+     "sub": "requests.post",
+     "art": "laptop"
+    },
+    {
+     "id": "api",
+     "label": "Messages API",
+     "x": 50,
+     "y": 50,
+     "sub": "/v1/messages",
+     "art": "api"
+    },
+    {
+     "id": "model",
+     "label": "Claude",
+     "x": 88,
+     "y": 50,
+     "sub": "claude-sonnet-5-5",
+     "art": "neural"
+    }
+   ],
+   "edges": [
+    {
+     "from": "nb",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "model"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Step four posts to the Claude messages A P I.",
+     "show": 3
+    },
+    {
+     "say": "The headers carry your key from the environment, the A P I version, and the content type.",
+     "show": 3,
+     "on": "nb",
+     "send": {
+      "from": "nb",
+      "to": "api",
+      "label": "x-api-key + JSON"
+     }
+    },
+    {
+     "say": "The message content is a list, with an image block and a text block side by side.",
+     "show": 3,
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "model",
+      "label": "image + text"
+     }
+    },
+    {
+     "say": "Claude looks at both, and writes a reply of up to three hundred tokens.",
+     "show": 3,
+     "on": "model",
+     "send": {
+      "from": "model",
+      "to": "api",
+      "label": "content blocks"
+     }
     },
     {
      "say": "The reply comes back as a list of blocks too. The text is in the blocks whose type is text.",
-     "show": 1
+     "show": 3,
+     "on": "nb",
+     "send": {
+      "from": "api",
+      "to": "nb",
+      "label": "response.json()"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Test it, then resize",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "Thumbnail shrinks, but keeps the shape",
+   "columns": [
+    "Your image",
+    "Before",
+    "After thumbnail"
+   ],
+   "rows": [
     [
-     "Varied questions",
-     "Describe · count · read text"
+     "Landscape photo",
+     "4032 × 3024",
+     "1024 × 768"
     ],
     [
-     "img.thumbnail((1024, 1024))",
-     "Smaller, same aspect ratio"
+     "Portrait photo",
+     "3024 × 4032",
+     "768 × 1024"
+    ],
+    [
+     "Small screenshot",
+     "800 × 600",
+     "800 × 600"
     ]
    ],
    "beats": [
     {
-     "say": "Run it on three or four images, asking different things: describe it, count objects, read the text in it.",
-     "show": 1
+     "say": "Large images cost more and can hit the size limit, so step six shrinks them first.",
+     "sql": "img.thumbnail((1024, 1024))\nimg.convert(\"RGB\").save(\"resized_image.jpg\")"
     },
     {
-     "say": "Then shrink large images with thumbnail, to at most ten twenty four pixels. It keeps the aspect ratio.",
-     "show": 2
+     "say": "A landscape phone photo becomes ten twenty four by seven sixty eight. The longest side fits, and the shape stays.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Large images cost more and can hit the size limit, so resizing first is a good habit.",
-     "show": 2
+     "say": "A portrait photo flips: seven sixty eight wide, ten twenty four tall.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "A small screenshot is already inside the box, so thumbnail leaves it alone. It never enlarges.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "And convert R G B lets you save a P N G with transparency as a J P E G.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "package",
+   "kind": "walk",
    "kicker": "Lab · Step 7",
    "title": "One reusable function",
-   "items": [
-    [
-     "ask_claude_about_image",
-     "Bytes + media type + question → text"
-    ],
-    [
-     "\"system\" field",
-     "Top level, not a message"
-    ],
-    [
-     "describe_image",
-     "Media type from the extension"
-    ]
-   ],
+   "file": "image_text_project",
+   "code": "def describe_image(image_path, question):\n    extension = os.path.splitext(\n        image_path)[1].lower()\n    if extension not in MEDIA_TYPES:\n        raise ValueError(\n            f\"Unsupported image type: {extension}\")\n    with open(image_path, \"rb\") as f:\n        return ask_claude_about_image(\n            f.read(), MEDIA_TYPES[extension],\n            question)\n\nprint(describe_image(\"resized_image.jpg\",\n\"Describe what's in this image in two sentences.\"))",
    "beats": [
     {
-     "say": "Finally, wrap it all in a function. Later projects reuse it, so keep it handy.",
-     "show": 0
+     "say": "Step seven wraps everything in two functions. Later projects reuse this cell, so keep it handy.",
+     "line": 1
     },
     {
-     "say": "Ask Claude about image takes raw bytes, a media type and a question, and returns the answer text.",
-     "show": 1
+     "say": "Call it with the resized image.",
+     "line": [
+      12,
+      13
+     ],
+     "vars": {
+      "image_path": "\"resized_image.jpg\""
+     }
     },
     {
-     "say": "A top-level system field tells Claude to say so when it can't tell, instead of guessing.",
-     "show": 2
+     "say": "Split the extension off the file name, and lower-case it: dot j p g.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "extension": "\".jpg\""
+     }
     },
     {
-     "say": "And describe image looks up the media type from the file extension, failing early on unsupported types.",
-     "show": 3
+     "say": "Dot j p g is in the media types table, so it's allowed.",
+     "line": 4
+    },
+    {
+     "say": "Open the file's bytes, and pass them on with the matching media type, image slash jpeg.",
+     "line": [
+      7,
+      8,
+      9,
+      10
+     ],
+     "vars": {
+      "MEDIA_TYPES[extension]": "\"image/jpeg\""
+     }
+    },
+    {
+     "say": "Inside, ask Claude about image encodes, sends, adds a system prompt, and joins the text blocks of the reply.",
+     "line": [
+      8,
+      9,
+      10
+     ],
+     "out": "A brown dog lies on a sunny porch… (for example)"
+    },
+    {
+     "say": "Now try a phone photo called photo dot H E I C. The extension becomes dot h e i c.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "image_path": "\"photo.HEIC\"",
+      "extension": "\".heic\"",
+      "MEDIA_TYPES[extension]": "(not in table)"
+     }
+    },
+    {
+     "say": "That's not in the table, so it fails early, with a clear error, before any A P I call.",
+     "line": [
+      4,
+      5,
+      6
+     ],
+     "out": "ValueError: Unsupported image type: .heic"
     }
    ]
   },
@@ -786,7 +1233,7 @@ feature_extraction_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "pixels",
+   "art": "graph",
    "kicker": "Project 3 · Image and audio features",
    "title": "Look under the hood",
    "beats": [
@@ -799,97 +1246,572 @@ feature_extraction_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "array",
+   "kind": "table",
    "kicker": "Lab · Step 2",
-   "title": "An image is an array",
-   "file": "extract_features.py",
-   "code": "img = Image.open(\"test_image.jpg\").convert(\"RGB\")\nimg_array = np.array(img)\nprint(\"Shape:\", img_array.shape)\nprint(\"Mean color:\", img_array.mean(axis=(0,1)))",
-   "beats": [
-    {
-     "say": "Turn the image into a numpy array.",
-     "show": 0
-    },
-    {
-     "say": "Its shape gives height, width, and color channels.",
-     "show": 1
-    },
-    {
-     "say": "And the mean color gives the average red, green and blue intensity.",
-     "show": 1
-    },
-    {
-     "say": "Next, a histogram of those values shows how brightness is spread across the image.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "wave",
-   "kicker": "Lab · Step 4",
-   "title": "Audio is numbers over time",
-   "file": "extract_features.py",
-   "code": "import librosa\naudio, sample_rate = librosa.load(\"test_audio.wav\")\nprint(\"Duration:\", len(audio) / sample_rate, \"seconds\")\nprint(\"Sample rate:\", sample_rate)",
-   "beats": [
-    {
-     "say": "Load the audio clip with librosa.",
-     "show": 0
-    },
-    {
-     "say": "The sample rate is how many times per second the signal was measured.",
-     "show": 1
-    },
-    {
-     "say": "Audio is a sequence of numbers over time, just as an image is a grid of numbers over space.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bars",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Spectrogram and tempo",
-   "items": [
+   "title": "An image is a grid of numbers",
+   "columns": [
+    "Pixel",
+    "Red",
+    "Green",
+    "Blue"
+   ],
+   "rows": [
     [
-     "Spectrogram",
-     "Frequencies over time"
+     "1 · sky",
+     "120",
+     "180",
+     "240"
     ],
     [
-     "Tempo",
-     "Beats per minute · rough on speech"
+     "2 · grass",
+     "60",
+     "140",
+     "50"
+    ],
+    [
+     "3 · grass",
+     "90",
+     "160",
+     "70"
+    ],
+    [
+     "mean",
+     "90",
+     "160",
+     "120"
     ]
    ],
    "beats": [
     {
-     "say": "A spectrogram turns the waveform into a picture of frequency content over time.",
-     "show": 1
+     "say": "Picture a tiny image: one row of three pixels. Each pixel is three numbers, red, green and blue, from zero to two fifty five.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "You make a mel spectrogram, and save it as spectrogram dot P N G.",
-     "show": 1
+     "say": "NumPy turns it into an array. Its shape is one high, three wide, three colour channels.",
+     "sql": "img_array = np.array(img)\nShape: (1, 3, 3)",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "Then estimate the tempo in beats per minute. It means most for music. On speech, it's rough.",
-     "show": 2
+     "say": "Mean over axes zero and one averages every pixel, one channel at a time.",
+     "sql": "img_array.mean(axis=(0,1))",
+     "hl": 3
+    },
+    {
+     "say": "Red: one twenty, sixty and ninety average to ninety.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 1
+    },
+    {
+     "say": "Green averages to one sixty, and blue to one twenty. The mean colour is a greenish grey.",
+     "sql": "Mean color: [ 90. 160. 120.]",
+     "hl": 3,
+     "col": 2
+    },
+    {
+     "say": "Your real photo works the same way, just with millions of pixels.",
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "neural",
-   "kicker": "Lab · Step 7",
-   "title": "Connect it to real models",
-   "quote": "Models learn their own features from the same raw numbers.",
+   "kind": "array",
+   "kicker": "Lab · Step 3",
+   "title": "A histogram counts brightness values",
+   "values": [
+    120,
+    180,
+    240,
+    60,
+    140,
+    50,
+    90,
+    160,
+    70
+   ],
    "beats": [
     {
-     "say": "Finish with a few sentences of notes.",
-     "show": 0
+     "say": "Flatten lays all nine numbers in one line, pixel by pixel."
     },
     {
-     "say": "A real multimodal model learns its own features from the same raw numbers, automatically, and at much greater scale.",
-     "show": 1
+     "say": "A histogram sorts them into bins and counts. Imagine just three bins. Dark, under one hundred: four values.",
+     "hl": [
+      3,
+      5,
+      6,
+      8
+     ],
+     "note": "0–99: 4 values"
+    },
+    {
+     "say": "Middle, one hundred to one ninety nine: four more.",
+     "ok": [
+      3,
+      5,
+      6,
+      8
+     ],
+     "hl": [
+      0,
+      1,
+      4,
+      7
+     ],
+     "note": "100–199: 4 values"
+    },
+    {
+     "say": "Bright, two hundred and up: just one, the sky's blue.",
+     "ok": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "hl": 2,
+     "note": "200–255: 1 value"
+    },
+    {
+     "say": "Your code uses fifty bins across a whole photo, and plots the counts as bars: brightness along the bottom, number of pixels up the side.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "plt.hist(img_array.flatten(), bins=50)"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 4",
+   "title": "Audio is numbers over time",
+   "xlabel": "time",
+   "ylabel": "amplitude",
+   "points": [
+    [
+     5,
+     50.0
+    ],
+    [
+     10,
+     74.7
+    ],
+    [
+     15,
+     85.0
+    ],
+    [
+     20,
+     74.7
+    ],
+    [
+     25,
+     50.0
+    ],
+    [
+     30,
+     25.3
+    ],
+    [
+     35,
+     15.0
+    ],
+    [
+     40,
+     25.3
+    ],
+    [
+     45,
+     50.0
+    ],
+    [
+     50,
+     74.7
+    ],
+    [
+     55,
+     85.0
+    ],
+    [
+     60,
+     74.7
+    ],
+    [
+     65,
+     50.0
+    ],
+    [
+     70,
+     25.3
+    ],
+    [
+     75,
+     15.0
+    ],
+    [
+     80,
+     25.3
+    ],
+    [
+     85,
+     50.0
+    ],
+    [
+     90,
+     74.7
+    ],
+    [
+     95,
+     85.0
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Audio is a sequence of numbers over time, just as an image is a grid of numbers over space.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "Each dot is one measurement of the sound wave, called a sample.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       5,
+       50.0
+      ]
+     ]
+    },
+    {
+     "say": "The sample rate is how many of these measurements are taken every second.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "Halve the sample rate and you'd keep only every other dot. The wave gets rougher.",
+     "groups": [
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2,
+      0,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 4 and 6",
+   "title": "Load the clip, then estimate its tempo",
+   "file": "feature_extraction_project",
+   "code": "import librosa\naudio, sample_rate = librosa.load(\"test_audio.wav\")\nprint(\"Duration:\", len(audio) / sample_rate,\n      \"seconds\")\nprint(\"Sample rate:\", sample_rate)\n\ntempo, _ = librosa.beat.beat_track(\n    y=audio, sr=sample_rate)\nprint(\"Estimated tempo (beats per minute):\", tempo)",
+   "beats": [
+    {
+     "say": "librosa loads the clip as an array of samples. By default it resamples to twenty two thousand and fifty per second.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "sample_rate": 22050
+     }
+    },
+    {
+     "say": "Say the clip has two hundred twenty thousand five hundred samples.",
+     "line": 2,
+     "vars": {
+      "len(audio)": 220500
+     }
+    },
+    {
+     "say": "Divide by the sample rate, and that's ten seconds of sound.",
+     "line": [
+      3,
+      4
+     ],
+     "out": "Duration: 10.0 seconds"
+    },
+    {
+     "say": "Then the sample rate itself.",
+     "line": 5,
+     "out": "Sample rate: 22050"
+    },
+    {
+     "say": "Beat track looks for regular pulses in the sound.",
+     "line": [
+      7,
+      8
+     ]
+    },
+    {
+     "say": "For a music clip, it might print about one hundred seventeen beats per minute. On speech, the number is rough.",
+     "line": 9,
+     "vars": {
+      "tempo": "[117.45]"
+     },
+     "out": "Estimated tempo (beats per minute): [117.45383523]"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 5",
+   "title": "A spectrogram: which frequencies, when",
+   "columns": [
+    "Band",
+    "0–1 s",
+    "1–2 s",
+    "2–3 s"
+   ],
+   "rows": [
+    [
+     "high",
+     "quiet",
+     "loud",
+     "quiet"
+    ],
+    [
+     "middle",
+     "medium",
+     "loud",
+     "medium"
+    ],
+    [
+     "low",
+     "loud",
+     "medium",
+     "quiet"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A waveform shows loudness over time, but not which pitches are in the sound. A spectrogram does.",
+     "sql": "librosa.feature.melspectrogram(y=audio, sr=sample_rate)"
+    },
+    {
+     "say": "Imagine a three second clip. Each column is a slice of time.",
+     "col": 1
+    },
+    {
+     "say": "Each row is a band of frequencies, from low pitches at the bottom to high at the top.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "In the first second, the low band is loud: maybe a drum.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "In the next second, every band lights up: a voice, or a chord.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "Power to d b turns strength into decibels, and your plot shows it as colour.",
+     "sql": "librosa.power_to_db(spectrogram)  →  colour, in dB"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 7",
+   "title": "Your features versus a model's features",
+   "nodes": [
+    {
+     "id": "raw",
+     "label": "Raw numbers",
+     "x": 15,
+     "y": 50,
+     "sub": "pixels and samples",
+     "art": "pixels"
+    },
+    {
+     "id": "you",
+     "label": "Your features",
+     "x": 55,
+     "y": 20,
+     "sub": "mean, histogram, tempo",
+     "art": "pencil"
+    },
+    {
+     "id": "model",
+     "label": "Model features",
+     "x": 55,
+     "y": 80,
+     "sub": "learned, at scale",
+     "art": "neural"
+    },
+    {
+     "id": "task",
+     "label": "Understanding",
+     "x": 88,
+     "y": 50,
+     "sub": "caption, answer",
+     "art": "bulb"
+    }
+   ],
+   "edges": [
+    {
+     "from": "raw",
+     "to": "you"
+    },
+    {
+     "from": "raw",
+     "to": "model"
+    },
+    {
+     "from": "you",
+     "to": "task"
+    },
+    {
+     "from": "model",
+     "to": "task"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In a text cell called feature notes, connect what you did to real models.",
+     "show": 1,
+     "on": "raw"
+    },
+    {
+     "say": "You hand-picked a few features from the raw numbers: a mean colour, a histogram, a tempo.",
+     "show": 2,
+     "on": "you",
+     "send": {
+      "from": "raw",
+      "to": "you",
+      "label": "a few features"
+     }
+    },
+    {
+     "say": "A multimodal model starts from the same raw numbers.",
+     "show": 3,
+     "on": "model",
+     "send": {
+      "from": "raw",
+      "to": "model",
+      "label": "all the values"
+     }
+    },
+    {
+     "say": "But it learns its own features automatically, at much greater scale, and uses them to caption or answer.",
+     "show": 4,
+     "on": [
+      "model",
+      "task"
+     ],
+     "send": {
+      "from": "model",
+      "to": "task",
+      "label": "learned features"
+     }
     }
    ]
   },
@@ -1059,7 +1981,7 @@ image_captioning_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "sparkle",
+   "art": "doc",
    "kicker": "Project 4 · Image captioning",
    "title": "From picture to words",
    "beats": [
@@ -1072,114 +1994,292 @@ image_captioning_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "architecture",
-   "kicker": "Concept",
-   "title": "How vision meets language",
-   "steps": [
-    "Image",
-    "Vision transformer → numbers",
-    "Aligned with words",
-    "Caption"
+   "kind": "diagram",
+   "kicker": "Step 2 · Concept",
+   "title": "How a vision-language model sees",
+   "nodes": [
+    {
+     "id": "img",
+     "label": "Image",
+     "x": 12,
+     "y": 50,
+     "sub": "pixels",
+     "art": "image"
+    },
+    {
+     "id": "vit",
+     "label": "Vision encoder",
+     "x": 42,
+     "y": 22,
+     "sub": "a vision transformer",
+     "art": "neural"
+    },
+    {
+     "id": "space",
+     "label": "Shared space",
+     "x": 42,
+     "y": 78,
+     "sub": "image meets words",
+     "art": "merge"
+    },
+    {
+     "id": "cap",
+     "label": "Caption",
+     "x": 85,
+     "y": 50,
+     "sub": "new text",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "img",
+     "to": "vit"
+    },
+    {
+     "from": "vit",
+     "to": "space"
+    },
+    {
+     "from": "space",
+     "to": "cap"
+    }
    ],
    "beats": [
     {
-     "say": "How does a model connect the two?",
-     "show": 0
+     "say": "How does one model connect pictures and words?",
+     "show": 1,
+     "on": "img"
     },
     {
      "say": "A vision transformer encodes the image into a numeric representation.",
-     "show": 1
+     "show": 2,
+     "on": "vit",
+     "send": {
+      "from": "img",
+      "to": "vit",
+      "label": "pixels"
+     }
     },
     {
-     "say": "Text-image embedding alignment means the model has learned to relate that representation to relevant words and concepts.",
-     "show": 2
+     "say": "During training, the model learned to relate that representation to words and concepts. That's text-image alignment.",
+     "show": 3,
+     "on": "space",
+     "send": {
+      "from": "vit",
+      "to": "space",
+      "label": "image numbers"
+     }
     },
     {
-     "say": "That's what lets it write a caption.",
-     "show": 3
+     "say": "So it can generate new words about the image: a caption.",
+     "show": 4,
+     "on": "cap",
+     "send": {
+      "from": "space",
+      "to": "cap",
+      "label": "a red bicycle…"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
-   "kicker": "Lab · Step 5",
-   "title": "Caption styles",
-   "file": "caption.py",
-   "code": "def generate_caption(image_path, style=\"concise\"):\n    prompts = {\n        \"concise\": \"Write a single, concise caption for this image.\",\n        \"detailed\": \"Write a detailed, descriptive caption for this image.\",\n        \"alt_text\": \"Write accessible alt-text for this image, suitable for a screen reader.\",\n    }\n    return describe_image(image_path, prompts[style])",
-   "beats": [
-    {
-     "say": "Generate caption reuses describe image from Project 2.",
-     "show": 0
-    },
-    {
-     "say": "A dictionary picks the prompt by style: concise, detailed, or alt text.",
-     "show": 1
-    },
-    {
-     "say": "Alt text is written for screen reader users, describing an image for someone who can't see it.",
-     "show": 1
-    },
-    {
-     "say": "No A P I code changes. Only the prompt does.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "star",
-   "kicker": "Lab · Steps 4 and 6",
-   "title": "Test hard images, then rate them",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 3 and 5",
+   "title": "One function, three caption styles",
+   "columns": [
+    "style",
+    "the prompt asks for"
+   ],
+   "rows": [
     [
-     "5 varied images",
-     "Simple · complex · text · abstract · people"
+     "concise",
+     "one concise caption"
     ],
     [
-     "Rate 1 to 5",
-     "Accuracy and usefulness"
+     "detailed",
+     "a detailed caption"
     ],
     [
-     "Note errors",
-     "Misidentified or hallucinated"
+     "alt_text",
+     "screen-reader alt-text"
     ]
    ],
    "beats": [
     {
-     "say": "Upload five varied images into an images folder.",
-     "show": 0
+     "say": "Generate caption reuses describe image from Project 2. Only the prompt changes.",
+     "sql": "def generate_caption(image_path, style=\"concise\"):\n    return describe_image(image_path, prompts[style])"
     },
     {
-     "say": "A simple object, a complex scene, a photo with text, an abstract image, and one with people.",
-     "show": 1
+     "say": "Call it with no style, and the default, concise, asks for a single short caption.",
+     "hl": 0,
+     "dim": true,
+     "sql": "generate_caption(\"images/cat.jpg\")"
     },
     {
-     "say": "Rate each caption from one to five on accuracy and usefulness.",
-     "show": 2
+     "say": "Ask for detailed, and the prompt asks for a descriptive caption instead.",
+     "hl": 1,
+     "dim": true,
+     "sql": "generate_caption(\"images/cat.jpg\", style=\"detailed\")"
     },
     {
-     "say": "And note errors, like misidentified objects or hallucinated details: things the caption says that aren't really there.",
-     "show": 3
+     "say": "Alt text describes the image for someone using a screen reader, who can't see it.",
+     "hl": 2,
+     "dim": true,
+     "sql": "generate_caption(\"images/cat.jpg\", style=\"alt_text\")"
+    },
+    {
+     "say": "A dictionary picks the prompt. No A P I code changed at all.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "loop",
-   "kicker": "Lab · Step 7",
-   "title": "Caption a whole folder",
-   "big": "filename: caption",
-   "sub": "one line per image in the folder",
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 6",
+   "title": "Test hard images, then rate them",
+   "columns": [
+    "Test image",
+    "Watch for"
+   ],
+   "rows": [
+    [
+     "Simple object",
+     "right object named?"
+    ],
+    [
+     "Complex scene",
+     "missed or extra items"
+    ],
+    [
+     "Photo with text",
+     "text read correctly?"
+    ],
+    [
+     "Abstract image",
+     "invented subject"
+    ],
+    [
+     "People",
+     "guesses and tone"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, loop over the images folder, skipping non-image files.",
-     "show": 0
+     "say": "Put five different images in a folder called images. Each one tests something.",
+     "sql": "rate each caption 1–5: accuracy, usefulness"
     },
     {
-     "say": "And print a caption for every image.",
-     "show": 1
+     "say": "A simple object: does the caption name the right thing?",
+     "hl": 0
+    },
+    {
+     "say": "A complex scene: does it miss things, or add things?",
+     "hl": 1
+    },
+    {
+     "say": "A photo with text in it: is the text read correctly?",
+     "hl": 2
+    },
+    {
+     "say": "An abstract image: does it invent a subject that isn't there?",
+     "hl": 3
+    },
+    {
+     "say": "And a photo with people: watch for guesses about them, and the tone.",
+     "hl": 4
+    },
+    {
+     "say": "A hallucinated detail is anything the caption claims that isn't in the image. Compare every caption to the real picture.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 7",
+   "title": "Caption a whole folder",
+   "file": "image_captioning_project",
+   "code": "import os\n\nfor filename in sorted(os.listdir(\"images\")):\n    extension = os.path.splitext(\n        filename)[1].lower()\n    if extension not in MEDIA_TYPES:\n        continue\n    caption = generate_caption(\n        os.path.join(\"images\", filename))\n    print(f\"{filename}: {caption}\")",
+   "beats": [
+    {
+     "say": "Say the images folder holds three pictures, and a stray notes file.",
+     "line": 3,
+     "vars": {
+      "sorted(os.listdir(\"images\"))": "[\"abstract.png\", \"cat.jpg\", \"notes.txt\", \"street.jpg\"]"
+     }
+    },
+    {
+     "say": "Sorted gives a stable order. First, abstract dot p n g.",
+     "line": [
+      3,
+      4,
+      5
+     ],
+     "vars": {
+      "filename": "\"abstract.png\"",
+      "extension": "\".png\""
+     }
+    },
+    {
+     "say": "P N G is supported, so it's captioned and printed.",
+     "line": [
+      8,
+      9,
+      10
+     ],
+     "out": "abstract.png: Swirls of blue and orange paint… (for example)"
+    },
+    {
+     "say": "Next, cat dot j p g. Captioned too.",
+     "line": [
+      3,
+      8,
+      9,
+      10
+     ],
+     "vars": {
+      "filename": "\"cat.jpg\"",
+      "extension": "\".jpg\""
+     },
+     "out": "cat.jpg: A tabby cat asleep on a windowsill. (for example)"
+    },
+    {
+     "say": "Then notes dot t x t. That's not an image type, so continue skips it.",
+     "line": [
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "vars": {
+      "filename": "\"notes.txt\"",
+      "extension": "\".txt\""
+     }
+    },
+    {
+     "say": "And street dot j p g. Three captions, and nothing crashed.",
+     "line": [
+      3,
+      8,
+      9,
+      10
+     ],
+     "vars": {
+      "filename": "\"street.jpg\"",
+      "extension": "\".jpg\""
+     },
+     "out": "street.jpg: A busy street at dusk… (for example)"
     }
    ]
   },
@@ -1472,7 +2572,7 @@ image_qa_app_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "chat",
+   "art": "phone",
    "kicker": "Project 5 · Image Q and A app",
    "title": "Ask a picture a question",
    "beats": [
@@ -1485,117 +2585,423 @@ image_qa_app_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Step 1",
-   "title": "Set up the project",
-   "steps": [
-    "mkdir image_qa_app_project",
-    "Create and activate .venv",
-    "pip install fastapi …",
-    "export ANTHROPIC_API_KEY"
+   "kind": "array",
+   "kicker": "Lab · Steps 1 and 3",
+   "title": "Set up, then start the app",
+   "values": [
+    "mkdir",
+    "venv",
+    "activate",
+    "pip install",
+    "export key",
+    "uvicorn"
    ],
    "beats": [
     {
-     "say": "Make a project folder.",
-     "show": 1
+     "say": "This app keeps running, so it lives on your computer. Make a project folder first.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "mkdir image_qa_app_project"
     },
     {
-     "say": "Create a virtual environment, a private set of packages for this project, and turn it on.",
-     "show": 2
+     "say": "Create a virtual environment: a private set of Python packages for this project.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "note": "python3 -m venv .venv"
     },
     {
-     "say": "Install Fast A P I, uvicorn, python multipart, and requests.",
-     "show": 3
+     "say": "Turn it on. Your prompt now starts with dot venv.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "source .venv/bin/activate"
     },
     {
-     "say": "Set your A P I key as an environment variable in the terminal, never in a file.",
-     "show": 4
+     "say": "Install Fast A P I, uvicorn, python multipart and requests.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     },
+     "note": "pip install fastapi uvicorn …"
+    },
+    {
+     "say": "Set your A P I key in the terminal. It lives only in that session, never in a file.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     },
+     "note": "export ANTHROPIC_API_KEY=…"
+    },
+    {
+     "say": "Then start the app. Reload restarts it every time you save app dot p y.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "step": 5
+     },
+     "note": "uvicorn app:app --reload"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Lab · Step 2",
-   "title": "The ask endpoint",
-   "file": "app.py",
-   "code": "@app.post(\"/ask\")\ndef ask_about_image(image: UploadFile, question: str = Form()):\n    image_bytes = read_checked_image(image)\n    answer = ask_claude_about_image(image_bytes, image.content_type, question)\n    return {\"answer\": answer}",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 2 and 4",
+   "title": "One request through the ask endpoint",
+   "nodes": [
     {
-     "say": "In app dot py, the ask endpoint takes an uploaded image and a question.",
-     "show": 0
+     "id": "curl",
+     "label": "curl",
+     "x": 12,
+     "y": 50,
+     "sub": "your second terminal",
+     "art": "terminal"
     },
     {
-     "say": "Upload file receives the file's bytes. Form receives the question, sent in the same request.",
-     "show": 1
+     "id": "app",
+     "label": "FastAPI app",
+     "x": 50,
+     "y": 50,
+     "sub": "POST /ask",
+     "art": "server"
     },
     {
-     "say": "Read checked image rejects anything that isn't a J P E G or P N G, with a four hundred error.",
-     "show": 1
-    },
-    {
-     "say": "It's a plain def, because the A P I call blocks while it waits.",
-     "show": 1
+     "id": "model",
+     "label": "Claude",
+     "x": 88,
+     "y": 50,
+     "sub": "image + text → text",
+     "art": "neural"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "pipeline",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Three models in a chain",
-   "steps": [
-    "Whisper: audio → text",
-    "Claude: image + text → text",
-    "gTTS: text → audio"
+   ],
+   "edges": [
+    {
+     "from": "curl",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "model"
+    }
    ],
    "beats": [
     {
-     "say": "Claude reads text and images, not audio. So the voice endpoint chains three models.",
-     "show": 0
+     "say": "Test the app from a second terminal with curl.",
+     "show": 3,
+     "on": "curl"
     },
     {
-     "say": "Faster whisper, a free speech-to-text model, turns the spoken question into text.",
-     "show": 1
+     "say": "One request carries two parts: the image file, and the question as a form field.",
+     "show": 3,
+     "on": "curl",
+     "send": {
+      "from": "curl",
+      "to": "app",
+      "label": "image + question"
+     }
     },
     {
-     "say": "Claude answers it about the image.",
-     "show": 2
+     "say": "Upload File receives the image bytes. Form receives the question text.",
+     "show": 3,
+     "on": "app"
     },
     {
-     "say": "And g T T S, text-to-speech, saves the answer as an M P 3.",
-     "show": 3
+     "say": "The app checks the image, then calls ask Claude about image, from Project 2.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "model",
+      "label": "base64 + text"
+     }
+    },
+    {
+     "say": "Claude answers in text.",
+     "show": 3,
+     "on": "model",
+     "send": {
+      "from": "model",
+      "to": "app",
+      "label": "answer text"
+     }
+    },
+    {
+     "say": "And the app sends J S O N back, with the answer inside.",
+     "show": 3,
+     "on": "curl",
+     "send": {
+      "from": "app",
+      "to": "curl",
+      "label": "{\"answer\": …}"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "Test errors, then the full flow",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 2 and 7",
+   "title": "read_checked_image guards the door",
+   "columns": [
+    "Upload",
+    "content_type",
+    "Result"
+   ],
+   "rows": [
     [
-     "notes.txt as image",
-     "400 · app keeps running ✓"
+     "test_image.jpg",
+     "image/jpeg",
+     "accepted"
     ],
     [
-     "/ask_voice",
-     "Hear the spoken answer"
+     "photo.png",
+     "image/png",
+     "accepted"
+    ],
+    [
+     "notes.txt",
+     "text/plain",
+     "400 · unsupported"
+    ],
+    [
+     "empty.jpg (0 bytes)",
+     "image/jpeg",
+     "400 · file is empty"
     ]
    ],
    "beats": [
     {
-     "say": "Send a text file instead of an image.",
-     "show": 0
+     "say": "Before any A P I call, read checked image checks every upload.",
+     "sql": "ALLOWED_IMAGE_TYPES = {\"image/jpeg\", \"image/png\"}"
     },
     {
-     "say": "You get a clear four hundred error, and the app keeps running.",
-     "show": 1
+     "say": "A J P E G or a P N G passes the type check.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Then record a voice question about your photo, send it to ask voice, and play answer dot M P 3.",
-     "show": 2
+     "say": "Step seven sends a text file instead. Its type isn't allowed.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "So the app raises an H T T P exception: status four hundred, use J P E G or P N G. And it keeps running.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "{\"detail\": \"Unsupported image format. Use JPEG or PNG.\"}"
+    },
+    {
+     "say": "A file with the right type but no bytes fails the second check: the image file is empty.",
+     "hl": 3,
+     "dim": true,
+     "col": 2,
+     "sql": "{\"detail\": \"The image file is empty.\"}"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 5",
+   "title": "Speech to text with Whisper",
+   "file": "app.py",
+   "code": "stt_model = WhisperModel(\"base\", device=\"cpu\",\n                         compute_type=\"int8\")\n\ndef transcribe_audio(audio_bytes):\n    segments, _info = stt_model.transcribe(\n        io.BytesIO(audio_bytes))\n    return \" \".join(segment.text.strip()\n                    for segment in segments)",
+   "beats": [
+    {
+     "say": "Claude reads text and images, not audio. So a free speech-to-text model, Whisper, turns a spoken question into text.",
+     "line": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "It loads once, when the app starts. The first run downloads about one hundred fifty megabytes.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "stt_model": "Whisper base (cpu, int8)"
+     }
+    },
+    {
+     "say": "Transcribe audio wraps the uploaded bytes so Whisper can read them like a file.",
+     "line": [
+      4,
+      5,
+      6
+     ]
+    },
+    {
+     "say": "Say you recorded two short sentences. Whisper returns two segments, each with a leading space.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "segments": "[\" What color is the car?\", \" Is it parked?\"]"
+     }
+    },
+    {
+     "say": "Strip trims each one, and join puts them together with single spaces.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "return": "\"What color is the car? Is it parked?\""
+     }
+    },
+    {
+     "say": "If the clip had no speech, there are no segments, so the result is an empty string.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "segments": "[]",
+      "return": "\"\""
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Steps 6 and 8",
+   "title": "Three models in a chain",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "Caller",
+     "x": 12,
+     "y": 50,
+     "sub": "image + voice clip",
+     "art": "mic"
+    },
+    {
+     "id": "stt",
+     "label": "Whisper",
+     "x": 50,
+     "y": 18,
+     "sub": "speech to text",
+     "art": "wave"
+    },
+    {
+     "id": "vlm",
+     "label": "Claude",
+     "x": 88,
+     "y": 50,
+     "sub": "image + text → text",
+     "art": "neural"
+    },
+    {
+     "id": "tts",
+     "label": "gTTS",
+     "x": 50,
+     "y": 82,
+     "sub": "text to speech",
+     "art": "megaphone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "stt"
+    },
+    {
+     "from": "stt",
+     "to": "vlm"
+    },
+    {
+     "from": "vlm",
+     "to": "tts"
+    },
+    {
+     "from": "tts",
+     "to": "you"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The ask voice endpoint chains three models. Follow one request.",
+     "show": 4
+    },
+    {
+     "say": "The caller sends the photo and a recorded question.",
+     "show": 4,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "stt",
+      "label": "test_audio.wav"
+     }
+    },
+    {
+     "say": "Whisper turns the speech into text. If it finds none, the endpoint stops with a four hundred error.",
+     "show": 4,
+     "on": "stt",
+     "send": {
+      "from": "stt",
+      "to": "vlm",
+      "label": "question text"
+     }
+    },
+    {
+     "say": "Claude looks at the checked image and answers in text. The terminal prints the question and the answer.",
+     "show": 4,
+     "on": "vlm",
+     "send": {
+      "from": "vlm",
+      "to": "tts",
+      "label": "answer text"
+     }
+    },
+    {
+     "say": "g T T S turns the answer into speech, saved as answer dot m p 3. It needs an internet connection.",
+     "show": 4,
+     "on": "tts",
+     "send": {
+      "from": "tts",
+      "to": "you",
+      "label": "answer.mp3"
+     }
+    },
+    {
+     "say": "Play the file, and you hear the answer. Text and voice, in and out.",
+     "show": 4,
+     "on": "you"
     }
    ]
   },
@@ -1821,110 +3227,429 @@ multimodal_search_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "merge",
-   "kicker": "Concept",
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 to 6",
    "title": "Caption, then embed",
-   "steps": [
-    "Image",
-    "Claude: detailed caption",
-    "Embed the caption",
-    "Same space as text"
+   "nodes": [
+    {
+     "id": "txt",
+     "label": "Text files",
+     "x": 12,
+     "y": 25,
+     "sub": "documents/*.txt",
+     "art": "doc"
+    },
+    {
+     "id": "img",
+     "label": "Images",
+     "x": 12,
+     "y": 78,
+     "sub": "images/",
+     "art": "image"
+    },
+    {
+     "id": "cap",
+     "label": "Claude",
+     "x": 45,
+     "y": 78,
+     "sub": "detailed caption",
+     "art": "neural"
+    },
+    {
+     "id": "emb",
+     "label": "MiniLM",
+     "x": 55,
+     "y": 25,
+     "sub": "384 numbers each",
+     "art": "layers"
+    },
+    {
+     "id": "db",
+     "label": "Chroma",
+     "x": 88,
+     "y": 50,
+     "sub": "mixed_documents",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "txt",
+     "to": "emb"
+    },
+    {
+     "from": "img",
+     "to": "cap"
+    },
+    {
+     "from": "cap",
+     "to": "emb"
+    },
+    {
+     "from": "emb",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "A multimodal embedding model maps text and images into the same number space.",
-     "show": 0
+     "say": "A true multimodal embedding model puts text and images into the same number space. There's a simpler bridge.",
+     "show": 5
     },
     {
-     "say": "This project uses a simpler bridge, caption then embed.",
-     "show": 0
+     "say": "Text files go straight to the text embedding model, all Mini L M.",
+     "show": 5,
+     "on": "txt",
+     "send": {
+      "from": "txt",
+      "to": "emb",
+      "label": "document text"
+     }
     },
     {
-     "say": "Claude writes a detailed caption for each image.",
-     "show": 1
+     "say": "Images can't go there directly. So Claude first writes a detailed caption for each one, reusing Project 4.",
+     "show": 5,
+     "on": "cap",
+     "send": {
+      "from": "img",
+      "to": "cap",
+      "label": "one call each"
+     }
     },
     {
-     "say": "The same text embedding model embeds that caption.",
-     "show": 2
+     "say": "Then that caption is embedded by the same text model.",
+     "show": 5,
+     "on": "emb",
+     "send": {
+      "from": "cap",
+      "to": "emb",
+      "label": "caption text"
+     }
     },
     {
-     "say": "Now images and text are comparable numbers, so one text query can find both.",
-     "show": 3
+     "say": "Every item is now three hundred eighty four numbers, and they all go into one Chroma collection.",
+     "show": 5,
+     "on": "db",
+     "send": {
+      "from": "emb",
+      "to": "db",
+      "label": "vectors + tags"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "database",
-   "kicker": "Lab · Step 6",
-   "title": "One collection, two types",
-   "file": "build_search.py",
-   "code": "collection.add(\n    documents=text_documents + image_captions,\n    embeddings=text_embeddings.tolist() + image_embeddings.tolist(),\n    ids=[f\"item_{i}\" for i in range(len(text_documents) + len(image_captions))],\n    metadatas=[{\"type\": \"text\", \"source\": name} for name in text_sources]\n              + [{\"type\": \"image\", \"source\": name} for name in image_sources],\n)",
-   "beats": [
-    {
-     "say": "Store everything in one Chroma collection.",
-     "show": 0
-    },
-    {
-     "say": "Documents and captions together, with their embeddings.",
-     "show": 1
-    },
-    {
-     "say": "Metadata records whether each item is text or an image, and which file it came from.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "scatter",
-   "kicker": "Lab · Step 7",
-   "title": "Search both at once",
-   "items": [
+   "kind": "chart",
+   "kicker": "Concept · Embeddings",
+   "title": "Similar meaning, nearby numbers",
+   "xlabel": "meaning (squashed)",
+   "ylabel": "meaning (squashed)",
+   "points": [
     [
-     "Same model for the query",
-     "Comparable numbers"
+     26,
+     82
     ],
     [
-     "Smaller distance",
-     "Closer match ✓"
+     16,
+     68
     ],
     [
-     "Image result",
-     "Show the real picture"
+     76,
+     24
+    ],
+    [
+     36,
+     70
+    ],
+    [
+     72,
+     80
     ]
    ],
    "beats": [
     {
-     "say": "To search, embed the query with the same model, and query the collection.",
-     "show": 1
+     "say": "Imagine squashing those three hundred eighty four numbers down to two, so we can plot them. Each dot is one item.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "A smaller distance means a closer match.",
-     "show": 2
+     "say": "These three dots are the text documents.",
+     "groups": [
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
     },
     {
-     "say": "Image results show the actual picture, using the source stored in the metadata.",
-     "show": 3
+     "say": "These two are images, stored as their captions. They sit in the same space.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Items about similar things land close together, whatever their type: the A P I notes sit near the architecture diagram.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "A query is embedded with the same model, so it lands in the same space too.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       32,
+       76
+      ]
+     ]
+    },
+    {
+     "say": "The nearest dots are the best matches: first the architecture diagram, then the A P I notes. Smaller distance, closer meaning.",
+     "groups": [
+      1,
+      3,
+      1,
+      3,
+      2
+     ],
+     "marks": [
+      [
+       32,
+       76
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "checklist",
-   "kicker": "Lab · Step 8",
-   "title": "Judge the results",
-   "big": "5 + 5 queries",
-   "sub": "did the right item come first?",
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "One collection, two types",
+   "columns": [
+    "id",
+    "type",
+    "source"
+   ],
+   "rows": [
+    [
+     "item_0",
+     "text",
+     "api_notes.txt"
+    ],
+    [
+     "item_1",
+     "text",
+     "onboarding.txt"
+    ],
+    [
+     "item_2",
+     "text",
+     "pricing.txt"
+    ],
+    [
+     "item_3",
+     "image",
+     "architecture.png"
+    ],
+    [
+     "item_4",
+     "image",
+     "team_photo.jpg"
+    ]
+   ],
    "beats": [
     {
-     "say": "Try five queries aimed at text, and five aimed at images.",
-     "show": 0
+     "say": "Say you have three text files and two images. Collection add stores them all together.",
+     "sql": "documents = text_documents + image_captions"
     },
     {
-     "say": "For each, note whether the right item came first, and any surprises.",
-     "show": 1
+     "say": "Texts come first, then captions, so the I Ds simply count up: item zero to item four.",
+     "col": 0,
+     "sql": "ids=[f\"item_{i}\" for i in range(3 + 2)]"
+    },
+    {
+     "say": "The metadata records each item's type.",
+     "col": 1
+    },
+    {
+     "say": "And the file it came from.",
+     "col": 2
+    },
+    {
+     "say": "So when an image matches, you can show the real picture, not just its caption.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 7",
+   "title": "One text query, both kinds of result",
+   "columns": [
+    "Rank",
+    "type",
+    "source",
+    "distance"
+   ],
+   "rows": [
+    [
+     "1",
+     "image",
+     "architecture.png",
+     "0.712"
+    ],
+    [
+     "2",
+     "text",
+     "api_notes.txt",
+     "1.104"
+    ],
+    [
+     "3",
+     "text",
+     "onboarding.txt",
+     "1.390"
+    ],
+    [
+     "4",
+     "image",
+     "team_photo.jpg",
+     "1.655"
+    ],
+    [
+     "5",
+     "text",
+     "pricing.txt",
+     "1.701"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now search with plain text. The query is embedded with the same Mini L M model.",
+     "sql": "search(\"diagram showing system architecture\")"
+    },
+    {
+     "say": "Chroma returns the five nearest items, with their distances. These numbers are just an example.",
+     "col": 3
+    },
+    {
+     "say": "Smaller distance means a closer match. The architecture diagram comes first, even though it's an image.",
+     "hl": 0,
+     "col": 3
+    },
+    {
+     "say": "Because its type is image, the search shows the actual picture, from the source in the metadata.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Text results print their first one hundred fifty characters instead.",
+     "hl": [
+      1,
+      2,
+      4
+     ],
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 8",
+   "title": "Judge ten queries by hand",
+   "values": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5"
+   ],
+   "beats": [
+    {
+     "say": "Now evaluate. Write five queries aimed at text, and five aimed at images."
+    },
+    {
+     "say": "For each text query, did the right item come first? Say four of five did.",
+     "ok": [
+      0,
+      1,
+      3,
+      4
+     ],
+     "gone": [
+      2
+     ],
+     "note": "text: 4 of 5 right first"
+    },
+    {
+     "say": "Then the image queries. Say three of five.",
+     "ok": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      7,
+      9
+     ],
+     "gone": [
+      2,
+      6,
+      8
+     ],
+     "note": "images: 3 of 5 right first"
+    },
+    {
+     "say": "Judge each type separately. Here, image search is weaker, maybe because a caption missed a detail. Note surprises like that in retrieval evaluation.",
+     "ok": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      7,
+      9
+     ],
+     "gone": [
+      2,
+      6,
+      8
+     ],
+     "hl": [
+      6,
+      8
+     ],
+     "note": "check those captions"
     }
    ]
   },
@@ -2086,143 +3811,356 @@ multimodal_evaluation_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "table",
    "kicker": "Lab · Steps 2 and 3",
-   "title": "Pick a system, build a test set",
-   "items": [
+   "title": "A test set full of hard cases",
+   "columns": [
+    "Case",
+    "Image type",
+    "Question"
+   ],
+   "rows": [
     [
-     "One system",
-     "Project 4, 5 or 6"
+     "1",
+     "simple: a mug",
+     "What is this?"
     ],
     [
-     "15 to 20 test cases",
-     "Simple · complex · text · low quality"
+     "2",
+     "complex: a market",
+     "How many stalls?"
+    ],
+    [
+     "3",
+     "text: a menu",
+     "Price of tea?"
+    ],
+    [
+     "4",
+     "low-res: a sign",
+     "What does it say?"
+    ],
+    [
+     "5",
+     "unusual: abstract art",
+     "Describe it."
+    ],
+    [
+     "6",
+     "low-light: a room",
+     "Is anyone there?"
     ]
    ],
    "beats": [
     {
-     "say": "Pick your captioning tool, your Q and A app, or your search tool.",
-     "show": 1
+     "say": "Pick one system to test: say, your Project 5 Q and A app."
     },
     {
-     "say": "Then collect fifteen to twenty diverse test cases.",
-     "show": 2
+     "say": "Collect fifteen to twenty cases. Here are six of them. A clear photo is the easy one.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Varied images: simple, complex, text-containing, and low quality. And varied questions.",
-     "show": 2
+     "say": "The rest are harder: a busy scene, dense text, a blurry image,",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "col": 1
+    },
+    {
+     "say": "unusual content, and a dark photo.",
+     "hl": [
+      4,
+      5
+     ],
+     "col": 1
+    },
+    {
+     "say": "A test set of easy images would hide exactly the cases where these systems fail.",
+     "hl": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "star",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Three metrics",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Three metrics on one answer",
+   "columns": [
+    "Metric",
+    "Asks",
+    "This answer"
+   ],
+   "rows": [
     [
      "Accuracy",
-     "Factually correct?"
+     "factually correct?",
+     "yes, it is red"
     ],
     [
      "Relevance",
-     "Answers the actual question?"
+     "answers the question?",
+     "yes"
     ],
     [
-     "Hallucination rate",
-     "Describes what isn't there?"
+     "Hallucination",
+     "invents things?",
+     "yes: no bicycle"
     ]
    ],
    "beats": [
     {
-     "say": "Score each case from one to five on three metrics.",
-     "show": 0
+     "say": "Say you ask: what color is the car? The answer: the red car is parked next to a bicycle. But there's no bicycle.",
+     "sql": "Q: What color is the car?\nA: The red car is parked next to a bicycle."
     },
     {
-     "say": "Accuracy: is the answer factually correct?",
-     "show": 1
+     "say": "Accuracy asks whether the answer is factually correct. The car really is red.",
+     "hl": 0
     },
     {
-     "say": "Relevance: does it address the actual question?",
-     "show": 2
+     "say": "Relevance asks whether it addresses the question that was asked. It does.",
+     "hl": 1
     },
     {
-     "say": "Hallucination rate: does it describe things that aren't actually there?",
-     "show": 3
+     "say": "Hallucination asks whether it describes things that aren't there. The bicycle is invented.",
+     "hl": 2
+    },
+    {
+     "say": "One answer can pass two metrics and still fail the third. That's why you score them separately.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Lab · Steps 6 and 7",
-   "title": "Failure modes and bias",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Score every case, then look for patterns",
+   "columns": [
+    "Case",
+    "Accuracy",
+    "Relevance",
+    "Hallucinated?"
+   ],
+   "rows": [
     [
-     "Low quality",
-     "Low resolution"
+     "1 · simple",
+     "5",
+     "5",
+     "no"
     ],
     [
-     "Dense text",
-     "OCR-like tasks"
+     "2 · complex",
+     "3",
+     "5",
+     "no"
     ],
     [
-     "Unusual content",
-     "Out of distribution"
+     "3 · menu text",
+     "2",
+     "4",
+     "yes"
     ],
     [
-     "Bias check",
-     "Range of people and settings"
+     "4 · low-res",
+     "1",
+     "4",
+     "yes"
+    ],
+    [
+     "5 · abstract",
+     "4",
+     "4",
+     "no"
+    ],
+    [
+     "6 · low-light",
+     "3",
+     "5",
+     "no"
     ]
    ],
    "beats": [
     {
-     "say": "Check the common failure modes.",
-     "show": 0
+     "say": "Run each case and score it from one to five. These scores are an example."
     },
     {
-     "say": "Low-quality or low-resolution images.",
-     "show": 1
+     "say": "Accuracy averages three: eighteen points over six cases.",
+     "col": 1,
+     "sql": "accuracy: 18 / 6 = 3.0"
     },
     {
-     "say": "Dense text within images.",
-     "show": 2
+     "say": "Relevance averages four and a half: the app nearly always answers the question.",
+     "col": 2,
+     "sql": "accuracy: 18 / 6 = 3.0 · relevance: 27 / 6 = 4.5"
     },
     {
-     "say": "Unusual, out-of-distribution content.",
-     "show": 3
+     "say": "Two of six answers invented something. That's a hallucination rate of one in three.",
+     "col": 3,
+     "hl": [
+      2,
+      3
+     ],
+     "sql": "accuracy 3.0 · relevance 4.5 · hallucination 2 / 6 = 33%"
     },
     {
-     "say": "Then test images showing a range of people, settings and contexts, and note systematic differences in quality, tone, or accuracy.",
-     "show": 4
+     "say": "Now group by category. The failures cluster in dense text and low resolution, two classic failure modes.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 0
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "doc",
+   "kind": "table",
+   "kicker": "Lab · Step 7",
+   "title": "Check for bias across content",
+   "columns": [
+    "Image set",
+    "Cases",
+    "Avg accuracy",
+    "Note"
+   ],
+   "rows": [
+    [
+     "People, city",
+     "4",
+     "4.5",
+     "detailed"
+    ],
+    [
+     "People, rural",
+     "4",
+     "3.0",
+     "vaguer, generic"
+    ],
+    [
+     "Older adults",
+     "3",
+     "4.3",
+     "detailed"
+    ],
+    [
+     "Younger adults",
+     "3",
+     "4.3",
+     "detailed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Step seven: test images showing a range of people, settings and contexts. These numbers are an example.",
+     "sql": "look for systematic differences: quality · tone · accuracy"
+    },
+    {
+     "say": "Compare each set's accuracy, and read the captions for detail and tone.",
+     "col": 2
+    },
+    {
+     "say": "Here, rural scenes score lower, and their captions are vaguer.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "A gap that repeats across a whole group is a finding. Write it down, with the examples.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Lab · Step 8",
-   "title": "The evaluation report",
-   "steps": [
+   "title": "The evaluation report, in order",
+   "values": [
     "Test set",
     "Metrics",
     "Scores",
-    "Failures and bias",
-    "Recommendations"
+    "Failure modes",
+    "Bias check",
+    "Fixes"
    ],
    "beats": [
     {
-     "say": "Write it up in a set order.",
-     "show": 0
+     "say": "Last, write the evaluation report, in six parts."
     },
     {
-     "say": "The test set, the metrics, and the scores.",
-     "show": 3
+     "say": "Describe the test set, and the metrics you used.",
+     "hl": [
+      0,
+      1
+     ],
+     "ptr": {
+      "now": 1
+     }
     },
     {
-     "say": "Failure modes, bias findings, and recommendations for improvement.",
-     "show": 5
+     "say": "Then the scores: three point oh accuracy, four point five relevance, thirty three percent hallucination.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
+    },
+    {
+     "say": "Then the failure modes: dense text and low resolution.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     }
+    },
+    {
+     "say": "Then the bias findings, like the weaker rural captions.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "now": 4
+     }
+    },
+    {
+     "say": "And end with recommendations, so the report leads to real fixes.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "now": 5
+     },
+     "note": "e.g. warn on blurry uploads"
     }
    ]
   },

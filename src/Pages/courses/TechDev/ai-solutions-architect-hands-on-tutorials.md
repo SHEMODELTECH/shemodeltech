@@ -127,125 +127,263 @@ solutions_brief_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "network",
-   "kicker": "Steps 3 and 4",
-   "title": "Stakeholders and goals",
-   "items": [
-    [
-     "Stakeholders",
-     "Support leads · IT/security · customers"
-    ],
-    [
-     "✓ Business goal",
-     "Cut response time by 30%"
-    ],
-    [
-     "✗ Technical goal",
-     "\"Deploy an LLM\""
-    ]
+   "kind": "diagram",
+   "kicker": "Step 3",
+   "title": "Who has a say in success?",
+   "nodes": [
+    {
+     "id": "prob",
+     "label": "Support problem",
+     "x": 50,
+     "y": 50,
+     "sub": "slow, repetitive replies",
+     "art": "mess"
+    },
+    {
+     "id": "lead",
+     "label": "Support leads",
+     "x": 16,
+     "y": 20,
+     "sub": "own the team",
+     "art": "people"
+    },
+    {
+     "id": "it",
+     "label": "IT and security",
+     "x": 84,
+     "y": 20,
+     "sub": "own the systems",
+     "art": "lock"
+    },
+    {
+     "id": "cust",
+     "label": "Customers",
+     "x": 50,
+     "y": 85,
+     "sub": "feel the wait",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "lead",
+     "to": "prob"
+    },
+    {
+     "from": "it",
+     "to": "prob"
+    },
+    {
+     "from": "cust",
+     "to": "prob"
+    }
    ],
    "beats": [
     {
-     "say": "In a text cell headed brief, note your stakeholders.",
-     "show": 0
+     "say": "In a text cell headed brief, start with the problem in the middle.",
+     "show": 1,
+     "on": "prob"
     },
     {
-     "say": "A stakeholder is anyone with a say in whether the solution succeeds. Here, support leadership, I T and security, and end customers.",
+     "say": "A stakeholder is anyone with a say in whether the solution succeeds.",
      "show": 1
     },
     {
-     "say": "Then write two or three measurable business goals, like reduce average response time by thirty percent.",
-     "show": 2
+     "say": "Here, support leadership, who run the team.",
+     "show": 2,
+     "on": "lead"
     },
     {
-     "say": "Not technical goals, like deploy an L L M. That's only a means, and may not be needed.",
-     "show": 3
+     "say": "I T and security, who own the systems any solution must fit into.",
+     "show": 3,
+     "on": "it"
+    },
+    {
+     "say": "And end customers, who feel the slow replies.",
+     "show": 4,
+     "on": "cust"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "scales",
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "Keep goals about the business",
+   "columns": [
+    "Draft goal",
+    "Kind",
+    "Keep?"
+   ],
+   "rows": [
+    [
+     "Cut response time 30%",
+     "Business",
+     "Yes"
+    ],
+    [
+     "Deploy an LLM",
+     "Technical",
+     "No"
+    ],
+    [
+     "Fewer repeat tickets",
+     "Business",
+     "Yes"
+    ],
+    [
+     "Add a vector database",
+     "Technical",
+     "No"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are four draft goals. Let's sort them."
+    },
+    {
+     "say": "Reduce average response time by thirty percent. That's a measurable business outcome.",
+     "hl": 0,
+     "col": 0
+    },
+    {
+     "say": "Deploy an L L M is a technical goal. It's only a means, and it may not even be needed.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "So keep two or three measurable business goals, and drop the technical ones.",
+     "sql": "Keep: measurable business outcomes",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Steps 5 and 6",
    "title": "Constraints, then a direction",
-   "items": [
+   "columns": [
+    "Constraint",
+    "For example"
+   ],
+   "rows": [
     [
-     "Budget & timeline",
-     ""
+     "Budget",
+     "A range"
+    ],
+    [
+     "Timeline",
+     "When it must be live"
     ],
     [
      "Existing systems",
-     "What must be integrated"
+     "Ticketing system"
     ],
     [
      "Compliance",
-     "Data residency, regulations"
+     "Data residency"
     ],
     [
      "Direction",
-     "2–3 sentences, not a design"
+     "RAG bot + ticketing"
     ]
    ],
    "beats": [
     {
-     "say": "Next, note your constraints.",
-     "show": 0
+     "say": "Next, note your constraints, one row each."
     },
     {
-     "say": "Budget range and timeline.",
-     "show": 1
+     "say": "A budget range, and a timeline. These shape everything that follows.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Existing systems you must integrate with.",
-     "show": 2
+     "say": "The existing systems you must integrate with, like the ticketing system.",
+     "hl": 2
     },
     {
-     "say": "And compliance requirements, like data residency or industry regulations.",
-     "show": 3
+     "say": "And compliance needs, like data residency or industry regulations.",
+     "hl": 3
     },
     {
-     "say": "Then propose a direction in two or three sentences: is A I a good fit, and roughly what kind of solution? Not a full design yet.",
-     "show": 4
+     "say": "Then propose a direction in two or three sentences, for example, a retrieval-augmented chatbot integrated with the existing ticketing system. Not a full design yet.",
+     "hl": 4,
+     "dim": true,
+     "sql": "Direction: 2–3 sentences"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "checklist",
+   "kind": "array",
    "kicker": "Step 7",
-   "title": "Assemble the brief",
-   "steps": [
-    "Business problem",
+   "title": "Assemble the one-page brief",
+   "values": [
+    "Problem",
     "Stakeholders",
     "Goals",
     "Constraints",
-    "Proposed direction"
+    "Direction"
    ],
    "beats": [
     {
-     "say": "Finally, combine it all into one page, in this order.",
-     "show": 0
+     "say": "Finally, combine it all into one page, in this order."
     },
     {
-     "say": "Business problem.",
-     "show": 1
+     "say": "The business problem.",
+     "ptr": {
+      "now": 0
+     },
+     "hl": 0
     },
     {
-     "say": "Stakeholders.",
-     "show": 2
+     "say": "The stakeholders.",
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "now": 1
+     },
+     "hl": 1
     },
     {
-     "say": "Goals.",
-     "show": 3
+     "say": "The goals.",
+     "ok": [
+      0,
+      1
+     ],
+     "ptr": {
+      "now": 2
+     },
+     "hl": 2
     },
     {
-     "say": "Constraints.",
-     "show": 4
+     "say": "The constraints.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "now": 3
+     },
+     "hl": 3
     },
     {
-     "say": "And proposed direction.",
-     "show": 5
+     "say": "And the proposed direction. That's your brief.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "One page, five sections"
     }
    ]
   },
@@ -418,151 +556,338 @@ system_diagram_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Steps 2 and 3",
-   "title": "Components and conventions",
-   "items": [
+   "title": "Components, boxes and arrows",
+   "columns": [
+    "On the diagram",
+    "Means"
+   ],
+   "rows": [
     [
-     "Components",
-     "App · API · AI model · data store · integrations"
+     "Box",
+     "A component"
     ],
     [
-     "Boxes",
-     "Services, databases"
+     "Arrow",
+     "Data flow or a request"
     ],
     [
-     "Arrows",
-     "Data flow or requests, labeled"
+     "Arrow label",
+     "What is being sent"
     ]
    ],
    "beats": [
     {
-     "say": "From your brief, list the pieces the system needs.",
-     "show": 0
+     "say": "From your brief, list the pieces you need: a user-facing app, an A P I layer, an A I model, a data store, and integrations."
     },
     {
-     "say": "A user-facing app, an A P I layer, an A I model, a data store, and integration with existing systems.",
-     "show": 1
+     "say": "On the diagram, each one is a box: a component, like a service or a database.",
+     "hl": 0
     },
     {
-     "say": "In architecture diagrams, boxes are components, like services or databases.",
-     "show": 2
+     "say": "Arrows show data flow or requests, with a direction.",
+     "hl": 1
     },
     {
-     "say": "And arrows are data flow or requests, labeled with direction and what's being sent.",
-     "show": 3
+     "say": "And each arrow gets a label saying what's being sent.",
+     "hl": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Step 4",
-   "title": "The request flow",
-   "steps": [
-    "User",
-    "App",
-    "API",
-    "AI Model",
-    "Response → User"
+   "title": "Follow one request",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "x": 12,
+     "y": 50,
+     "sub": "a customer",
+     "art": "persona"
+    },
+    {
+     "id": "app",
+     "label": "App",
+     "x": 36,
+     "y": 16,
+     "sub": "chat window",
+     "art": "phone"
+    },
+    {
+     "id": "api",
+     "label": "API",
+     "x": 66,
+     "y": 16,
+     "sub": "your service",
+     "art": "server"
+    },
+    {
+     "id": "model",
+     "label": "AI Model",
+     "x": 88,
+     "y": 50,
+     "sub": "writes the reply",
+     "art": "neural"
+    },
+    {
+     "id": "resp",
+     "label": "Response",
+     "x": 50,
+     "y": 84,
+     "sub": "back to the user",
+     "art": "chat"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "model"
+    },
+    {
+     "from": "model",
+     "to": "resp"
+    },
+    {
+     "from": "resp",
+     "to": "user"
+    }
    ],
    "beats": [
     {
-     "say": "Start with the core path a request takes.",
-     "show": 0
+     "say": "Start with the core path a request takes. Five boxes.",
+     "show": 5
     },
     {
-     "say": "The user.",
-     "show": 1
+     "say": "A customer types a question into the app.",
+     "on": "user",
+     "send": {
+      "from": "user",
+      "to": "app",
+      "label": "question"
+     }
     },
     {
-     "say": "The app.",
-     "show": 2
+     "say": "The app sends it to your A P I.",
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "api",
+      "label": "request"
+     }
     },
     {
-     "say": "The A P I.",
-     "show": 3
+     "say": "The A P I passes it to the A I model.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "model",
+      "label": "prompt"
+     }
     },
     {
-     "say": "The A I model.",
+     "say": "The model writes a response.",
+     "on": "model",
+     "send": {
+      "from": "model",
+      "to": "resp",
+      "label": "answer"
+     }
+    },
+    {
+     "say": "And the response goes back to the user. One full loop.",
+     "on": "resp",
+     "send": {
+      "from": "resp",
+      "to": "user",
+      "label": "reply"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 5 and 6",
+   "title": "Add data and an existing system",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "x": 10,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "app",
+     "label": "App",
+     "x": 30,
+     "y": 18,
+     "art": "phone"
+    },
+    {
+     "id": "api",
+     "label": "API",
+     "x": 52,
+     "y": 50,
+     "sub": "your service",
+     "art": "server"
+    },
+    {
+     "id": "model",
+     "label": "AI Model",
+     "x": 86,
+     "y": 18,
+     "art": "neural"
+    },
+    {
+     "id": "db",
+     "label": "Vector store",
+     "x": 30,
+     "y": 84,
+     "sub": "help articles",
+     "art": "database"
+    },
+    {
+     "id": "tix",
+     "label": "Ticketing",
+     "x": 86,
+     "y": 82,
+     "sub": "existing system",
+     "art": "plug"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "model"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    },
+    {
+     "from": "api",
+     "to": "tix"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the request flow again, now with a data layer and an integration.",
      "show": 4
     },
     {
-     "say": "And a response, back to the user.",
-     "show": 5
+     "say": "Add where data lives: a database or vector store.",
+     "show": 5,
+     "on": "db"
+    },
+    {
+     "say": "The A P I reads from it, to find relevant help articles.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "search"
+     }
+    },
+    {
+     "say": "And it gets the matching documents back.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "top articles"
+     }
+    },
+    {
+     "say": "Then connect the existing systems named in your constraints, like the ticketing system.",
+     "show": 6,
+     "on": "tix"
+    },
+    {
+     "say": "When the bot can't help, the A P I opens a ticket there.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "tix",
+      "label": "new ticket"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "database",
-   "kicker": "Steps 5 and 6",
-   "title": "Add data and integrations",
-   "items": [
-    [
-     "Data layer",
-     "API ⇄ database / vector store"
-    ],
-    [
-     "Integrations",
-     "e.g. existing ticketing system"
-    ],
-    [
-     "Tools",
-     "diagrams.net or mermaid.live"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Next, add the data layer: where data lives, and which component reads and writes it.",
-     "show": 0
-    },
-    {
-     "say": "Here, the A P I reads and writes a database or vector store.",
-     "show": 1
-    },
-    {
-     "say": "Then connect any existing systems named in your constraints, like an existing ticketing system.",
-     "show": 2
-    },
-    {
-     "say": "Draw it in diagrams dot net, or edit the Mermaid code at mermaid dot live and export a P N G.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "search",
+   "kind": "table",
    "kicker": "Steps 7 and 8",
-   "title": "Label it, then test it cold",
-   "items": [
+   "title": "Label every arrow, then test it cold",
+   "columns": [
+    "Arrow",
+    "Label"
+   ],
+   "rows": [
     [
-     "Label everything",
-     "Every arrow, every box"
+     "User → App",
+     "Customer question"
     ],
     [
-     "Read it cold",
-     "A newcomer explains it back"
+     "App → API",
+     "Chat request"
+    ],
+    [
+     "API ⇄ Vector store",
+     "Search · top articles"
+    ],
+    [
+     "API → Model",
+     "Prompt + articles"
+    ],
+    [
+     "API → Ticketing",
+     "New ticket"
     ]
    ],
    "beats": [
     {
-     "say": "Label every arrow with what flows, and every box with what it does, in one phrase.",
-     "show": 1
+     "say": "Now label everything. Each arrow says what's flowing.",
+     "col": 1
     },
     {
-     "say": "Unlabeled arrows leave readers guessing.",
-     "show": 1
+     "say": "The user sends a customer question. The app sends a chat request.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Then show it to someone unfamiliar with the project, and ask them to explain it back.",
-     "show": 2
+     "say": "The A P I searches the vector store, and sends the prompt with the articles to the model.",
+     "hl": [
+      2,
+      3
+     ]
     },
     {
-     "say": "If they can, your diagram communicates clearly.",
-     "show": 2
+     "say": "Unlabeled arrows leave readers guessing. Give every box a one-phrase job too.",
+     "hl": 4
+    },
+    {
+     "say": "Then show it to someone new to the project. If they can explain it back, it communicates clearly.",
+     "sql": "Read it cold: can a newcomer explain it back?"
     }
    ]
   },
@@ -745,104 +1070,424 @@ model_comparison_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Steps 2 and 3",
-   "title": "Criteria first, then candidates",
-   "items": [
+   "kind": "table",
+   "kicker": "Steps 2 to 4",
+   "title": "The comparison matrix (example ratings)",
+   "columns": [
+    "Candidate",
+    "Quality",
+    "Cost",
+    "Privacy"
+   ],
+   "rows": [
     [
-     "Criteria",
-     "Quality · latency · cost · privacy · integration"
+     "LLM API",
+     "High",
+     "Per token",
+     "Data leaves"
     ],
     [
-     "LLM API / open-weight / fine-tuned",
-     "AI candidates"
+     "Open-weight, self-host",
+     "Varies",
+     "Fixed per hour",
+     "Stays in-house"
     ],
     [
-     "Rules-based",
-     "The non-AI baseline"
+     "Fine-tuned model",
+     "Strong on your task",
+     "Training + serving",
+     "Depends on host"
+    ],
+    [
+     "Rules-based baseline",
+     "Fixed cases only",
+     "Lowest",
+     "Stays in-house"
     ]
    ],
    "beats": [
     {
      "say": "Define your criteria first, so every option is judged on the same factors.",
-     "show": 0
+     "sql": "Criteria: quality · latency · cost · privacy · integration"
     },
     {
-     "say": "Accuracy or quality. Latency. Cost per request. Data privacy. And ease of integration.",
-     "show": 1
+     "say": "Then put two to four candidates in the rows. These ratings are only examples.",
+     "col": 0
     },
     {
-     "say": "Then pick two to four candidates: a general-purpose L L M A P I, a smaller open-weight model you host yourself, or a fine-tuned specialized model.",
-     "show": 2
+     "say": "Read down one column at a time. Privacy: with an L L M A P I, your data leaves your infrastructure.",
+     "col": 3,
+     "hl": 0
     },
     {
-     "say": "And a non-A I, rules-based baseline. If it works well enough, A I may not be worth the cost and risk.",
-     "show": 3
+     "say": "Self-hosting keeps it in-house.",
+     "col": 3,
+     "hl": 1
+    },
+    {
+     "say": "And always include a non-A I, rules-based baseline. If it's good enough, A I may not be worth the cost and risk.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Latency and ease of integration get their own columns in your full matrix too."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Steps 4 and 5",
-   "title": "The matrix, and a key tradeoff",
-   "items": [
-    [
-     "Matrix",
-     "Rows: candidates · columns: criteria"
-    ],
-    [
-     "Prompting / RAG",
-     "Adapts at request time, weights unchanged"
-    ],
-    [
-     "Fine-tuning",
-     "Trains the weights on your data"
-    ]
+   "kind": "diagram",
+   "kicker": "Step 5",
+   "title": "Prompting versus fine-tuning",
+   "nodes": [
+    {
+     "id": "data",
+     "label": "Your data",
+     "x": 12,
+     "y": 50,
+     "sub": "docs and examples",
+     "art": "doc"
+    },
+    {
+     "id": "prompt",
+     "label": "Prompt + RAG",
+     "x": 45,
+     "y": 18,
+     "sub": "built per request",
+     "art": "chat"
+    },
+    {
+     "id": "model",
+     "label": "Model weights",
+     "x": 80,
+     "y": 50,
+     "sub": "what it has learned",
+     "art": "neural"
+    },
+    {
+     "id": "ans",
+     "label": "Answer",
+     "x": 45,
+     "y": 84,
+     "art": "sparkle"
+    }
+   ],
+   "edges": [
+    {
+     "from": "data",
+     "to": "prompt"
+    },
+    {
+     "from": "prompt",
+     "to": "model"
+    },
+    {
+     "from": "model",
+     "to": "ans"
+    },
+    {
+     "from": "data",
+     "to": "model"
+    }
    ],
    "beats": [
     {
-     "say": "In a text cell headed comparison matrix, build a table: candidates as rows, criteria as columns.",
-     "show": 1
+     "say": "Two ways to adapt a general model to your problem.",
+     "show": 4
     },
     {
-     "say": "Now, a key tradeoff.",
-     "show": 1
+     "say": "Prompting, including RAG, works at request time. Relevant data goes into the prompt.",
+     "on": "prompt",
+     "send": {
+      "from": "data",
+      "to": "prompt",
+      "label": "retrieved docs"
+     }
     },
     {
-     "say": "Prompting, including RAG, adapts a general model at request time, without changing its weights.",
-     "show": 2
+     "say": "The model reads the prompt and answers.",
+     "on": "model",
+     "send": {
+      "from": "prompt",
+      "to": "model",
+      "label": "request"
+     }
     },
     {
-     "say": "Fine-tuning further trains the model's weights on your own data.",
-     "show": 3
+     "say": "Its weights never change.",
+     "on": "model",
+     "send": {
+      "from": "model",
+      "to": "ans",
+      "label": "answer"
+     }
+    },
+    {
+     "say": "Fine-tuning is different: it further trains the model's weights on your data, before any request arrives.",
+     "on": [
+      "data",
+      "model"
+     ],
+     "send": {
+      "from": "data",
+      "to": "model",
+      "label": "training run"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "coin",
-   "kicker": "Step 6",
-   "title": "Estimate the cost",
+   "kind": "walk",
+   "kicker": "Step 6 · simplified",
+   "title": "Estimate the monthly cost",
    "file": "model_comparison_project",
-   "code": "avg_input_tokens = 1500\navg_output_tokens = 300\nrequests_per_month = 50_000\n\nfor name, price in api_options.items():\n    per_request = (avg_input_tokens * price[\"input_per_mtok\"]\n                   + avg_output_tokens * price[\"output_per_mtok\"]) / 1_000_000\n    print(f\"{name}: ${per_request * requests_per_month:,.0f} per month\")\n\ngpu_cost_per_hour = 1.20    # Template: replace with a real quote\nhours_per_month = 730\nprint(f\"Self-hosted: ${gpu_cost_per_hour * hours_per_month:,.0f} per month\")",
+   "code": "api_options = {\n    \"Large model API\": (3.00, 15.00),\n    \"Small model API\": (0.80, 4.00),\n}  # ($ input, $ output) per million tokens\navg_input_tokens = 1500\navg_output_tokens = 300\nrequests_per_month = 50_000\nfor name, (inp, out) in api_options.items():\n    per_request = (avg_input_tokens * inp\n        + avg_output_tokens * out) / 1_000_000\n    monthly = per_request * requests_per_month\n    print(f\"{name}: ${monthly:,.0f} per month\")\nself_hosted = 1.20 * 730  # $ per GPU hour × hours\nprint(f\"Self-hosted: ${self_hosted:,.0f} per month\")",
    "beats": [
     {
-     "say": "L L M A P Is charge per token, roughly three quarters of an English word, with separate input and output prices per million tokens.",
-     "show": 0
+     "say": "L L M A P Is charge per token, about three quarters of a word, with separate input and output prices per million tokens. These prices are made-up examples.",
+     "line": [
+      1,
+      4
+     ]
     },
     {
-     "say": "This template multiplies average tokens by those prices. The prices are made-up examples; replace them with real ones.",
-     "show": 1
+     "say": "Each request averages fifteen hundred input tokens and three hundred output tokens, fifty thousand times a month.",
+     "line": [
+      5,
+      7
+     ],
+     "vars": {
+      "avg_input_tokens": 1500,
+      "avg_output_tokens": 300,
+      "requests_per_month": "50,000"
+     }
     },
     {
-     "say": "A self-hosted model costs the same every hour, whether or not anyone uses it.",
-     "show": 1
+     "say": "First, the large model. Fifteen hundred times three dollars, plus three hundred times fifteen, over a million: nine tenths of a cent per request.",
+     "line": [
+      8,
+      10
+     ],
+     "vars": {
+      "name": "Large model API",
+      "per_request": 0.009
+     }
     },
     {
-     "say": "Rerun with five thousand, then five hundred thousand requests a month. The cheaper option depends on your volume.",
-     "show": 1
+     "say": "Times fifty thousand requests: four hundred and fifty dollars a month.",
+     "line": [
+      11,
+      12
+     ],
+     "vars": {
+      "monthly": 450
+     },
+     "out": "Large model API: $450 per month"
+    },
+    {
+     "say": "The small model costs a quarter of a cent per request, so one hundred and twenty dollars a month.",
+     "line": [
+      8,
+      12
+     ],
+     "vars": {
+      "name": "Small model API",
+      "per_request": 0.0024,
+      "monthly": 120
+     },
+     "out": "Small model API: $120 per month"
+    },
+    {
+     "say": "A self-hosted G P U costs one dollar twenty an hour for seven hundred and thirty hours: eight hundred and seventy six dollars, whether anyone uses it or not.",
+     "line": [
+      13,
+      14
+     ],
+     "vars": {
+      "self_hosted": 876
+     },
+     "out": "Self-hosted: $876 per month"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 6",
+   "title": "The cheaper option depends on volume",
+   "points": [
+    [
+     1,
+     0.8
+    ],
+    [
+     10,
+     8.0
+    ],
+    [
+     20,
+     16.0
+    ],
+    [
+     40,
+     32.0
+    ],
+    [
+     60,
+     48.0
+    ],
+    [
+     80,
+     64.0
+    ],
+    [
+     100,
+     80.0
+    ],
+    [
+     1,
+     58.4
+    ],
+    [
+     10,
+     58.4
+    ],
+    [
+     20,
+     58.4
+    ],
+    [
+     40,
+     58.4
+    ],
+    [
+     60,
+     58.4
+    ],
+    [
+     80,
+     58.4
+    ],
+    [
+     100,
+     58.4
+    ]
+   ],
+   "xlabel": "requests per month (0 to 500k)",
+   "ylabel": "monthly cost (0 to $1,500)",
+   "beats": [
+    {
+     "say": "Now change the traffic. Across the bottom, zero to five hundred thousand requests a month.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "The small model A P I grows with every request: twelve dollars at five thousand, twelve hundred at five hundred thousand.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "line": [
+      0.8,
+      0
+     ]
+    },
+    {
+     "say": "The self-hosted model stays at eight hundred and seventy six dollars, at any traffic level.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0,
+      58.4
+     ]
+    },
+    {
+     "say": "The lines cross at about three hundred and sixty five thousand requests. Below that, the A P I is cheaper. Above it, self-hosting wins.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       73,
+       58.4
+      ]
+     ]
+    },
+    {
+     "say": "The large model costs nearly four times as much per request, so it crosses much sooner, at under a hundred thousand.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       73,
+       58.4
+      ]
+     ]
     }
    ]
   },
@@ -858,7 +1503,7 @@ model_comparison_project/
      "show": 0
     },
     {
-     "say": "And why, pointing directly at your matrix.",
+     "say": "And why, pointing directly at your matrix and your cost estimate.",
      "show": 1
     }
    ]
@@ -1019,82 +1664,271 @@ full_architecture_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "architecture",
-   "kicker": "Step 2",
+   "kind": "table",
+   "kicker": "Steps 2 and 3",
    "title": "Three reference architectures",
-   "items": [
+   "columns": [
+    "Pattern",
+    "How it works",
+    "Good when"
+   ],
+   "rows": [
     [
      "Simple API call",
-     "Prompt in, response out"
+     "Prompt in, reply out",
+     "The model alone knows"
     ],
     [
      "RAG",
-     "Retrieve, then generate"
+     "Retrieve, then answer",
+     "Answers need your docs"
     ],
     [
      "Agentic",
-     "Calls tools to take actions"
+     "Calls tools to act",
+     "It must take actions"
     ]
    ],
    "beats": [
     {
      "say": "There are three common patterns.",
-     "show": 0
+     "col": 0
     },
     {
      "say": "A simple A P I call just sends a prompt and returns a response.",
-     "show": 1
+     "hl": 0
     },
     {
      "say": "RAG retrieves relevant data before generating a response.",
-     "show": 2
+     "hl": 1
     },
     {
      "say": "And agentic lets the A I call tools or A P Is to take actions.",
-     "show": 3
+     "hl": 2
     },
     {
-     "say": "Use your Project 3 recommendation to choose one, or a combination.",
-     "show": 3
+     "say": "Use your Project 3 recommendation to choose one, or a combination. Our support bot answers from help articles, so it's RAG.",
+     "hl": 1,
+     "dim": true,
+     "sql": "Support bot → RAG"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "plug",
+   "kind": "diagram",
    "kicker": "Steps 4 and 5",
-   "title": "Make it specific, add integration",
-   "items": [
-    [
-     "Your chosen model",
-     "Not a generic \"AI Model\" box"
-    ],
-    [
-     "API gateway",
-     "Manages external access"
-    ],
-    [
-     "Message queue",
-     "Async work for slow requests"
-    ]
+   "title": "RAG, with your chosen model and a gateway",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "x": 10,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "gw",
+     "label": "API gateway",
+     "x": 32,
+     "y": 18,
+     "sub": "external access",
+     "art": "firewall"
+    },
+    {
+     "id": "api",
+     "label": "Chat service",
+     "x": 56,
+     "y": 50,
+     "sub": "builds the prompt",
+     "art": "server"
+    },
+    {
+     "id": "vs",
+     "label": "Vector store",
+     "x": 32,
+     "y": 84,
+     "sub": "help articles",
+     "art": "database"
+    },
+    {
+     "id": "model",
+     "label": "Small model API",
+     "x": 88,
+     "y": 50,
+     "sub": "chosen in Project 3",
+     "art": "neural"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "gw"
+    },
+    {
+     "from": "gw",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "vs"
+    },
+    {
+     "from": "api",
+     "to": "model"
+    }
    ],
    "beats": [
     {
-     "say": "Replace the generic A I model box with the model you actually chose.",
-     "show": 1
+     "say": "Here's the support bot as a RAG design. Notice the model box names the actual model you chose, not a generic A I model.",
+     "show": 5,
+     "on": "model"
     },
     {
-     "say": "Then add integration patterns.",
-     "show": 1
+     "say": "Requests come in through an A P I gateway, which manages external access to your service.",
+     "on": "gw",
+     "send": {
+      "from": "user",
+      "to": "gw",
+      "label": "question"
+     }
     },
     {
-     "say": "An A P I gateway manages external access to your service.",
-     "show": 2
+     "say": "The gateway passes allowed requests to the chat service.",
+     "on": "api",
+     "send": {
+      "from": "gw",
+      "to": "api",
+      "label": "question"
+     }
     },
     {
-     "say": "A message queue handles asynchronous processing, useful when requests can take a while.",
-     "show": 3
+     "say": "Retrieve: the service searches the vector store.",
+     "on": "vs",
+     "send": {
+      "from": "api",
+      "to": "vs",
+      "label": "search"
+     }
+    },
+    {
+     "say": "And gets the most relevant articles back.",
+     "on": "api",
+     "send": {
+      "from": "vs",
+      "to": "api",
+      "label": "top articles"
+     }
+    },
+    {
+     "say": "Then generate: the question and articles go to the model.",
+     "on": "model",
+     "send": {
+      "from": "api",
+      "to": "model",
+      "label": "question + docs"
+     }
+    },
+    {
+     "say": "The answer travels back the same way.",
+     "on": "user",
+     "send": {
+      "from": "gw",
+      "to": "user",
+      "label": "answer"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 5",
+   "title": "A message queue for slow work",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "x": 10,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "api",
+     "label": "Chat service",
+     "x": 38,
+     "y": 50,
+     "art": "server"
+    },
+    {
+     "id": "q",
+     "label": "Message queue",
+     "x": 66,
+     "y": 18,
+     "sub": "jobs wait in line",
+     "art": "stack"
+    },
+    {
+     "id": "w",
+     "label": "Worker",
+     "x": 88,
+     "y": 60,
+     "sub": "does the slow part",
+     "art": "gear"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "q"
+    },
+    {
+     "from": "q",
+     "to": "w"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Some requests take a while, like summarizing a long ticket history.",
+     "show": 4
+    },
+    {
+     "say": "The user asks for one.",
+     "on": "api",
+     "send": {
+      "from": "user",
+      "to": "api",
+      "label": "long request"
+     }
+    },
+    {
+     "say": "Instead of making them wait, the service drops a job on a message queue.",
+     "on": "q",
+     "send": {
+      "from": "api",
+      "to": "q",
+      "label": "job"
+     }
+    },
+    {
+     "say": "And replies right away.",
+     "on": "user",
+     "send": {
+      "from": "api",
+      "to": "user",
+      "label": "on its way"
+     }
+    },
+    {
+     "say": "A worker picks the job up when it's ready. That's asynchronous processing.",
+     "on": "w",
+     "send": {
+      "from": "q",
+      "to": "w",
+      "label": "next job"
+     }
     }
    ]
   },
@@ -1129,41 +1963,70 @@ full_architecture_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "doc",
+   "kind": "array",
    "kicker": "Step 8",
    "title": "Write the architecture document",
-   "steps": [
-    "Pattern and why",
+   "values": [
+    "Pattern + why",
     "Full diagram",
-    "Components and roles",
-    "Scalability notes",
+    "Components",
+    "Scalability",
     "Rough cost"
    ],
    "beats": [
     {
-     "say": "In a text cell headed architecture, write it up in this order.",
-     "show": 0
+     "say": "In a text cell headed architecture, write it up in this order."
     },
     {
-     "say": "The pattern you chose and why.",
-     "show": 1
+     "say": "The pattern you chose, and why.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
     },
     {
      "say": "The full diagram.",
-     "show": 2
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     }
     },
     {
-     "say": "Components and their roles.",
-     "show": 3
+     "say": "Each component and its role.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
     },
     {
      "say": "Scalability notes.",
-     "show": 4
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     }
     },
     {
-     "say": "And a rough cost estimate.",
-     "show": 5
+     "say": "And a rough cost estimate. That's your architecture document.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "architecture.md"
     }
    ]
   },
@@ -1332,133 +2195,266 @@ data_infra_layer_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "database",
+   "kind": "table",
    "kicker": "Steps 2 and 3",
-   "title": "Data flow and storage",
-   "items": [
+   "title": "Match storage to the data",
+   "columns": [
+    "Data",
+    "Example",
+    "Store in"
+   ],
+   "rows": [
     [
      "Structured records",
+     "Tickets, accounts",
      "Relational database"
     ],
     [
-     "Documents for retrieval",
+     "Docs for retrieval",
+     "Help articles",
      "Vector database"
     ],
     [
      "Large files",
+     "Attachments",
      "Object storage"
     ]
    ],
    "beats": [
     {
      "say": "First, sketch the data flow: where data enters, where it's stored, and where it's deleted or archived.",
-     "show": 0
+     "sql": "Enters → stored → archived or deleted"
     },
     {
      "say": "Then match storage to the type of data.",
-     "show": 0
+     "col": 2
     },
     {
-     "say": "Structured records go in a relational database.",
-     "show": 1
+     "say": "Structured records, like tickets, go in a relational database.",
+     "hl": 0
     },
     {
-     "say": "Documents for retrieval go in a vector database.",
-     "show": 2
+     "say": "Documents for retrieval, like help articles, go in a vector database.",
+     "hl": 1
     },
     {
-     "say": "And large files go in object storage.",
-     "show": 3
+     "say": "And large files, like attachments, go in object storage.",
+     "hl": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "firewall",
-   "kicker": "Steps 4 and 5",
-   "title": "Network security and access",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Steps 4 and 7",
+   "title": "Storage sits behind a boundary",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "x": 10,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "api",
+     "label": "App / API",
+     "x": 34,
+     "y": 50,
+     "art": "server"
+    },
+    {
+     "id": "ac",
+     "label": "Access control",
+     "x": 60,
+     "y": 50,
+     "sub": "checks every request",
+     "art": "lock"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 20,
+     "sub": "inside the boundary",
+     "art": "database"
+    },
+    {
+     "id": "vs",
+     "label": "Vector store",
+     "x": 88,
+     "y": 80,
+     "sub": "inside the boundary",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "ac"
+    },
+    {
+     "from": "ac",
+     "to": "db"
+    },
+    {
+     "from": "ac",
+     "to": "vs"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the layer. Storage sits inside a network boundary.",
+     "show": 5,
+     "on": [
+      "db",
+      "vs"
+     ]
+    },
+    {
+     "say": "The user reaches the app or A P I. The data in transit is encrypted.",
+     "on": "api",
+     "send": {
+      "from": "user",
+      "to": "api",
+      "label": "encrypted"
+     }
+    },
+    {
+     "say": "Every request for data goes through one access-control point.",
+     "on": "ac",
+     "send": {
+      "from": "api",
+      "to": "ac",
+      "label": "read articles"
+     }
+    },
+    {
+     "say": "It allows only what this caller needs: a read from the vector store.",
+     "on": "vs",
+     "send": {
+      "from": "ac",
+      "to": "vs",
+      "label": "read allowed"
+     }
+    },
+    {
+     "say": "Network segmentation keeps the parts isolated, so a breach in one area doesn't automatically expose everything.",
+     "on": [
+      "db",
+      "vs"
+     ]
+    },
+    {
+     "say": "And the stored data is encrypted at rest.",
+     "on": "db"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Least privilege (example rules)",
+   "columns": [
+    "Who",
+    "Database",
+    "Vector store"
+   ],
+   "rows": [
     [
-     "Segmentation",
-     "A breach stays contained"
+     "Chat service",
+     "Read tickets",
+     "Read"
     ],
     [
-     "In transit",
-     "Data moving between parts"
+     "Article loader",
+     "None",
+     "Write"
     ],
     [
-     "At rest",
-     "Stored data"
-    ],
-    [
-     "Least privilege",
-     "Only the access needed"
+     "Support agent",
+     "Read + write",
+     "None"
     ]
    ],
    "beats": [
     {
-     "say": "Network segmentation isolates parts of the system, so a breach in one area doesn't expose everything.",
-     "show": 1
+     "say": "Least privilege means each component or user gets only the access it strictly needs.",
+     "sql": "Grant only what each one needs"
     },
     {
-     "say": "Encryption in transit protects data moving between components.",
-     "show": 2
+     "say": "The chat service only reads. It never changes anything.",
+     "hl": 0
     },
     {
-     "say": "Encryption at rest protects stored data.",
-     "show": 3
+     "say": "The job that loads help articles can write to the vector store, and has no database access at all.",
+     "hl": 1
     },
     {
-     "say": "And least privilege means each component or user gets only the access it strictly needs.",
-     "show": 4
+     "say": "Support agents work tickets in the database, but don't touch the vector store.",
+     "hl": 2
+    },
+    {
+     "say": "If one of them is compromised, the damage stops at its own row.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "lock",
-   "kicker": "Step 7",
-   "title": "Behind the boundary",
-   "steps": [
-    "User",
-    "App / API",
-    "Access control",
-    "Database + vector store, inside the boundary"
+   "kind": "table",
+   "kicker": "Steps 6 and 8",
+   "title": "Map the design to compliance",
+   "columns": [
+    "Project 1 constraint",
+    "Design answer"
+   ],
+   "rows": [
+    [
+     "Data residency",
+     "Store in-region"
+    ],
+    [
+     "Personal data",
+     "Encrypt at rest"
+    ],
+    [
+     "Contain a breach",
+     "Segmented network"
+    ],
+    [
+     "Limit who sees data",
+     "Least privilege"
+    ]
    ],
    "beats": [
     {
-     "say": "Here's the layer as a diagram.",
-     "show": 0
+     "say": "Revisit your Project 1 constraints, and confirm the design satisfies each one."
     },
     {
-     "say": "The user reaches the app or A P I.",
-     "show": 1
+     "say": "Data residency? Keep storage in the required region.",
+     "hl": 0
     },
     {
-     "say": "Every request to storage goes through access control.",
-     "show": 2
+     "say": "Personal data? Encrypt it at rest, and in transit.",
+     "hl": 1
     },
     {
-     "say": "And the database and vector store sit inside a network boundary.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "checklist",
-   "kicker": "Steps 6 and 8",
-   "title": "Map it to compliance",
-   "quote": "Data flow → Storage → Network security → Access control → Compliance mapping",
-   "beats": [
-    {
-     "say": "Revisit your Project 1 constraints, like data residency, and confirm the design satisfies them.",
-     "show": 0
-    },
-    {
-     "say": "Then write the design doc: data flow, storage choices, network security, access control, and compliance mapping.",
-     "show": 1
+     "say": "Then write the design doc: data flow, storage choices, network security, access control, and this compliance mapping.",
+     "sql": "Data flow → Storage → Network → Access → Compliance",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },
@@ -1615,128 +2611,254 @@ governance_risk_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Step 2",
-   "title": "Five risk categories",
-   "items": [
+   "kind": "table",
+   "kicker": "Steps 2 and 3",
+   "title": "Score each risk (support bot example)",
+   "columns": [
+    "Risk",
+    "Likely",
+    "Severe",
+    "Score"
+   ],
+   "rows": [
     [
      "Data privacy",
-     "Mishandled personal data"
+     "Medium (2)",
+     "High (3)",
+     "6"
     ],
     [
-     "Model",
-     "Biased or incorrect outputs"
+     "Model: wrong answers",
+     "High (3)",
+     "Medium (2)",
+     "6"
     ],
     [
-     "Operational",
-     "Downtime"
+     "Operational: downtime",
+     "Low (1)",
+     "Medium (2)",
+     "2"
     ],
     [
      "Reputational",
-     "Public AI mistakes"
+     "Medium (2)",
+     "High (3)",
+     "6"
     ],
     [
      "Regulatory",
-     "e.g. EU AI Act"
+     "Low (1)",
+     "High (3)",
+     "3"
     ]
    ],
    "beats": [
     {
-     "say": "Start with common risk categories.",
-     "show": 0
+     "say": "Five common risk categories: data privacy, model, operational, reputational, and regulatory, like the E U A I Act.",
+     "col": 0
     },
     {
-     "say": "Data privacy risk: mishandled personal data.",
-     "show": 1
+     "say": "In a text cell headed risk assessment, ask two questions for each. How likely is it here?",
+     "col": 1
     },
     {
-     "say": "Model risk: biased or incorrect outputs.",
-     "show": 2
+     "say": "And how severe would it be if it happened? These ratings are examples for a support bot.",
+     "col": 2
     },
     {
-     "say": "Operational risk: downtime that affects the business.",
-     "show": 3
+     "say": "Multiply them to get a score.",
+     "col": 3,
+     "sql": "score = likely × severe (Low 1, Medium 2, High 3)"
     },
     {
-     "say": "Reputational risk: public-facing A I mistakes.",
-     "show": 4
-    },
-    {
-     "say": "And regulatory risk: breaking laws that apply, like data-protection rules or the E U A I Act.",
-     "show": 5
+     "say": "Three risks score six: data privacy, wrong answers, and reputational damage. Those are your top risks.",
+     "hl": [
+      0,
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Steps 3 and 4",
-   "title": "Assess, then mitigate",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "Specific mitigations for the top risks",
+   "columns": [
+    "Top risk",
+    "Mitigation"
+   ],
+   "rows": [
     [
-     "Assess",
-     "Likelihood × severity"
+     "Model: wrong answers",
+     "Human review step"
     ],
     [
-     "Mitigate the top 2–3",
-     "Human review · log and audit 90 days"
+     "Reputational",
+     "Log + audit 90 days"
+    ],
+    [
+     "Data privacy",
+     "Least-privilege access"
     ]
    ],
    "beats": [
     {
-     "say": "In a text cell headed risk assessment, ask two questions for each category.",
-     "show": 0
+     "say": "For your top two or three risks, write a specific mitigation."
     },
     {
-     "say": "How likely is it here? And how severe would it be?",
-     "show": 1
+     "say": "Wrong answers: add a human review step for high-stakes outputs.",
+     "hl": 0
     },
     {
-     "say": "Then write specific mitigations for your top two or three risks.",
-     "show": 2
+     "say": "Reputational: log and audit all model responses for ninety days, so you can find and fix mistakes.",
+     "hl": 1
     },
     {
-     "say": "Like: add a human review step for high-stakes outputs. Or log and audit all model responses for ninety days.",
-     "show": 2
+     "say": "Data privacy: the least-privilege access you designed in Project 5.",
+     "hl": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bell",
-   "kicker": "Steps 5 and 6",
-   "title": "When it goes wrong",
-   "items": [
-    [
-     "Incident response",
-     "Who's notified · how fast · rollback"
-    ],
-    [
-     "Responsible AI",
-     ""
-    ],
-    [
-     "Fairness · Transparency · Accountability",
-     ""
-    ]
+   "kind": "diagram",
+   "kicker": "Step 5",
+   "title": "When something goes wrong",
+   "nodes": [
+    {
+     "id": "inc",
+     "label": "Incident",
+     "x": 12,
+     "y": 50,
+     "sub": "bot gives bad advice",
+     "art": "warning"
+    },
+    {
+     "id": "own",
+     "label": "On-call owner",
+     "x": 42,
+     "y": 18,
+     "sub": "notified first",
+     "art": "bell"
+    },
+    {
+     "id": "lead",
+     "label": "Stakeholders",
+     "x": 86,
+     "y": 18,
+     "sub": "support + IT leads",
+     "art": "people"
+    },
+    {
+     "id": "back",
+     "label": "Rollback",
+     "x": 64,
+     "y": 82,
+     "sub": "last good version",
+     "art": "loop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "inc",
+     "to": "own"
+    },
+    {
+     "from": "own",
+     "to": "lead"
+    },
+    {
+     "from": "own",
+     "to": "back"
+    }
    ],
    "beats": [
     {
      "say": "An incident response plan describes what happens when something goes wrong.",
-     "show": 0
+     "show": 1,
+     "on": "inc"
     },
     {
-     "say": "Who's notified, how fast, and how you roll back.",
-     "show": 1
+     "say": "Who's notified, and how fast. Write the real time limit in your plan.",
+     "show": 2,
+     "on": "own",
+     "send": {
+      "from": "inc",
+      "to": "own",
+      "label": "alert"
+     }
     },
     {
-     "say": "Then cover responsible A I.",
-     "show": 2
+     "say": "The owner tells the stakeholders who need to know.",
+     "show": 3,
+     "on": "lead",
+     "send": {
+      "from": "own",
+      "to": "lead",
+      "label": "status update"
+     }
     },
     {
-     "say": "Fairness: does it perform differently across user groups? Transparency: do users know it's A I? Accountability: who's responsible?",
-     "show": 3
+     "say": "And the rollback process: how you return to the last version that worked.",
+     "show": 4,
+     "on": "back",
+     "send": {
+      "from": "own",
+      "to": "back",
+      "label": "roll back"
+     }
+    },
+    {
+     "say": "Decide all of this before launch, so nobody has to improvise when customers are already affected.",
+     "on": [
+      "inc",
+      "own",
+      "lead",
+      "back"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Responsible AI: three questions",
+   "columns": [
+    "Principle",
+    "Ask"
+   ],
+   "rows": [
+    [
+     "Fairness",
+     "Equal across groups?"
+    ],
+    [
+     "Transparency",
+     "Users know it's AI?"
+    ],
+    [
+     "Accountability",
+     "Who is responsible?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Fairness: does the system perform differently across user groups?",
+     "hl": 0
+    },
+    {
+     "say": "Transparency: do users know they're talking to A I?",
+     "hl": 1
+    },
+    {
+     "say": "Accountability: who's responsible if it goes wrong?",
+     "hl": 2
+    },
+    {
+     "say": "Then write the plan: risks and assessment, mitigations, incident response, and these responsible A I notes.",
+     "sql": "Risks → Mitigations → Incident response → Responsible AI"
     }
    ]
   },
@@ -1914,66 +3036,209 @@ architecture_proposal_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "array",
    "kicker": "Steps 3 and 4",
-   "title": "Structure the presentation",
-   "steps": [
-    "Problem & goals → overview",
+   "title": "Seven sections, built from your earlier work",
+   "values": [
+    "Problem",
+    "Overview",
     "Architecture",
-    "Data, security, risks",
-    "Cost, timeline, ask"
+    "Data",
+    "Risks",
+    "Cost/time",
+    "Ask"
    ],
    "beats": [
     {
-     "say": "Outline it, reusing your earlier work, one slide or section each.",
-     "show": 0
+     "say": "In a text cell headed presentation outline, draft seven sections. Each becomes one slide, reusing earlier work."
     },
     {
-     "say": "Problem and goals, from Project 1, then a solution overview.",
-     "show": 1
+     "say": "Problem and goals, straight from your Project 1 brief.",
+     "hl": 0,
+     "ptr": {
+      "slide": 0
+     },
+     "note": "from Project 1"
+    },
+    {
+     "say": "A short overview of the proposed solution.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "slide": 1
+     }
     },
     {
      "say": "The architecture, from Project 4.",
-     "show": 2
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "slide": 2
+     },
+     "note": "from Project 4"
     },
     {
-     "say": "Data and security, from Project 5, then risks and governance, from Project 6.",
-     "show": 3
+     "say": "Data and security, from Project 5.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "slide": 3
+     },
+     "note": "from Project 5"
     },
     {
-     "say": "Cost and timeline. And finally, your ask and next steps.",
-     "show": 4
+     "say": "Risks and governance, from Project 6.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "slide": 4
+     },
+     "note": "from Project 6"
+    },
+    {
+     "say": "Cost and timeline. And last, your ask and next steps.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "Business first, depth in the middle"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "chat",
-   "kicker": "Steps 5 and 6",
-   "title": "Objections and the ask",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Five tough questions, ready answers",
+   "columns": [
+    "Tough question",
+    "Answer from"
+   ],
+   "rows": [
     [
-     "5 tough questions",
-     "\"Why not approach X?\" · \"What if it's wrong?\""
+     "Why not approach X?",
+     "Project 3 matrix"
     ],
     [
-     "A clear ask",
-     "Budget · engineers · pilot green light"
+     "What if it's wrong?",
+     "Project 6 mitigations"
+    ],
+    [
+     "Is our data safe?",
+     "Project 5 design"
+    ],
+    [
+     "What will it cost?",
+     "Projects 3 and 4"
+    ],
+    [
+     "Will it scale?",
+     "Project 4 scale notes"
     ]
    ],
    "beats": [
     {
-     "say": "In a text cell headed anticipated questions, list five tough questions, and your answers.",
-     "show": 1
+     "say": "In a text cell headed anticipated questions, list five tough questions, and your answers."
     },
     {
-     "say": "Like: why not just use approach X? Or: what if the model gets it wrong?",
-     "show": 1
+     "say": "Why not just use approach X? Your Project 3 matrix already compared it.",
+     "hl": 0
     },
     {
-     "say": "Then define a clear ask: budget approval, engineering resources, or a pilot green light.",
-     "show": 2
+     "say": "What if the model gets it wrong? Point to your mitigations from Project 6.",
+     "hl": 1
+    },
+    {
+     "say": "The other three are examples. Each answer is something you already built.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "col": 1
+    },
+    {
+     "say": "Prepared answers keep an objection from stalling approval.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Make the ask clear",
+   "columns": [
+    "End with",
+    "Clear ask?"
+   ],
+   "rows": [
+    [
+     "Any thoughts?",
+     "No: nothing to decide"
+    ],
+    [
+     "Approve the budget",
+     "Yes"
+    ],
+    [
+     "Assign engineers",
+     "Yes"
+    ],
+    [
+     "Green-light a pilot",
+     "Yes"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finish by stating exactly what you need from this audience."
+    },
+    {
+     "say": "Any thoughts is not an ask. Nobody knows what to decide.",
+     "hl": 0
+    },
+    {
+     "say": "Budget approval, engineering resources, or a green light for a pilot. Each is a specific request.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "Say it plainly on your last slide, so everyone leaves knowing what they agreed to.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
     }
    ]
   },

@@ -220,131 +220,326 @@ pulumi_iac_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
-   "kicker": "Concept",
-   "title": "Infrastructure as code",
-   "items": [
+   "kind": "table",
+   "kicker": "Concept · Step 3",
+   "title": "Typed commands vs infrastructure as code",
+   "columns": [
+    "Question",
+    "Manual (Project 3)",
+    "As code"
+   ],
+   "rows": [
     [
-     "Not reviewable",
-     "✗ manual setup"
+     "Can it be reviewed?",
+     "no",
+     "yes, like any code"
     ],
     [
-     "Not repeatable",
-     "✗ manual setup"
+     "Can it be repeated?",
+     "not easily",
+     "yes, exactly"
     ],
     [
-     "No record of why",
-     "✗ manual setup"
+     "Why this setting?",
+     "no record",
+     "in the file + history"
     ]
    ],
    "beats": [
     {
-     "say": "Infrastructure as code means defining servers, networks and other resources in version controlled files, instead of clicking through a console.",
-     "show": 0
+     "say": "Infrastructure as code means defining servers, networks and other resources in version controlled files, instead of clicking through a console."
     },
     {
-     "say": "Typed commands can't be code reviewed.",
-     "show": 1
+     "say": "Typed commands can't be code reviewed. A file can, like any other code.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "They can't easily be replicated for a second environment.",
-     "show": 2
+     "say": "Typed commands are hard to repeat for a second environment. Code reproduces it exactly.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And they leave no record of why a setting was chosen.",
-     "show": 3
+     "say": "And typed commands leave no record of why a setting was chosen. The file and its history do.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Code fixes all three: it can be reviewed, reused and reproduced exactly.",
-     "show": 3
+     "say": "That's the whole case for it: reviewed, reused, and reproduced.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "key",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1, 2 and 4",
-   "title": "Set up, keys out of your code",
-   "steps": [
-    "Install the Pulumi CLI",
-    "aws configure",
-    "pulumi login --local",
-    "pulumi new aws-python"
+   "title": "Who does what, and where the keys live",
+   "nodes": [
+    {
+     "id": "code",
+     "label": "__main__.py",
+     "x": 12,
+     "y": 25,
+     "sub": "what you want",
+     "art": "code"
+    },
+    {
+     "id": "cli",
+     "label": "Pulumi CLI",
+     "x": 50,
+     "y": 50,
+     "sub": "plans and applies",
+     "art": "terminal"
+    },
+    {
+     "id": "creds",
+     "label": "AWS credentials",
+     "x": 12,
+     "y": 78,
+     "sub": "~/.aws/credentials",
+     "art": "key"
+    },
+    {
+     "id": "aws",
+     "label": "AWS",
+     "x": 88,
+     "y": 25,
+     "sub": "us-east-1",
+     "art": "cloud"
+    },
+    {
+     "id": "state",
+     "label": "Local state",
+     "x": 88,
+     "y": 78,
+     "sub": "pulumi login --local",
+     "art": "file"
+    }
+   ],
+   "edges": [
+    {
+     "from": "code",
+     "to": "cli"
+    },
+    {
+     "from": "creds",
+     "to": "cli"
+    },
+    {
+     "from": "cli",
+     "to": "aws"
+    },
+    {
+     "from": "cli",
+     "to": "state"
+    }
    ],
    "beats": [
     {
-     "say": "Install the Pulumi C L I with the official installer. Pip install pulumi only gives you the Python library.",
-     "show": 1
+     "say": "Pip install pulumi gives you only the Python library: the code that describes what you want.",
+     "show": 1,
+     "on": "code"
     },
     {
-     "say": "Install the A W S C L I, then run a w s configure with an access key from your own I A M user. The keys live on your computer, never in your code.",
-     "show": 2
+     "say": "The Pulumi C L I, from the official installer, is the engine. It reads your code and works out the changes.",
+     "show": 2,
+     "on": "cli",
+     "send": {
+      "from": "code",
+      "to": "cli",
+      "label": "desired state"
+     }
     },
     {
-     "say": "Run pulumi login dash dash local, so Pulumi keeps its state in a folder on your computer.",
-     "show": 3
+     "say": "A W S configure saves your access key in a file on your computer. It never goes in your code.",
+     "show": 3,
+     "on": "creds",
+     "send": {
+      "from": "creds",
+      "to": "cli",
+      "label": "access key"
+     }
     },
     {
-     "say": "Then pulumi new a w s dash python creates a stack called dev. A stack is an isolated, deployable copy of your infrastructure, like dev or prod.",
-     "show": 4
+     "say": "The C L I uses that key to talk to A W S, in us east one.",
+     "show": 4,
+     "on": "aws",
+     "send": {
+      "from": "cli",
+      "to": "aws",
+      "label": "create / update"
+     }
+    },
+    {
+     "say": "Pulumi login dash dash local keeps Pulumi's records, its state, in a folder on your computer.",
+     "show": 5,
+     "on": "state",
+     "send": {
+      "from": "cli",
+      "to": "state",
+      "label": "save state"
+     }
+    },
+    {
+     "say": "Then pulumi new a w s dash python creates a stack called dev: an isolated, deployable copy of this setup, like dev or prod.",
+     "show": 5,
+     "on": [
+      "code",
+      "cli"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Step 5",
-   "title": "A VM, defined in Python",
+   "title": "Read the VM definition line by line",
    "file": "__main__.py",
-   "code": "ami = aws.ec2.get_ami(\n    most_recent=True,\n    owners=[\"099720109477\"],  # Canonical\n    filters=[aws.ec2.GetAmiFilterArgs(\n        name=\"name\",\n        values=[\"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*\"],\n    )],\n)\n\ninstance = aws.ec2.Instance(\n    \"ai-service-instance\",\n    instance_type=\"t3.micro\",\n    ami=ami.id,\n    tags={\"Name\": \"ai-inference-server\"},\n)\npulumi.export(\"public_ip\", instance.public_ip)",
+   "code": "ami = aws.ec2.get_ami(\n    most_recent=True,\n    owners=[\"099720109477\"],  # Canonical\n    filters=[aws.ec2.GetAmiFilterArgs(name=\"name\",\n        values=[\"ubuntu/images/hvm-ssd-gp3/ubuntu-\"\n                \"noble-24.04-amd64-server-*\"])],\n)\ninstance = aws.ec2.Instance(\n    \"ai-service-instance\",\n    instance_type=\"t3.micro\",\n    ami=ami.id,\n    tags={\"Name\": \"ai-inference-server\"},\n)\npulumi.export(\"public_ip\", instance.public_ip)",
    "beats": [
     {
-     "say": "In main dot py, you define the instance.",
-     "show": 0
+     "say": "First, a lookup. Get A M I asks A W S for the most recent image owned by Canonical, the company that publishes Ubuntu.",
+     "line": [
+      1,
+      2,
+      3
+     ],
+     "vars": {
+      "most_recent": "True",
+      "owner": "Canonical"
+     }
     },
     {
-     "say": "Get A M I is a lookup. It asks A W S for the newest Ubuntu twenty four oh four image at deploy time, because A M I I Ds differ by region and go stale.",
-     "show": 1
+     "say": "The filter matches Ubuntu twenty four oh four server images by name.",
+     "line": [
+      4,
+      5,
+      6
+     ],
+     "vars": {
+      "ami.id": "newest match, at deploy time"
+     }
     },
     {
-     "say": "Then an E C 2 instance of type t3 micro, and its public I P as an output.",
-     "show": 1
+     "say": "A M I I Ds differ by region and go stale, so we look one up instead of pasting it.",
+     "line": [
+      4,
+      5,
+      6
+     ]
+    },
+    {
+     "say": "Next, the E C 2 instance itself, named a i service instance, of type t3 micro.",
+     "line": [
+      8,
+      9,
+      10
+     ],
+     "vars": {
+      "instance_type": "\"t3.micro\""
+     }
+    },
+    {
+     "say": "Its image is the I D the lookup just found.",
+     "line": 11
+    },
+    {
+     "say": "And a name tag, a i inference server, so you can spot it in the console.",
+     "line": 12,
+     "vars": {
+      "Name": "\"ai-inference-server\""
+     }
+    },
+    {
+     "say": "Finally, the public I P is exported as an output, and printed when pulumi up finishes.",
+     "line": 14,
+     "out": [
+      "Outputs:",
+      "    public_ip: \"<assigned by AWS>\""
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
+   "kind": "table",
    "kicker": "Lab · Steps 6 to 10",
-   "title": "Preview, deploy, change, destroy",
-   "steps": [
-    "pulumi preview",
-    "pulumi up",
-    "Change → diff",
-    "Destroy + recreate",
-    "Tear down"
+   "title": "Every command, and what really changes",
+   "columns": [
+    "Command",
+    "What it does",
+    "Instances"
+   ],
+   "rows": [
+    [
+     "pulumi preview",
+     "shows plan, no change",
+     "0"
+    ],
+    [
+     "pulumi up",
+     "+ create",
+     "1 (t3.micro)"
+    ],
+    [
+     "edit, then pulumi up",
+     "~ update type only",
+     "1 (t3.small)"
+    ],
+    [
+     "pulumi destroy",
+     "- delete",
+     "0"
+    ],
+    [
+     "pulumi up",
+     "+ recreate",
+     "1 (t3.small)"
+    ],
+    [
+     "pulumi destroy",
+     "- delete",
+     "0"
+    ],
+    [
+     "pulumi stack rm dev",
+     "remove stack records",
+     "0"
+    ]
    ],
    "beats": [
     {
-     "say": "Pulumi preview shows what would be created, changed or destroyed, without doing it.",
-     "show": 1
+     "say": "Pulumi preview shows what would be created, changed or destroyed, without doing anything.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Pulumi up deploys it, and prints the outputs.",
-     "show": 2
+     "say": "Pulumi up shows the plan again, and after you choose yes, creates one t3 micro instance.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Change the type to t3 small and run up again. Pulumi calculates a diff, and changes only that.",
-     "show": 3
+     "say": "Change the type to t3 small and run up again. Pulumi calculates a diff, and updates only that one setting.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Destroy and recreate, to prove it's genuinely defined in code.",
-     "show": 4
+     "say": "Destroy it, then run up again. If it comes back identical, it's genuinely defined in code.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
     },
     {
-     "say": "Finally, destroy, remove the stack, and check the console for running instances.",
-     "show": 5
+     "say": "Finally, destroy, remove the stack, and check the E C 2 page for anything still running.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
@@ -589,129 +784,298 @@ opentofu_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
-   "kicker": "Concept",
-   "title": "Both declarative, different languages",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Concept · Steps 2 and 6",
+   "title": "Declarative: describe the end state",
+   "nodes": [
+    {
+     "id": "cfg",
+     "label": "main.tf",
+     "x": 12,
+     "y": 30,
+     "sub": "desired end state",
+     "art": "file"
+    },
+    {
+     "id": "tofu",
+     "label": "OpenTofu",
+     "x": 50,
+     "y": 50,
+     "sub": "works out the diff",
+     "art": "gear"
+    },
+    {
+     "id": "state",
+     "label": "terraform.tfstate",
+     "x": 12,
+     "y": 78,
+     "sub": "what it manages",
+     "art": "database"
+    },
+    {
+     "id": "aws",
+     "label": "AWS",
+     "x": 88,
+     "y": 50,
+     "sub": "what really exists",
+     "art": "cloud"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cfg",
+     "to": "tofu"
+    },
+    {
+     "from": "state",
+     "to": "tofu"
+    },
+    {
+     "from": "tofu",
+     "to": "aws"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Both Pulumi and OpenTofu are declarative. In main dot t f, you describe the end state: one t3 micro instance should exist.",
+     "show": 1,
+     "on": "cfg"
+    },
+    {
+     "say": "OpenTofu reads it. Pulumi would say the same thing in Python; OpenTofu uses H C L, a language built only for infrastructure.",
+     "show": 2,
+     "on": "tofu",
+     "send": {
+      "from": "cfg",
+      "to": "tofu",
+      "label": "1 × t3.micro"
+     }
+    },
+    {
+     "say": "It also keeps a state file, recording what it created and manages. The first time, it's empty.",
+     "show": 3,
+     "on": "state",
+     "send": {
+      "from": "state",
+      "to": "tofu",
+      "label": "0 resources"
+     }
+    },
+    {
+     "say": "So on apply, it creates only what's missing.",
+     "show": 4,
+     "on": "aws",
+     "send": {
+      "from": "tofu",
+      "to": "aws",
+      "label": "create instance"
+     }
+    },
+    {
+     "say": "Then it writes the new instance into the state file. Next time, it knows what to change, or leave alone.",
+     "show": 4,
+     "on": "state",
+     "send": {
+      "from": "tofu",
+      "to": "state",
+      "label": "+ ai_service"
+     }
+    },
+    {
+     "say": "That file can contain sensitive values, so never commit it to a public repository.",
+     "show": 4,
+     "on": "state"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 3 and 7",
+   "title": "The same instance, in HCL",
+   "file": "main.tf",
+   "code": "data \"aws_ami\" \"ubuntu\" {\n  most_recent = true\n  owners      = [\"099720109477\"] # Canonical\n  filter {\n    name   = \"name\"\n    values = [\"ubuntu/…/ubuntu-noble-24.04-*\"]\n  }\n}\nresource \"aws_instance\" \"ai_service\" {\n  ami           = data.aws_ami.ubuntu.id\n  instance_type = \"t3.micro\"\n  tags          = { Name = \"ai-inference-server\" }\n}",
+   "beats": [
+    {
+     "say": "A data block is a data source. It reads something that already exists, instead of creating it.",
+     "line": 1
+    },
+    {
+     "say": "Here, the newest image owned by Canonical, matching the Ubuntu twenty four oh four name. It's the H C L twin of get A M I.",
+     "line": [
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "vars": {
+      "data.aws_ami.ubuntu.id": "newest match"
+     }
+    },
+    {
+     "say": "A resource block is something OpenTofu creates and manages: an A W S instance called a i service.",
+     "line": 9
+    },
+    {
+     "say": "Its image comes from the data source, and its type is t3 micro, with the same name tag as before.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "instance_type": "\"t3.micro\""
+     }
+    },
+    {
+     "say": "Above this, a terraform block lists the A W S provider. It keeps that name for compatibility, and OpenTofu reads it as is.",
+     "line": 1
+    },
+    {
+     "say": "In Step 7, change the type to t3 small, and tofu plan shows a diff for just that one setting.",
+     "line": 11,
+     "vars": {
+      "instance_type": "\"t3.small\""
+     },
+     "out": [
+      "~ instance_type = \"t3.micro\" -> \"t3.small\"",
+      "Plan: 0 to add, 1 to change, 0 to destroy."
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 4, 5, 7 and 9",
+   "title": "The OpenTofu workflow, next to Pulumi's",
+   "columns": [
+    "OpenTofu",
+    "Pulumi twin",
+    "What happens"
+   ],
+   "rows": [
     [
-     "Pulumi",
-     "General-purpose language (Python)"
+     "tofu init",
+     "(pulumi new setup)",
+     "downloads AWS provider"
     ],
     [
-     "OpenTofu",
-     "HCL, built only for infrastructure"
+     "tofu plan",
+     "pulumi preview",
+     "shows changes only"
+    ],
+    [
+     "tofu apply",
+     "pulumi up",
+     "creates the instance"
+    ],
+    [
+     "edit, tofu plan",
+     "pulumi preview",
+     "1 to change"
+    ],
+    [
+     "tofu apply",
+     "pulumi up",
+     "now t3.small"
+    ],
+    [
+     "tofu destroy",
+     "pulumi destroy",
+     "deletes all in state"
     ]
    ],
    "beats": [
     {
-     "say": "Both tools are declarative. You describe the end state, and the tool works out what to create, change or delete.",
-     "show": 0
-    },
-    {
-     "say": "Pulumi uses a general purpose language like Python, with loops, functions and libraries.",
-     "show": 1
-    },
-    {
-     "say": "OpenTofu uses H C L, a configuration language built only for describing infrastructure.",
-     "show": 2
-    },
-    {
-     "say": "H C L's limited, predictable syntax suits large, standardized setups. Pulumi offers more flexibility for complex logic.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 3",
-   "title": "The instance in HCL",
-   "file": "main.tf",
-   "code": "data \"aws_ami\" \"ubuntu\" {\n  most_recent = true\n  owners      = [\"099720109477\"] # Canonical\n  filter {\n    name   = \"name\"\n    values = [\"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*\"]\n  }\n}\n\nresource \"aws_instance\" \"ai_service\" {\n  ami           = data.aws_ami.ubuntu.id\n  instance_type = \"t3.micro\"\n  tags          = { Name = \"ai-inference-server\" }\n}",
-   "beats": [
-    {
-     "say": "In main dot t f, a data block is a data source. It reads the newest Ubuntu image that already exists, just like get A M I.",
-     "show": 0
-    },
-    {
-     "say": "A resource block defines the instance itself.",
-     "show": 1
-    },
-    {
-     "say": "The terraform block at the top keeps its name for compatibility. OpenTofu reads it as is.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 4, 5 and 7",
-   "title": "Init, plan, apply",
-   "steps": [
-    "tofu init",
-    "tofu plan",
-    "tofu apply",
-    "t3.small → plan → apply"
-   ],
-   "beats": [
-    {
      "say": "Tofu init downloads the A W S provider plugin.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Tofu plan is the equivalent of pulumi preview.",
-     "show": 2
+     "say": "Tofu plan is OpenTofu's version of pulumi preview. Both tools follow the same rule.",
+     "hl": 1,
+     "dim": true,
+     "sql": "Preview before you apply."
     },
     {
      "say": "Tofu apply deploys it, like pulumi up. Type yes to confirm.",
-     "show": 3
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Then change the type to t3 small, plan to see the diff, and apply.",
-     "show": 4
+     "say": "Change the type, plan to see the one change, then apply it.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "Tofu destroy removes everything in the state file in one step. Then check the console, and delete the access key if you no longer need it.",
+     "hl": 5,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "file",
-   "kicker": "Lab · Step 6",
-   "title": "The state file",
-   "quote": "terraform.tfstate: what OpenTofu created and manages. Never commit it publicly.",
-   "beats": [
-    {
-     "say": "OpenTofu keeps a state file, terraform dot t f state, recording what it created and manages.",
-     "show": 0
-    },
-    {
-     "say": "That's how it knows what to change, or leave alone, next time.",
-     "show": 1
-    },
-    {
-     "say": "It can contain sensitive values, so never commit it to a public repository. Losing or corrupting it is a very common real world incident.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "pencil",
-   "kicker": "Lab · Steps 8 and 9",
-   "title": "Compare, then destroy",
-   "steps": [
-    "Write the comparison note",
-    "tofu destroy"
+   "kind": "table",
+   "kicker": "Lab · Step 8",
+   "title": "Your comparison note",
+   "columns": [
+    "Aspect",
+    "Pulumi",
+    "OpenTofu"
+   ],
+   "rows": [
+    [
+     "Language",
+     "Python (general)",
+     "HCL (infra only)"
+    ],
+    [
+     "Image lookup",
+     "get_ami",
+     "data \"aws_ami\""
+    ],
+    [
+     "Preview",
+     "pulumi preview",
+     "tofu plan"
+    ],
+    [
+     "Records",
+     "stack state",
+     "terraform.tfstate"
+    ],
+    [
+     "Often chosen for",
+     "complex logic",
+     "large, standard setups"
+    ]
    ],
    "beats": [
     {
-     "say": "Write pulumi versus opentofu dot m d, comparing syntax, workflow, and when you'd choose each.",
-     "show": 1
+     "say": "In pulumi versus opentofu dot m d, compare the two tools you've now used for the identical resource."
     },
     {
-     "say": "Then tofu destroy removes everything in the state file in one step. Check the console, and delete the access key if you no longer need it.",
-     "show": 2
+     "say": "The real difference is the language. Python has loops, functions and libraries. H C L is limited, and predictable.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "The ideas line up one to one: a lookup, a preview, and records of what was created.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "So when would you choose each? H C L often wins for large, standardized infrastructure. Pulumi for complex logic.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
@@ -1368,160 +1732,399 @@ gpu_k8s_lab/
    ]
   },
   {
-   "kind": "flow",
-   "art": "container",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1 to 4",
-   "title": "A cluster with fake GPUs",
-   "steps": [
-    "Install kind + kubectl",
-    "kind create cluster",
-    "Patch example.com/gpu: 2",
-    "Label + taint workers"
+   "title": "A kind cluster with simulated GPUs",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "kubectl",
+     "x": 12,
+     "y": 50,
+     "sub": "your terminal",
+     "art": "terminal"
+    },
+    {
+     "id": "cp",
+     "label": "Control plane",
+     "x": 45,
+     "y": 50,
+     "sub": "API server, scheduler",
+     "art": "server"
+    },
+    {
+     "id": "w1",
+     "label": "gpu-lab-worker",
+     "x": 85,
+     "y": 22,
+     "sub": "example.com/gpu: 2",
+     "art": "chip"
+    },
+    {
+     "id": "w2",
+     "label": "gpu-lab-worker2",
+     "x": 85,
+     "y": 78,
+     "sub": "example.com/gpu: 2",
+     "art": "chip"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "cp"
+    },
+    {
+     "from": "cp",
+     "to": "w1"
+    },
+    {
+     "from": "cp",
+     "to": "w2"
+    }
    ],
    "beats": [
     {
-     "say": "Install kind, which runs Kubernetes nodes as Docker containers, and kube control, the command line tool.",
-     "show": 1
+     "say": "Kind runs Kubernetes nodes as Docker containers. You talk to the cluster with kube control.",
+     "show": 2,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "cp",
+      "label": "get nodes"
+     }
     },
     {
-     "say": "Create a cluster with one control plane node and two workers.",
-     "show": 2
+     "say": "The control plane runs the A P I server, and the scheduler, which picks a node for every pod.",
+     "show": 2,
+     "on": "cp"
     },
     {
-     "say": "Patch an extended resource, example dot com slash G P U, into each worker's status: two per worker. The scheduler counts it exactly like a real G P U.",
-     "show": 3
+     "say": "And there are two workers. These are your G P U machines.",
+     "show": 4,
+     "on": [
+      "w1",
+      "w2"
+     ]
     },
     {
-     "say": "Then label the workers accelerator equals fake G P U, and taint them so ordinary pods stay off.",
-     "show": 4
+     "say": "Kind nodes have no G P Us, so you patch a made up resource, example dot com slash G P U, into each worker's status.",
+     "show": 4,
+     "on": "cp",
+     "send": {
+      "from": "you",
+      "to": "cp",
+      "label": "patch status"
+     }
+    },
+    {
+     "say": "Two per worker, four in total, counted exactly like real N V I D I A G P Us.",
+     "show": 4,
+     "on": [
+      "w1",
+      "w2"
+     ]
+    },
+    {
+     "say": "Then label both workers accelerator equals fake G P U, and taint them, so ordinary pods stay off.",
+     "show": 4,
+     "on": [
+      "w1",
+      "w2"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "One namespace per team",
-   "items": [
-    [
-     "team-a",
-     "Inference · quota 2 GPUs"
-    ],
-    [
-     "team-b",
-     "Training · quota 4 GPUs"
-    ],
-    [
-     "LimitRange",
-     "Default CPU and memory, plus a max"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Each team gets a namespace. Team A runs production inference, team B runs research training.",
-     "show": 0
-    },
-    {
-     "say": "A resource quota caps what a namespace may request: two G P Us for team A.",
-     "show": 1
-    },
-    {
-     "say": "And four for team B.",
-     "show": 2
-    },
-    {
-     "say": "A limit range fills in default C P U and memory, and rejects any container above the max.",
-     "show": 3
-    },
-    {
-     "say": "The quotas promise six G P Us on a four G P U cluster. That's normal, and it's why you also need priorities.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "gear",
+   "kind": "table",
    "kicker": "Lab · Step 7",
-   "title": "Requests, taints and tolerations",
-   "items": [
+   "title": "Who may land where",
+   "columns": [
+    "Node",
+    "Taint",
+    "gpu-smoke-test",
+    "no-toleration"
+   ],
+   "rows": [
     [
-     "GPU pod: selector + toleration + request = limit",
-     "Running ✓"
+     "gpu-lab-control-plane",
+     "control-plane",
+     "✗ no matching label",
+     "✗ untolerated taint"
     ],
     [
-     "Pod with no toleration",
-     "Pending ✗ untolerated taint"
+     "gpu-lab-worker",
+     "gpu=present",
+     "✓ fits",
+     "✗ untolerated taint"
+    ],
+    [
+     "gpu-lab-worker2",
+     "gpu=present",
+     "✓ fits",
+     "✗ untolerated taint"
     ]
    ],
    "beats": [
     {
-     "say": "A G P U pod needs a node selector for the label, a toleration for the taint, and a request equal to its limit, because G P Us are handed out in whole units.",
-     "show": 0
+     "say": "Three nodes, and every one of them has a taint.",
+     "col": 1
     },
     {
-     "say": "With all three, it runs on a worker.",
-     "show": 1
+     "say": "The smoke test pod has a node selector for the label, a toleration for the taint, and a request for one G P U, equal to its limit.",
+     "col": 2
     },
     {
-     "say": "An ordinary pod with no toleration stays pending. Kube control describe shows why, in its events.",
-     "show": 2
+     "say": "Only the workers fit. It runs on one, and team A's quota shows one of two G P Us used.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "A toleration only allows a pod onto a tainted node. The selector or affinity is what sends it there.",
-     "show": 2
+     "say": "Now an ordinary pod, with no toleration. Every node repels it.",
+     "col": 3
+    },
+    {
+     "say": "So it stays pending, and kube control describe says why, in its events.",
+     "col": 3,
+     "sql": "0/3 nodes are available:\n1 node(s) had untolerated taint\n  {node-role.kubernetes.io/control-plane: },\n2 node(s) had untolerated taint\n  {example.com/gpu: present}"
+    },
+    {
+     "say": "A toleration only allows a pod onto a tainted node. The selector is what sends it there.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "stack",
+   "kind": "array",
    "kicker": "Lab · Steps 8 to 10",
-   "title": "Priority and preemption",
-   "steps": [
-    "PriorityClasses",
-    "Training fills 4 GPUs",
-    "Deploy inference",
-    "Training preempted, waits"
+   "title": "Inference arrives, and training is preempted",
+   "values": [
+    "free",
+    "free",
+    "free",
+    "free"
    ],
    "beats": [
     {
-     "say": "Create two priority classes: inference high, which may preempt, and training low, with preemption policy never.",
-     "show": 1
+     "say": "Four G P U slots: the first two on gpu lab worker, the last two on worker two. All free.",
+     "ptr": {
+      "worker": 0,
+      "worker2": 2
+     },
+     "note": "2 GPUs per worker"
     },
     {
-     "say": "Fill all four G P Us with a training job of four pods.",
-     "show": 2
+     "say": "Two priority classes: inference high, one hundred thousand, which may preempt, and training low, one thousand, which never does.",
+     "note": "inference-high 100000 > training-low 1000"
     },
     {
-     "say": "Deploy two high priority inference replicas.",
-     "show": 3
+     "say": "Team B's training job runs four pods at once, one G P U each. Every G P U is now busy.",
+     "vals": [
+      "train",
+      "train",
+      "train",
+      "train"
+     ],
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "llm-finetune: 4 Running"
     },
     {
-     "say": "Within seconds, two training pods are preempted, and their replacements wait as pending, with insufficient G P U. Training isn't lost; it just waits.",
-     "show": 4
+     "say": "Now team A deploys two inference replicas. Nothing is free, but their priority is higher.",
+     "vals": [
+      "train",
+      "train",
+      "train",
+      "train"
+     ],
+     "note": "llm-inference: 2 Pending"
+    },
+    {
+     "say": "So the scheduler preempts one training pod on each worker.",
+     "vals": [
+      "train",
+      "train",
+      "train",
+      "train"
+     ],
+     "hl": [
+      1,
+      3
+     ],
+     "gone": [
+      1,
+      3
+     ],
+     "note": "2 training pods → Terminating"
+    },
+    {
+     "say": "Within seconds, inference holds those G P Us, normally one replica per worker.",
+     "vals": [
+      "train",
+      "infer",
+      "train",
+      "infer"
+     ],
+     "ok": [
+      1,
+      3
+     ],
+     "note": "Preempted by pod … on node gpu-lab-worker"
+    },
+    {
+     "say": "Training isn't lost. Two replacement pods wait as pending, with insufficient G P U, until G P Us free up.",
+     "vals": [
+      "train",
+      "infer",
+      "train",
+      "infer"
+     ],
+     "ok": [
+      1,
+      3
+     ],
+     "hl": [
+      0,
+      2
+     ],
+     "note": "2 Pending: Insufficient example.com/gpu"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "gauge",
-   "kicker": "Lab · Steps 11 to 13",
+   "kind": "table",
+   "kicker": "Lab · Steps 6 and 11",
    "title": "The quota still wins",
-   "big": "exceeded quota",
-   "sub": "priority picks who goes first; quota caps how much",
+   "columns": [
+    "team-a pod",
+    "GPUs used",
+    "Quota",
+    "Result"
+   ],
+   "rows": [
+    [
+     "replica 1",
+     "0 → 1",
+     "2",
+     "✓ created"
+    ],
+    [
+     "replica 2",
+     "1 → 2",
+     "2",
+     "✓ created"
+    ],
+    [
+     "replica 3",
+     "2 → 3",
+     "2",
+     "✗ exceeded quota"
+    ]
+   ],
    "beats": [
     {
-     "say": "Scale inference to three replicas.",
-     "show": 0
+     "say": "Each team's resource quota caps what its namespace may request: two G P Us for team A, and four for team B.",
+     "sql": "team-a: requests.example.com/gpu = 2\nteam-b: requests.example.com/gpu = 4"
     },
     {
-     "say": "Only two exist. The failed create event says exceeded quota. Priority decides who goes first; the quota caps how much a team holds.",
-     "show": 1
+     "say": "That's six promised on a four G P U cluster. Normal, since teams rarely peak together."
     },
     {
-     "say": "For production queueing and fair sharing, teams add Kueue. Write up what you saw, then delete the cluster.",
-     "show": 2
+     "say": "Now scale inference to three replicas. The first two already fit inside the quota.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "The third would make three. The quota allows two, so it's never created.",
+     "hl": 2,
+     "dim": true,
+     "col": 3,
+     "sql": "exceeded quota: gpu-quota\nrequested: requests.example.com/gpu=1\nused: requests.example.com/gpu=2\nlimited: requests.example.com/gpu=2"
+    },
+    {
+     "say": "That message is in team A's failed create events. Priority picks who goes first; the quota caps how much.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 12 and 13",
+   "title": "Scheduling ideas, inside Kubernetes",
+   "columns": [
+    "Scheduling idea",
+    "In Kubernetes"
+   ],
+   "rows": [
+    [
+     "A fixed pool of GPUs",
+     "node allocatable"
+    ],
+    [
+     "Who holds which GPUs",
+     "Allocated resources"
+    ],
+    [
+     "A priority queue",
+     "PriorityClass values"
+    ],
+    [
+     "Release, retry queue",
+     "pending pods retried"
+    ],
+    [
+     "A per-team cap",
+     "ResourceQuota"
+    ],
+    [
+     "Preventing starvation",
+     "not built in"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every scheduling idea maps onto something Kubernetes already does."
+    },
+    {
+     "say": "The G P U pool is each node's allocatable capacity, and describe node shows who holds which.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Priority classes sort the queue of pending pods, which are retried as capacity frees up. Quotas cap each team.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "But nothing stops a job from waiting forever. For that, and for all or nothing job starts, teams add Kueue.",
+     "hl": 5,
+     "dim": true,
+     "sql": "Kueue: LocalQueue → ClusterQueue (team quota),\ncohorts borrow idle quota, fair sharing"
+    },
+    {
+     "say": "Write up what you saw in scheduling notes dot m d, then delete the cluster.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
@@ -1544,7 +2147,7 @@ gpu_k8s_lab/
      "show": 0
     },
     {
-     "say": "When you scaled inference to 3 replicas, what stopped the third pod?",
+     "say": "When you scaled inference to three replicas, what stopped the third pod?",
      "show": 0
     },
     {
@@ -2216,171 +2819,497 @@ gpu_k8s_lab/
    ]
   },
   {
-   "kind": "list",
-   "art": "chain",
-   "kicker": "Concept",
+   "kind": "diagram",
+   "kicker": "Concept · Steps 1 and 5",
    "title": "Identity, role, binding",
-   "items": [
-    [
-     "Identity",
-     "User or ServiceAccount"
-    ],
-    [
-     "Role",
-     "Role · ClusterRole"
-    ],
-    [
-     "Binding",
-     "RoleBinding · ClusterRoleBinding"
-    ]
+   "nodes": [
+    {
+     "id": "alice",
+     "label": "ds-alice",
+     "x": 12,
+     "y": 30,
+     "sub": "ServiceAccount, team-a",
+     "art": "idcard"
+    },
+    {
+     "id": "role",
+     "label": "data-scientist",
+     "x": 85,
+     "y": 30,
+     "sub": "Role in team-a",
+     "art": "doc"
+    },
+    {
+     "id": "rb",
+     "label": "RoleBinding",
+     "x": 85,
+     "y": 78,
+     "sub": "alice → role, team-a",
+     "art": "chain"
+    },
+    {
+     "id": "api",
+     "label": "API server",
+     "x": 45,
+     "y": 78,
+     "sub": "checks every request",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "alice",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "rb"
+    },
+    {
+     "from": "rb",
+     "to": "role"
+    }
    ],
    "beats": [
     {
-     "say": "I A M always has three parts.",
-     "show": 0
+     "say": "I A M has three parts. An identity: who is asking. Here, a service account, ds alice, standing in for a data scientist.",
+     "show": 1,
+     "on": "alice"
     },
     {
-     "say": "An identity: who is asking. A user, or a service account for programs.",
-     "show": 1
+     "say": "A role: a named set of allowed actions. This one allows jobs, pods and logs, in team A only.",
+     "show": 2,
+     "on": "role"
     },
     {
-     "say": "A role: a named set of allowed actions. A Role works in one namespace; a cluster role works cluster wide.",
-     "show": 2
+     "say": "And a binding: who gets which role, and where. This one gives it to alice, in team A.",
+     "show": 3,
+     "on": "rb"
     },
     {
-     "say": "A binding: which identity gets which role, and where.",
-     "show": 3
+     "say": "Now alice asks the A P I server to create a job in team A.",
+     "show": 4,
+     "on": "alice",
+     "send": {
+      "from": "alice",
+      "to": "api",
+      "label": "create job (A)"
+     }
     },
     {
-     "say": "R B A C only has allow rules. Anything not explicitly allowed is denied.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "doc",
-   "kicker": "Lab · Steps 2 to 4",
-   "title": "Audit logging from the start",
-   "steps": [
-    "audit-policy.yaml",
-    "kind create cluster (audit on)",
-    "Restore the tenant setup"
-   ],
-   "beats": [
-    {
-     "say": "Write an audit policy. It records Secrets at metadata level, so you see who touched them, never their contents.",
-     "show": 1
+     "say": "The A P I server finds her binding, and the role it points to.",
+     "show": 4,
+     "on": [
+      "rb",
+      "role"
+     ],
+     "send": {
+      "from": "api",
+      "to": "rb",
+      "label": "check binding"
+     }
     },
     {
-     "say": "Recreate the kind cluster with the audit log turned on in the A P I server.",
-     "show": 2
+     "say": "The role allows creating jobs, so the answer is yes.",
+     "show": 4,
+     "on": "alice",
+     "send": {
+      "from": "api",
+      "to": "alice",
+      "label": "allowed"
+     }
     },
     {
-     "say": "Reapply your Bonus Module 3 files, and the tenant setup is back in seconds.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "lock",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Least privilege by role",
-   "items": [
-    [
-     "Data scientist",
-     "✓ Jobs, pods, logs, own namespace"
-    ],
-    [
-     "Data scientist",
-     "✗ Secrets, quotas, RoleBindings"
-    ],
-    [
-     "Platform admin",
-     "✓ Cluster-wide ops · ✗ Secrets"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Each team's data scientist gets a Role in their own namespace only.",
-     "show": 0
+     "say": "Pods in team B? No binding grants her anything there, and R B A C only has allow rules. Forbidden.",
+     "show": 4,
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "alice",
+      "label": "403 Forbidden"
+     }
     },
     {
-     "say": "They can create jobs, see pods, and read logs.",
-     "show": 1
-    },
-    {
-     "say": "But no Secrets, no deployments, and no editing quotas or role bindings.",
-     "show": 2
-    },
-    {
-     "say": "Platform admins get a cluster role to manage nodes, namespaces, quotas and priorities everywhere. Even so, no Secrets.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "test",
-   "kicker": "Lab · Steps 7 to 9",
-   "title": "Test the boundaries",
-   "file": "check-rbac.sh",
-   "code": "check yes \"$ALICE\" create jobs -n team-a\ncheck yes \"$ALICE\" get pods --subresource=log -n team-a\ncheck no  \"$ALICE\" create jobs -n team-b\ncheck no  \"$ALICE\" get secrets -n team-a\ncheck yes \"$ADMIN\" list pods --all-namespaces\ncheck no  \"$ADMIN\" get secrets -n team-a\ncheck yes \"$RUNNER\" get secret/hf-token -n team-a\ncheck no  \"$RUNNER\" list secrets -n team-a",
-   "beats": [
-    {
-     "say": "Kube control auth can I asks whether an identity would be allowed, without doing it. As an admin, you impersonate with dash dash as.",
-     "show": 0
-    },
-    {
-     "say": "Check R B A C dot s h turns this into a repeatable test of both allowed and denied cases.",
-     "show": 1
-    },
-    {
-     "say": "Then act as Alice for real: her job runs in team A, and team B is forbidden. A short lived token, from kube control create token, expires on its own.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Lab · Steps 10 to 12",
-   "title": "Secrets, audit log, cloud IAM",
-   "items": [
-    [
-     "resourceNames: [hf-token]",
-     "One Secret, get only"
-    ],
-    [
-     "Create pods ≈ read Secrets",
-     "Mount one and print it"
-    ],
-    [
-     "Audit log",
-     "\"forbid\" · code 403"
-    ],
-    [
-     "Cloud IAM",
-     "e.g. AWS CloudTrail"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "The inference runner may get exactly one named Secret, H F token, and nothing else. The script now reports zero failures.",
-     "show": 1
-    },
-    {
-     "say": "Beware: anyone who can create pods or jobs in a namespace can effectively read its Secrets.",
-     "show": 2
-    },
-    {
-     "say": "In the audit log, a denial shows decision forbid and code four oh three.",
-     "show": 3
-    },
-    {
-     "say": "And every idea maps to the clouds. On A W S, for example, the audit log's equivalent is CloudTrail.",
+     "say": "Roles work in one namespace. Cluster roles, like the platform admin's, work cluster wide.",
      "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "The audit policy: first match wins",
+   "columns": [
+    "Rule",
+    "Matches",
+    "Level"
+   ],
+   "rows": [
+    [
+     "1",
+     "health-check URLs",
+     "None"
+    ],
+    [
+     "2",
+     "leases (heartbeats)",
+     "None"
+    ],
+    [
+     "3",
+     "group system:nodes",
+     "None"
+    ],
+    [
+     "4",
+     "control-plane reads",
+     "None"
+    ],
+    [
+     "5",
+     "secrets",
+     "Metadata"
+    ],
+    [
+     "6",
+     "RBAC objects",
+     "Request"
+    ],
+    [
+     "7",
+     "everything else",
+     "Metadata"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The audit log records every request to the A P I server. The policy sets the detail, checking rules top to bottom.",
+     "col": 2
+    },
+    {
+     "say": "A health check matches rule one, so it isn't logged at all.",
+     "hl": 0,
+     "dim": true,
+     "sql": "GET /healthz"
+    },
+    {
+     "say": "Creating a Secret matches rule five, metadata: who touched it, never its value.",
+     "hl": 4,
+     "dim": true,
+     "sql": "create secret hf-token -n team-a"
+    },
+    {
+     "say": "A RoleBinding matches rule six, which also keeps the body: which permission was granted.",
+     "hl": 5,
+     "dim": true,
+     "sql": "create rolebinding data-scientist-ds-alice"
+    },
+    {
+     "say": "Alice creating a job matches nothing above, so rule seven records who, what, where, when, and the result.",
+     "hl": 6,
+     "dim": true,
+     "sql": "create job alice-finetune -n team-a"
+    },
+    {
+     "say": "You recreate the kind cluster with this policy switched on, then reapply your Bonus Module 3 files.",
+     "col": 2,
+     "sql": "kind create cluster --config kind-audit.yaml"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 7 to 9",
+   "title": "Test the boundaries with check-rbac.sh",
+   "columns": [
+    "Who",
+    "Asks to",
+    "Expect",
+    "Got"
+   ],
+   "rows": [
+    [
+     "alice",
+     "create jobs in team-a",
+     "yes",
+     "PASS"
+    ],
+    [
+     "alice",
+     "create jobs in team-b",
+     "no",
+     "PASS"
+    ],
+    [
+     "alice",
+     "get secrets in team-a",
+     "no",
+     "PASS"
+    ],
+    [
+     "admin",
+     "list pods, all ns",
+     "yes",
+     "PASS"
+    ],
+    [
+     "admin",
+     "get secrets in team-a",
+     "no",
+     "PASS"
+    ],
+    [
+     "runner",
+     "get secret/hf-token",
+     "yes",
+     "FAIL until Step 10"
+    ],
+    [
+     "runner",
+     "list secrets",
+     "no",
+     "PASS"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Kube control auth can I asks if an identity would be allowed, without doing it. You impersonate with dash dash as.",
+     "sql": "kubectl auth can-i create jobs -n team-a \\\n  --as=system:serviceaccount:team-a:ds-alice"
+    },
+    {
+     "say": "Alice may create jobs in team A, but not in team B, and she can't read Secrets.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The platform admin sees pods in every namespace, but still no Secrets.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The inference runner's one allowed Secret fails for now, because you grant it in Step 10.",
+     "hl": 5,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Testing denials as well as allowed actions proves the rules discriminate.",
+     "col": 3
+    },
+    {
+     "say": "Then act as alice for real, with a short lived token that expires on its own after ten minutes.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "sql": "kubectl create token ds-alice \\\n  -n team-a --duration=10m"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 10",
+   "title": "Least privilege for Secrets",
+   "nodes": [
+    {
+     "id": "runner",
+     "label": "inference-runner",
+     "x": 12,
+     "y": 28,
+     "sub": "ServiceAccount",
+     "art": "robot"
+    },
+    {
+     "id": "api",
+     "label": "API server",
+     "x": 45,
+     "y": 28,
+     "sub": "RBAC check",
+     "art": "server"
+    },
+    {
+     "id": "hf",
+     "label": "hf-token",
+     "x": 85,
+     "y": 18,
+     "sub": "named in its Role",
+     "art": "key"
+    },
+    {
+     "id": "db",
+     "label": "db-password",
+     "x": 85,
+     "y": 62,
+     "sub": "no rule names it",
+     "art": "lock"
+    },
+    {
+     "id": "job",
+     "label": "alice's Job pod",
+     "x": 45,
+     "y": 82,
+     "sub": "can mount Secrets",
+     "art": "container"
+    }
+   ],
+   "edges": [
+    {
+     "from": "runner",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "hf"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    },
+    {
+     "from": "job",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The inference server needs one Secret, a model hub token.",
+     "show": 2,
+     "on": "runner"
+    },
+    {
+     "say": "Team A has two Secrets, both with fake values: H F token and D B password.",
+     "show": 4,
+     "on": [
+      "hf",
+      "db"
+     ]
+    },
+    {
+     "say": "Its Role names exactly one Secret, with get only. So H F token is allowed.",
+     "show": 4,
+     "on": "hf",
+     "send": {
+      "from": "api",
+      "to": "hf",
+      "label": "get ✓"
+     }
+    },
+    {
+     "say": "D B password isn't named, so getting it is forbidden.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "runner",
+      "to": "api",
+      "label": "get db-password"
+     }
+    },
+    {
+     "say": "It can't list Secrets either, since a list returns every name. Check R B A C now reports zero failures.",
+     "show": 4,
+     "on": "api"
+    },
+    {
+     "say": "The catch: alice can create jobs, and a job's pod can mount any Secret in its namespace, and print it.",
+     "show": 5,
+     "on": "job",
+     "send": {
+      "from": "job",
+      "to": "db",
+      "label": "mount + print"
+     }
+    },
+    {
+     "say": "So creating pods is close to reading Secrets. That's why each team gets its own namespace.",
+     "show": 5,
+     "on": [
+      "job",
+      "db"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 11",
+   "title": "Reading alice's audit trail",
+   "columns": [
+    "verb",
+    "resource",
+    "namespace",
+    "decision"
+   ],
+   "rows": [
+    [
+     "create",
+     "jobs",
+     "team-a",
+     "allow"
+    ],
+    [
+     "list",
+     "jobs",
+     "team-a",
+     "allow"
+    ],
+    [
+     "list",
+     "pods",
+     "team-b",
+     "forbid · 403"
+    ],
+    [
+     "create",
+     "jobs",
+     "team-b",
+     "forbid · 403"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "With j q, filter the audit log to everything alice did.",
+     "sql": "select(.user.username == ALICE\n  or .impersonatedUser.username == ALICE)"
+    },
+    {
+     "say": "Her allowed requests: creating and listing jobs in her own namespace.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "And her denials in team B: decision forbid, with response code four oh three.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "With dash dash as, the log records both: the user is you, and the impersonated user is alice.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "Every idea here has a cloud twin. On A W S, this record is CloudTrail, and S T S assume role gives short lived credentials. Map them in your notes, then clean up.",
+     "col": 3
     }
    ]
   },
@@ -2403,7 +3332,7 @@ gpu_k8s_lab/
      "show": 0
     },
     {
-     "say": "RBAC has no deny rules. How was alice still blocked from team-b?",
+     "say": "R B A C has no deny rules. How was Alice still blocked from team B?",
      "show": 0
     },
     {

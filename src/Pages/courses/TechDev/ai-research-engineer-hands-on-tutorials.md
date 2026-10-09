@@ -140,11 +140,10 @@ paper_reproduction_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "book",
-   "kicker": "Concept",
-   "title": "Skim the structure first",
-   "steps": [
+   "kind": "array",
+   "kicker": "Step 3",
+   "title": "Skim all five, then read closely",
+   "values": [
     "Abstract",
     "Introduction",
     "Method",
@@ -153,67 +152,243 @@ paper_reproduction_project/
    ],
    "beats": [
     {
-     "say": "Choose a short, well-known paper with a simple result, one you can reproduce with a small dataset and a few hours of compute.",
-     "show": 0
+     "say": "Pick a short, well-known paper with a simple result. Most papers follow these same five sections."
     },
     {
-     "say": "Most papers follow the same five sections.",
-     "show": 1
+     "say": "On the first pass, you skim. Start with the abstract.",
+     "hl": 0,
+     "ptr": {
+      "skim": 0
+     }
     },
     {
-     "say": "Abstract, introduction, method, results, and discussion.",
-     "show": 5
+     "say": "Then the introduction.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "skim": 1
+     }
     },
     {
-     "say": "Skim all five once, before rereading anything closely.",
-     "show": 5
+     "say": "The method.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "skim": 2
+     }
+    },
+    {
+     "say": "The results, and the discussion. All five, once, before you read anything closely.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "skim": 4
+     },
+     "note": "First pass: structure, not detail"
+    },
+    {
+     "say": "Now you know where the claim lives, so you can reread the method and results closely.",
+     "hl": [
+      2,
+      3
+     ],
+     "ok": [
+      0,
+      1,
+      4
+     ],
+     "note": "Second pass: the parts you will rebuild"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "target",
+   "kind": "table",
    "kicker": "Steps 4 to 6",
-   "title": "One core claim",
-   "quote": "This paper claims that [method] achieves [result] on [dataset/task].",
+   "title": "Fill in one core claim",
+   "columns": [
+    "Slot",
+    "Example paper"
+   ],
+   "rows": [
+    [
+     "method",
+     "logistic regression"
+    ],
+    [
+     "result",
+     "about 97% accuracy"
+    ],
+    [
+     "dataset / task",
+     "Breast cancer (Wisc.)"
+    ],
+    [
+     "metric",
+     "accuracy"
+    ]
+   ],
    "beats": [
     {
-     "say": "In a text cell called paper summary, write one sentence.",
-     "show": 0
+     "say": "In a text cell called paper summary, write one sentence with three blanks.",
+     "sql": "This paper claims that [method]\nachieves [result] on [dataset/task]."
     },
     {
-     "say": "This paper claims that a method achieves a result on a dataset or task.",
-     "show": 1
+     "say": "For our example, the method is logistic regression.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Then paraphrase the method in your own words, without quoting the paper, and note its dataset and evaluation metric.",
-     "show": 1
+     "say": "The result it claims is about ninety seven percent accuracy.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "And the dataset is the Wisconsin breast cancer dataset.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Note the metric too, here accuracy, and paraphrase the method in your own words, without quoting the paper.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Step 7",
    "title": "Data, method, evaluation",
-   "file": "paper_reproduction_project",
-   "code": "# 1. Data\nX, y = load_breast_cancer(return_X_y=True)\n\n# 2. Method\nmodel = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))\n\n# 3. Evaluation\nscores = cross_val_score(model, X, y, cv=5, scoring=\"accuracy\")\nprint(f\"Mean accuracy: {scores.mean():.3f} (+/- {scores.std():.3f})\")\n\nPAPER_REPORTED = 0.97  # replace with your paper's number",
+   "file": "reproduce.py",
+   "code": "X, y = load_breast_cancer(return_X_y=True)\nprint(\"Data shape:\", X.shape)\nmodel = make_pipeline(StandardScaler(),\n    LogisticRegression(max_iter=1000))\nscores = cross_val_score(model, X, y, cv=5,\n                         scoring=\"accuracy\")\nprint(\"Accuracy per fold:\", scores.round(3))\nprint(f\"Mean accuracy: {scores.mean():.3f} \"\n      f\"(+/- {scores.std():.3f})\")\nPAPER_REPORTED = 0.97  # your paper's number\ngap = scores.mean() - PAPER_REPORTED\nprint(f\"Paper reported: {PAPER_REPORTED:.3f}, \"\n      f\"difference: {gap:+.3f}\")",
    "beats": [
     {
-     "say": "Every reproduction script has the same three parts: data, method, and evaluation.",
-     "show": 0
+     "say": "Part one is data. Five hundred and sixty nine tumor samples, each with thirty features.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "X": "569 × 30",
+      "y": "569 labels"
+     },
+     "out": "Data shape: (569, 30)"
     },
     {
-     "say": "Here the claim is that logistic regression reaches about ninety seven percent accuracy on the Wisconsin breast cancer dataset.",
-     "show": 1
+     "say": "Part two is the method: the simplest version of the paper's approach. Scale the features, then logistic regression.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "model": "scaler + logistic"
+     }
     },
     {
-     "say": "Five-fold cross-validation tests on each of five parts in turn, so your number doesn't depend on one lucky split.",
-     "show": 1
+     "say": "Part three is evaluation, with the paper's metric, accuracy, measured five times.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "scores": "5 fold scores"
+     }
     },
     {
-     "say": "You should see a mean accuracy of about zero point nine eight.",
-     "show": 1
+     "say": "Each fold scores around zero point nine eight.",
+     "line": 7,
+     "out": "Accuracy per fold: [0.982 0.982 0.974 0.974 0.991]"
+    },
+    {
+     "say": "The mean is zero point nine eight one, give or take zero point zero zero seven.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "mean": 0.981
+     },
+     "out": "Mean accuracy: 0.981 (+/- 0.007)"
+    },
+    {
+     "say": "Finally, compare with the paper's ninety seven percent. You're about one point higher.",
+     "line": [
+      10,
+      13
+     ],
+     "vars": {
+      "PAPER_REPORTED": 0.97,
+      "gap": "+0.011"
+     },
+     "out": "Paper reported: 0.970, difference: +0.011"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 7 · Cross-validation",
+   "title": "Five folds, five test rounds",
+   "values": [
+    0.982,
+    0.982,
+    0.974,
+    0.974,
+    0.991
+   ],
+   "beats": [
+    {
+     "say": "Cross-validation splits the data into five parts. These are the five scores you just saw."
+    },
+    {
+     "say": "Round one: train on parts two to five, test on part one. Zero point nine eight two.",
+     "hl": 0,
+     "ptr": {
+      "test": 0
+     },
+     "note": "Test on fold 1, train on the other 4"
+    },
+    {
+     "say": "Round two tests on part two instead.",
+     "hl": 1,
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "test": 1
+     }
+    },
+    {
+     "say": "And so on, until every part has been the test set exactly once.",
+     "hl": 4,
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "test": 4
+     }
+    },
+    {
+     "say": "Averaging all five gives zero point nine eight one, so your number doesn't depend on one lucky split.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Mean 0.981"
     }
    ]
   },
@@ -238,7 +413,7 @@ paper_reproduction_project/
    ],
    "beats": [
     {
-     "say": "Finally, record your metric and compare it with the paper's number.",
+     "say": "Record your metric and compare it with the paper's number.",
      "show": 0
     },
     {
@@ -441,92 +616,278 @@ data_exploration_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "table",
    "kicker": "Step 2",
-   "title": "Load it into a DataFrame",
-   "file": "data_exploration_project",
-   "code": "import pandas as pd\nfrom sklearn.datasets import load_breast_cancer\n\nload_breast_cancer(as_frame=True).frame.to_csv(\"breast_cancer.csv\", index=False)\n\ndf = pd.read_csv(\"breast_cancer.csv\")\ndf.head()",
-   "beats": [
-    {
-     "say": "This course uses the Wisconsin breast cancer dataset, which comes with scikit-learn.",
-     "show": 0
-    },
-    {
-     "say": "The code saves it as a C S V file, then loads that file, the way you'd load any data.",
-     "show": 1
-    },
-    {
-     "say": "A DataFrame is a table of rows and columns, like a spreadsheet. Each row is one tumor sample, and the target column is the label.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Steps 3 to 5",
-   "title": "Four first questions",
-   "items": [
+   "title": "One row, one tumor sample",
+   "columns": [
+    "row",
+    "mean radius",
+    "mean texture",
+    "target"
+   ],
+   "rows": [
     [
-     "df.shape",
-     "Rows × columns"
+     "0",
+     "17.99",
+     "10.38",
+     "0"
     ],
     [
-     "df.dtypes",
-     "Column types"
+     "1",
+     "20.57",
+     "17.77",
+     "0"
     ],
     [
-     "df.isnull().sum()",
-     "Missing values per column"
+     "2",
+     "19.69",
+     "21.25",
+     "0"
     ],
     [
-     ".hist(bins=30)",
-     "A column's distribution"
+     "3",
+     "11.42",
+     "20.38",
+     "0"
+    ],
+    [
+     "4",
+     "20.29",
+     "14.34",
+     "0"
     ]
    ],
    "beats": [
     {
-     "say": "Then ask the data a few questions.",
-     "show": 0
+     "say": "The code saves the Wisconsin breast cancer dataset as a C S V file, then loads it into a DataFrame.",
+     "sql": "df = pd.read_csv(\"breast_cancer.csv\")\ndf.head()"
     },
     {
-     "say": "Shape gives rows by columns: here, five hundred and sixty nine by thirty one.",
-     "show": 1
+     "say": "A DataFrame is a table, like a spreadsheet. Head shows the first five rows.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
     },
     {
-     "say": "D types tells you whether each column is numeric, text, or something else.",
-     "show": 2
+     "say": "Each row is one tumor sample.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Is null, dot sum, counts the missing values in each column. This dataset has none, which is rare for real data.",
-     "show": 3
+     "say": "Each column is one measurement. Here are two of the thirty.",
+     "col": 1
     },
     {
-     "say": "And a histogram shows a column's distribution: spread evenly, skewed, or clustered.",
-     "show": 4
+     "say": "And the target column is the label. Zero means malignant, one means benign.",
+     "col": 3
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "pie",
-   "kicker": "Step 6",
-   "title": "Check the class balance",
-   "big": "63% / 37%",
-   "sub": "benign / malignant: mildly imbalanced",
+   "kind": "walk",
+   "kicker": "Steps 3, 4 and 6",
+   "title": "Ask the data four questions",
+   "file": "data_exploration_project",
+   "code": "print(df.shape)\nprint(df.dtypes)\ndf.isnull().sum()\nprint(df[\"target\"].value_counts())\nprint(df[\"target\"].value_counts(normalize=True))",
    "beats": [
     {
-     "say": "Class imbalance is when one category vastly outnumbers another.",
-     "show": 0
+     "say": "First question: how big is it? Shape gives rows by columns.",
+     "line": 1,
+     "out": "(569, 31)"
     },
     {
-     "say": "Value counts shows about sixty three percent benign, and thirty seven percent malignant.",
-     "show": 1
+     "say": "Five hundred and sixty nine samples, thirty features plus the target.",
+     "line": 1,
+     "vars": {
+      "rows": 569,
+      "columns": 31
+     }
     },
     {
-     "say": "Mildly imbalanced. Keep that in mind for the next project.",
-     "show": 2
+     "say": "Second: what types are the columns? Here, thirty decimal columns and one whole-number label.",
+     "line": 2,
+     "out": [
+      "float64 × 30 columns",
+      "target    int64"
+     ]
+    },
+    {
+     "say": "Third: is anything missing? Is null, dot sum, counts the gaps in each column. Every count is zero.",
+     "line": 3,
+     "out": "every column: 0",
+     "vars": {
+      "missing": 0
+     }
+    },
+    {
+     "say": "That's rare for real data. A column with thirty percent missing would need a decision before modeling.",
+     "line": 3
+    },
+    {
+     "say": "Fourth: how balanced are the classes? Three hundred and fifty seven benign, two hundred and twelve malignant.",
+     "line": 4,
+     "out": [
+      "1    357",
+      "0    212"
+     ]
+    },
+    {
+     "say": "As fractions, about sixty three percent and thirty seven percent.",
+     "line": 5,
+     "out": [
+      "1    0.627",
+      "0    0.373"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 5",
+   "title": "What the histogram shows",
+   "xlabel": "mean radius (bins)",
+   "ylabel": "number of samples",
+   "points": [
+    [
+     8.2,
+     9.5
+    ],
+    [
+     16.6,
+     39.5
+    ],
+    [
+     25.0,
+     92.5
+    ],
+    [
+     33.5,
+     64.5
+    ],
+    [
+     42.0,
+     27.5
+    ],
+    [
+     50.4,
+     25.0
+    ],
+    [
+     58.8,
+     19.0
+    ],
+    [
+     67.3,
+     3.5
+    ],
+    [
+     75.8,
+     2.0
+    ],
+    [
+     84.2,
+     1.5
+    ]
+   ],
+   "beats": [
+    {
+     "say": "This is the histogram of mean radius, with thirty bins squeezed into ten here. Each dot is the height of one bar."
+    },
+    {
+     "say": "Most samples sit in the middle, around eleven to fifteen.",
+     "groups": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "But the right side trails off slowly: a few tumors are much bigger.",
+     "groups": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "That shape is called skewed. A distribution can also be even, or clustered. Try two or three other columns too.",
+     "groups": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Check the class balance",
+   "columns": [
+    "target",
+    "meaning",
+    "count",
+    "share"
+   ],
+   "rows": [
+    [
+     "1",
+     "benign",
+     "357",
+     "63%"
+    ],
+    [
+     "0",
+     "malignant",
+     "212",
+     "37%"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Class imbalance is when one category vastly outnumbers another, like ninety five percent no and five percent yes."
+    },
+    {
+     "say": "Here, benign is the bigger class: about sixty three percent.",
+     "hl": 0,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Malignant is about thirty seven percent. That's mildly imbalanced.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Remember it: a model that always says benign would already be right sixty three percent of the time.",
+     "hl": 0,
+     "sql": "always guess 1 → right 357 / 569 ≈ 63%"
     }
    ]
   },
@@ -751,132 +1112,508 @@ gradient_descent_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "bulb",
-   "kicker": "Concept",
-   "title": "Loss and gradient",
-   "items": [
+   "kind": "chart",
+   "kicker": "Steps 2 and 3",
+   "title": "Loss, and which way is downhill",
+   "xlabel": "w",
+   "ylabel": "loss",
+   "points": [
     [
-     "Loss",
-     "How wrong the predictions are"
+     0,
+     90
     ],
     [
-     "Gradient",
-     "Direction of steepest increase"
+     12.5,
+     50.6
     ],
     [
-     "Step against it",
-     "Loss goes down"
+     25,
+     22.5
+    ],
+    [
+     37.5,
+     5.6
+    ],
+    [
+     50,
+     0
+    ],
+    [
+     62.5,
+     5.6
+    ],
+    [
+     75,
+     22.5
+    ],
+    [
+     87.5,
+     50.6
+    ],
+    [
+     100,
+     90
     ]
    ],
    "beats": [
     {
-     "say": "Two ideas first.",
-     "show": 0
+     "say": "Our example has one data point: x is two, and y is eight. This curve is the loss for every value of w."
     },
     {
-     "say": "A loss function measures how wrong a model's predictions are. Minimizing it means adjusting the model until predictions get as close to correct as possible.",
-     "show": 1
+     "say": "A loss function measures how wrong the predictions are. The bottom is at w equals four, where two times four is exactly eight.",
+     "marks": [
+      [
+       50,
+       0
+      ]
+     ]
     },
     {
-     "say": "A gradient is the direction of steepest increase in the loss.",
-     "show": 2
+     "say": "We start far away, at w equals zero, where the loss is sixty four.",
+     "marks": [
+      [
+       0,
+       90
+      ]
+     ]
     },
     {
-     "say": "So you move the opposite way, and the loss goes down.",
-     "show": 3
+     "say": "The gradient is the slope here: minus thirty two. It points toward steepest increase, which is to the left.",
+     "marks": [
+      [
+       0,
+       90
+      ]
+     ],
+     "line": [
+      -3.6,
+      90
+     ]
+    },
+    {
+     "say": "So we step the opposite way, to the right, and the loss goes down.",
+     "marks": [
+      [
+       0,
+       90
+      ],
+      [
+       4,
+       76
+      ]
+     ],
+     "line": [
+      -3.6,
+      90
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
+   "kind": "walk",
    "kicker": "Steps 4 and 5",
    "title": "Squared error and its derivative",
-   "file": "gradient_descent_project",
-   "code": "def loss(w, x, y):\n    prediction = w * x\n    return (prediction - y) ** 2\n\ndef gradient(w, x, y):\n    prediction = w * x\n    return 2 * (prediction - y) * x",
+   "file": "gradient_descent.py",
+   "code": "def loss(w, x, y):\n    prediction = w * x\n    return (prediction - y) ** 2\n\ndef gradient(w, x, y):\n    prediction = w * x\n    return 2 * (prediction - y) * x\n\nprint(loss(0.0, 2.0, 8.0))\nprint(gradient(0.0, 2.0, 8.0))",
    "beats": [
     {
-     "say": "The loss is squared error, for a one-parameter model on one data point.",
-     "show": 0
+     "say": "Let's call both functions at the start point: w zero, x two, y eight.",
+     "line": 9,
+     "vars": {
+      "w": 0.0,
+      "x": 2.0,
+      "y": 8.0
+     }
     },
     {
-     "say": "Squaring penalizes big mistakes more than small ones.",
-     "show": 1
+     "say": "The prediction is w times x: zero.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "prediction": 0.0
+     }
     },
     {
-     "say": "The gradient is its derivative with respect to w: the calculus that tells you which direction reduces the error.",
-     "show": 1
+     "say": "The error is minus eight, and squaring it gives sixty four. Squaring punishes big mistakes more than small ones.",
+     "line": 3,
+     "out": "64.0"
+    },
+    {
+     "say": "The gradient is the derivative with respect to w.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "prediction": 0.0
+     }
+    },
+    {
+     "say": "Two, times minus eight, times two: minus thirty two. Negative means increasing w lowers the loss.",
+     "line": [
+      7,
+      10
+     ],
+     "out": "-32.0"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "loop",
+   "kind": "walk",
    "kicker": "Step 6",
-   "title": "The descent loop",
-   "file": "gradient_descent_project",
-   "code": "w = 0.0\nlearning_rate = 0.01\nx, y = 2.0, 8.0  # example: true relationship is w=4\n\nfor step in range(100):\n    g = gradient(w, x, y)\n    w = w - learning_rate * g\n    if step % 10 == 0:\n        print(f\"Step {step}: w={w:.4f}, loss={loss(w, x, y):.4f}\")",
+   "title": "Watch the loop walk downhill",
+   "file": "gradient_descent.py",
+   "code": "w = 0.0\nlearning_rate = 0.01\nx, y = 2.0, 8.0  # example: true relationship is w=4\n\nfor step in range(100):\n    g = gradient(w, x, y)\n    w = w - learning_rate * g\n    if step % 10 == 0:\n        print(f\"Step {step}: w={w:.4f}, \"\n              f\"loss={loss(w, x, y):.4f}\")",
    "beats": [
     {
-     "say": "Now the loop. Start w at zero. The true relationship here is w equals four.",
-     "show": 0
+     "say": "Start w at zero, with a learning rate of zero point zero one.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "w": 0.0,
+      "learning_rate": 0.01
+     }
     },
     {
-     "say": "Each step, compute the gradient, and move w a small step against it.",
-     "show": 1
+     "say": "Step zero: the gradient is minus thirty two.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "step": 0,
+      "g": -32.0
+     }
     },
     {
-     "say": "The learning rate controls the step size.",
-     "show": 1
+     "say": "Subtract the learning rate times the gradient, and w moves up to zero point three two.",
+     "line": 7,
+     "vars": {
+      "w": 0.32
+     }
+    },
+    {
+     "say": "Step zero is a multiple of ten, so it prints. The loss has dropped from sixty four to about fifty four.",
+     "line": [
+      8,
+      10
+     ],
+     "out": "Step 0: w=0.3200, loss=54.1696"
+    },
+    {
+     "say": "Step one: the gradient is smaller now, minus twenty nine point four four, so the step is a little smaller.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "step": 1,
+      "g": -29.44,
+      "w": 0.6144
+     }
+    },
+    {
+     "say": "By step ten, w is about two point four.",
+     "line": [
+      8,
+      10
+     ],
+     "vars": {
+      "step": 10,
+      "w": 2.4015
+     },
+     "out": "Step 10: w=2.4015, loss=10.2214"
+    },
+    {
+     "say": "By step ninety, w is almost exactly four, and the loss rounds to zero.",
+     "line": [
+      8,
+      10
+     ],
+     "vars": {
+      "step": 90,
+      "w": 3.998
+     },
+     "out": [
+      "...",
+      "Step 90: w=3.9980, loss=0.0000"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "flask",
+   "kind": "chart",
    "kicker": "Step 7",
-   "title": "Experiment with the learning rate",
-   "items": [
+   "title": "Learning rate: step size",
+   "xlabel": "step",
+   "ylabel": "w",
+   "points": [
     [
-     "0.5 ✗",
-     "Overshoots · loss explodes"
+     0,
+     6.4
     ],
     [
-     "0.001 ✗",
-     "Still well short of 4"
+     20,
+     66.1
+    ],
+    [
+     40,
+     77.4
+    ],
+    [
+     60,
+     79.5
+    ],
+    [
+     80,
+     79.9
+    ],
+    [
+     99,
+     80.0
+    ],
+    [
+     0,
+     0.6
+    ],
+    [
+     20,
+     12.4
+    ],
+    [
+     40,
+     22.4
+    ],
+    [
+     60,
+     31.0
+    ],
+    [
+     80,
+     38.3
+    ],
+    [
+     99,
+     44.2
     ]
    ],
    "beats": [
     {
-     "say": "Try two other learning rates.",
-     "show": 0
+     "say": "Here is w after each twenty steps. The line marks the target, w equals four.",
+     "line": [
+      0,
+      80
+     ]
     },
     {
-     "say": "At zero point five, each step overshoots so far that w swings back and forth, and the loss explodes.",
-     "show": 1
+     "say": "With a learning rate of zero point zero one, w climbs fast and settles on four.",
+     "line": [
+      0,
+      80
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "At zero point zero zero one, w is still well short of four after a hundred steps.",
-     "show": 2
+     "say": "With zero point zero zero one, every step is ten times smaller. After a hundred steps, w is only about two point two.",
+     "line": [
+      0,
+      80
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Too small, and training takes forever.",
+     "line": [
+      0,
+      80
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       99,
+       44.2
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "scatter",
-   "kicker": "Step 8",
-   "title": "Two parameters",
-   "big": "y = 3x + 1",
-   "sub": "w ≈ 3, b ≈ 1 after 2000 steps",
+   "kind": "array",
+   "kicker": "Step 7",
+   "title": "Learning rate 0.5: overshoot",
+   "values": [
+    0,
+    16,
+    -32,
+    112,
+    -320,
+    976
+   ],
    "beats": [
     {
-     "say": "Last, extend the model to w times x, plus b.",
-     "show": 0
+     "say": "Now try zero point five. Here is w after each step, starting from zero.",
+     "hl": 0,
+     "ptr": {
+      "w": 0
+     }
     },
     {
-     "say": "Use several points, average the gradients, and update both w and b each step. W should end close to three, and b close to one.",
-     "show": 1
+     "say": "The first gradient is minus thirty two. Half of that is sixteen, so w jumps straight past four, to sixteen.",
+     "hl": 1,
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "w": 1
+     },
+     "note": "Target is 4"
+    },
+    {
+     "say": "Now the gradient points back, and it's huge. W swings to minus thirty two.",
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "ptr": {
+      "w": 2
+     }
+    },
+    {
+     "say": "Then one hundred and twelve, then minus three hundred and twenty.",
+     "hl": [
+      3,
+      4
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "w": 4
+     }
+    },
+    {
+     "say": "Every swing is bigger than the last, so the loss explodes. Too large, and it never settles.",
+     "gone": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ptr": {
+      "w": 5
+     },
+     "note": "Loss explodes"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 8",
+   "title": "Two parameters: fit w times x plus b",
+   "xlabel": "x",
+   "ylabel": "y",
+   "points": [
+    [
+     20,
+     24
+    ],
+    [
+     40,
+     42
+    ],
+    [
+     60,
+     60
+    ],
+    [
+     80,
+     78
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now fit w times x, plus b, to four points that lie on y equals three x plus one."
+    },
+    {
+     "say": "Both w and b start at zero. After the first step, the line is still nearly flat: w is zero point five.",
+     "line": [
+      0.15,
+      1.02
+     ]
+    },
+    {
+     "say": "Each step averages the gradients over all four points, and updates w and b together.",
+     "line": [
+      0.15,
+      1.02
+     ]
+    },
+    {
+     "say": "By step four hundred, w is about three and b is about one.",
+     "line": [
+      0.9,
+      6.03
+     ]
+    },
+    {
+     "say": "At step two thousand: w is three, b is one. The line goes through every point.",
+     "line": [
+      0.9,
+      6.0
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -1079,80 +1816,344 @@ baseline_model_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "fork",
+   "kind": "diagram",
    "kicker": "Steps 2 and 3",
    "title": "Features, labels, and a split",
-   "file": "baseline_model_project",
-   "code": "df = load_breast_cancer(as_frame=True).frame\nX = df.drop(columns=[\"target\"])  # features\ny = df[\"target\"]                 # label\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)",
+   "nodes": [
+    {
+     "id": "df",
+     "label": "DataFrame",
+     "x": 10,
+     "y": 50,
+     "sub": "569 rows × 31",
+     "art": "table"
+    },
+    {
+     "id": "X",
+     "label": "X · features",
+     "x": 36,
+     "y": 22,
+     "sub": "30 columns"
+    },
+    {
+     "id": "y",
+     "label": "y · labels",
+     "x": 36,
+     "y": 78,
+     "sub": "target"
+    },
+    {
+     "id": "split",
+     "label": "train_test_split",
+     "x": 62,
+     "y": 50,
+     "sub": "test_size=0.2",
+     "art": "fork"
+    },
+    {
+     "id": "train",
+     "label": "Train set",
+     "x": 90,
+     "y": 22,
+     "sub": "455 rows"
+    },
+    {
+     "id": "test",
+     "label": "Test set",
+     "x": 90,
+     "y": 78,
+     "sub": "114 rows · held out",
+     "art": "lock"
+    }
+   ],
+   "edges": [
+    {
+     "from": "df",
+     "to": "X"
+    },
+    {
+     "from": "df",
+     "to": "y"
+    },
+    {
+     "from": "X",
+     "to": "split"
+    },
+    {
+     "from": "y",
+     "to": "split"
+    },
+    {
+     "from": "split",
+     "to": "train"
+    },
+    {
+     "from": "split",
+     "to": "test"
+    }
+   ],
    "beats": [
     {
-     "say": "Load the dataset. X holds the features, the inputs. Y holds the labels, the answers.",
-     "show": 0
+     "say": "Start from the Project 2 DataFrame.",
+     "show": 1,
+     "on": "df"
     },
     {
-     "say": "Then hold back twenty percent as a test set the model never sees, so you can check it generalizes instead of memorizing.",
-     "show": 1
+     "say": "Drop the target column, and what's left is X: the thirty features the model learns from.",
+     "show": 2,
+     "on": "X",
+     "send": {
+      "from": "df",
+      "to": "X",
+      "label": "drop target"
+     }
     },
     {
-     "say": "Stratify keeps the same class balance in both parts.",
-     "show": 1
+     "say": "The target column itself is y: the answers.",
+     "show": 3,
+     "on": "y",
+     "send": {
+      "from": "df",
+      "to": "y",
+      "label": "target"
+     }
+    },
+    {
+     "say": "Train test split takes both.",
+     "show": 4,
+     "on": "split",
+     "send": {
+      "from": "X",
+      "to": "split",
+      "label": "X and y"
+     }
+    },
+    {
+     "say": "Eighty percent, four hundred and fifty five rows, go to training.",
+     "show": 5,
+     "on": "train",
+     "send": {
+      "from": "split",
+      "to": "train",
+      "label": "80%"
+     }
+    },
+    {
+     "say": "Twenty percent, one hundred and fourteen rows, are held back. The model never sees them during training.",
+     "show": 6,
+     "on": "test",
+     "send": {
+      "from": "split",
+      "to": "test",
+      "label": "20%"
+     }
+    },
+    {
+     "say": "Stratify keeps the same class balance in both: the test set has seventy two benign and forty two malignant, still sixty three percent.",
+     "show": 6,
+     "on": [
+      "train",
+      "test"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "neural",
-   "kicker": "Steps 4 and 5",
-   "title": "Two baselines",
-   "items": [
+   "kind": "walk",
+   "kicker": "Steps 4 to 6",
+   "title": "Two baselines, one test set",
+   "file": "baseline.py",
+   "code": "baseline = DummyClassifier(strategy=\"most_frequent\")\nmodel = make_pipeline(StandardScaler(),\n    LogisticRegression(max_iter=1000))\n\nfor name, clf in [\n        (\"Dummy (most frequent)\", baseline),\n        (\"Logistic regression\", model)]:\n    preds = clf.predict(X_test)\n    acc = accuracy_score(y_test, preds)\n    f1 = f1_score(y_test, preds, average=\"macro\",\n                  zero_division=0)\n    print(f\"{name}: accuracy={acc:.3f}, \"\n          f\"macro F1={f1:.3f}\")",
+   "beats": [
+    {
+     "say": "The dummy classifier always predicts the most common class. It's dumb on purpose: any real model must beat it.",
+     "line": 1,
+     "vars": {
+      "baseline": "always 1 (benign)"
+     }
+    },
+    {
+     "say": "Logistic regression, with features scaled first: simple, interpretable, and often hard to beat.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "model": "scaler + logistic"
+     }
+    },
+    {
+     "say": "Both are fitted on the training set. Now the loop scores each one on the test set.",
+     "line": [
+      5,
+      7
+     ],
+     "vars": {
+      "name": "Dummy (most frequent)"
+     }
+    },
+    {
+     "say": "The dummy predicts benign for all one hundred and fourteen test samples.",
+     "line": 8,
+     "vars": {
+      "preds": "114 × 1"
+     }
+    },
+    {
+     "say": "Seventy two of them really are benign, so accuracy is zero point six three two.",
+     "line": 9,
+     "vars": {
+      "acc": 0.632
+     }
+    },
+    {
+     "say": "But macro F 1 is only zero point three eight seven.",
+     "line": [
+      10,
+      13
+     ],
+     "vars": {
+      "f1": 0.387
+     },
+     "out": "Dummy (most frequent): accuracy=0.632, macro F1=0.387"
+    },
+    {
+     "say": "Next, logistic regression. It gets one hundred and twelve of the one hundred and fourteen right.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "name": "Logistic regression",
+      "preds": "112 correct",
+      "acc": 0.982
+     }
+    },
+    {
+     "say": "And its macro F 1 is just as high.",
+     "line": [
+      10,
+      13
+     ],
+     "vars": {
+      "f1": 0.981
+     },
+     "out": "Logistic regression: accuracy=0.982, macro F1=0.981"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Where each model is right",
+   "columns": [
+    "Model",
+    "Benign right",
+    "Malignant right",
+    "Accuracy"
+   ],
+   "rows": [
     [
-     "Dummy classifier",
-     "Always the most common class"
+     "Dummy",
+     "72 of 72",
+     "0 of 42",
+     "0.632"
     ],
     [
      "Logistic regression",
-     "Simple · interpretable · strong"
+     "71 of 72",
+     "41 of 42",
+     "0.982"
     ]
    ],
    "beats": [
     {
-     "say": "Train two baselines.",
-     "show": 0
+     "say": "Split the test set by true class, and look at what each model got right."
     },
     {
-     "say": "A dummy classifier always predicts the most common class. It's dumb on purpose: any real model must beat it.",
-     "show": 1
+     "say": "The dummy gets every benign sample right, because it always says benign.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Logistic regression is simple, interpretable, and often surprisingly hard to beat. Standard scaler puts the features on a similar scale first.",
-     "show": 2
+     "say": "And it never catches a single malignant tumor.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "That's how it reaches sixty three percent accuracy without detecting anything.",
+     "hl": 0,
+     "dim": true,
+     "col": 3,
+     "sql": "accuracy = 72 / 114 = 0.632"
+    },
+    {
+     "say": "Logistic regression misses just one sample of each class.",
+     "hl": 1,
+     "dim": true,
+     "col": 2,
+     "sql": "accuracy = 112 / 114 = 0.982"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "bars",
+   "kind": "table",
    "kicker": "Step 6",
-   "title": "Accuracy versus macro F 1",
-   "file": "expected output",
-   "code": "Dummy (most frequent): accuracy=0.632, macro F1=0.387\nLogistic regression: accuracy=0.982, macro F1=0.981",
+   "title": "Macro F 1 counts every class",
+   "columns": [
+    "Model",
+    "F1 malignant",
+    "F1 benign",
+    "Macro F1"
+   ],
+   "rows": [
+    [
+     "Dummy",
+     "0.000",
+     "0.774",
+     "0.387"
+    ],
+    [
+     "Logistic regression",
+     "0.976",
+     "0.986",
+     "0.981"
+    ]
+   ],
    "beats": [
     {
-     "say": "Evaluate both on the test set.",
-     "show": 0
+     "say": "F 1 balances precision and recall. Macro F 1 computes it for each class, then averages them equally.",
+     "sql": "macro F1 = (F1 malignant + F1 benign) / 2"
     },
     {
-     "say": "The dummy gets sixty three percent accuracy, just by always guessing benign. But its macro F 1 is low.",
-     "show": 1
+     "say": "The dummy scores zero on malignant, since it never predicts it.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Macro F 1 scores each class separately and averages them equally, so it isn't fooled by imbalance.",
-     "show": 1
+     "say": "Averaged with its benign score, it falls to zero point three eight seven.",
+     "hl": 0,
+     "dim": true,
+     "col": 3,
+     "sql": "(0.000 + 0.774) / 2 = 0.387"
+    },
+    {
+     "say": "Logistic regression is strong on both classes, so its macro F 1 stays high.",
+     "hl": 1,
+     "dim": true,
+     "col": 3,
+     "sql": "(0.976 + 0.986) / 2 = 0.981"
     },
     {
      "say": "That's why accuracy alone is misleading on imbalanced data.",
-     "show": 1
+     "hl": [
+      0,
+      1
+     ],
+     "col": 3
     }
    ]
   },
@@ -1192,7 +2193,7 @@ baseline_model_project/
      "show": 0
     },
     {
-     "say": "The dummy model scores 63% accuracy. Why isn't it a useful model?",
+     "say": "The dummy model scores sixty three percent accuracy. Why isn't it a useful model?",
      "show": 0
     },
     {
@@ -1397,104 +2398,451 @@ neural_network_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "bulb",
-   "kicker": "Concept",
-   "title": "What a neuron does",
-   "steps": [
-    "Weighted sum of inputs",
-    "Add a bias",
-    "Activation, e.g. sigmoid"
+   "kind": "diagram",
+   "kicker": "Step 2",
+   "title": "What one neuron does",
+   "nodes": [
+    {
+     "id": "x1",
+     "label": "Input x1 = 0",
+     "x": 12,
+     "y": 25,
+     "sub": "weight 0.50"
+    },
+    {
+     "id": "x2",
+     "label": "Input x2 = 1",
+     "x": 12,
+     "y": 75,
+     "sub": "weight -0.23"
+    },
+    {
+     "id": "sum",
+     "label": "Weighted sum",
+     "x": 45,
+     "y": 50,
+     "sub": "+ bias 0",
+     "art": "calc"
+    },
+    {
+     "id": "act",
+     "label": "Sigmoid",
+     "x": 72,
+     "y": 50,
+     "sub": "squash to 0–1"
+    },
+    {
+     "id": "out",
+     "label": "Output",
+     "x": 92,
+     "y": 50,
+     "sub": "0.442"
+    }
+   ],
+   "edges": [
+    {
+     "from": "x1",
+     "to": "sum"
+    },
+    {
+     "from": "x2",
+     "to": "sum"
+    },
+    {
+     "from": "sum",
+     "to": "act"
+    },
+    {
+     "from": "act",
+     "to": "out"
+    }
    ],
    "beats": [
     {
-     "say": "A neuron does three things.",
-     "show": 0
-    },
-    {
-     "say": "It computes a weighted sum of its inputs.",
-     "show": 1
-    },
-    {
-     "say": "Adds a bias.",
+     "say": "Here is one real hidden neuron from this project, fed the input zero, one.",
      "show": 2
     },
     {
-     "say": "And passes the result through an activation function, like sigmoid, which squashes any input into a range between zero and one.",
-     "show": 3
+     "say": "Each input is multiplied by its weight. Zero times zero point five is zero.",
+     "show": 3,
+     "on": "x1",
+     "send": {
+      "from": "x1",
+      "to": "sum",
+      "label": "0 × 0.50"
+     }
+    },
+    {
+     "say": "One times minus zero point two three is minus zero point two three.",
+     "show": 3,
+     "on": "x2",
+     "send": {
+      "from": "x2",
+      "to": "sum",
+      "label": "1 × -0.23"
+     }
+    },
+    {
+     "say": "Add them up, and add the bias, which starts at zero. The sum is minus zero point two three.",
+     "show": 3,
+     "on": "sum"
+    },
+    {
+     "say": "Then the activation function, sigmoid, squashes it into the range zero to one.",
+     "show": 4,
+     "on": "act",
+     "send": {
+      "from": "sum",
+      "to": "act",
+      "label": "-0.23"
+     }
+    },
+    {
+     "say": "The neuron outputs zero point four four two.",
+     "show": 5,
+     "on": "out",
+     "send": {
+      "from": "act",
+      "to": "out",
+      "label": "0.442"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
+   "kind": "table",
    "kicker": "Step 3",
-   "title": "Sigmoid and its shortcut",
-   "file": "neural_network_project",
-   "code": "def sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\ndef sigmoid_derivative_from_output(s):\n    # s must be a value that has ALREADY been through sigmoid\n    return s * (1 - s)",
-   "beats": [
-    {
-     "say": "If s is already a sigmoid output, its derivative is simply s times one minus s.",
-     "show": 0
-    },
-    {
-     "say": "The network stores activated values, so it uses this shortcut directly.",
-     "show": 1
-    },
-    {
-     "say": "Applying sigmoid a second time to an activated value is a classic bug that stops the network from learning.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "layers",
-   "kicker": "Steps 4 and 5",
-   "title": "Random weights, then forward",
-   "file": "neural_network_project",
-   "code": "np.random.seed(42)\ninput_size, hidden_size, output_size = 2, 4, 1\nW1 = np.random.randn(input_size, hidden_size)\nb1 = np.zeros((1, hidden_size))\nW2 = np.random.randn(hidden_size, output_size)\nb2 = np.zeros((1, output_size))\n\ndef forward(X):\n    hidden = sigmoid(X @ W1 + b1)\n    output = sigmoid(hidden @ W2 + b2)\n    return hidden, output",
-   "beats": [
-    {
-     "say": "Weights start random on purpose. Identical weights would make every neuron learn the same thing. This is called breaking symmetry.",
-     "show": 0
-    },
-    {
-     "say": "Biases can safely start at zero.",
-     "show": 1
-    },
-    {
-     "say": "The forward pass flows input through the network: weighted sum, plus bias, through the activation, layer by layer.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Steps 6 and 7",
-   "title": "Backpropagate, then train on XOR",
-   "steps": [
-    "Backward: chain rule",
-    "Train 10,000 epochs on XOR",
-    "Rounded: [0 1 1 0]"
+   "title": "Sigmoid, and its shortcut",
+   "columns": [
+    "x",
+    "s = sigmoid(x)",
+    "s * (1 - s)"
+   ],
+   "rows": [
+    [
+     "-2",
+     "0.119",
+     "0.105"
+    ],
+    [
+     "-0.23",
+     "0.442",
+     "0.247"
+    ],
+    [
+     "0",
+     "0.5",
+     "0.25"
+    ],
+    [
+     "2",
+     "0.881",
+     "0.105"
+    ]
    ],
    "beats": [
     {
-     "say": "Backpropagation applies the chain rule, working backward from the output, to find how much each weight contributed to the error.",
-     "show": 1
+     "say": "Sigmoid is one over one plus e to the minus x.",
+     "sql": "sigmoid(x) = 1 / (1 + np.exp(-x))",
+     "col": 1
     },
     {
-     "say": "It's the same idea as gradient descent, applied to many parameters at once.",
-     "show": 1
+     "say": "Big negative inputs land near zero, big positive ones near one, and zero lands exactly on one half.",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "col": 1
     },
     {
-     "say": "Then train on X O R for ten thousand epochs. An epoch is one pass over the training set.",
-     "show": 2
+     "say": "Its derivative has a shortcut: if s is already a sigmoid output, it's s times one minus s.",
+     "sql": "derivative = s * (1 - s)",
+     "col": 2
     },
     {
-     "say": "The loss falls toward zero, and the predictions round to zero, one, one, zero, matching the labels.",
+     "say": "For our neuron's output, zero point four four two, that's zero point two four seven.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The classic bug is applying sigmoid again to a value that's already activated. At zero, you'd get zero point two three five, not zero point two five.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "wrong: sigmoid(0.5) = 0.622 → 0.235"
+    },
+    {
+     "say": "Wrong gradients mean the network stops learning, so the code uses the shortcut directly.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "right: s = 0.5 → 0.5 * (1 - 0.5) = 0.25"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 4 to 6",
+   "title": "Forward, then backward",
+   "nodes": [
+    {
+     "id": "inp",
+     "label": "Input",
+     "x": 12,
+     "y": 40,
+     "sub": "2 values",
+     "art": "array"
+    },
+    {
+     "id": "hid",
+     "label": "Hidden layer",
+     "x": 50,
+     "y": 40,
+     "sub": "4 neurons · sigmoid",
+     "art": "neural"
+    },
+    {
+     "id": "out",
+     "label": "Output",
+     "x": 88,
+     "y": 40,
+     "sub": "1 neuron · sigmoid"
+    },
+    {
+     "id": "lab",
+     "label": "Label y",
+     "x": 88,
+     "y": 85,
+     "sub": "the right answer",
+     "art": "target"
+    }
+   ],
+   "edges": [
+    {
+     "from": "inp",
+     "to": "hid"
+    },
+    {
+     "from": "hid",
+     "to": "out"
+    },
+    {
+     "from": "out",
+     "to": "lab"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The network: two inputs, a hidden layer of four neurons, and one output.",
      "show": 3
+    },
+    {
+     "say": "Weights start random, so each neuron learns something different. That's breaking symmetry. Biases start at zero.",
+     "show": 3,
+     "on": [
+      "hid",
+      "out"
+     ]
+    },
+    {
+     "say": "The forward pass: input times W one, plus b one, through sigmoid, into the hidden layer.",
+     "show": 3,
+     "on": "hid",
+     "send": {
+      "from": "inp",
+      "to": "hid",
+      "label": "X @ W1 + b1"
+     }
+    },
+    {
+     "say": "Then hidden times W two, plus b two, through sigmoid, gives the prediction.",
+     "show": 3,
+     "on": "out",
+     "send": {
+      "from": "hid",
+      "to": "out",
+      "label": "hidden @ W2 + b2"
+     }
+    },
+    {
+     "say": "Compare it to the label. For input zero, one, it predicts zero point three three eight, but the answer is one.",
+     "show": 4,
+     "on": [
+      "out",
+      "lab"
+     ],
+     "send": {
+      "from": "out",
+      "to": "lab",
+      "label": "0.338 vs 1"
+     }
+    },
+    {
+     "say": "Backpropagation works backward with the chain rule. First, the output error nudges W two and b two.",
+     "show": 4,
+     "on": "out",
+     "send": {
+      "from": "out",
+      "to": "hid",
+      "label": "output_error"
+     }
+    },
+    {
+     "say": "Then that error flows back to the hidden layer, to nudge W one and b one. Gradient descent, on many weights at once.",
+     "show": 4,
+     "on": "hid",
+     "send": {
+      "from": "hid",
+      "to": "inp",
+      "label": "hidden_error"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 7",
+   "title": "Train on XOR",
+   "file": "neural_network.py",
+   "code": "X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])\ny = np.array([[0], [1], [1], [0]])  # XOR problem\n\nfor epoch in range(10000):\n    hidden, output = forward(X)\n    backward(X, y, hidden, output)\n    if epoch % 2000 == 0:\n        print(f\"Epoch {epoch}: loss=\"\n              f\"{np.mean((output - y) ** 2):.4f}\")\n\npredictions = forward(X)[1]\nprint(\"Rounded:\",\n      predictions.round().astype(int).ravel())",
+   "beats": [
+    {
+     "say": "X O R: the output is one only when the two inputs differ.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "y": "[0, 1, 1, 0]"
+     }
+    },
+    {
+     "say": "Each epoch is one pass over all four examples: forward, then backward.",
+     "line": [
+      4,
+      6
+     ],
+     "vars": {
+      "epoch": 0
+     }
+    },
+    {
+     "say": "At epoch zero, the loss is zero point two eight three two.",
+     "line": [
+      7,
+      9
+     ],
+     "out": "Epoch 0: loss=0.2832"
+    },
+    {
+     "say": "By epoch two thousand, it's already zero point zero zero two eight.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "epoch": 2000
+     },
+     "out": "Epoch 2000: loss=0.0028"
+    },
+    {
+     "say": "And it keeps falling toward zero.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "epoch": 8000
+     },
+     "out": [
+      "Epoch 4000: loss=0.0008",
+      "Epoch 6000: loss=0.0004",
+      "Epoch 8000: loss=0.0003"
+     ]
+    },
+    {
+     "say": "After ten thousand epochs, the rounded predictions are zero, one, one, zero.",
+     "line": [
+      11,
+      13
+     ],
+     "vars": {
+      "epoch": 9999
+     },
+     "out": "Rounded: [0 1 1 0]"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 7",
+   "title": "Predictions before and after training",
+   "values": [
+    0.395,
+    0.338,
+    0.326,
+    0.292
+   ],
+   "beats": [
+    {
+     "say": "These are the network's four predictions before training, for inputs zero zero, zero one, one zero, and one one."
+    },
+    {
+     "say": "They're all around zero point three. The network hasn't learned anything yet.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "Labels: 0, 1, 1, 0"
+    },
+    {
+     "say": "After training, the middle two have climbed close to one, and the outer two have dropped close to zero.",
+     "vals": [
+      0.01,
+      0.987,
+      0.984,
+      0.017
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "Labels: 0, 1, 1, 0"
+    },
+    {
+     "say": "Rounded, that's zero, one, one, zero: every example matches its label.",
+     "vals": [
+      0,
+      1,
+      1,
+      0
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "All 4 correct"
+    },
+    {
+     "say": "A single-layer model can't solve X O R. Solving it proves your hidden layer and backpropagation work.",
+     "vals": [
+      0,
+      1,
+      1,
+      0
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },
@@ -1517,7 +2865,7 @@ neural_network_project/
      "show": 0
     },
     {
-     "say": "Why is XOR a good test for this network?",
+     "say": "Why is X O R a good test for this network?",
      "show": 0
     },
     {
@@ -1747,44 +3095,65 @@ ablation_study_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
-   "kicker": "Concept",
+   "kind": "table",
+   "kicker": "Step 3",
    "title": "Change one thing at a time",
-   "items": [
+   "columns": [
+    "Variant",
+    "use_hidden",
+    "activation",
+    "What changed"
+   ],
+   "rows": [
     [
      "full_model",
-     "The Project 5 network"
+     "True",
+     "sigmoid",
+     "nothing"
     ],
     [
      "no_hidden_layer",
-     "Inputs straight to the output"
+     "False",
+     "(none)",
+     "hidden layer removed"
     ],
     [
      "different_activation",
-     "ReLU instead of sigmoid"
+     "True",
+     "relu",
+     "sigmoid → ReLU"
     ]
    ],
    "beats": [
     {
-     "say": "An ablation removes or changes one component, while holding everything else fixed.",
-     "show": 0
+     "say": "An ablation removes or changes one component, while everything else stays fixed.",
+     "sql": "same X, y · epochs=10000 · learning_rate=0.5 · seed"
     },
     {
-     "say": "You'll test three variants of your Project 5 network.",
-     "show": 0
+     "say": "The full model is your Project 5 network. It's the reference.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "The full model.",
-     "show": 1
+     "say": "Variant two switches off the hidden layer, so the inputs connect straight to the output.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "The same network with no hidden layer.",
-     "show": 2
+     "say": "Variant three keeps the hidden layer, but swaps sigmoid for relu, which outputs the maximum of zero and x.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And relu instead of sigmoid in the hidden layer. Relu outputs the maximum of zero and x.",
-     "show": 3
+     "say": "One train function with two switches builds all three, so nothing else can differ.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 3
     }
    ]
   },
@@ -1810,62 +3179,327 @@ ablation_study_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "loop",
-   "kicker": "Steps 5 and 6",
-   "title": "Same everything, five seeds",
-   "file": "ablation_study_project",
-   "code": "seeds = [0, 1, 2, 3, 4]\nfor name, run_fn in variants.items():\n    accuracies = [run_fn(X, y, seed=s)[\"accuracy\"] for s in seeds]\n    results[name][\"accuracy\"] = float(np.mean(accuracies))\n    print(f\"{name}: accuracies={accuracies}, \"\n          f\"mean={np.mean(accuracies):.2f}, std={np.std(accuracies):.2f}\")",
+   "kind": "walk",
+   "kicker": "Step 6",
+   "title": "Five seeds per variant",
+   "file": "ablation.py",
+   "code": "seeds = [0, 1, 2, 3, 4]\nfor name, run_fn in variants.items():\n    accuracies = [run_fn(X, y, seed=s)[\"accuracy\"]\n                  for s in seeds]\n    results[name][\"accuracy\"] = float(\n        np.mean(accuracies))\n    print(f\"{name}: accuracies={accuracies}, \"\n          f\"mean={np.mean(accuracies):.2f}, \"\n          f\"std={np.std(accuracies):.2f}\")",
    "beats": [
     {
-     "say": "One train function builds every variant, with switches.",
-     "show": 0
+     "say": "One run can be lucky or unlucky, so each variant is trained with five different seeds.",
+     "line": 1,
+     "vars": {
+      "seeds": "[0, 1, 2, 3, 4]"
+     }
     },
     {
-     "say": "Every variant gets the same data, epochs, learning rate and seed.",
-     "show": 1
+     "say": "First, the full model. All five seeds solve X O R perfectly.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "name": "full_model",
+      "accuracies": "[1.0, 1.0, 1.0, 1.0, 1.0]"
+     }
     },
     {
-     "say": "And because one run can be lucky or unlucky, you run each with five seeds, and record the mean and the spread.",
-     "show": 1
+     "say": "The mean goes into results, and it prints: mean one, spread zero.",
+     "line": [
+      5,
+      9
+     ],
+     "out": "full_model: mean=1.00, std=0.00"
+    },
+    {
+     "say": "Next, no hidden layer. Four seeds score zero point five, one scores zero point seven five.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "name": "no_hidden_layer",
+      "accuracies": "[0.5, 0.5, 0.5, 0.75, 0.5]"
+     }
+    },
+    {
+     "say": "Mean zero point five five.",
+     "line": [
+      5,
+      9
+     ],
+     "out": "no_hidden_layer: mean=0.55, std=0.10"
+    },
+    {
+     "say": "Last, relu. Four perfect runs, and one at zero point seven five.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "name": "different_activation",
+      "accuracies": "[1.0, 1.0, 1.0, 0.75, 1.0]"
+     }
+    },
+    {
+     "say": "Mean zero point nine five. The std, standard deviation, shows how much results vary between seeds.",
+     "line": [
+      5,
+      9
+     ],
+     "out": "different_activation: mean=0.95, std=0.10"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
+   "kind": "array",
+   "kicker": "Step 6",
+   "title": "Why one seed isn't enough",
+   "values": [
+    0.5,
+    0.5,
+    0.5,
+    0.75,
+    0.5
+   ],
+   "beats": [
+    {
+     "say": "Here are the five no hidden layer runs, one per seed."
+    },
+    {
+     "say": "Seeds zero, one and two all score zero point five: as good as guessing.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "seed": 0
+     }
+    },
+    {
+     "say": "But seed three scores zero point seven five. If that were your only run, you'd think it half works.",
+     "hl": 3,
+     "ptr": {
+      "seed": 3
+     },
+     "note": "A lucky run"
+    },
+    {
+     "say": "Now relu. Seed three is the unlucky one here: zero point seven five, while the rest are perfect.",
+     "vals": [
+      1.0,
+      1.0,
+      1.0,
+      0.75,
+      1.0
+     ],
+     "hl": 3,
+     "ptr": {
+      "seed": 3
+     },
+     "note": "An unlucky run"
+    },
+    {
+     "say": "Five seeds show the typical result, and the spread.",
+     "vals": [
+      1.0,
+      1.0,
+      1.0,
+      0.75,
+      1.0
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      4
+     ],
+     "note": "Mean 0.95 · std 0.10"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
    "kicker": "Steps 7 and 8",
    "title": "What the evidence says",
-   "items": [
+   "xlabel": "full · no hidden · ReLU",
+   "ylabel": "accuracy",
+   "points": [
     [
-     "full_model",
-     "mean 1.00"
+     12,
+     90
     ],
     [
-     "no_hidden_layer ✗",
-     "mean 0.55"
+     16,
+     90
     ],
     [
-     "different_activation",
-     "mean 0.95 · one seed failed"
+     20,
+     90
+    ],
+    [
+     24,
+     90
+    ],
+    [
+     28,
+     90
+    ],
+    [
+     42,
+     45
+    ],
+    [
+     46,
+     45
+    ],
+    [
+     50,
+     45
+    ],
+    [
+     54,
+     67.5
+    ],
+    [
+     58,
+     45
+    ],
+    [
+     72,
+     90
+    ],
+    [
+     76,
+     90
+    ],
+    [
+     80,
+     90
+    ],
+    [
+     84,
+     67.5
+    ],
+    [
+     88,
+     90
     ]
    ],
    "beats": [
     {
-     "say": "Compare the results against your hypotheses.",
-     "show": 0
+     "say": "Every run, all fifteen, on one chart. Each dot is one seed."
     },
     {
-     "say": "The full model averages one hundred percent.",
-     "show": 1
+     "say": "The full model: five dots at the top. One hundred percent.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "With no hidden layer, about fifty five percent. It breaks completely.",
-     "show": 2
+     "say": "No hidden layer: low, averaging fifty five percent. The hidden layer is essential.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       50,
+       49.5
+      ]
+     ]
     },
     {
-     "say": "With relu, about ninety five percent. It usually works, but failed on one seed out of five.",
-     "show": 3
+     "say": "Relu: averaging ninety five percent. It usually works, but failed on one seed out of five.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       50,
+       49.5
+      ],
+      [
+       80,
+       85.5
+      ]
+     ]
+    },
+    {
+     "say": "Now compare that against your hypotheses. What did you predict, what happened, and by how much?",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       20,
+       90
+      ],
+      [
+       50,
+       49.5
+      ],
+      [
+       80,
+       85.5
+      ]
+     ]
     }
    ]
   },
@@ -2049,63 +3683,236 @@ research_report_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
-   "kicker": "Concept",
-   "title": "The shape of a report",
-   "steps": [
+   "kind": "array",
+   "kicker": "Steps 3 to 8",
+   "title": "Read in one order, write in another",
+   "values": [
+    "Abstract",
     "Introduction",
     "Method",
-    "Results + chart",
-    "Discussion",
-    "Abstract, last"
+    "Results",
+    "Discussion"
    ],
    "beats": [
     {
-     "say": "You'll report on your Project 6 ablation study, or combine it with Project 4's baseline.",
-     "show": 0
+     "say": "You'll report on your Project 6 ablation study. A reader meets the sections in this order."
     },
     {
-     "say": "Write the introduction: the question, and why it matters.",
-     "show": 1
+     "say": "But you write the abstract last. Plan it now, and skip it.",
+     "gone": 0,
+     "note": "Abstract: planned, not written"
     },
     {
-     "say": "The method: enough detail to repeat it. The data, each variant, the epochs, the learning rate, and the seeds.",
-     "show": 2
+     "say": "Write the introduction first: the question, and why it matters.",
+     "gone": 0,
+     "hl": 1,
+     "ptr": {
+      "write": 1
+     }
+    },
+    {
+     "say": "Then the method.",
+     "gone": 0,
+     "ok": [
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "write": 2
+     }
     },
     {
      "say": "The results, with a chart.",
-     "show": 3
+     "gone": 0,
+     "ok": [
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "write": 3
+     }
     },
     {
      "say": "The discussion: what it means, its limitations, and what you'd test next.",
-     "show": 4
+     "gone": 0,
+     "ok": [
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "write": 4
+     }
     },
     {
-     "say": "And the abstract, last.",
-     "show": 5
+     "say": "Only now, write the abstract: three to five sentences on question, method, result, and takeaway.",
+     "ok": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 0,
+     "ptr": {
+      "write": 0
+     },
+     "note": "Abstract: written last"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "bars",
-   "kicker": "Step 6",
-   "title": "A well-labeled chart",
-   "file": "research_report_project",
-   "code": "results = {\n    \"full_model\": {\"accuracy\": 1.00},\n    \"no_hidden_layer\": {\"accuracy\": 0.55},\n    \"different_activation\": {\"accuracy\": 0.95},\n}\n\nplt.bar(results.keys(), [r[\"accuracy\"] for r in results.values()])\nplt.ylabel(\"Mean accuracy (5 seeds)\")\nplt.ylim(0, 1.05)\nplt.title(\"Ablation study on XOR\")\nplt.savefig(\"results_chart.png\", bbox_inches=\"tight\")",
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "A method someone could repeat",
+   "columns": [
+    "Detail",
+    "Your Project 6 value"
+   ],
+   "rows": [
+    [
+     "Data",
+     "XOR, 4 examples"
+    ],
+    [
+     "Variants",
+     "full, no hidden, ReLU"
+    ],
+    [
+     "Epochs",
+     "10,000"
+    ],
+    [
+     "Learning rate",
+     "0.5"
+    ],
+    [
+     "Seeds",
+     "0, 1, 2, 3, 4"
+    ]
+   ],
    "beats": [
     {
-     "say": "This is a new notebook, so type in your Project 6 mean accuracies.",
-     "show": 0
+     "say": "The test of a method section: could someone else repeat your experiment from it alone?"
     },
     {
-     "say": "Then plot a bar chart, label the axis, and say what the numbers are: here, the average over five seeds.",
-     "show": 1
+     "say": "Say what data you used.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A labeled chart communicates a comparison faster than a table of numbers.",
-     "show": 1
+     "say": "Each variant you tested.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "The number of epochs, and the learning rate.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "And the seeds. Leave any one out, and nobody can get your numbers.",
+     "hl": 4,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 6",
+   "title": "Build a well-labeled chart",
+   "file": "research_report_project",
+   "code": "results = {\n    \"full_model\": {\"accuracy\": 1.00},\n    \"no_hidden_layer\": {\"accuracy\": 0.55},\n    \"different_activation\": {\"accuracy\": 0.95},\n}\n\nplt.bar(results.keys(),\n        [r[\"accuracy\"] for r in results.values()])\nplt.ylabel(\"Mean accuracy (5 seeds)\")\nplt.ylim(0, 1.05)\nplt.title(\"Ablation study on XOR\")\nplt.savefig(\"results_chart.png\",\n            bbox_inches=\"tight\")",
+   "beats": [
+    {
+     "say": "This is a new notebook, so Project 6's results aren't here. Type in your own mean accuracies.",
+     "line": [
+      1,
+      5
+     ],
+     "vars": {
+      "results": "3 variants"
+     }
+    },
+    {
+     "say": "One bar per variant, with its accuracy as the height.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "bars": "[1.00, 0.55, 0.95]"
+     }
+    },
+    {
+     "say": "Label the axis, and say what the numbers are: the average over five seeds.",
+     "line": 9
+    },
+    {
+     "say": "Set the range from zero to just above one, so a perfect score isn't cut off.",
+     "line": 10
+    },
+    {
+     "say": "Give it a title, and save it as results chart dot P N G.",
+     "line": [
+      11,
+      13
+     ],
+     "out": "saved results_chart.png"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 6",
+   "title": "What the chart tells a reader",
+   "xlabel": "variant",
+   "ylabel": "mean accuracy (5 seeds)",
+   "points": [
+    [
+     20,
+     95.2
+    ],
+    [
+     50,
+     52.4
+    ],
+    [
+     80,
+     90.5
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the tops of the three bars."
+    },
+    {
+     "say": "Full model and relu stand tall, near the top.",
+     "groups": [
+      1,
+      0,
+      1
+     ]
+    },
+    {
+     "say": "No hidden layer stands out at once: barely above half.",
+     "groups": [
+      1,
+      2,
+      1
+     ]
+    },
+    {
+     "say": "A labeled chart makes that comparison faster than a table of numbers.",
+     "groups": [
+      1,
+      2,
+      1
+     ]
     }
    ]
   },
@@ -2140,24 +3947,6 @@ research_report_project/
     {
      "say": "They tell readers how far to trust the results, and what to test next.",
      "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "pencil",
-   "kicker": "Step 8",
-   "title": "The abstract, last",
-   "big": "3–5 sentences",
-   "sub": "question · method · result · takeaway",
-   "beats": [
-    {
-     "say": "Now that everything else is written, write the abstract.",
-     "show": 0
-    },
-    {
-     "say": "Three to five sentences: the question, method, result, and takeaway, so someone can decide whether to read further.",
-     "show": 1
     }
    ]
   },

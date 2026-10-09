@@ -134,7 +134,7 @@ infra_stack_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "server",
+   "art": "layers",
    "kicker": "Project 1 · The infrastructure stack",
    "title": "See the system as layers",
    "beats": [
@@ -147,44 +147,69 @@ infra_stack_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "chip",
-   "kicker": "Concept",
+   "kind": "table",
+   "kicker": "Step 3",
    "title": "Training versus inference",
-   "items": [
+   "columns": [
+    "",
+    "Training",
+    "Inference"
+   ],
+   "rows": [
     [
-     "Training",
-     "Heavy · GPU-hungry · occasional"
+     "Job",
+     "Teach model from data",
+     "Run model, predict"
     ],
     [
-     "Inference",
-     "Light per request · fast · often"
+     "Load",
+     "Heavy, GPU-hungry",
+     "Light per request"
+    ],
+    [
+     "How often",
+     "Once or now and then",
+     "Fast, and very often"
     ]
    ],
    "beats": [
     {
-     "say": "Infrastructure works in two modes.",
-     "show": 0
+     "say": "Infrastructure works in two modes. Training on one side, inference on the other.",
+     "col": 0
     },
     {
-     "say": "Training teaches a model from data. It's heavy, hungry for G P Us, can take hours, and happens once or now and then.",
-     "show": 1
+     "say": "Training teaches a model from data. Inference runs the trained model to get predictions.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Inference runs the trained model to get predictions. It's lighter per request, but must be fast and happen often.",
-     "show": 2
+     "say": "Training is heavy and hungry for G P Us, and can take hours. Inference is light for each single request.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "But training happens once, or now and then, while inference must be fast and happen all the time.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Your example system, an image classifier serving a mobile app at fifty requests per second, is an inference system.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Concept",
+   "kind": "table",
+   "kicker": "Step 4",
    "title": "Six core layers",
-   "items": [
+   "columns": [
+    "Layer",
+    "Its job"
+   ],
+   "rows": [
     [
      "Compute",
-     "CPU / GPU machines"
+     "Machines that run code"
     ],
     [
      "Storage",
@@ -196,11 +221,11 @@ infra_stack_project/
     ],
     [
      "Orchestration",
-     "Packaged and kept running"
+     "Package, keep running"
     ],
     [
      "Serving",
-     "Model file → callable API"
+     "Model file → API"
     ],
     [
      "Monitoring",
@@ -209,109 +234,400 @@ infra_stack_project/
    ],
    "beats": [
     {
-     "say": "Every A I system sits on six core layers.",
-     "show": 0
+     "say": "Every A I system sits on six core layers."
     },
     {
      "say": "Compute: the C P U and G P U machines that run your code.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
      "say": "Storage: where your model files and data live.",
-     "show": 2
+     "hl": 1,
+     "dim": true
     },
     {
      "say": "Networking: how requests reach your service.",
-     "show": 3
+     "hl": 2,
+     "dim": true
     },
     {
      "say": "Orchestration: how your app is packaged and kept running.",
-     "show": 4
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Serving turns a model file into an A P I you can call. And monitoring tells you it's working.",
-     "show": 6
+     "say": "Serving turns a model file into an A P I you can call.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "And monitoring is how you know it's all working.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
-   "kicker": "Steps 5 to 8",
-   "title": "Make your choices",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Choose your compute",
+   "columns": [
+    "Type",
+    "Strength",
+    "Good for"
+   ],
+   "rows": [
     [
-     "Compute",
-     "CPU · GPU · accelerator"
+     "CPU",
+     "General-purpose, cheap",
+     "Small, light models"
     ],
     [
-     "Storage",
-     "Object storage · model registry"
+     "GPU",
+     "Parallel processing",
+     "Large deep learning"
     ],
     [
-     "Networking",
-     "API gateway · load balancer"
-    ],
-    [
-     "Orchestration",
-     "Container · orchestrator"
+     "Accelerator",
+     "Chip built for ML math",
+     "e.g. GPU, TPU"
     ]
    ],
    "beats": [
     {
-     "say": "Start from one requirement, like serving an image classifier to a mobile app at fifty requests per second. Then choose for each layer.",
-     "show": 0
+     "say": "Step five: choose the compute type."
     },
     {
-     "say": "Compute: a C P U for small, light models, a G P U for large deep learning models, or another accelerator like a T P U.",
-     "show": 1
+     "say": "A C P U is general purpose and cheap. Small, light models run fine on it.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Storage: object storage for big files like model weights, and a model registry, a versioned catalog of trained models.",
-     "show": 2
+     "say": "A G P U does many calculations in parallel, which large deep learning models need.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Networking: an A P I gateway as the front door, and a load balancer that spreads traffic across copies of your service.",
-     "show": 3
-    },
-    {
-     "say": "Orchestration: a container packages your app, and an orchestrator like Kubernetes starts, stops and scales containers.",
-     "show": 4
+     "say": "And accelerator is the word for any chip built for machine learning maths, like a G P U or a T P U.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "architecture",
-   "kicker": "Step 9",
-   "title": "Follow one request",
-   "steps": [
-    "Request in → Serving",
-    "Orchestration",
-    "Compute + storage + network",
-    "Prediction out",
-    "Monitoring observes all"
+   "kind": "array",
+   "kicker": "Step 6",
+   "title": "Storage: weights in a bucket, versions in a registry",
+   "values": [
+    "model v1",
+    "model v2",
+    "model v3"
    ],
    "beats": [
     {
-     "say": "Put it together as a diagram.",
-     "show": 0
+     "say": "Big files like model weights go in object storage, a bucket-style store.",
+     "note": "weights → object storage"
+    },
+    {
+     "say": "A model registry is a versioned catalog of every model you've trained.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "model registry"
+    },
+    {
+     "say": "It marks which version is live, so you always know what's answering requests. Here, version two.",
+     "ptr": {
+      "live": 1
+     },
+     "note": "v2 is live"
+    },
+    {
+     "say": "When version three is deployed, the registry records the change.",
+     "ptr": {
+      "live": 2
+     },
+     "ok": [
+      0,
+      1
+     ],
+     "note": "v3 is live"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 7 and 8",
+   "title": "Networking and orchestration in action",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Mobile app",
+     "x": 10,
+     "y": 30,
+     "sub": "50 requests/sec",
+     "art": "phone"
+    },
+    {
+     "id": "gw",
+     "label": "API gateway",
+     "x": 32,
+     "y": 70,
+     "sub": "the front door",
+     "art": "globe"
+    },
+    {
+     "id": "lb",
+     "label": "Load balancer",
+     "x": 56,
+     "y": 40,
+     "sub": "spreads traffic",
+     "art": "router"
+    },
+    {
+     "id": "c1",
+     "label": "Container 1",
+     "x": 88,
+     "y": 15,
+     "sub": "your app",
+     "art": "container"
+    },
+    {
+     "id": "c2",
+     "label": "Container 2",
+     "x": 88,
+     "y": 50,
+     "sub": "your app",
+     "art": "container"
+    },
+    {
+     "id": "c3",
+     "label": "Container 3",
+     "x": 88,
+     "y": 85,
+     "sub": "your app",
+     "art": "container"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "gw"
+    },
+    {
+     "from": "gw",
+     "to": "lb"
+    },
+    {
+     "from": "lb",
+     "to": "c1"
+    },
+    {
+     "from": "lb",
+     "to": "c2"
+    },
+    {
+     "from": "lb",
+     "to": "c3"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the networking layer, and the containers behind it.",
+     "show": 6
+    },
+    {
+     "say": "A request from the mobile app arrives at the A P I gateway, the front door.",
+     "on": "gw",
+     "send": {
+      "from": "app",
+      "to": "gw",
+      "label": "request"
+     }
+    },
+    {
+     "say": "The gateway routes it to the right internal service, here, through a load balancer.",
+     "on": "lb",
+     "send": {
+      "from": "gw",
+      "to": "lb",
+      "label": "request"
+     }
+    },
+    {
+     "say": "The load balancer sends the first request to copy one.",
+     "on": "c1",
+     "send": {
+      "from": "lb",
+      "to": "c1",
+      "label": "request 1"
+     }
+    },
+    {
+     "say": "The next goes to copy two, and the one after to copy three, so no single machine is overwhelmed.",
+     "on": [
+      "c2",
+      "c3"
+     ],
+     "send": {
+      "from": "lb",
+      "to": "c3",
+      "label": "request 3"
+     }
+    },
+    {
+     "say": "Each copy is a container, a self-contained package of your app. An orchestrator like Kubernetes starts, stops and scales them.",
+     "on": [
+      "c1",
+      "c2",
+      "c3"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 9",
+   "title": "Follow one request through the stack",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Request in",
+     "x": 10,
+     "y": 30,
+     "sub": "from the app",
+     "art": "phone"
+    },
+    {
+     "id": "srv",
+     "label": "Serving",
+     "x": 38,
+     "y": 30,
+     "sub": "model → API",
+     "art": "api"
+    },
+    {
+     "id": "orch",
+     "label": "Orchestration",
+     "x": 66,
+     "y": 30,
+     "sub": "Kubernetes",
+     "art": "boxes"
+    },
+    {
+     "id": "cmp",
+     "label": "Compute",
+     "x": 66,
+     "y": 75,
+     "sub": "CPU or GPU",
+     "art": "chip"
+    },
+    {
+     "id": "stor",
+     "label": "Storage",
+     "x": 92,
+     "y": 75,
+     "sub": "model weights",
+     "art": "database"
+    },
+    {
+     "id": "mon",
+     "label": "Monitoring",
+     "x": 30,
+     "y": 75,
+     "sub": "watches it all",
+     "art": "eye"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "srv"
+    },
+    {
+     "from": "srv",
+     "to": "orch"
+    },
+    {
+     "from": "orch",
+     "to": "cmp"
+    },
+    {
+     "from": "cmp",
+     "to": "stor"
+    },
+    {
+     "from": "cmp",
+     "to": "app"
+    },
+    {
+     "from": "mon",
+     "to": "srv"
+    },
+    {
+     "from": "mon",
+     "to": "cmp"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Now put it together, and follow one request.",
+     "show": 5
     },
     {
      "say": "A request enters at the serving layer.",
-     "show": 1
+     "on": "srv",
+     "send": {
+      "from": "app",
+      "to": "srv",
+      "label": "image"
+     }
     },
     {
-     "say": "Orchestration hands it to compute.",
-     "show": 2
+     "say": "Orchestration hands it to a running copy on the compute layer.",
+     "on": [
+      "orch",
+      "cmp"
+     ],
+     "send": {
+      "from": "orch",
+      "to": "cmp",
+      "label": "image"
+     }
     },
     {
-     "say": "Compute reads from storage, talks over the network, and sends a prediction back out.",
-     "show": 3
+     "say": "Compute uses the model it loaded from storage.",
+     "on": [
+      "cmp",
+      "stor"
+     ],
+     "send": {
+      "from": "stor",
+      "to": "cmp",
+      "label": "weights"
+     }
     },
     {
-     "say": "And monitoring watches every layer along the way.",
-     "show": 4
+     "say": "And the prediction flows back out.",
+     "on": "app",
+     "send": {
+      "from": "cmp",
+      "to": "app",
+      "label": "prediction"
+     }
+    },
+    {
+     "say": "All the while, monitoring watches serving and compute, so you know it's working.",
+     "show": 6,
+     "on": "mon",
+     "send": {
+      "from": "srv",
+      "to": "mon",
+      "label": "observes"
+     }
     }
    ]
   },
@@ -654,7 +970,7 @@ monitoring_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "pulse",
+   "art": "terminal",
    "kicker": "Project 2 · Monitoring scripts",
    "title": "See what the machine is doing",
    "beats": [
@@ -670,167 +986,376 @@ monitoring_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "terminal",
-   "kicker": "Concept",
-   "title": "Shell, command, script",
-   "items": [
-    [
-     "Shell",
-     "Runs typed commands (bash)"
-    ],
-    [
-     "Command",
-     "One instruction"
-    ],
-    [
-     "Script",
-     "A saved file of commands"
-    ]
+   "kind": "diagram",
+   "kicker": "Step 4",
+   "title": "A pipe passes output from command to command",
+   "nodes": [
+    {
+     "id": "top",
+     "label": "top -bn1",
+     "x": 12,
+     "y": 30,
+     "sub": "one snapshot",
+     "art": "terminal"
+    },
+    {
+     "id": "grep",
+     "label": "grep \"Cpu(s)\"",
+     "x": 38,
+     "y": 70,
+     "sub": "keeps one line",
+     "art": "search"
+    },
+    {
+     "id": "awk",
+     "label": "awk '{print $2}'",
+     "x": 64,
+     "y": 30,
+     "sub": "takes word two",
+     "art": "funnel"
+    },
+    {
+     "id": "cpu",
+     "label": "CPU",
+     "x": 90,
+     "y": 70,
+     "sub": "a shell variable",
+     "art": "gauge"
+    }
+   ],
+   "edges": [
+    {
+     "from": "top",
+     "to": "grep"
+    },
+    {
+     "from": "grep",
+     "to": "awk"
+    },
+    {
+     "from": "awk",
+     "to": "cpu"
+    }
    ],
    "beats": [
     {
-     "say": "Three words first.",
-     "show": 0
-    },
-    {
-     "say": "A shell is a program, like bash, that takes typed commands and runs them.",
-     "show": 1
-    },
-    {
-     "say": "A command is a single instruction to the operating system.",
-     "show": 2
-    },
-    {
-     "say": "A script is a saved file of commands the computer runs for you, instead of typing them one by one.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Steps 3 and 4",
-   "title": "Your first scripts",
-   "file": "cpu_monitor.sh",
-   "code": "#!/bin/bash\nCPU=$(top -bn1 | grep \"Cpu(s)\" | awk '{print $2}')\necho \"CPU Usage: $CPU%\"\n\n# then, in the terminal:\nchmod +x cpu_monitor.sh\n./cpu_monitor.sh",
-   "beats": [
-    {
-     "say": "Every script starts with a shebang line, which tells Linux which program runs the file.",
-     "show": 0
-    },
-    {
-     "say": "This C P U monitor takes one snapshot from top, and pulls out the usage number.",
-     "show": 1
-    },
-    {
-     "say": "Then chmod plus x gives the file execute permission, and dot slash runs it. Without that permission, Linux refuses.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "gauge",
-   "kicker": "Steps 5 to 10",
-   "title": "One monitor per resource",
-   "items": [
-    [
-     "Memory",
-     "free"
-    ],
-    [
-     "Disk",
-     "df /"
-    ],
-    [
-     "Processes",
-     "ps aux"
-    ],
-    [
-     "Network",
-     "ss -tulwn"
-    ],
-    [
-     "GPU",
-     "nvidia-smi (if present)"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "You build one small monitor for each resource.",
-     "show": 0
-    },
-    {
-     "say": "Memory, with free. When RAM fills up, things slow down or crash with an out of memory error.",
-     "show": 1
-    },
-    {
-     "say": "Disk, with d f, for space used on the root partition.",
-     "show": 2
-    },
-    {
-     "say": "Processes, with p s, sorted by C P U to find the program to blame.",
-     "show": 3
-    },
-    {
-     "say": "Network, with s s, listing ports open and listening.",
+     "say": "A shell like bash runs commands. The pipe symbol sends one command's output into the next.",
      "show": 4
     },
     {
-     "say": "And G P U, with nvidia smi, only if you have one. Then you combine them into one dashboard script, monitor dot s h.",
-     "show": 5
+     "say": "top dash b n one takes a single snapshot of the machine, a whole screen of numbers.",
+     "on": "top",
+     "send": {
+      "from": "top",
+      "to": "grep",
+      "label": "full snapshot"
+     }
+    },
+    {
+     "say": "grep keeps only the line that mentions C P U.",
+     "on": "grep",
+     "send": {
+      "from": "grep",
+      "to": "awk",
+      "label": "%Cpu(s): 3.1 us"
+     }
+    },
+    {
+     "say": "awk prints the second word on that line. For example, three point one, the share used by user programs.",
+     "on": "awk",
+     "send": {
+      "from": "awk",
+      "to": "cpu",
+      "label": "3.1"
+     }
+    },
+    {
+     "say": "The dollar sign and brackets capture that result in a variable called C P U.",
+     "on": "cpu"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "bell",
+   "kind": "walk",
+   "kicker": "Steps 3 and 4",
+   "title": "Make the script runnable, then run it",
+   "file": "cpu_monitor.sh",
+   "code": "#!/bin/bash\nCPU=$(top -bn1 | grep \"Cpu(s)\" | awk '{print $2}')\necho \"CPU Usage: $CPU%\"\n\n# in the terminal:\n./cpu_monitor.sh\nchmod +x cpu_monitor.sh\n./cpu_monitor.sh",
+   "beats": [
+    {
+     "say": "The first line is the shebang. It tells Linux to run this file with bash.",
+     "line": 1
+    },
+    {
+     "say": "Line two is the pipeline you just saw. Line three prints the result.",
+     "line": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Try running it straight away, and Linux refuses.",
+     "line": 6,
+     "out": "bash: ./cpu_monitor.sh: Permission denied"
+    },
+    {
+     "say": "chmod plus x gives the file execute permission.",
+     "line": 7
+    },
+    {
+     "say": "Run it again. Now the pipeline fills in C P U.",
+     "line": [
+      8,
+      2
+     ],
+     "vars": {
+      "CPU": "3.1"
+     }
+    },
+    {
+     "say": "And echo prints the usage, with a percent sign added.",
+     "line": 3,
+     "out": "CPU Usage: 3.1%"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 5 to 10",
+   "title": "One small monitor per resource",
+   "columns": [
+    "Resource",
+    "Command",
+    "Prints, e.g."
+   ],
+   "rows": [
+    [
+     "CPU",
+     "top -bn1",
+     "3.1%"
+    ],
+    [
+     "Memory",
+     "free",
+     "31.25%"
+    ],
+    [
+     "Disk",
+     "df /",
+     "9%"
+    ],
+    [
+     "Network",
+     "ss -tulwn | wc -l",
+     "7"
+    ],
+    [
+     "Processes",
+     "ps aux",
+     "who uses the CPU"
+    ],
+    [
+     "GPU",
+     "nvidia-smi",
+     "only if you have one"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You build the same kind of script for each resource. Your numbers will differ.",
+     "col": 1
+    },
+    {
+     "say": "Memory, with free: how full the RAM is. When it fills up, things slow down or crash with an out of memory error.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Disk, with d f: how much of the root partition is used.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Network, with s s: the ports open and listening, counted with w c.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "p s lists every process. Sorted by C P U, it shows which program is to blame.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "And nvidia smi reports on a G P U, but only on a machine that has one.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "Then monitor dot s h puts the first four into one report.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "dim": true,
+     "sql": "monitor.sh"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Step 11",
-   "title": "A threshold alert",
+   "title": "A threshold alert, traced twice",
    "file": "monitor.sh",
    "code": "CPU_VALUE=$(echo $CPU | cut -d'%' -f1)\nif (( $(echo \"$CPU_VALUE > 80\" | bc -l) )); then\n  echo \"WARNING: CPU usage above 80%\"\nfi",
    "beats": [
     {
-     "say": "Now add a threshold alert to the end of monitor dot s h.",
-     "show": 0
+     "say": "These lines go at the end of monitor dot s h. Say C P U came back as three point one.",
+     "vars": {
+      "CPU": "3.1"
+     }
     },
     {
-     "say": "It uses b c, a calculator for decimals, to check whether C P U is above eighty percent.",
-     "show": 1
+     "say": "cut removes a percent sign, if there is one. C P U value is three point one.",
+     "line": 1,
+     "vars": {
+      "CPU_VALUE": "3.1"
+     }
     },
     {
-     "say": "An alert that fires when a metric crosses a line is the simplest form of monitoring.",
-     "show": 1
+     "say": "b c, a calculator for decimals, checks: is three point one above eighty? It prints zero, meaning no.",
+     "line": 2,
+     "vars": {
+      "bc says": "0"
+     }
+    },
+    {
+     "say": "So the warning is skipped. Now imagine a busy machine, at ninety two point five.",
+     "line": 4,
+     "vars": {
+      "CPU": "92.5",
+      "CPU_VALUE": "92.5"
+     }
+    },
+    {
+     "say": "This time b c prints one, meaning yes.",
+     "line": 2,
+     "vars": {
+      "bc says": "1"
+     }
+    },
+    {
+     "say": "So the alert fires. A line crossed, a warning printed: the simplest form of monitoring.",
+     "line": 3,
+     "out": "WARNING: CPU usage above 80%"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "stopwatch",
-   "kicker": "Steps 12 to 14",
-   "title": "Live, logged, scheduled",
-   "steps": [
-    "watch -n 1 ./monitor.sh",
-    "./monitor.sh >> monitor.log",
-    "cron: */5 * * * *"
+   "kind": "array",
+   "kicker": "Step 13",
+   "title": "Two greater-than signs append to the log",
+   "values": [
+    "report 1"
    ],
    "beats": [
     {
-     "say": "Three finishing touches.",
-     "show": 0
+     "say": "Each box is one full report from monitor dot s h, saved in monitor dot log."
     },
     {
-     "say": "watch dash n one reruns the script every second, as a live dashboard.",
-     "show": 1
+     "say": "Run it again with two greater-than signs, and the new report is added to the end.",
+     "vals": [
+      "report 1",
+      "report 2"
+     ],
+     "hl": 1,
+     "note": "./monitor.sh >> monitor.log"
     },
     {
-     "say": "Two greater-than signs append its output to monitor dot log.",
-     "show": 2
+     "say": "And again. The log keeps growing, so you keep your history.",
+     "vals": [
+      "report 1",
+      "report 2",
+      "report 3"
+     ],
+     "hl": 2,
+     "note": ">> appends"
     },
     {
-     "say": "And a cron line runs it every five minutes, on a machine that stays on.",
-     "show": 3
+     "say": "With a single greater-than sign, the file is replaced, and the history is gone.",
+     "vals": [
+      "report 4"
+     ],
+     "hl": 0,
+     "note": "> replaces the file"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 14",
+   "title": "Reading the cron schedule",
+   "columns": [
+    "Field",
+    "Value",
+    "Means"
+   ],
+   "rows": [
+    [
+     "Minute",
+     "*/5",
+     "every 5th minute"
+    ],
+    [
+     "Hour",
+     "*",
+     "every hour"
+    ],
+    [
+     "Day of month",
+     "*",
+     "every day"
+    ],
+    [
+     "Month",
+     "*",
+     "every month"
+    ],
+    [
+     "Day of week",
+     "*",
+     "any day of the week"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "cron is Linux's built in scheduler. Each line starts with five time fields.",
+     "sql": "*/5 * * * *  monitor.sh >> monitor.log"
+    },
+    {
+     "say": "Star slash five in the minute field means every fifth minute.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "A star in every other field means any hour, any day, any month.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "So monitor dot s h runs every five minutes, and appends to the log. Use the full path that p w d printed.",
+     "col": 2
+    },
+    {
+     "say": "Cron needs a machine that stays on. Cloud Shell shuts down when you close it."
     }
    ]
   },
@@ -1105,110 +1630,304 @@ cloud_deploy_project/
     },
     {
      "say": "You'll move from your own machine to a real cloud server on Google Cloud Compute Engine, working from Cloud Shell."
+    },
+    {
+     "say": "It creates real resources, so keep your budget alert on, and always do the shutdown step."
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "coin",
-   "kicker": "Before you start",
-   "title": "Real resources cost money",
-   "quote": "Stay in the free tier. Set a budget alert. Always shut down.",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Steps 3, 6 and 7",
+   "title": "Create the VM, copy the code, log in",
+   "nodes": [
     {
-     "say": "This project creates a real server.",
-     "show": 0
+     "id": "cs",
+     "label": "Cloud Shell",
+     "x": 14,
+     "y": 50,
+     "sub": "gcloud tool",
+     "art": "terminal"
     },
     {
-     "say": "The free tier includes one e two micro V M, in certain regions. Set a budget alert, and never create a G P U V M by accident.",
-     "show": 1
+     "id": "vm",
+     "label": "ai-service-vm",
+     "x": 60,
+     "y": 50,
+     "sub": "e2-micro · Ubuntu",
+     "art": "server"
     },
     {
-     "say": "And always do the shutdown step when you finish.",
-     "show": 1
+     "id": "key",
+     "label": "Key pair",
+     "x": 60,
+     "y": 85,
+     "sub": "public + private",
+     "art": "key"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "server",
-   "kicker": "Steps 3 and 4",
-   "title": "Create a VM, open one port",
-   "steps": [
-    "gcloud compute instances create",
-    "Note the EXTERNAL_IP",
-    "Firewall rule: tcp:8000",
-    "Delete it when done"
+   ],
+   "edges": [
+    {
+     "from": "cs",
+     "to": "vm"
+    },
+    {
+     "from": "cs",
+     "to": "key"
+    },
+    {
+     "from": "key",
+     "to": "vm"
+    }
    ],
    "beats": [
     {
-     "say": "A V M, or instance, is an emulated computer on shared hardware. Renting one by the hour is called infrastructure as a service.",
-     "show": 0
-    },
-    {
-     "say": "Create an e two micro instance, tagged A I service, and note its public I P.",
+     "say": "You work from Cloud Shell, and rent a virtual machine by the hour. That's infrastructure as a service.",
      "show": 1
     },
     {
-     "say": "Then a firewall rule opens port eight thousand, only on V Ms with that tag.",
-     "show": 2
+     "say": "g cloud compute instances create makes an e two micro V M: two shared virtual C P Us and one gigabyte of RAM.",
+     "show": 2,
+     "on": "vm",
+     "send": {
+      "from": "cs",
+      "to": "vm",
+      "label": "instances create"
+     }
     },
     {
-     "say": "Zero dot zero dot zero dot zero slash zero means from anywhere, fine for a short test, which is why you delete the rule later.",
-     "show": 3
+     "say": "Write down its external I P. That's its public address.",
+     "show": 2,
+     "on": "vm"
+    },
+    {
+     "say": "The first time you connect, g cloud makes a key pair. The public half goes onto the V M.",
+     "show": 3,
+     "on": "key",
+     "send": {
+      "from": "key",
+      "to": "vm",
+      "label": "public key"
+     }
+    },
+    {
+     "say": "Then g cloud compute s c p copies main dot p y over the same encrypted connection S S H uses.",
+     "show": 3,
+     "on": "cs",
+     "send": {
+      "from": "cs",
+      "to": "vm",
+      "label": "main.py"
+     }
+    },
+    {
+     "say": "And g cloud compute s s h logs you in. The private key proves it's you, no password needed.",
+     "show": 3,
+     "on": [
+      "cs",
+      "vm"
+     ],
+     "send": {
+      "from": "cs",
+      "to": "vm",
+      "label": "ssh"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Step 5",
-   "title": "A hello world service",
-   "file": "main.py",
-   "code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n\n@app.get(\"/\")\ndef hello():\n    return {\"message\": \"Hello from the cloud!\"}",
-   "beats": [
-    {
-     "say": "Write a tiny Fast A P I service in main dot p y.",
-     "show": 0
-    },
-    {
-     "say": "One route returns a J S O N message.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "key",
-   "kicker": "Steps 6 to 10",
-   "title": "Ship it and test it",
-   "steps": [
-    "gcloud compute scp",
-    "gcloud compute ssh",
-    "venv + pip install",
-    "uvicorn --host 0.0.0.0",
-    "curl http://<ip>:8000"
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "Which requests does the firewall let in?",
+   "columns": [
+    "From",
+    "Port",
+    "VM tag",
+    "Result"
+   ],
+   "rows": [
+    [
+     "anywhere",
+     "8000",
+     "ai-service",
+     "allowed"
+    ],
+    [
+     "anywhere",
+     "8000",
+     "no tag",
+     "blocked"
+    ],
+    [
+     "anywhere",
+     "9090",
+     "ai-service",
+     "blocked"
+    ]
    ],
    "beats": [
     {
-     "say": "Copy main dot p y to the V M with g cloud compute s c p, over an encrypted S S H connection.",
-     "show": 1
+     "say": "A firewall rule, called a security group on A W S, controls which ports can receive outside traffic.",
+     "sql": "allow tcp:8000\ntarget-tags: ai-service\nsource-ranges: 0.0.0.0/0"
     },
     {
-     "say": "S S H in. A key pair proves who you are, instead of a password.",
-     "show": 2
+     "say": "A request from anywhere, to port eight thousand, on a V M tagged A I service, matches the rule. It's allowed.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Ubuntu blocks pip into the system Python, so make a virtual environment, then install Fast A P I and uvicorn.",
-     "show": 3
+     "say": "The same port on a V M without the tag doesn't match, so it's blocked.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Run uvicorn on host zero dot zero dot zero dot zero, so it accepts traffic from outside.",
-     "show": 4
+     "say": "And a different port, like nine thousand and ninety, isn't opened at all.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "From a second tab, curl the public I P on port eight thousand. Hello from the cloud.",
-     "show": 5
+     "say": "Zero dot zero dot zero dot zero slash zero means from anywhere. Fine for a short test, which is why you delete the rule later.",
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Steps 8 to 10",
+   "title": "Install, run, and test from outside",
+   "file": "terminal",
+   "code": "# on the VM:\nsudo apt install -y python3-venv\npython3 -m venv ~/venv\nsource ~/venv/bin/activate\npip install fastapi uvicorn\nuvicorn main:app --host 0.0.0.0 --port 8000\n\n# in a second Cloud Shell tab:\ncurl http://<public-ip>:8000",
+   "beats": [
+    {
+     "say": "On the V M, Ubuntu blocks pip from installing into the system Python.",
+     "line": 1
+    },
+    {
+     "say": "So install the venv tool, and make a virtual environment, a private Python just for this service.",
+     "line": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Activate it. Your prompt now starts with venv in brackets.",
+     "line": 4,
+     "vars": {
+      "venv": "active"
+     }
+    },
+    {
+     "say": "pip installs Fast A P I and uvicorn inside it.",
+     "line": 5,
+     "vars": {
+      "venv": "active",
+      "installed": "fastapi, uvicorn"
+     }
+    },
+    {
+     "say": "Start uvicorn on host zero dot zero dot zero dot zero, port eight thousand, and leave it running.",
+     "line": 6,
+     "out": "INFO: Uvicorn running on http://0.0.0.0:8000"
+    },
+    {
+     "say": "From a second Cloud Shell tab, curl the public I P. Hello from the cloud.",
+     "line": 9,
+     "out": "{\"message\":\"Hello from the cloud!\"}"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 9",
+   "title": "Why bind to 0.0.0.0?",
+   "columns": [
+    "--host",
+    "From the VM itself",
+    "From outside"
+   ],
+   "rows": [
+    [
+     "127.0.0.1",
+     "works",
+     "refused"
+    ],
+    [
+     "0.0.0.0",
+     "works",
+     "works"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The host setting decides which addresses uvicorn listens on."
+    },
+    {
+     "say": "One two seven dot zero dot zero dot one only accepts connections from the server itself. Your curl from outside would fail.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Zero dot zero dot zero dot zero accepts traffic from any address, which is what external access needs.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 11 and 12",
+   "title": "Stop or delete, to control cost",
+   "columns": [
+    "Command",
+    "VM",
+    "What you pay for"
+   ],
+   "rows": [
+    [
+     "(running)",
+     "using CPU",
+     "VM time"
+    ],
+    [
+     "instances stop",
+     "stopped",
+     "disk (in free tier)"
+    ],
+    [
+     "instances delete",
+     "gone",
+     "nothing"
+    ],
+    [
+     "firewall-rules delete",
+     "rule gone",
+     "port 8000 closed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Cloud resources keep running, and can keep costing money, until you stop or delete them.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Control C stops uvicorn, then exit leaves the V M. Project 4 reuses it, so stop the V M. A stopped V M uses no C P U time.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "When you've finished Projects 3 to 5, delete the V M.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And delete the firewall rule, so nothing is left open to the internet.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
@@ -1447,108 +2166,360 @@ container_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
-   "kicker": "Concept",
-   "title": "Container versus VM",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 2",
+   "title": "Container versus virtual machine",
+   "columns": [
+    "",
+    "VM",
+    "Container"
+   ],
+   "rows": [
     [
-     "VM",
-     "Emulates a whole computer"
+     "Contains",
+     "A whole computer",
+     "App + deps + thin OS"
     ],
     [
-     "Container",
-     "Shares the host kernel · light · fast"
+     "Kernel",
+     "Its own",
+     "Shares the host's"
+    ],
+    [
+     "Weight",
+     "Heavy",
+     "Light"
+    ],
+    [
+     "Start-up",
+     "Slower",
+     "Fast"
     ]
    ],
    "beats": [
     {
-     "say": "A container bundles your app, its dependencies, and a minimal O S layer into one portable unit.",
-     "show": 0
+     "say": "Why containers? Compare one with the V M from Project 3."
     },
     {
-     "say": "A V M emulates a whole computer.",
-     "show": 1
+     "say": "A V M emulates a whole computer. A container bundles just your app, its dependencies, and a minimal O S layer.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A container shares the host's kernel, so it's much lighter and faster to start.",
-     "show": 2
+     "say": "The big difference: a container shares the host's kernel, instead of running its own.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "So it's much lighter, and much faster to start.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "package",
+   "kind": "walk",
    "kicker": "Step 4",
-   "title": "Write a Dockerfile",
+   "title": "Read the Dockerfile, one instruction at a time",
    "file": "Dockerfile",
-   "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+   "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \\\n     \"--port\", \"8000\"]",
    "beats": [
     {
-     "say": "List fastapi and uvicorn in requirements dot t x t, then write the Dockerfile.",
-     "show": 0
+     "say": "Start from a base image: Python three point twelve slim, a ready made starting environment.",
+     "line": 1,
+     "vars": {
+      "image has": "Python 3.12"
+     }
     },
     {
-     "say": "Start from a base image, Python three point twelve slim.",
-     "show": 1
+     "say": "Work inside a folder called slash app.",
+     "line": 2,
+     "vars": {
+      "folder": "/app"
+     }
     },
     {
-     "say": "Copy the requirements and install them, then copy your code, and start uvicorn.",
-     "show": 1
+     "say": "Copy in requirements dot t x t on its own.",
+     "line": 3,
+     "vars": {
+      "files": "requirements.txt"
+     }
     },
     {
-     "say": "Each instruction adds a layer, which is cached for faster rebuilds.",
-     "show": 1
+     "say": "Install what it lists: Fast A P I and uvicorn.",
+     "line": 4,
+     "vars": {
+      "image has": "Python 3.12, fastapi, uvicorn"
+     }
+    },
+    {
+     "say": "Now copy in the rest of your folder, including main dot p y.",
+     "line": 5,
+     "vars": {
+      "files": "requirements.txt, main.py, Dockerfile"
+     }
+    },
+    {
+     "say": "And CMD sets the command that starts the service, on port eight thousand, open to any address.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "starts with": "uvicorn main:app"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "boxes",
-   "kicker": "Steps 5 to 7",
-   "title": "Build, run, push",
-   "steps": [
-    "docker build --platform linux/amd64",
-    "docker run -p 8000:8000",
-    "docker push"
+   "kind": "array",
+   "kicker": "Step 4",
+   "title": "Each instruction is a cached layer",
+   "values": [
+    "FROM",
+    "WORKDIR",
+    "COPY reqs",
+    "RUN pip",
+    "COPY . .",
+    "CMD"
    ],
    "beats": [
     {
-     "say": "Build the image with a tag, v one. Add platform linux amd sixty four, so it runs on the V M's processor, even from an Apple Silicon Mac.",
-     "show": 1
+     "say": "The first build runs every step and saves each one as a layer.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "first build: all steps"
     },
     {
-     "say": "Run it locally, mapping port eight thousand on your machine to port eight thousand in the container.",
-     "show": 2
+     "say": "Now you edit main dot p y and build again.",
+     "note": "main.py changed"
     },
     {
-     "say": "Then log in and push it to Docker Hub, a container registry other machines can pull from. Never put secrets in a public image.",
-     "show": 3
+     "say": "Docker reuses the cached layers up to the first thing that changed.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "cached"
+    },
+    {
+     "say": "Only copying your code, and what follows, runs again. The slow pip install is skipped.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5
+     ],
+     "note": "rebuilt from COPY . ."
+    },
+    {
+     "say": "That's why requirements are copied first. Change them, and the install runs again.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "requirements.txt changed"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "rocket",
-   "kicker": "Steps 8 to 10",
-   "title": "Run it on the VM",
-   "steps": [
-    "Install docker.io on the VM",
-    "docker pull + docker run -d",
-    "curl http://<ip>:8000"
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Build for the VM's processor",
+   "columns": [
+    "Built on",
+    "Flag",
+    "Image",
+    "On the VM"
+   ],
+   "rows": [
+    [
+     "Apple Silicon Mac",
+     "none",
+     "arm64",
+     "exec format error"
+    ],
+    [
+     "Apple Silicon Mac",
+     "linux/amd64",
+     "amd64",
+     "runs"
+    ],
+    [
+     "Cloud Shell / PC",
+     "linux/amd64",
+     "amd64",
+     "runs"
+    ]
    ],
    "beats": [
     {
-     "say": "Start your Project 3 V M, S S H in, and install Docker.",
-     "show": 1
+     "say": "docker build turns the Dockerfile into an image, tagged v one.",
+     "sql": "docker build --platform linux/amd64 \\\n  -t YOUR_DOCKERHUB_USERNAME/my-ai-service:v1 ."
     },
     {
-     "say": "Pull your image, and run it detached, so it keeps going after you disconnect.",
-     "show": 2
+     "say": "The cloud V M has an amd sixty four processor.",
+     "col": 3
     },
     {
-     "say": "Curl the public I P. Notice you never installed Python or Fast A P I on the V M. Everything came inside the image.",
-     "show": 3
+     "say": "Apple Silicon Macs use arm sixty four chips. Build there without the flag, and the image fails on the V M with an exec format error.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "With platform linux amd sixty four, Docker builds for the V M's processor, and it runs.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 6 to 10",
+   "title": "Build once, run it anywhere",
+   "nodes": [
+    {
+     "id": "pc",
+     "label": "Your computer",
+     "x": 12,
+     "y": 25,
+     "sub": "docker build",
+     "art": "laptop"
+    },
+    {
+     "id": "hub",
+     "label": "Docker Hub",
+     "x": 50,
+     "y": 25,
+     "sub": "my-ai-service:v1",
+     "art": "cloud"
+    },
+    {
+     "id": "vm",
+     "label": "ai-service-vm",
+     "x": 88,
+     "y": 25,
+     "sub": "only Docker",
+     "art": "server"
+    },
+    {
+     "id": "ctr",
+     "label": "Container",
+     "x": 88,
+     "y": 78,
+     "sub": "uvicorn on :8000",
+     "art": "container"
+    },
+    {
+     "id": "you",
+     "label": "curl",
+     "x": 45,
+     "y": 78,
+     "sub": "from outside",
+     "art": "terminal"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pc",
+     "to": "hub"
+    },
+    {
+     "from": "hub",
+     "to": "vm"
+    },
+    {
+     "from": "vm",
+     "to": "ctr"
+    },
+    {
+     "from": "you",
+     "to": "vm"
+    }
+   ],
+   "beats": [
+    {
+     "say": "After testing it locally with docker run, log in and push the image to Docker Hub, a container registry.",
+     "show": 2,
+     "on": "hub",
+     "send": {
+      "from": "pc",
+      "to": "hub",
+      "label": "docker push"
+     }
+    },
+    {
+     "say": "New Docker Hub repositories are public, so never put secrets inside the image.",
+     "show": 2,
+     "on": "hub"
+    },
+    {
+     "say": "On the V M, install Docker, then pull the image.",
+     "show": 3,
+     "on": "vm",
+     "send": {
+      "from": "hub",
+      "to": "vm",
+      "label": "docker pull"
+     }
+    },
+    {
+     "say": "docker run, with dash d, starts it detached, so it keeps going after you disconnect.",
+     "show": 4,
+     "on": "ctr",
+     "send": {
+      "from": "vm",
+      "to": "ctr",
+      "label": "run -d"
+     }
+    },
+    {
+     "say": "Now curl the public I P. Dash p eight thousand colon eight thousand maps the V M's port to the container's port.",
+     "show": 5,
+     "on": [
+      "you",
+      "ctr"
+     ],
+     "send": {
+      "from": "you",
+      "to": "vm",
+      "label": "GET :8000"
+     }
+    },
+    {
+     "say": "And you never installed Python or Fast A P I on the V M. Everything came inside the image.",
+     "show": 5,
+     "on": "ctr",
+     "send": {
+      "from": "ctr",
+      "to": "vm",
+      "label": "Hello from cloud"
+     }
     }
    ]
   },
@@ -1769,7 +2740,7 @@ benchmark_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "gauge",
+   "art": "stopwatch",
    "kicker": "Project 5 · Benchmarking",
    "title": "Measure, don't guess",
    "beats": [
@@ -1782,101 +2753,428 @@ benchmark_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "stopwatch",
-   "kicker": "Concept",
-   "title": "What fast means",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Step 3",
+   "title": "A fair, like-for-like comparison",
+   "nodes": [
+    {
+     "id": "bench",
+     "label": "benchmark.py",
+     "x": 12,
+     "y": 50,
+     "sub": "Cloud Shell",
+     "art": "stopwatch"
+    },
+    {
+     "id": "a",
+     "label": "Config A",
+     "x": 55,
+     "y": 20,
+     "sub": "e2-micro",
+     "art": "server"
+    },
+    {
+     "id": "b",
+     "label": "Config B",
+     "x": 55,
+     "y": 80,
+     "sub": "e2-standard-2",
+     "art": "server"
+    },
+    {
+     "id": "hub",
+     "label": "Docker Hub",
+     "x": 92,
+     "y": 50,
+     "sub": "one image, v1",
+     "art": "container"
+    }
+   ],
+   "edges": [
+    {
+     "from": "hub",
+     "to": "a"
+    },
+    {
+     "from": "hub",
+     "to": "b"
+    },
+    {
+     "from": "bench",
+     "to": "a"
+    },
+    {
+     "from": "bench",
+     "to": "b"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Configuration A is your Project 4 V M, an e two micro.",
+     "show": 2,
+     "on": "a"
+    },
+    {
+     "say": "For B, create a bigger e two standard two. It isn't free, about seven cents an hour.",
+     "show": 3,
+     "on": "b"
+    },
+    {
+     "say": "Both pull the identical image, so any difference comes from the hardware, not the code.",
+     "show": 4,
+     "on": [
+      "a",
+      "b"
+     ],
+     "send": {
+      "from": "hub",
+      "to": "b",
+      "label": "same image"
+     }
+    },
+    {
+     "say": "Then the benchmark script sends a hundred requests to A.",
+     "on": [
+      "bench",
+      "a"
+     ],
+     "send": {
+      "from": "bench",
+      "to": "a",
+      "label": "100 × GET /"
+     }
+    },
+    {
+     "say": "And the same hundred to B.",
+     "on": [
+      "bench",
+      "b"
+     ],
+     "send": {
+      "from": "bench",
+      "to": "b",
+      "label": "100 × GET /"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Step 4",
+   "title": "Time every request",
+   "file": "benchmark.py",
+   "code": "latencies = []\nstart_all = time.perf_counter()\nfor _ in range(num_requests):\n    start = time.perf_counter()\n    response = requests.get(url, timeout=10)\n    response.raise_for_status()\n    latencies.append(time.perf_counter() - start)\ntotal_time = time.perf_counter() - start_all\n\nlatencies.sort()\nprint(f\"P50 latency: {latencies[49] * 1000:.1f} ms\")\nprint(f\"P95 latency: {latencies[94] * 1000:.1f} ms\")",
+   "beats": [
+    {
+     "say": "Start with an empty list, and note the time before the first request.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "latencies": "[]"
+     }
+    },
+    {
+     "say": "The loop starts a stopwatch, and sends one G E T request.",
+     "line": [
+      3,
+      4,
+      5
+     ]
+    },
+    {
+     "say": "raise for status stops the run if the server returns an error.",
+     "line": 6
+    },
+    {
+     "say": "The time taken goes into the list. For example, sixty one milliseconds for the first one, while the connection warms up.",
+     "line": 7,
+     "vars": {
+      "latencies": "[0.0613]"
+     }
+    },
+    {
+     "say": "That repeats, one request at a time, a hundred times.",
+     "line": [
+      3,
+      7
+     ],
+     "vars": {
+      "latencies": "100 values"
+     }
+    },
+    {
+     "say": "Then the total time. In this example run, four point eight seconds.",
+     "line": 8,
+     "vars": {
+      "latencies": "100 values",
+      "total_time": "4.80"
+     }
+    },
+    {
+     "say": "Sort the list. Item forty nine is the fiftieth fastest, the P fifty.",
+     "line": [
+      10,
+      11
+     ],
+     "out": "P50 latency: 44.0 ms"
+    },
+    {
+     "say": "And item ninety four is the P ninety five.",
+     "line": 12,
+     "out": "P95 latency: 61.3 ms"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 2",
+   "title": "Percentiles: read them off the sorted list",
+   "points": [
     [
-     "Latency",
-     "Time for one request"
+     5,
+     36.2
     ],
     [
-     "Throughput",
-     "Requests per second"
+     10,
+     37.5
     ],
     [
-     "P50 / P95 / P99",
-     "Percentiles of latency"
+     15,
+     38.6
+    ],
+    [
+     20,
+     39.4
+    ],
+    [
+     25,
+     40.1
+    ],
+    [
+     30,
+     40.9
+    ],
+    [
+     35,
+     41.6
+    ],
+    [
+     40,
+     42.4
+    ],
+    [
+     45,
+     43.1
+    ],
+    [
+     50,
+     44.0
+    ],
+    [
+     55,
+     44.8
+    ],
+    [
+     60,
+     45.7
+    ],
+    [
+     65,
+     46.9
+    ],
+    [
+     70,
+     48.0
+    ],
+    [
+     75,
+     49.6
+    ],
+    [
+     80,
+     51.5
+    ],
+    [
+     85,
+     54.0
+    ],
+    [
+     90,
+     57.2
+    ],
+    [
+     95,
+     61.3
+    ],
+    [
+     100,
+     88.0
+    ]
+   ],
+   "xlabel": "request, fastest → slowest",
+   "ylabel": "latency (ms)",
+   "beats": [
+    {
+     "say": "Here are those hundred latencies, sorted from fastest to slowest. Latency is how long one request takes."
+    },
+    {
+     "say": "P fifty is the middle one: half the requests were faster than forty four milliseconds.",
+     "marks": [
+      [
+       50,
+       44.0
+      ]
+     ]
+    },
+    {
+     "say": "P ninety five: ninety five percent were faster than sixty one point three milliseconds.",
+     "marks": [
+      [
+       50,
+       44.0
+      ],
+      [
+       95,
+       61.3
+      ]
+     ]
+    },
+    {
+     "say": "The slowest few, past that point, are the ones that annoy users. Percentiles show them, where an average would hide them.",
+     "marks": [
+      [
+       50,
+       44.0
+      ],
+      [
+       95,
+       61.3
+      ]
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Throughput is how many requests per second: a hundred divided by four point eight is about twenty point eight.",
+     "marks": [
+      [
+       50,
+       44.0
+      ],
+      [
+       95,
+       61.3
+      ]
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Cost per 1,000 requests",
+   "columns": [
+    "Config",
+    "$ per hour",
+    "Req/sec",
+    "Per 1,000"
+   ],
+   "rows": [
+    [
+     "Course example",
+     "0.07",
+     "20",
+     "≈ $0.001"
+    ],
+    [
+     "A: e2-micro",
+     "0.0084",
+     "20.8",
+     "≈ $0.00011"
+    ],
+    [
+     "B: e2-standard-2",
+     "0.07",
+     "21.6",
+     "≈ $0.00090"
     ]
    ],
    "beats": [
     {
-     "say": "First, the words.",
-     "show": 0
+     "say": "Now weigh cost against speed, with this formula.",
+     "sql": "per 1,000 = $ per hour ÷ (req/sec × 3600) × 1000"
     },
     {
-     "say": "Latency is how long one request takes.",
-     "show": 1
+     "say": "The course example: seven cents an hour at twenty per second is seventy two thousand requests an hour, about a tenth of a cent per thousand.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Throughput is how many requests are handled per second.",
-     "show": 2
+     "say": "For A, use the e two micro's normal list price, roughly eight tenths of a cent an hour, so it reflects paying at scale.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Percentiles: a P ninety five latency means ninety five percent of requests were faster than that number.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "scales",
-   "kicker": "Step 3",
-   "title": "A fair comparison",
-   "big": "Same image, two machines",
-   "sub": "e2-micro vs e2-standard-2 · delete the large VM after",
-   "beats": [
-    {
-     "say": "Configuration A is your e two micro. For B, create a bigger e two standard two, which is not free, and run the identical image.",
-     "show": 0
+     "say": "In this example, B was barely faster, because most of the latency is network time between you and the V M.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "The same image on both means any difference comes from the hardware.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Step 4",
-   "title": "A load-testing script",
-   "file": "benchmark.py",
-   "code": "latencies = []\nstart_all = time.perf_counter()\nfor _ in range(num_requests):\n    start = time.perf_counter()\n    response = requests.get(url, timeout=10)\n    response.raise_for_status()\n    latencies.append(time.perf_counter() - start)\ntotal_time = time.perf_counter() - start_all\n\nlatencies.sort()\nprint(f\"P50 latency: {latencies[49] * 1000:.1f} ms\")\nprint(f\"P95 latency: {latencies[94] * 1000:.1f} ms\")\nprint(f\"Throughput: {num_requests / total_time:.1f} requests per second\")",
-   "beats": [
-    {
-     "say": "The benchmark sends a hundred requests in a row, and times each one.",
-     "show": 0
-    },
-    {
-     "say": "After sorting, it reads off P fifty and P ninety five, and works out throughput.",
-     "show": 1
-    },
-    {
-     "say": "Because it sends one request at a time, that throughput is a lower bound, not the server's maximum.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "coin",
-   "kicker": "Step 6",
-   "title": "Cost per thousand requests",
-   "quote": "cost per 1,000 requests = hourly cost ÷ (requests/sec × 3600) × 1000",
-   "beats": [
-    {
-     "say": "Then compare cost against performance.",
-     "show": 0
-    },
-    {
-     "say": "Divide the hourly cost by requests per second times thirty six hundred, then multiply by a thousand.",
-     "show": 1
-    },
-    {
-     "say": "For this tiny service, most latency is network time, so a bigger V M may barely help. Write that up, then delete the large V M.",
-     "show": 1
+     "say": "So B costs about eight times more per thousand requests. Write that up, then delete the large V M.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 3
     }
    ]
   },
@@ -2279,144 +3577,321 @@ autoscaling_api_project/
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
+   "kind": "array",
    "kicker": "Step 2",
-   "title": "Wrap a model in an API",
-   "file": "main.py",
-   "code": "@app.post(\"/predict\")\ndef predict(request: PredictRequest):\n    # Simulate the CPU work a real model does for each prediction.\n    total = 0\n    for i in range(300_000):\n        total += i * i\n\n    words = request.text.lower().split()\n    score = sum(w in POSITIVE for w in words) - sum(w in NEGATIVE for w in words)\n    ...\n    return {\"label\": label, \"score\": score}",
-   "beats": [
-    {
-     "say": "The model is a tiny word-counting sentiment classifier, served at slash predict.",
-     "show": 0
-    },
-    {
-     "say": "A loop burns C P U the way real inference does, so autoscaling has something to react to.",
-     "show": 1
-    },
-    {
-     "say": "The caller sends text, and the service sends back a label and a score.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "container",
-   "kicker": "Steps 3 to 6",
-   "title": "A practice cluster",
-   "steps": [
-    "docker build -t sentiment-api:v1",
-    "Install kubectl + kind",
-    "kind create cluster + load image",
-    "Metrics server"
+   "title": "The model: count the happy and sad words",
+   "values": [
+    "i",
+    "love",
+    "this",
+    "great",
+    "course"
    ],
    "beats": [
     {
-     "say": "Build the image with Docker.",
-     "show": 1
+     "say": "The model is a tiny sentiment classifier behind slash predict. First, a loop burns C P U, the way real inference does."
     },
     {
-     "say": "Install kubectl, the Kubernetes command line tool, and kind, which makes a practice cluster inside Docker.",
-     "show": 2
+     "say": "Then the text, I love this great course, is lowercased and split into words.",
+     "note": "lower().split()"
     },
     {
-     "say": "Create the cluster, and load your image straight into it. No registry needed.",
-     "show": 3
+     "say": "Love and great are in the positive set. That's two.",
+     "hl": [
+      1,
+      3
+     ],
+     "note": "positive: 2"
     },
     {
-     "say": "Install the metrics server, which measures C P U for autoscaling. On kind it needs one small patch.",
-     "show": 4
+     "say": "None are in the negative set, so the score is two minus zero, two.",
+     "hl": [
+      1,
+      3
+     ],
+     "gone": [
+      0,
+      2,
+      4
+     ],
+     "note": "score = 2 − 0 = 2"
+    },
+    {
+     "say": "A score above zero means positive. The service replies: label positive, score two.",
+     "ok": [
+      1,
+      3
+     ],
+     "gone": [
+      0,
+      2,
+      4
+     ],
+     "note": "{\"label\":\"positive\",\"score\":2}"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "architecture",
-   "kicker": "Step 7",
-   "title": "Deployment and Service",
-   "items": [
-    [
-     "Deployment",
-     "Image + replica count"
-    ],
-    [
-     "Pod",
-     "One running copy"
-    ],
-    [
-     "Service",
-     "Stable name · load balancer"
-    ],
-    [
-     "cpu: 100m",
-     "What autoscaling measures against"
-    ]
+   "kind": "diagram",
+   "kicker": "Steps 5 to 10",
+   "title": "Inside the cluster",
+   "nodes": [
+    {
+     "id": "lg",
+     "label": "load-generator",
+     "x": 12,
+     "y": 50,
+     "sub": "curl in a loop",
+     "art": "terminal"
+    },
+    {
+     "id": "svc",
+     "label": "Service",
+     "x": 42,
+     "y": 50,
+     "sub": "sentiment-api",
+     "art": "router"
+    },
+    {
+     "id": "p1",
+     "label": "Pod 1",
+     "x": 75,
+     "y": 18,
+     "sub": "cpu request 100m",
+     "art": "container"
+    },
+    {
+     "id": "hpa",
+     "label": "Autoscaler",
+     "x": 42,
+     "y": 88,
+     "sub": "HPA · 1 to 5 pods",
+     "art": "gauge"
+    },
+    {
+     "id": "p2",
+     "label": "Pod 2",
+     "x": 75,
+     "y": 50,
+     "sub": "added by the HPA",
+     "art": "container"
+    },
+    {
+     "id": "p3",
+     "label": "Pod 3",
+     "x": 75,
+     "y": 82,
+     "sub": "added by the HPA",
+     "art": "container"
+    }
+   ],
+   "edges": [
+    {
+     "from": "lg",
+     "to": "svc"
+    },
+    {
+     "from": "svc",
+     "to": "p1"
+    },
+    {
+     "from": "svc",
+     "to": "p2"
+    },
+    {
+     "from": "svc",
+     "to": "p3"
+    },
+    {
+     "from": "hpa",
+     "to": "p1"
+    }
    ],
    "beats": [
     {
-     "say": "Next, a Y A M L file with two parts.",
-     "show": 0
+     "say": "kind runs a practice Kubernetes cluster inside Docker. A Deployment keeps one replica of your image running: one pod.",
+     "show": 3,
+     "on": "p1"
     },
     {
-     "say": "A Deployment says which image to run, and how many replicas to keep alive. Each running copy is a pod.",
-     "show": 1
+     "say": "The Service gives the pods one stable name, sentiment A P I.",
+     "show": 3,
+     "on": "svc"
     },
     {
-     "say": "A Service gives the pods one stable name, and load balances requests across them.",
-     "show": 2
+     "say": "A load generator inside the cluster sends requests nonstop, through the Service.",
+     "show": 3,
+     "on": "lg",
+     "send": {
+      "from": "lg",
+      "to": "svc",
+      "label": "POST /predict"
+     }
     },
     {
-     "say": "Each pod requests one hundred milli C P U, a tenth of a core. Autoscaling percentages are measured against that.",
-     "show": 3
+     "say": "With one pod, the Service sends everything there, and its C P U climbs.",
+     "show": 3,
+     "on": "p1",
+     "send": {
+      "from": "svc",
+      "to": "p1",
+      "label": "request"
+     }
+    },
+    {
+     "say": "The autoscaler reads C P U from the metrics server. It's well above the fifty percent target.",
+     "show": 4,
+     "on": "hpa",
+     "send": {
+      "from": "p1",
+      "to": "hpa",
+      "label": "CPU above 50%"
+     }
+    },
+    {
+     "say": "So it tells the Deployment to add replicas.",
+     "show": 6,
+     "on": [
+      "p2",
+      "p3"
+     ]
+    },
+    {
+     "say": "Now the Service balances requests across every pod. That's why the load runs inside the cluster: port forward only reaches one pod.",
+     "show": 6,
+     "on": [
+      "svc",
+      "p3"
+     ],
+     "send": {
+      "from": "svc",
+      "to": "p3",
+      "label": "request"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "gauge",
+   "kind": "walk",
    "kicker": "Step 9",
-   "title": "The HorizontalPodAutoscaler",
+   "title": "Read the autoscaler rule",
    "file": "hpa.yaml",
    "code": "spec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: sentiment-api\n  minReplicas: 1\n  maxReplicas: 5\n  metrics:\n    - type: Resource\n      resource:\n        name: cpu\n        target:\n          type: Utilization\n          averageUtilization: 50",
    "beats": [
     {
-     "say": "Now the autoscaler.",
-     "show": 0
+     "say": "The HorizontalPodAutoscaler points at the sentiment A P I Deployment.",
+     "line": [
+      2,
+      5
+     ]
     },
     {
-     "say": "It reads: keep average C P U near fifty percent of what each pod requested, using between one and five replicas.",
-     "show": 1
+     "say": "It may use between one and five replicas.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "replicas": "1 to 5"
+     }
+    },
+    {
+     "say": "It watches C P U, and aims for fifty percent average utilisation.",
+     "line": [
+      11,
+      14
+     ],
+     "vars": {
+      "replicas": "1 to 5",
+      "target": "50%"
+     }
+    },
+    {
+     "say": "Fifty percent of what? Of each pod's request, one hundred milli C P U. So the target is fifty milli C P U per pod.",
+     "line": 14,
+     "vars": {
+      "replicas": "1 to 5",
+      "target": "50% of 100m = 50m"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Steps 10 to 13",
-   "title": "Load it and watch",
-   "steps": [
-    "kubectl run load-generator",
-    "Replicas rise",
-    "Stop load → back to 1",
-    "kind delete cluster"
+   "kind": "table",
+   "kicker": "Steps 10 to 12",
+   "title": "How the autoscaler picks a replica count",
+   "columns": [
+    "Moment",
+    "Pods",
+    "Avg CPU",
+    "Wants"
+   ],
+   "rows": [
+    [
+     "Idle",
+     "1",
+     "2%",
+     "1"
+    ],
+    [
+     "Load starts",
+     "1",
+     "200%",
+     "4"
+    ],
+    [
+     "Spread over 4",
+     "4",
+     "50%",
+     "4"
+    ],
+    [
+     "Second generator",
+     "4",
+     "100%",
+     "8 → max 5"
+    ],
+    [
+     "Load stopped",
+     "5",
+     "1%",
+     "1, after ~5 min"
+    ]
    ],
    "beats": [
     {
-     "say": "Run a load generator pod inside the cluster, so traffic goes through the Service's load balancing.",
-     "show": 1
+     "say": "Each check, it uses this rule. These C P U numbers are an example.",
+     "sql": "wanted pods = round up(pods × avg CPU ÷ 50%)"
     },
     {
-     "say": "Watch the autoscaler. C P U climbs above fifty percent, and replicas rise.",
-     "show": 2
+     "say": "Idle, one pod at two percent. One pod is plenty.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Delete the load generator. After about five minutes, replicas fall back to one. That wait avoids flapping.",
-     "show": 3
+     "say": "The load starts. One pod hits two hundred percent of its request. One times two hundred, over fifty, is four.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "Finally, delete the cluster, and note how many pod minutes you'd have paid for in the cloud.",
-     "show": 4
+     "say": "Four pods now share that work, about fifty percent each. Right on target, so it holds.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "A second load generator doubles the work. The rule asks for eight, but max replicas caps it at five.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Stop the load, and the rule says one. But Kubernetes waits about five minutes first, so a short dip doesn't cause flapping.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "Then delete the cluster, and note the pod minutes you'd have paid for in the cloud."
     }
    ]
   },
@@ -3171,7 +4646,7 @@ observability_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "eye",
+   "art": "graph",
    "kicker": "Project 7 · Monitoring and alerting",
    "title": "Give your API eyes",
    "beats": [
@@ -3187,151 +4662,660 @@ observability_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
+   "kind": "table",
    "kicker": "Step 2",
-   "title": "What to measure",
-   "items": [
+   "title": "Four signals, three metric types",
+   "columns": [
+    "Signal",
+    "Question",
+    "Metric",
+    "In the API"
+   ],
+   "rows": [
     [
+     "Traffic",
+     "Requests per second?",
      "Counter",
-     "Only goes up"
+     "requests_total"
     ],
     [
+     "Errors",
+     "What share fail?",
+     "Counter + status",
+     "requests_total"
+    ],
+    [
+     "Latency",
+     "How long?",
      "Histogram",
-     "Durations in buckets"
+     "request_duration"
     ],
     [
+     "Saturation",
+     "How busy right now?",
      "Gauge",
-     "Up and down"
-    ],
-    [
-     "Labels",
-     "Few values · ✗ user ID, ✗ raw URL"
+     "in_progress"
     ]
    ],
    "beats": [
     {
-     "say": "For a model A P I, four signals tell you most of what you need: traffic, errors, latency and saturation.",
-     "show": 0
+     "say": "For a model A P I, four signals tell you most of what you need."
     },
     {
-     "say": "A counter only goes up, like requests handled so far.",
-     "show": 1
+     "say": "Traffic: how many requests per second. A counter only goes up, so you watch how fast it grows.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A histogram sorts each request's duration into buckets, so you can estimate percentiles like p ninety five.",
-     "show": 2
+     "say": "Errors: the same counter, split by a status label, like two hundred or five hundred.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "A gauge goes up and down, like requests in progress right now.",
-     "show": 3
+     "say": "Latency: a histogram sorts each request's duration into buckets, so you can estimate percentiles.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Labels like endpoint and status split a metric into time series. Never label by user I D or raw U R L. That's high cardinality.",
-     "show": 4
+     "say": "Saturation: a gauge goes up and down, like requests in progress right now.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Keep labels to a few values. Never label by user I D or raw U R L. That's high cardinality, and it can overload Prometheus.",
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "diagram",
    "kicker": "Step 3",
-   "title": "Instrument the API",
-   "file": "app/main.py",
-   "code": "@app.middleware(\"http\")\nasync def record_metrics(request: Request, call_next):\n    endpoint = endpoint_label(request)\n    ...\n    IN_PROGRESS.labels(endpoint=endpoint).inc()\n    start = time.perf_counter()\n    status = \"500\"\n    try:\n        response = await call_next(request)\n        status = str(response.status_code)\n        return response\n    finally:\n        LATENCY.labels(endpoint=endpoint).observe(time.perf_counter() - start)\n        REQUESTS.labels(endpoint=endpoint, status=status).inc()",
-   "beats": [
+   "title": "The middleware records every request",
+   "nodes": [
     {
-     "say": "Instrumentation is code whose only job is to record what the service does.",
-     "show": 0
+     "id": "cl",
+     "label": "Request",
+     "x": 10,
+     "y": 50,
+     "sub": "POST /predict",
+     "art": "terminal"
     },
     {
-     "say": "A middleware runs around every request. It raises the in progress gauge and starts a timer.",
-     "show": 1
+     "id": "mw",
+     "label": "Middleware",
+     "x": 40,
+     "y": 50,
+     "sub": "record_metrics",
+     "art": "gear"
     },
     {
-     "say": "When the request finishes, it records the duration in the histogram, counts the status code, and lowers the gauge.",
-     "show": 1
+     "id": "h",
+     "label": "predict()",
+     "x": 75,
+     "y": 50,
+     "sub": "the model",
+     "art": "neural"
+    },
+    {
+     "id": "g",
+     "label": "Gauge",
+     "x": 40,
+     "y": 15,
+     "sub": "in progress",
+     "art": "gauge"
+    },
+    {
+     "id": "c",
+     "label": "Counter",
+     "x": 40,
+     "y": 85,
+     "sub": "endpoint + status",
+     "art": "calc"
+    },
+    {
+     "id": "hist",
+     "label": "Histogram",
+     "x": 75,
+     "y": 85,
+     "sub": "duration buckets",
+     "art": "bars"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "bell",
-   "kicker": "Step 6",
-   "title": "An alert rule",
-   "file": "prometheus/rules.yml",
-   "code": "- alert: HighErrorRate\n  expr: endpoint:http_requests_errors:ratio_rate1m{endpoint=\"/predict\"} > 0.05\n  for: 1m\n  labels:\n    severity: warning\n  annotations:\n    summary: \"More than 5% of /predict requests are failing\"",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "Prometheus scrapes the app's metrics page every few seconds, at app colon eight thousand, its Compose service name.",
-     "show": 0
+     "from": "cl",
+     "to": "mw"
     },
     {
-     "say": "Recording rules save queries like error ratio and p ninety five. Alert rules add a condition and a for duration.",
-     "show": 1
+     "from": "mw",
+     "to": "h"
     },
     {
-     "say": "This one fires when more than five percent of predict requests fail with a five hundred error, for a full minute.",
-     "show": 1
+     "from": "mw",
+     "to": "g"
+    },
+    {
+     "from": "mw",
+     "to": "c"
+    },
+    {
+     "from": "mw",
+     "to": "hist"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "dashboard",
-   "kicker": "Steps 7 to 11",
-   "title": "Run the stack",
-   "steps": [
-    "Provision Grafana",
-    "docker compose up -d --build",
-    "load.py + PromQL",
-    "Dashboard on :3000"
    ],
    "beats": [
     {
-     "say": "Provision Grafana from files: a data source and a four panel dashboard. No clicking through setup screens.",
-     "show": 1
+     "say": "Instrumentation is code whose only job is to record what the service does. Here, a middleware wraps every request.",
+     "show": 6
     },
     {
-     "say": "One Compose file starts the app, Prometheus and Grafana together. Validate it, and check the rules with promtool.",
-     "show": 2
+     "say": "A request arrives for slash predict.",
+     "on": "mw",
+     "send": {
+      "from": "cl",
+      "to": "mw",
+      "label": "POST /predict"
+     }
     },
     {
-     "say": "Generate traffic with the load script, and query it with Prom Q L: rate, sum by, and histogram quantile.",
-     "show": 3
+     "say": "The middleware adds one to the in progress gauge, and starts a timer.",
+     "on": "g",
+     "send": {
+      "from": "mw",
+      "to": "g",
+      "label": "+1"
+     }
     },
     {
-     "say": "Open Grafana on port three thousand, and watch the dashboard fill.",
+     "say": "It passes the request on to the model.",
+     "on": "h",
+     "send": {
+      "from": "mw",
+      "to": "h",
+      "label": "call_next"
+     }
+    },
+    {
+     "say": "The model answers with status two hundred. If it had crashed, the status would stay five hundred.",
+     "on": "mw",
+     "send": {
+      "from": "h",
+      "to": "mw",
+      "label": "200"
+     }
+    },
+    {
+     "say": "Then the duration goes into the histogram.",
+     "on": "hist",
+     "send": {
+      "from": "mw",
+      "to": "hist",
+      "label": "0.021 s"
+     }
+    },
+    {
+     "say": "The counter for slash predict, status two hundred, goes up by one.",
+     "on": "c",
+     "send": {
+      "from": "mw",
+      "to": "c",
+      "label": "/predict 200 +1"
+     }
+    },
+    {
+     "say": "And the gauge goes back down.",
+     "on": "g",
+     "send": {
+      "from": "mw",
+      "to": "g",
+      "label": "−1"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Steps 6 to 11",
+   "title": "Compose runs the whole stack",
+   "nodes": [
+    {
+     "id": "load",
+     "label": "load.py",
+     "x": 12,
+     "y": 25,
+     "sub": "~20–30 req/s",
+     "art": "terminal"
+    },
+    {
+     "id": "app",
+     "label": "app",
+     "x": 48,
+     "y": 25,
+     "sub": "app:8000/metrics",
+     "art": "server"
+    },
+    {
+     "id": "prom",
+     "label": "Prometheus",
+     "x": 48,
+     "y": 78,
+     "sub": "localhost:9090",
+     "art": "pulse"
+    },
+    {
+     "id": "graf",
+     "label": "Grafana",
+     "x": 85,
+     "y": 78,
+     "sub": "localhost:3000",
+     "art": "dashboard"
+    },
+    {
+     "id": "you",
+     "label": "Your browser",
+     "x": 85,
+     "y": 25,
+     "sub": "the dashboard",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "load",
+     "to": "app"
+    },
+    {
+     "from": "prom",
+     "to": "app"
+    },
+    {
+     "from": "graf",
+     "to": "prom"
+    },
+    {
+     "from": "you",
+     "to": "graf"
+    }
+   ],
+   "beats": [
+    {
+     "say": "One Compose file starts three containers: the app, Prometheus and Grafana.",
      "show": 4
+    },
+    {
+     "say": "The load script sends steady traffic, with about one in ten requests sent empty on purpose.",
+     "on": "load",
+     "send": {
+      "from": "load",
+      "to": "app",
+      "label": "POST /predict"
+     }
+    },
+    {
+     "say": "Every five seconds, Prometheus scrapes the app's metrics page.",
+     "on": "prom",
+     "send": {
+      "from": "prom",
+      "to": "app",
+      "label": "GET /metrics"
+     }
+    },
+    {
+     "say": "It finds the app at app colon eight thousand, its Compose service name. Localhost would mean Prometheus itself.",
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "prom",
+      "label": "text format"
+     }
+    },
+    {
+     "say": "Grafana asks Prometheus with Prom Q L queries, like rate, sum by, and histogram quantile.",
+     "on": "graf",
+     "send": {
+      "from": "graf",
+      "to": "prom",
+      "label": "PromQL"
+     }
+    },
+    {
+     "say": "And you open the dashboard on port three thousand. It was all provisioned from files, no clicking.",
+     "show": 5,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "graf",
+      "label": "open dashboard"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "warning",
-   "kicker": "Steps 12 and 13",
-   "title": "Simulate a bad release",
-   "steps": [
-    "FAIL_RATE=0.2 → HighErrorRate fires",
-    "EXTRA_DELAY_SECONDS=0.8 → HighP95Latency fires",
-    "Healthy again → Inactive"
+   "kind": "chart",
+   "kicker": "Step 12",
+   "title": "A bad release: Pending, then Firing",
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     25,
+     18
+    ],
+    [
+     30,
+     36
+    ],
+    [
+     35,
+     54
+    ],
+    [
+     40,
+     72
+    ],
+    [
+     45,
+     70
+    ],
+    [
+     50,
+     74
+    ],
+    [
+     55,
+     71
+    ],
+    [
+     60,
+     73
+    ],
+    [
+     65,
+     72
+    ],
+    [
+     70,
+     70
+    ],
+    [
+     75,
+     73
+    ],
+    [
+     80,
+     72
+    ],
+    [
+     85,
+     71
+    ],
+    [
+     90,
+     73
+    ],
+    [
+     95,
+     72
+    ],
+    [
+     100,
+     72
+    ]
+   ],
+   "xlabel": "time (5 minutes)",
+   "ylabel": "share of /predict failing",
+   "beats": [
+    {
+     "say": "This is the error panel: the share of slash predict requests failing with a five hundred error. Right now, zero."
+    },
+    {
+     "say": "The alert rule's line: more than five percent, held for one minute.",
+     "line": [
+      0,
+      20
+     ]
+    },
+    {
+     "say": "Now restart the app with fail rate zero point two. The one minute rate starts to climb.",
+     "line": [
+      0,
+      20
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Within about thirty seconds it crosses five percent. High error rate turns Pending: true, but the clock is running.",
+     "line": [
+      0,
+      20
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       26,
+       20
+      ]
+     ]
+    },
+    {
+     "say": "It settles near eighteen percent: twenty percent of the ninety percent that weren't empty text.",
+     "line": [
+      0,
+      20
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       26,
+       20
+      ]
+     ]
+    },
+    {
+     "say": "A minute after Pending, it's still true, so the alert turns Firing.",
+     "line": [
+      0,
+      20
+     ],
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       26,
+       20
+      ],
+      [
+       46,
+       72
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 13",
+   "title": "Why p95 shows 0.97 s for 0.8 s requests",
+   "columns": [
+    "Bucket (le)",
+    "Requests ≤ le",
+    "In this bucket"
+   ],
+   "rows": [
+    [
+     "0.005 s",
+     "10",
+     "10"
+    ],
+    [
+     "0.025 s",
+     "10",
+     "0"
+    ],
+    [
+     "0.1 s",
+     "10",
+     "0"
+    ],
+    [
+     "0.5 s",
+     "10",
+     "0"
+    ],
+    [
+     "1.0 s",
+     "100",
+     "90"
+    ],
+    [
+     "2.5 s",
+     "100",
+     "0"
+    ],
+    [
+     "+Inf",
+     "100",
+     "0"
+    ]
    ],
    "beats": [
     {
-     "say": "Now break it on purpose.",
-     "show": 0
+     "say": "Next, an extra delay of zero point eight seconds per prediction. Here are some buckets, per hundred requests."
     },
     {
-     "say": "Set fail rate to zero point two, and restart the app. High error rate goes Pending, then about a minute later, Firing.",
-     "show": 1
+     "say": "Ten empty text requests return four hundred at once, in the fastest bucket.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Then set an extra delay of zero point eight seconds. High p ninety five latency goes Pending, then Firing.",
-     "show": 2
+     "say": "The other ninety take about zero point eight two seconds, so they land between half a second and one second.",
+     "hl": 4,
+     "dim": true
     },
     {
-     "say": "Restart with no settings, and the alerts return to Inactive.",
-     "show": 3
+     "say": "The ninety fifth request sits in that bucket, eighty five places in.",
+     "hl": 4,
+     "dim": true,
+     "sql": "95th of 100 → bucket 0.5 s to 1.0 s"
+    },
+    {
+     "say": "histogram quantile assumes requests are spread evenly inside it, so it estimates zero point nine seven seconds.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "sql": "0.5 + 0.5 × (95 − 10) ÷ 90 ≈ 0.97 s"
+    },
+    {
+     "say": "Still above the half second line, so high p ninety five latency fires. Better placed buckets give sharper estimates.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
@@ -3392,7 +5376,7 @@ observability_project/
      "show": 0
     },
     {
-     "say": "your observability project folder has the instrumented A P I, Compose file, Prometheus rules, Grafana dashboard and load script,",
+     "say": "your monitoring project folder has the instrumented A P I, Compose file, Prometheus rules, Grafana dashboard and load script,",
      "show": 1
     },
     {

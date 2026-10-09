@@ -113,130 +113,308 @@ ai_product_brief_project/
    "title": "Frame the problem first",
    "beats": [
     {
-     "say": "Welcome to AI Product Engineer: Hands-On Project Tutorials."
+     "say": "Welcome to A I Product Engineer: Hands-On Project Tutorials."
     },
     {
-     "say": "Before touching any code, you'll frame a real problem in product terms. That habit separates a useful AI feature from a novelty."
+     "say": "Before touching any code, you'll frame a real problem in product terms. That habit separates a useful A I feature from a novelty."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
+   "kind": "table",
+   "kicker": "Step 2",
    "title": "Is it an AI-suited problem?",
-   "items": [
+   "columns": [
+    "Problem",
+    "Pattern",
+    "Ambiguity",
+    "Volume"
+   ],
+   "rows": [
     [
-     "A pattern",
-     "Something to learn from data"
+     "Summarize long tickets",
+     "✓ learn from data",
+     "✓ rules can't cope",
+     "✓ many per day"
     ],
     [
-     "Ambiguity",
-     "Fixed rules can't handle it"
-    ],
-    [
-     "Volume",
-     "Worth automating"
+     "Add two numbers",
+     "✗ a fixed rule",
+     "✗ none",
+     "✗ no AI needed"
     ]
    ],
    "beats": [
     {
-     "say": "Not every problem needs A I.",
-     "show": 0
+     "say": "Not every problem needs A I. Let's test two ideas against three questions."
     },
     {
-     "say": "An A I suited problem has a pattern to learn from data.",
-     "show": 1
+     "say": "First, is there a pattern to learn from data? Support tickets, yes. Adding numbers is just a fixed rule.",
+     "col": 1
     },
     {
-     "say": "Ambiguity that rules-based code can't handle.",
-     "show": 2
+     "say": "Second, is there ambiguity that rules-based code can't handle? Every ticket is worded differently, so yes.",
+     "col": 2
     },
     {
-     "say": "And enough volume to be worth automating.",
-     "show": 3
+     "say": "Third, is there enough volume to be worth automating? A support team gets many tickets a day.",
+     "col": 3
     },
     {
-     "say": "Summarizing long support tickets fits. Adding two numbers does not.",
-     "show": 3
+     "say": "Summarizing long support tickets passes all three. That's an A I suited problem.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Adding two numbers fails them all. Plain code does it perfectly.",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "pencil",
+   "kind": "array",
    "kicker": "Steps 3 and 4",
-   "title": "One-sentence problem statement",
-   "quote": "[user] struggles to [task] because [reason], which causes [consequence].",
+   "title": "Fill in the problem statement",
+   "values": [
+    "[user]",
+    "[task]",
+    "[reason]",
+    "[consequence]"
+   ],
    "beats": [
     {
-     "say": "In a text cell headed brief, first write one sentence: who has this problem, and how often?",
-     "show": 0
+     "say": "In a text cell headed brief, you'll write your problem in one sentence, with four slots."
     },
     {
-     "say": "Then state the problem with this pattern.",
-     "show": 1
+     "say": "First the user. Who has this problem, and how often? Say, support agents, every day.",
+     "vals": [
+      "Support agents",
+      "[task]",
+      "[reason]",
+      "[consequence]"
+     ],
+     "hl": 0,
+     "note": "[user] struggles to..."
     },
     {
-     "say": "User struggles to do a task, because of a reason, which causes a consequence.",
-     "show": 1
+     "say": "Then the task they struggle with: reading long tickets.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "[reason]",
+      "[consequence]"
+     ],
+     "hl": 1,
+     "ok": [
+      0
+     ],
+     "note": "...struggles to [task]..."
+    },
+    {
+     "say": "Then the reason: because the tickets are long.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "they're long",
+      "[consequence]"
+     ],
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "...because [reason]..."
+    },
+    {
+     "say": "And the consequence: which causes slow resolution for customers.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "they're long",
+      "slow resolution"
+     ],
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "...which causes [consequence]."
+    },
+    {
+     "say": "User, task, reason, consequence. One sentence anyone on the team can understand.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "they're long",
+      "slow resolution"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "Then Step 5: describe the AI solution in 2-3 plain sentences"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
+   "kind": "table",
    "kicker": "Step 6",
    "title": "Success metric or vanity metric?",
-   "items": [
+   "columns": [
+    "Metric",
+    "Kind",
+    "Proves it works?"
+   ],
+   "rows": [
     [
-     "✓ Success metric",
-     "Resolution time drops by 20%"
+     "Resolution time -20%",
+     "Success metric",
+     "Yes, measurable"
     ],
     [
-     "✗ Vanity metric",
-     "\"Users saw the feature\""
+     "Users saw the feature",
+     "Vanity metric",
+     "No, only looks good"
     ]
    ],
    "beats": [
     {
-     "say": "Next, define what success looks like.",
-     "show": 0
+     "say": "Next, define what success looks like. Here are two ways to measure it."
     },
     {
-     "say": "A success metric is a measurable signal the feature is working, like support ticket resolution time dropping by twenty percent.",
-     "show": 1
+     "say": "Support ticket resolution time drops by twenty percent. That's measurable, and it shows the feature really helps.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "A vanity metric looks good without proving value, like users saw the feature.",
-     "show": 2
+     "say": "Users saw the feature. It sounds nice, but it proves nothing about value. That's a vanity metric.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "Put the success metric in your brief.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Success metric = a measurable signal the feature is working"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "checklist",
-   "kicker": "Steps 7 and 8",
+   "kind": "table",
+   "kicker": "Step 7",
+   "title": "Name the constraints and risks",
+   "columns": [
+    "Risk",
+    "Question to answer"
+   ],
+   "rows": [
+    [
+     "Cost limits",
+     "What can we spend?"
+    ],
+    [
+     "Data availability",
+     "Do we have the data?"
+    ],
+    [
+     "Privacy",
+     "Whose data is this?"
+    ],
+    [
+     "AI gets it wrong",
+     "What happens then?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Before you build, list your constraints and risks."
+    },
+    {
+     "say": "Cost limits: A P I calls are paid, so how much can you spend?",
+     "hl": 0
+    },
+    {
+     "say": "Data availability: do you actually have the tickets to work with?",
+     "hl": 1
+    },
+    {
+     "say": "Privacy: tickets contain customer details, so whose data is this?",
+     "hl": 2
+    },
+    {
+     "say": "And what happens if the A I gets it wrong? A bad summary could send an agent the wrong way.",
+     "hl": 3
+    },
+    {
+     "say": "Planning for mistakes now shapes the design, and shows whether the risk is acceptable.",
+     "hl": 3,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 8",
    "title": "Assemble the one-page brief",
-   "steps": [
+   "values": [
     "Problem",
     "User",
     "Solution",
     "Success metric",
-    "Constraints / risks"
+    "Constraints/risks"
    ],
    "beats": [
     {
-     "say": "List your constraints and risks: cost limits, data availability, privacy, and what happens if the A I gets it wrong.",
-     "show": 0
+     "say": "Finally, combine Steps 3 to 7 into one page, in this order."
     },
     {
-     "say": "Then combine everything into one page.",
-     "show": 1
+     "say": "The problem statement leads.",
+     "ok": [
+      0
+     ],
+     "hl": 0
     },
     {
-     "say": "Problem, user, solution, success metric, and constraints and risks.",
-     "show": 5
+     "say": "Then the user who has it.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 1
+    },
+    {
+     "say": "Then your proposed A I solution, in plain language.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 2
+    },
+    {
+     "say": "Then the success metric.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 3
+    },
+    {
+     "say": "And last, the constraints and risks. That's your one-page brief.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "brief: one page, ready for Project 2"
     }
    ]
   },
@@ -259,7 +437,7 @@ ai_product_brief_project/
      "show": 0
     },
     {
-     "say": "Why list what happens if the AI gets it wrong in the brief?",
+     "say": "Why list what happens if the A I gets it wrong in the brief?",
      "show": 0
     },
     {
@@ -440,79 +618,300 @@ ai_feature_prototype_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
+   "kind": "diagram",
    "kicker": "Step 2",
-   "title": "Keep your API key secret",
-   "items": [
-    [
-     "✗ In your code",
-     "Anyone who sees it can use it"
-    ],
-    [
-     "✓ Colab secret",
-     "ANTHROPIC_API_KEY → environment variable"
-    ]
+   "title": "Where your API key should travel",
+   "nodes": [
+    {
+     "id": "code",
+     "label": "Your notebook",
+     "x": 60,
+     "y": 30,
+     "sub": "code cells",
+     "art": "code"
+    },
+    {
+     "id": "leak",
+     "label": "Anyone reading",
+     "x": 60,
+     "y": 80,
+     "sub": "a shared notebook",
+     "art": "eye"
+    },
+    {
+     "id": "secret",
+     "label": "Colab secret",
+     "x": 14,
+     "y": 30,
+     "sub": "key icon, left sidebar",
+     "art": "key"
+    },
+    {
+     "id": "env",
+     "label": "Environment var",
+     "x": 34,
+     "y": 80,
+     "sub": "os.environ",
+     "art": "lock"
+    },
+    {
+     "id": "api",
+     "label": "Claude API",
+     "x": 88,
+     "y": 55,
+     "sub": "api.anthropic.com",
+     "art": "api"
+    }
+   ],
+   "edges": [
+    {
+     "from": "code",
+     "to": "leak"
+    },
+    {
+     "from": "secret",
+     "to": "env"
+    },
+    {
+     "from": "env",
+     "to": "code"
+    },
+    {
+     "from": "code",
+     "to": "api"
+    }
    ],
    "beats": [
     {
      "say": "An A P I key is a secret credential that authenticates your requests. Treat it like a password.",
-     "show": 0
+     "show": 1,
+     "on": "code"
     },
     {
-     "say": "Never paste it into your code. Anyone who sees the code could use it and run up charges.",
-     "show": 1
+     "say": "If you paste it into your code, anyone who sees the notebook can copy it and run up charges.",
+     "show": 2,
+     "on": "leak",
+     "send": {
+      "from": "code",
+      "to": "leak",
+      "label": "key in the code"
+     }
     },
     {
-     "say": "Instead, store it as a Colab secret named anthropic A P I key, and load it into an environment variable.",
-     "show": 2
+     "say": "Instead, store it as a Colab secret named anthropic A P I key.",
+     "show": 3,
+     "on": "secret"
+    },
+    {
+     "say": "The cell at the top of the notebook loads it into an environment variable.",
+     "show": 4,
+     "on": "env",
+     "send": {
+      "from": "secret",
+      "to": "env",
+      "label": "userdata.get"
+     }
+    },
+    {
+     "say": "Your code reads it from there, never typing the key itself.",
+     "show": 4,
+     "on": "code",
+     "send": {
+      "from": "env",
+      "to": "code",
+      "label": "os.environ[...]"
+     }
+    },
+    {
+     "say": "And sends it to Claude in a request header called x A P I key.",
+     "show": 5,
+     "on": "api",
+     "send": {
+      "from": "code",
+      "to": "api",
+      "label": "x-api-key header"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Step 5",
-   "title": "Wrap the call in a function",
+   "kind": "walk",
+   "kicker": "Steps 3 and 5",
+   "title": "Trace one call through run_feature",
    "file": "run_feature",
-   "code": "def run_feature(user_input):\n    prompt = f\"Summarize this support ticket in one sentence:\\n\\n{user_input}\"\n    response = requests.post(\n        \"https://api.anthropic.com/v1/messages\",\n        headers={...},  # API key, version, content-type\n        json={\n            \"model\": \"claude-sonnet-5-5\",\n            \"max_tokens\": 200,\n            \"messages\": [{\"role\": \"user\", \"content\": prompt}],\n        },\n    )\n    response.raise_for_status()\n    return response.json()[\"content\"][0][\"text\"]",
+   "code": "def run_feature(user_input):\n    prompt = (\"Summarize this support ticket \"\n              f\"in one sentence:\\n\\n{user_input}\")\n    response = requests.post(\n        \"https://api.anthropic.com/v1/messages\",\n        headers={...},  # key, version, content-type\n        json={\"model\": \"claude-sonnet-5-5\",\n              \"max_tokens\": 200,\n              \"messages\": [{\"role\": \"user\",\n                            \"content\": prompt}]})\n    response.raise_for_status()\n    return response.json()[\"content\"][0][\"text\"]\n\nprint(run_feature(\"I was charged twice...\"))",
    "beats": [
     {
-     "say": "Your first call posts J S O N to the messages endpoint. J S O N is how your Python code and the A I service speak to each other.",
-     "show": 0
+     "say": "Your first call posts J S O N to the messages endpoint. Step 5 wraps it in a function, so it works for any input.",
+     "line": 1
     },
     {
-     "say": "Then wrap the call in a function called run feature, so it works for any input, not just one.",
-     "show": 1
+     "say": "Here we call it with a ticket: I was charged twice for my subscription this month.",
+     "line": 14,
+     "vars": {
+      "user_input": "\"I was charged twice...\""
+     }
     },
     {
-     "say": "The reply text sits in the first content block of the response.",
-     "show": 1
+     "say": "The function builds the prompt: the instruction, a blank line, then the ticket.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "prompt": "\"Summarize this support ticket in one sentence:\\n\\nI was charged twice...\""
+     }
+    },
+    {
+     "say": "It posts to the messages endpoint, with the model, a two hundred token limit, and one user message.",
+     "line": [
+      4,
+      10
+     ]
+    },
+    {
+     "say": "J S O N is how your Python code and the A I service speak to each other.",
+     "line": [
+      7,
+      10
+     ]
+    },
+    {
+     "say": "If the A P I sent back an error status, raise for status stops here with a clear error.",
+     "line": 11
+    },
+    {
+     "say": "Otherwise, it pulls out the reply text and returns it.",
+     "line": 12,
+     "vars": {
+      "response": "200 OK"
+     }
+    },
+    {
+     "say": "And the print shows Claude's one-sentence summary.",
+     "line": 14,
+     "out": "(one-sentence summary of the double charge and the refund request)"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Steps 4 to 7",
-   "title": "Make it real, then test it",
-   "steps": [
-    "Match the prompt to your brief",
-    "Test 3 to 5 real inputs",
-    "Note the failures"
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Find the reply inside the JSON",
+   "columns": [
+    "Key",
+    "Value"
+   ],
+   "rows": [
+    [
+     "id",
+     "msg_..."
+    ],
+    [
+     "type",
+     "message"
+    ],
+    [
+     "role",
+     "assistant"
+    ],
+    [
+     "content",
+     "[{type, text}]"
+    ],
+    [
+     "stop_reason",
+     "end_turn"
+    ],
+    [
+     "usage",
+     "{input_tokens, ...}"
+    ]
    ],
    "beats": [
     {
-     "say": "Change the instruction in the prompt to match your own brief, with real input, like an actual support ticket.",
-     "show": 1
+     "say": "Here's what response dot J S O N gives you: a dictionary with several keys."
     },
     {
-     "say": "Run it against three to five different realistic inputs, not just one.",
-     "show": 2
+     "say": "Most are details, like the role and why the model stopped.",
+     "hl": [
+      2,
+      4
+     ]
     },
     {
-     "say": "Then, in a text cell headed prototype notes, write down where the output was wrong, confusing or unhelpful.",
-     "show": 3
+     "say": "The reply lives under content, which is a list of blocks.",
+     "hl": 3,
+     "dim": true,
+     "sql": "response.json()[\"content\"]"
+    },
+    {
+     "say": "Take the first block, index zero.",
+     "hl": 3,
+     "dim": true,
+     "sql": "response.json()[\"content\"][0]"
+    },
+    {
+     "say": "And its text field is the summary itself.",
+     "hl": 3,
+     "dim": true,
+     "col": 1,
+     "sql": "response.json()[\"content\"][0][\"text\"]"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 4, 6 and 7",
+   "title": "Test 3 to 5 real inputs, then take notes",
+   "columns": [
+    "Test input",
+    "What to check",
+    "prototype_notes"
+   ],
+   "rows": [
+    [
+     "Charged twice",
+     "Mentions the refund?",
+     "e.g. worked"
+    ],
+    [
+     "Late, damaged box",
+     "Product works fine?",
+     "e.g. left this out"
+    ],
+    [
+     "Logged out on tabs",
+     "Clear and short?",
+     "e.g. confusing"
+    ],
+    [
+     "(your own ticket)",
+     "Matches your brief?",
+     "..."
+    ]
+   ],
+   "beats": [
+    {
+     "say": "First, change the instruction in the prompt to match your own brief, and use real input, like an actual support ticket.",
+     "hl": 3
+    },
+    {
+     "say": "Then run your function on three to five different realistic inputs, not just one.",
+     "col": 0
+    },
+    {
+     "say": "For each one, decide what a good answer must include.",
+     "col": 1
+    },
+    {
+     "say": "In a text cell headed prototype notes, write down where the output was wrong, confusing or unhelpful.",
+     "col": 2
+    },
+    {
+     "say": "Imagine the damaged box summary forgot that the product works fine. One test alone would have hidden that.",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
@@ -702,118 +1101,295 @@ chatbot_prototype_project/
    ]
   },
   {
-   "kind": "big",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Step 2",
-   "title": "LLM APIs are stateless",
-   "big": "Stateless",
-   "sub": "resend the full message history every time",
-   "beats": [
+   "title": "The API forgets everything between calls",
+   "nodes": [
     {
-     "say": "Here's the key idea. L L M A P Is are stateless.",
-     "show": 0
+     "id": "code",
+     "label": "Your chat()",
+     "x": 15,
+     "y": 50,
+     "sub": "in your notebook",
+     "art": "code"
     },
     {
-     "say": "Each call has no memory of earlier ones. To simulate a conversation, you resend the full message history with every request.",
-     "show": 1
+     "id": "api",
+     "label": "Claude API",
+     "x": 85,
+     "y": 50,
+     "sub": "no memory",
+     "art": "api"
+    }
+   ],
+   "edges": [
+    {
+     "from": "code",
+     "to": "api"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the key idea: L L M A P I s are stateless.",
+     "show": 2
+    },
+    {
+     "say": "Turn one. You ask: Hi! Where can I see my order status?",
+     "on": "code",
+     "send": {
+      "from": "code",
+      "to": "api",
+      "label": "Order status?"
+     }
+    },
+    {
+     "say": "Claude answers.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "code",
+      "label": "reply 1"
+     }
+    },
+    {
+     "say": "Turn two. If you only send: and how long do refunds usually take?",
+     "on": "code",
+     "send": {
+      "from": "code",
+      "to": "api",
+      "label": "And refunds?"
+     }
+    },
+    {
+     "say": "Claude has no memory of turn one, so the and has nothing to attach to.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "code",
+      "label": "lost context"
+     }
+    },
+    {
+     "say": "The fix: send the full message history with every request. Now it sees all three messages.",
+     "on": "code",
+     "send": {
+      "from": "code",
+      "to": "api",
+      "label": "all 3 messages"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "array",
    "kicker": "Step 3",
-   "title": "Keep a message history",
-   "file": "chat()",
-   "code": "def chat(user_message):\n    history.append({\"role\": \"user\", \"content\": user_message})\n    response = requests.post(\n        \"https://api.anthropic.com/v1/messages\",\n        headers={...},\n        json={\n            \"model\": \"claude-sonnet-5-5\",\n            \"max_tokens\": 300,\n            \"system\": SYSTEM_PROMPT,   # top-level field\n            \"messages\": history,       # the full conversation so far\n        },\n    )\n    reply = response.json()[\"content\"][0][\"text\"]\n    history.append({\"role\": \"assistant\", \"content\": reply})\n    return reply",
+   "title": "Watch the history list grow",
+   "values": [
+    "history = []"
+   ],
    "beats": [
     {
-     "say": "The chat function adds the user's message to a history list, then sends the whole history.",
-     "show": 0
+     "say": "The history list starts empty. Only user and assistant messages go in it.",
+     "note": "SYSTEM_PROMPT is kept separately"
     },
     {
-     "say": "The system prompt sets the assistant's role. It goes in the top-level system field, not inside the history.",
-     "show": 1
+     "say": "Turn one: chat adds your question as a user message, then sends the list.",
+     "vals": [
+      "user: order status?"
+     ],
+     "hl": 0,
+     "note": "sent: 1 message"
     },
     {
-     "say": "After the reply comes back, append it to history as an assistant message, so the next turn makes sense.",
-     "show": 1
+     "say": "When the reply comes back, it's appended as an assistant message.",
+     "vals": [
+      "user: order status?",
+      "assistant: reply 1"
+     ],
+     "hl": 1,
+     "ok": [
+      0
+     ]
+    },
+    {
+     "say": "Turn two adds the refund question, and sends all three messages.",
+     "vals": [
+      "user: order status?",
+      "assistant: reply 1",
+      "user: refunds?"
+     ],
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "sent: 3 messages"
+    },
+    {
+     "say": "The second reply is appended too, ready for turn three.",
+     "vals": [
+      "user: order status?",
+      "assistant: reply 1",
+      "user: refunds?",
+      "assistant: reply 2"
+     ],
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "4 messages"
     },
     {
      "say": "To start a fresh conversation, run history dot clear.",
-     "show": 1
+     "vals": [
+      "history = []"
+     ],
+     "note": "history.clear()"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Steps 4 to 6",
-   "title": "System prompt and guardrails",
-   "items": [
-    [
-     "System prompt",
-     "What to do, what to avoid"
-    ],
-    [
-     "Multi-turn test",
-     "3 to 4 exchanges in a row"
-    ],
-    [
-     "Guardrails",
-     "e.g. refuse off-topic questions"
-    ]
-   ],
+   "kind": "walk",
+   "kicker": "Steps 3, 4 and 7",
+   "title": "Trace chat(), including the empty message",
+   "file": "chat() · URL and headers shortened",
+   "code": "def chat(user_message):\n    if not user_message.strip():\n        return \"Please type a message.\"\n    history.append({\"role\": \"user\",\n                    \"content\": user_message})\n    response = requests.post(URL, headers=HEADERS,\n        json={\"model\": \"claude-sonnet-5-5\",\n              \"max_tokens\": 300,\n              \"system\": SYSTEM_PROMPT,\n              \"messages\": history})\n    reply = response.json()[\"content\"][0][\"text\"]\n    history.append({\"role\": \"assistant\",\n                    \"content\": reply})\n    return reply",
    "beats": [
     {
-     "say": "Write a first system prompt from your Project 1 brief: what should this assistant do, and what should it avoid?",
-     "show": 1
+     "say": "Here's chat, with the empty message check from Step 7 at the top. History starts empty.",
+     "vars": {
+      "history": "[]"
+     }
     },
     {
-     "say": "Run three or four exchanges in a row, and check later replies make sense given earlier turns.",
-     "show": 2
+     "say": "We call chat with: Hi! Where can I see my order status?",
+     "line": 1,
+     "vars": {
+      "user_message": "\"Hi! Where can I see my order status?\""
+     }
     },
     {
-     "say": "Then add guardrails. A guardrail is a rule that keeps the A I within intended bounds, like refusing off-topic questions.",
-     "show": 3
+     "say": "The message isn't empty, so we carry on.",
+     "line": 2
+    },
+    {
+     "say": "It's appended to history as a user message.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "history": "[user]"
+     }
+    },
+    {
+     "say": "The request sends the system prompt in the top-level system field, and the history as messages.",
+     "line": [
+      6,
+      10
+     ]
+    },
+    {
+     "say": "The system prompt sets the role: a helpful assistant for customer questions about online orders. Write yours from your brief.",
+     "line": 9
+    },
+    {
+     "say": "The reply comes back, and is appended as an assistant message, so the next turn makes sense.",
+     "line": [
+      11,
+      13
+     ],
+     "vars": {
+      "reply": "\"(answer about order status)\"",
+      "history": "[user, assistant]"
+     }
+    },
+    {
+     "say": "Now someone sends an empty message.",
+     "line": 1,
+     "vars": {
+      "user_message": "\"\""
+     }
+    },
+    {
+     "say": "Strip leaves nothing, so chat returns a friendly message, and never calls the A P I, which would reject it.",
+     "line": [
+      2,
+      3
+     ],
+     "out": "Please type a message."
+    },
+    {
+     "say": "History is untouched.",
+     "line": 3,
+     "vars": {
+      "history": "[user, assistant]"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Step 7",
-   "title": "Test the edge cases",
-   "items": [
+   "kind": "table",
+   "kicker": "Steps 5 to 7",
+   "title": "Test the turns and the edge cases",
+   "columns": [
+    "Test",
+    "Example input",
+    "What should happen"
+   ],
+   "rows": [
+    [
+     "Multi-turn",
+     "And refunds?",
+     "Uses earlier turns"
+    ],
     [
      "Off-topic",
-     "Does the guardrail hold?"
+     "e.g. a poem request",
+     "Guardrail declines"
     ],
     [
      "Ambiguous",
-     "Does it ask or guess?"
+     "e.g. Where is it?",
+     "Asks which order"
     ],
     [
      "Empty",
-     "Return \"Please type a message.\""
+     "\"\"",
+     "Please type a message."
     ]
    ],
    "beats": [
     {
-     "say": "Finally, try the edge cases.",
-     "show": 0
+     "say": "Now test it. First, run three or four exchanges in a row.",
+     "hl": 0
     },
     {
-     "say": "An off-topic question.",
-     "show": 1
+     "say": "Later replies should make sense given earlier turns, like a follow-up about refunds.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "An ambiguous question.",
-     "show": 2
+     "say": "Add a guardrail: a rule that keeps the A I within bounds, like refusing off-topic questions.",
+     "sql": "Guardrail: refuse off-topic questions",
+     "hl": 1
     },
     {
-     "say": "And an empty message. The A P I rejects it with an error, so check for it at the top of chat, and ask the user to type a message instead of crashing.",
-     "show": 3
+     "say": "So ask for something off-topic, and check the guardrail holds.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "Try an ambiguous question. A good assistant asks which order you mean.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "And an empty message gets the friendly reply, instead of a crash.",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
@@ -836,7 +1412,7 @@ chatbot_prototype_project/
      "show": 0
     },
     {
-     "say": "Where does the system prompt go in a Messages API request?",
+     "say": "Where does the system prompt go in a Messages A P I request?",
      "show": 0
     },
     {
@@ -969,83 +1545,310 @@ discovery_doc_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "pencil",
+   "kind": "table",
    "kicker": "Step 2",
    "title": "Ask about the past, not the hypothetical",
-   "items": [
+   "columns": [
+    "Question",
+    "Type",
+    "Keep?"
+   ],
+   "rows": [
     [
-     "✓ Past behaviour",
-     "\"Tell me about the last time you...\""
+     "Last time you...?",
+     "Past behaviour",
+     "✓ Keep"
     ],
     [
-     "✗ Hypothetical",
-     "\"Would you use a feature that...\""
+     "Would you use...?",
+     "Hypothetical",
+     "✗ Rewrite"
+    ],
+    [
+     "Your last long ticket?",
+     "Past behaviour",
+     "✓ Keep"
+    ],
+    [
+     "Would summaries help?",
+     "Hypothetical",
+     "✗ Rewrite"
     ]
    ],
    "beats": [
     {
-     "say": "Write five interview questions.",
-     "show": 0
+     "say": "Write five interview questions. Here's how to check each one."
     },
     {
-     "say": "Good discovery questions ask about past behaviour: tell me about the last time you did this.",
-     "show": 1
+     "say": "Tell me about the last time you did this. That asks about real past behaviour.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Not hypotheticals, like would you use a feature that does this. Those invite guesses and polite yeses.",
-     "show": 2
+     "say": "Would you use a feature that does this? That's hypothetical. It invites guesses and polite yeses.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "So walk me through your last long ticket is a keeper.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "And would summaries help you gets rewritten into a past behaviour question.",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "mic",
+   "kind": "diagram",
    "kicker": "Steps 3 and 4",
-   "title": "Interview and show the prototype",
-   "steps": [
-    "3 to 5 short interviews",
-    "Show the prototype",
-    "Collect reactions"
+   "title": "Interview, then show the prototype",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 14,
+     "y": 50,
+     "sub": "the interviewer",
+     "art": "mic"
+    },
+    {
+     "id": "user",
+     "label": "Target user",
+     "x": 50,
+     "y": 20,
+     "sub": "3 to 5 people",
+     "art": "persona"
+    },
+    {
+     "id": "proto",
+     "label": "Your prototype",
+     "x": 86,
+     "y": 50,
+     "sub": "from Project 3",
+     "art": "chat"
+    },
+    {
+     "id": "notes",
+     "label": "interview_notes",
+     "x": 50,
+     "y": 82,
+     "sub": "a text cell",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "user"
+    },
+    {
+     "from": "user",
+     "to": "proto"
+    },
+    {
+     "from": "you",
+     "to": "notes"
+    }
    ],
    "beats": [
     {
-     "say": "Run three to five short interviews, and keep notes in a text cell headed interview notes.",
-     "show": 1
+     "say": "Run three to five short interviews with people who fit your Project 1 target user.",
+     "show": 2,
+     "on": "user"
     },
     {
-     "say": "No real users? Ask peers who fit your target user, or research how people solve this today.",
-     "show": 1
+     "say": "No real users? Ask peers who fit, or research how people solve this today.",
+     "show": 2,
+     "on": "user"
     },
     {
-     "say": "Then show your Project 3 prototype. Does it solve the problem? What's missing? What's confusing?",
-     "show": 2
+     "say": "Ask your past behaviour questions.",
+     "show": 2,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "user",
+      "label": "Last time...?"
+     }
+    },
+    {
+     "say": "They answer with real stories.",
+     "show": 2,
+     "on": "user",
+     "send": {
+      "from": "user",
+      "to": "you",
+      "label": "a real story"
+     }
+    },
+    {
+     "say": "Then show them your Project 3 prototype.",
+     "show": 3,
+     "on": "proto",
+     "send": {
+      "from": "proto",
+      "to": "user",
+      "label": "try it"
+     }
+    },
+    {
+     "say": "Does it solve the problem? What's missing? What's confusing?",
+     "show": 3,
+     "on": "user",
+     "send": {
+      "from": "user",
+      "to": "you",
+      "label": "reactions"
+     }
+    },
+    {
+     "say": "Write it all down in a text cell headed interview notes.",
+     "show": 4,
+     "on": "notes",
+     "send": {
+      "from": "you",
+      "to": "notes",
+      "label": "notes"
+     }
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "sticky",
+   "kind": "table",
    "kicker": "Step 5",
-   "title": "What counts as an insight",
-   "quote": "An insight is a pattern across several people, not one person's opinion.",
+   "title": "An insight is a pattern, not one opinion",
+   "columns": [
+    "Person",
+    "Pain mentioned",
+    "Prototype reaction"
+   ],
+   "rows": [
+    [
+     "1",
+     "Skims long tickets",
+     "Summary helpful"
+    ],
+    [
+     "2",
+     "Misses key details",
+     "Wants order number"
+    ],
+    [
+     "3",
+     "Skims long tickets",
+     "Wants order number"
+    ],
+    [
+     "4",
+     "Wants dark mode",
+     "Summary helpful"
+    ],
+    [
+     "5",
+     "Misses key details",
+     "Wants order number"
+    ]
+   ],
    "beats": [
     {
-     "say": "Now look for patterns.",
-     "show": 0
+     "say": "Say your interview notes from five people look like this."
     },
     {
-     "say": "A discovery insight is a pattern repeated across multiple people, not a single person's opinion.",
-     "show": 1
+     "say": "Look down the reactions. Three different people asked for the order number in the summary.",
+     "col": 2,
+     "hl": [
+      1,
+      2,
+      4
+     ],
+     "dim": true,
+     "sql": "Pattern: 3 of 5 people"
+    },
+    {
+     "say": "That's a discovery insight: a pattern repeated across multiple people.",
+     "hl": [
+      1,
+      2,
+      4
+     ],
+     "dim": true,
+     "sql": "Insight: summaries must include the order number"
+    },
+    {
+     "say": "Now dark mode. Only one person mentioned it.",
+     "col": 1,
+     "hl": 3,
+     "dim": true,
+     "sql": "1 of 5 people"
+    },
+    {
+     "say": "That's one person's opinion, not an insight. Note it, but don't steer by it.",
+     "hl": 3,
+     "dim": true,
+     "sql": "Opinion, not an insight"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "doc",
-   "kicker": "Steps 6 and 7",
-   "title": "Revise and write it up",
-   "steps": [
+   "kind": "array",
+   "kicker": "Step 6",
+   "title": "Update the problem statement if the evidence says so",
+   "values": [
+    "Support agents",
+    "read long tickets",
+    "they're long",
+    "slow resolution"
+   ],
+   "beats": [
+    {
+     "say": "Here's the problem statement from your Project 1 brief."
+    },
+    {
+     "say": "You assumed the reason was simply that tickets are long.",
+     "hl": 2,
+     "note": "assumption"
+    },
+    {
+     "say": "But two people said they miss key details, and three wanted the order number pulled out.",
+     "hl": 2,
+     "note": "evidence: the details are what's lost"
+    },
+    {
+     "say": "So update the reason to match the evidence.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "key details hide",
+      "slow resolution"
+     ],
+     "hl": 2,
+     "note": "updated from discovery"
+    },
+    {
+     "say": "Same user, same task, same consequence. A sharper reason, and a better feature.",
+     "vals": [
+      "Support agents",
+      "read long tickets",
+      "key details hide",
+      "slow resolution"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Step 7",
+   "title": "Write the discovery doc",
+   "values": [
     "Who you talked to",
     "What you asked",
     "Key insights",
@@ -1053,12 +1856,46 @@ discovery_doc_project/
    ],
    "beats": [
     {
-     "say": "If discovery showed the real problem is different, update your Project 1 problem statement to match the evidence.",
-     "show": 0
+     "say": "Finally, write it up in a text cell headed discovery doc, with four parts."
     },
     {
-     "say": "Then write the discovery doc: who you talked to, what you asked, key insights, and what changes for the feature.",
-     "show": 4
+     "say": "Who you talked to: five people who fit your target user.",
+     "hl": 0,
+     "ok": []
+    },
+    {
+     "say": "What you asked: your five past behaviour questions.",
+     "hl": 1,
+     "ok": [
+      0
+     ]
+    },
+    {
+     "say": "Key insights: the patterns, like wanting the order number.",
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ]
+    },
+    {
+     "say": "And what changes for the feature: summaries now always include it.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "That's your discovery doc.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "discovery_doc"
     }
    ]
   },
@@ -1213,104 +2050,350 @@ feature_flow_project/
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Steps 2 and 3",
    "title": "Map the happy path",
-   "steps": [
-    "Open the feature",
-    "Provide input",
-    "Get a good result"
+   "nodes": [
+    {
+     "id": "open",
+     "label": "Open feature",
+     "x": 12,
+     "y": 50,
+     "sub": "user arrives",
+     "art": "cursor"
+    },
+    {
+     "id": "input",
+     "label": "Provide input",
+     "x": 50,
+     "y": 25,
+     "sub": "paste a ticket",
+     "art": "form"
+    },
+    {
+     "id": "result",
+     "label": "Good result",
+     "x": 88,
+     "y": 50,
+     "sub": "a clear summary",
+     "art": "sparkle"
+    }
+   ],
+   "edges": [
+    {
+     "from": "open",
+     "to": "input"
+    },
+    {
+     "from": "input",
+     "to": "result"
+    }
    ],
    "beats": [
     {
      "say": "Start with the happy path: the ideal sequence when everything goes right.",
-     "show": 0
+     "show": 3
     },
     {
      "say": "The user opens the feature.",
-     "show": 1
+     "show": 3,
+     "on": "open"
     },
     {
-     "say": "Provides input.",
-     "show": 2
+     "say": "They provide input, like pasting a support ticket.",
+     "show": 3,
+     "on": "input",
+     "send": {
+      "from": "open",
+      "to": "input",
+      "label": "opens"
+     }
     },
     {
-     "say": "And gets a good result.",
-     "show": 3
+     "say": "And they get a good result.",
+     "show": 3,
+     "on": "result",
+     "send": {
+      "from": "input",
+      "to": "result",
+      "label": "ticket text"
+     }
     },
     {
-     "say": "Sketch the input step, on paper or in a simple tool.",
-     "show": 3
+     "say": "Now sketch that input step, on paper or in a simple tool. What box, what button, what hint text?",
+     "show": 3,
+     "on": "input"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "stopwatch",
-   "kicker": "Steps 4 and 5",
-   "title": "Loading and error states",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Steps 4 to 6",
+   "title": "Design for when things don't go right",
+   "nodes": [
+    {
+     "id": "input",
+     "label": "Input",
+     "x": 12,
+     "y": 50,
+     "sub": "user sends a ticket",
+     "art": "form"
+    },
+    {
+     "id": "load",
+     "label": "Loading",
+     "x": 40,
+     "y": 50,
+     "sub": "latency masking",
+     "art": "stopwatch"
+    },
+    {
+     "id": "result",
+     "label": "Result",
+     "x": 68,
+     "y": 20,
+     "sub": "the summary",
+     "art": "sparkle"
+    },
+    {
+     "id": "error",
+     "label": "Error state",
+     "x": 68,
+     "y": 82,
+     "sub": "fail or timeout",
+     "art": "warning"
+    },
+    {
+     "id": "fb",
+     "label": "Helpful? Yes / No",
+     "x": 90,
+     "y": 50,
+     "sub": "uncertainty UX",
+     "art": "ask"
+    }
+   ],
+   "edges": [
+    {
+     "from": "input",
+     "to": "load"
+    },
+    {
+     "from": "load",
+     "to": "result"
+    },
+    {
+     "from": "load",
+     "to": "error"
+    },
+    {
+     "from": "error",
+     "to": "input"
+    },
+    {
+     "from": "result",
+     "to": "fb"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Between input and result, the A I takes a moment.",
+     "show": 2,
+     "on": "input",
+     "send": {
+      "from": "input",
+      "to": "load",
+      "label": "ticket text"
+     }
+    },
+    {
+     "say": "Latency masking means showing a message or animation while it works, instead of a frozen screen.",
+     "show": 2,
+     "on": "load"
+    },
+    {
+     "say": "Sometimes the A P I fails, times out, or returns something unusable.",
+     "show": 4,
+     "on": "load",
+     "send": {
+      "from": "load",
+      "to": "error",
+      "label": "timeout"
+     }
+    },
+    {
+     "say": "Design an error state with a clear message, and a next step, like trying again.",
+     "show": 4,
+     "on": "error",
+     "send": {
+      "from": "error",
+      "to": "input",
+      "label": "try again"
+     }
+    },
+    {
+     "say": "When it works, the result appears.",
+     "show": 4,
+     "on": "result",
+     "send": {
+      "from": "load",
+      "to": "result",
+      "label": "summary"
+     }
+    },
+    {
+     "say": "But the A I might be wrong. Uncertainty U X invites correction, like asking was this helpful, yes or no.",
+     "show": 5,
+     "on": "fb",
+     "send": {
+      "from": "result",
+      "to": "fb",
+      "label": "Yes / No"
+     }
+    },
+    {
+     "say": "It never presents A I output as unquestionable fact.",
+     "show": 5,
+     "on": [
+      "result",
+      "fb"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 2 to 6",
+   "title": "What the user sees in each state",
+   "columns": [
+    "State",
+    "User sees",
+    "Without it"
+   ],
+   "rows": [
+    [
+     "Happy path",
+     "A good summary",
+     "-"
+    ],
     [
      "Loading",
-     "Latency masking, not a frozen screen"
+     "e.g. Summarizing...",
+     "A frozen screen"
     ],
     [
      "Error",
-     "Fails, times out, or unusable output"
+     "e.g. Try again",
+     "A broken page"
+    ],
+    [
+     "AI might be wrong",
+     "Was this helpful?",
+     "Output seen as fact"
     ]
    ],
    "beats": [
     {
-     "say": "But things don't always go right.",
-     "show": 0
+     "say": "Let's put the four states side by side.",
+     "col": 0
     },
     {
-     "say": "Latency masking means showing something, a message or an animation, while the A I works, instead of a frozen screen.",
-     "show": 1
+     "say": "On the happy path, the user simply sees a good summary.",
+     "hl": 0
     },
     {
-     "say": "And design an error state for when the A P I fails, times out, or returns something unusable.",
-     "show": 2
+     "say": "While loading, a message like summarizing. Without it, the screen looks frozen.",
+     "hl": 1
+    },
+    {
+     "say": "On error, a clear message and a way to try again, not a broken page.",
+     "hl": 2
+    },
+    {
+     "say": "And for uncertainty, a was this helpful question, so the output isn't taken as fact.",
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Step 6",
-   "title": "The \"AI might be wrong\" state",
-   "quote": "Was this helpful? [Yes / No]",
-   "beats": [
-    {
-     "say": "Then design for uncertainty.",
-     "show": 0
-    },
-    {
-     "say": "Uncertainty U X communicates confidence, or invites correction, like asking was this helpful, yes or no.",
-     "show": 1
-    },
-    {
-     "say": "It never presents A I output as unquestionable fact.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "layout",
+   "kind": "array",
    "kicker": "Step 7",
-   "title": "One complete walkthrough",
-   "big": "Full flow",
-   "sub": "happy path · loading · error · uncertainty",
+   "title": "Walk through the full flow",
+   "values": [
+    "Open",
+    "Input",
+    "Loading",
+    "Result",
+    "Helpful?"
+   ],
    "beats": [
     {
-     "say": "Finally, combine everything into one sequence, as simple mockup screens or a written walkthrough.",
-     "show": 0
+     "say": "Finally, combine every state into one walkthrough, as mockup screens or written steps."
     },
     {
-     "say": "Happy path, loading, error, and uncertainty, all in one flow.",
-     "show": 1
+     "say": "The user opens the feature.",
+     "ptr": {
+      "user": 0
+     },
+     "hl": 0
+    },
+    {
+     "say": "Pastes in a ticket.",
+     "ptr": {
+      "user": 1
+     },
+     "hl": 1,
+     "ok": [
+      0
+     ]
+    },
+    {
+     "say": "Sees a loading message. Say the A P I times out here.",
+     "ptr": {
+      "user": 2
+     },
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "timeout -> error state"
+    },
+    {
+     "say": "The error state explains it, and sends them back to try again.",
+     "ptr": {
+      "user": 1
+     },
+     "hl": 1,
+     "ok": [
+      0
+     ],
+     "note": "error: 'Try again'"
+    },
+    {
+     "say": "This time it works: the result appears.",
+     "ptr": {
+      "user": 3
+     },
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "And they're asked, was this helpful? Happy path, loading, error and uncertainty, all in one flow.",
+     "ptr": {
+      "user": 4
+     },
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "full flow"
     }
    ]
   },
@@ -1489,111 +2572,377 @@ evaluation_plan_project/
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Steps 2 and 3",
-   "title": "Test set and rubric",
-   "items": [
+   "kind": "table",
+   "kicker": "Step 2",
+   "title": "Turn your notes into a test set",
+   "columns": [
+    "#",
+    "Input",
+    "Expected"
+   ],
+   "rows": [
     [
-     "Test set",
-     "10 to 15 input / expected-output pairs"
+     "1",
+     "Charged twice, refund",
+     "Double charge + refund"
     ],
     [
-     "Rubric",
-     "1 to 5 on accuracy, tone, helpfulness"
+     "2",
+     "Logout on tab switch",
+     "Mentions the logout"
+    ],
+    [
+     "3-15",
+     "(from your notes)",
+     "(what good looks like)"
     ]
    ],
    "beats": [
     {
-     "say": "In a text cell headed test cases, turn your Project 2 notes into ten to fifteen concrete input and expected-output pairs.",
-     "show": 1
+     "say": "In a text cell headed test cases, turn your Project 2 notes into concrete input and expected-output pairs."
     },
     {
-     "say": "Use real observed successes and failures.",
-     "show": 1
+     "say": "Test one: I was charged twice for my subscription. The summary should mention the double charge and the refund request.",
+     "hl": 0
     },
     {
-     "say": "Then define a rubric: a scoring guide, say one to five, for judging output on dimensions like accuracy, tone and helpfulness.",
-     "show": 2
+     "say": "Test two: the app logs me out every time I switch tabs. It should mention that.",
+     "hl": 1
+    },
+    {
+     "say": "Keep going until you have ten to fifteen, built from real observed successes and failures.",
+     "hl": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Step 4",
-   "title": "Run it and get a baseline",
-   "file": "evaluation",
-   "code": "outputs = []\nfor i, case in enumerate(test_cases, start=1):\n    output = run_feature(case[\"input\"])\n    outputs.append(output)\n    print(f\"--- Test {i}\\nInput: {case['input']}\\nExpected: {case['expected']}\\nGot: {output}\\n\")\n\nscores = [4, 5]  # your 1-5 rubric score per test case\nprint(f\"Baseline score: {sum(scores) / len(scores):.1f} out of 5\")",
+   "kind": "table",
+   "kicker": "Step 3",
+   "title": "A rubric makes scoring consistent",
+   "columns": [
+    "Dimension",
+    "Scores 1 when...",
+    "Scores 5 when..."
+   ],
+   "rows": [
+    [
+     "Accuracy",
+     "facts are wrong",
+     "every fact is right"
+    ],
+    [
+     "Tone",
+     "cold or confusing",
+     "clear and calm"
+    ],
+    [
+     "Helpfulness",
+     "agent learns nothing",
+     "agent can act at once"
+    ]
+   ],
    "beats": [
     {
-     "say": "Run every test case through your run feature function, and print the output next to what you expected.",
-     "show": 0
+     "say": "Judging A I output is subjective, so write a rubric: a scoring guide from one to five.",
+     "sql": "score each output 1-5"
     },
     {
-     "say": "Score each one with your rubric, type the scores into a list, and average them.",
-     "show": 1
+     "say": "Accuracy: are the facts in the summary right?",
+     "hl": 0
     },
     {
-     "say": "That average is your baseline score.",
-     "show": 1
+     "say": "Tone: is it clear and calm?",
+     "hl": 1
+    },
+    {
+     "say": "Helpfulness: can the agent act on it straight away?",
+     "hl": 2
+    },
+    {
+     "say": "With anchors like these, two people scoring the same output should land close together.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
-   "kicker": "Steps 5 and 6",
-   "title": "Two kinds of metric, plus feedback",
-   "items": [
+   "kind": "walk",
+   "kicker": "Step 4",
+   "title": "Run every case, then average the scores",
+   "file": "evaluation",
+   "code": "outputs = []\nfor i, case in enumerate(test_cases, start=1):\n    output = run_feature(case[\"input\"])\n    outputs.append(output)\n    print(f\"--- Test {i}\\nInput: {case['input']}\"\n          f\"\\nExpected: {case['expected']}\"\n          f\"\\nGot: {output}\\n\")\n\nscores = [4, 5]  # your 1-5 rubric scores\nprint(f\"Baseline score: \"\n      f\"{sum(scores) / len(scores):.1f} out of 5 \"\n      f\"across {len(scores)} test cases\")",
+   "beats": [
+    {
+     "say": "First paste in your run feature cell. Then this loop runs every test case.",
+     "line": 1,
+     "vars": {
+      "outputs": "[]"
+     }
+    },
+    {
+     "say": "Test one: the double charge ticket goes through run feature.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "i": 1,
+      "output": "\"(summary 1)\""
+     }
+    },
+    {
+     "say": "The output is saved, and printed next to what you expected.",
+     "line": [
+      4,
+      7
+     ],
+     "vars": {
+      "outputs": "[summary 1]"
+     },
+     "out": [
+      "--- Test 1",
+      "Input: I was charged twice for my subscription this month. Please refund one payment.",
+      "Expected: Mentions the double charge and the refund request.",
+      "Got: (summary 1)",
+      ""
+     ]
+    },
+    {
+     "say": "Test two: the logout ticket, the same way.",
+     "line": [
+      2,
+      7
+     ],
+     "vars": {
+      "i": 2,
+      "output": "\"(summary 2)\"",
+      "outputs": "[summary 1, summary 2]"
+     },
+     "out": [
+      "--- Test 2",
+      "Input: The app logs me out every time I switch to another tab.",
+      "Expected: Mentions being logged out when switching tabs.",
+      "Got: (summary 2)",
+      ""
+     ]
+    },
+    {
+     "say": "Now you read each pair and score it with your rubric. Say four, and five.",
+     "line": 9,
+     "vars": {
+      "scores": "[4, 5]"
+     }
+    },
+    {
+     "say": "Nine divided by two is four point five. That average is your baseline score.",
+     "line": [
+      10,
+      12
+     ],
+     "out": "Baseline score: 4.5 out of 5 across 2 test cases"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 4",
+   "title": "A baseline is a line you can beat",
+   "xlabel": "test case",
+   "ylabel": "rubric score",
+   "points": [
     [
-     "Quality metrics",
+     5,
+     72
+    ],
+    [
+     15,
+     90
+    ],
+    [
+     25,
+     54
+    ],
+    [
+     35,
+     72
+    ],
+    [
+     45,
+     36
+    ],
+    [
+     55,
+     90
+    ],
+    [
+     65,
+     72
+    ],
+    [
+     75,
+     54
+    ],
+    [
+     85,
+     90
+    ],
+    [
+     95,
+     72
+    ]
+   ],
+   "beats": [
+    {
+     "say": "With a full test set, say ten cases, your scores might look like this."
+    },
+    {
+     "say": "They average three point nine. That line is your baseline.",
+     "line": [
+      0,
+      70.2
+     ]
+    },
+    {
+     "say": "The cases below four are the ones to fix first.",
+     "line": [
+      0,
+      70.2
+     ],
+     "groups": [
+      0,
+      0,
+      2,
+      0,
+      2,
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       45,
+       36
+      ]
+     ]
+    },
+    {
+     "say": "The lowest scored two. Your Project 2 notes probably flagged it already.",
+     "line": [
+      0,
+      70.2
+     ],
+     "groups": [
+      0,
+      0,
+      2,
+      0,
+      2,
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       45,
+       36
+      ]
+     ]
+    },
+    {
+     "say": "After any prompt change, rerun the set and compare against this line.",
+     "line": [
+      0,
+      70.2
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Steps 5 and 6",
+   "title": "Quality, business, and the feedback loop",
+   "columns": [
+    "Metric",
+    "Kind",
+    "Answers"
+   ],
+   "rows": [
+    [
+     "Accuracy",
+     "Quality",
      "Is the output good?"
     ],
     [
-     "Business metrics",
-     "Does it reach the product goal?"
+     "Relevance",
+     "Quality",
+     "Is the output good?"
     ],
     [
+     "Resolution time",
+     "Business",
+     "Did we hit the goal?"
+    ],
+    [
+     "User retention",
+     "Business",
+     "Did we hit the goal?"
+    ],
+    [
+     "Thumbs up / down",
      "Feedback loop",
-     "Real user signal after launch"
+     "Real user signal"
     ]
    ],
    "beats": [
     {
-     "say": "Quality metrics measure whether the A I's output is good, like accuracy and relevance.",
-     "show": 1
+     "say": "Your plan needs two kinds of metric."
     },
     {
-     "say": "Business metrics measure whether the feature reaches your Project 1 goal, like ticket resolution time or retention.",
-     "show": 2
+     "say": "Quality metrics, like accuracy and relevance, measure whether the A I's output is good.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Business metrics, like ticket resolution time or retention, measure whether the feature reaches your Project 1 goal.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "Good output alone isn't enough. It has to move the business metric too.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 1
     },
     {
      "say": "And a feedback loop, like the thumbs up or down from Project 5, captures real user signal after launch.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "doc",
-   "kicker": "Step 7",
-   "title": "Write the evaluation plan",
-   "steps": [
-    "Test set",
-    "Rubric",
-    "Baseline scores",
-    "Quality vs. business",
-    "Feedback loop"
-   ],
-   "beats": [
-    {
-     "say": "Write it up in a text cell headed evaluation plan.",
-     "show": 0
-    },
-    {
-     "say": "Test set, rubric, baseline scores, quality versus business metrics, and the feedback loop plan.",
-     "show": 5
+     "hl": 4,
+     "dim": true,
+     "sql": "evaluation_plan: Test set -> Rubric -> Baseline -> Metrics -> Feedback loop"
     }
    ]
   },
@@ -1753,102 +3102,390 @@ launch_plan_project/
    ]
   },
   {
-   "kind": "big",
-   "art": "people",
+   "kind": "table",
    "kicker": "Steps 2 and 3",
-   "title": "Start small, with a quality bar",
-   "big": "Limited launch",
-   "sub": "small group first, gated by your quality bar",
-   "beats": [
-    {
-     "say": "A limited launch, or beta, releases a feature to a small subset of users first, instead of everyone at once.",
-     "show": 0
-    },
-    {
-     "say": "Problems show up with fewer people affected. And using your Project 6 baseline, set the minimum quality bar it must hit before even a limited launch.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "roadmap",
-   "kicker": "Step 4",
-   "title": "Roll out in stages",
-   "steps": [
-    "Internal testing",
-    "Limited beta",
-    "Full launch"
+   "title": "Set the bar before anyone sees it",
+   "columns": [
+    "Launch criterion",
+    "Bar",
+    "Baseline"
    ],
-   "beats": [
-    {
-     "say": "Roll out in three stages, each gated by criteria.",
-     "show": 0
-    },
-    {
-     "say": "First, internal testing.",
-     "show": 1
-    },
-    {
-     "say": "Once it meets the quality bar, a limited beta.",
-     "show": 2
-    },
-    {
-     "say": "And when beta feedback is positive, the full launch.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "network",
-   "kicker": "Steps 5 and 6",
-   "title": "People and monitoring",
-   "items": [
+   "rows": [
     [
-     "Stakeholders",
-     "Engineering, reviewer, sign-offs"
+     "Average rubric score",
+     "e.g. at least 4.0",
+     "4.5 ✓"
     ],
     [
-     "Monitoring",
-     "First week + rollback triggers"
+     "Test cases scored",
+     "e.g. all 10 to 15",
+     "2 so far ✗"
     ]
    ],
    "beats": [
     {
-     "say": "List who needs to be involved: engineering, your evaluation reviewer, and anyone who signs off before wider release.",
-     "show": 1
+     "say": "A limited launch, or beta, releases a feature to a small group first. Problems show up with fewer people affected."
     },
     {
-     "say": "Then plan monitoring, building on your feedback loop.",
-     "show": 2
+     "say": "But even a limited launch needs a minimum quality bar, set from your Project 6 baseline.",
+     "col": 1
     },
     {
-     "say": "What will you watch in the first week, and what would trigger a rollback?",
-     "show": 2
+     "say": "Say the bar is an average of at least four. The template baseline, four point five, clears it.",
+     "hl": 0,
+     "dim": true,
+     "sql": "launch if average >= 4.0 across the full test set"
+    },
+    {
+     "say": "But it only covers two test cases. Score the full set before you trust that number.",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "doc",
+   "kind": "diagram",
+   "kicker": "Step 4",
+   "title": "Roll out in stages, each with a gate",
+   "nodes": [
+    {
+     "id": "int",
+     "label": "Internal testing",
+     "x": 12,
+     "y": 50,
+     "sub": "your team",
+     "art": "people"
+    },
+    {
+     "id": "beta",
+     "label": "Limited beta",
+     "x": 50,
+     "y": 25,
+     "sub": "a small group",
+     "art": "flask"
+    },
+    {
+     "id": "full",
+     "label": "Full launch",
+     "x": 88,
+     "y": 50,
+     "sub": "everyone",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "int",
+     "to": "beta"
+    },
+    {
+     "from": "beta",
+     "to": "full"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Roll out in three stages, each gated by criteria before moving on.",
+     "show": 3
+    },
+    {
+     "say": "First, internal testing.",
+     "show": 3,
+     "on": "int"
+    },
+    {
+     "say": "Once it meets the quality bar, it moves to a limited beta.",
+     "show": 3,
+     "on": "beta",
+     "send": {
+      "from": "int",
+      "to": "beta",
+      "label": "quality bar met"
+     }
+    },
+    {
+     "say": "When the beta feedback is positive, the full launch.",
+     "show": 3,
+     "on": "full",
+     "send": {
+      "from": "beta",
+      "to": "full",
+      "label": "beta feedback ✓"
+     }
+    },
+    {
+     "say": "Not a date on a calendar, and not whenever engineering is ready. The criteria decide.",
+     "show": 3,
+     "on": [
+      "int",
+      "beta",
+      "full"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Step 5",
+   "title": "Who needs to be involved",
+   "nodes": [
+    {
+     "id": "plan",
+     "label": "Launch plan",
+     "x": 50,
+     "y": 50,
+     "sub": "your notebook",
+     "art": "doc"
+    },
+    {
+     "id": "eng",
+     "label": "Engineering",
+     "x": 14,
+     "y": 22,
+     "sub": "builds it",
+     "art": "code"
+    },
+    {
+     "id": "rev",
+     "label": "Eval reviewer",
+     "x": 86,
+     "y": 22,
+     "sub": "your Project 6 plan",
+     "art": "test"
+    },
+    {
+     "id": "sign",
+     "label": "Sign-off",
+     "x": 50,
+     "y": 85,
+     "sub": "before wider release",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "eng",
+     "to": "plan"
+    },
+    {
+     "from": "rev",
+     "to": "plan"
+    },
+    {
+     "from": "sign",
+     "to": "plan"
+    }
+   ],
+   "beats": [
+    {
+     "say": "List the roles your launch depends on.",
+     "show": 1,
+     "on": "plan"
+    },
+    {
+     "say": "Engineering, to build it.",
+     "show": 2,
+     "on": "eng",
+     "send": {
+      "from": "eng",
+      "to": "plan",
+      "label": "builds it"
+     }
+    },
+    {
+     "say": "Your Project 6 evaluation reviewer, to check it against the test set.",
+     "show": 3,
+     "on": "rev",
+     "send": {
+      "from": "rev",
+      "to": "plan",
+      "label": "scores ✓"
+     }
+    },
+    {
+     "say": "And anyone who must sign off before a wider release.",
+     "show": 4,
+     "on": "sign",
+     "send": {
+      "from": "sign",
+      "to": "plan",
+      "label": "approved"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Step 6",
+   "title": "Watch the first week, with a rollback trigger",
+   "xlabel": "day after launch",
+   "ylabel": "% helpful",
+   "points": [
+    [
+     10,
+     82
+    ],
+    [
+     23,
+     80
+    ],
+    [
+     36,
+     78
+    ],
+    [
+     49,
+     81
+    ],
+    [
+     62,
+     74
+    ],
+    [
+     75,
+     55
+    ],
+    [
+     88,
+     50
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Monitoring builds on your Project 6 feedback loop. Say you watch the share of was this helpful, yes answers."
+    },
+    {
+     "say": "Before launch, set a rollback trigger. Say, below sixty percent.",
+     "line": [
+      0,
+      60
+     ]
+    },
+    {
+     "say": "Days one to five sit comfortably above it.",
+     "line": [
+      0,
+      60
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "On day six it drops to fifty five. The trigger fires.",
+     "line": [
+      0,
+      60
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      0
+     ],
+     "marks": [
+      [
+       75,
+       55
+      ]
+     ]
+    },
+    {
+     "say": "So you roll back to the earlier stage, fix it, and roll forward again.",
+     "line": [
+      0,
+      60
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       75,
+       55
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Step 7",
    "title": "Write the launch plan",
-   "steps": [
+   "values": [
     "Scope",
-    "Launch criteria",
+    "Criteria",
     "Rollout stages",
     "Stakeholders",
     "Monitoring"
    ],
    "beats": [
     {
-     "say": "Write it up in a text cell headed launch plan.",
-     "show": 0
+     "say": "Write it up in a text cell headed launch plan, in five parts."
     },
     {
-     "say": "Launch scope, criteria to launch, rollout stages, stakeholders, and the post-launch monitoring plan.",
-     "show": 5
+     "say": "Launch scope: who gets it first.",
+     "hl": 0
+    },
+    {
+     "say": "Criteria to launch, from your baseline.",
+     "hl": 1,
+     "ok": [
+      0
+     ]
+    },
+    {
+     "say": "Rollout stages, with their gates.",
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ]
+    },
+    {
+     "say": "Stakeholders.",
+     "hl": 3,
+     "ok": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "And the post-launch monitoring plan, with rollback triggers.",
+     "hl": 4,
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "say": "That's your launch plan.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "launch_plan"
     }
    ]
   },
@@ -1913,7 +3550,7 @@ launch_plan_project/
      "show": 2
     },
     {
-     "say": "You've finished AI Product Engineer. Well done.",
+     "say": "You've finished A I Product Engineer. Well done.",
      "show": 2
     }
    ]
