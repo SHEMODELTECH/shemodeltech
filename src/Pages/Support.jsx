@@ -63,7 +63,7 @@ const Support = () => {
     },
     {
       q: 'Is She Model Tech free to use?',
-      a: "Yes, completely. Every member gets courses, cohort projects, all six badge tracks, certificates, messaging, workspaces, and events for free. Nothing is held back and nothing is metered. We are a 501(c)(3) nonprofit, funded by donations and by companies through our company tiers, never by the women who learn here.",
+      a: "Yes, completely. Every member gets courses, team projects, all six badge tracks, certificates, messaging, workspaces, and events for free. Nothing is held back and nothing is metered. We are a 501(c)(3) nonprofit, funded by donations and by companies through our company tiers, never by the women who learn here.",
     },
     {
       q: 'How do badges and Top Talent visibility work together?',

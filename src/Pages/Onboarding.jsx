@@ -123,10 +123,11 @@ const Onboarding = () => {
   ];
 
   const individualInterests = [
-    { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
-    { id: 'paid', label: 'Paid projects', desc: 'Paid She Model Tech cohort projects (18+)' },
-    { id: 'community', label: 'Community', desc: 'Connect with tech professionals' },
-    { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
+    { id: 'learning', label: 'Learning', desc: 'Courses with videos, labs and certificates' },
+    { id: 'projects', label: 'Free projects', desc: 'Build a real project with a team and earn badges (13+)' },
+    { id: 'paid', label: 'Paid projects', desc: 'Build a real project with a team and get paid, when available (18+)' },
+    { id: 'community', label: 'Community', desc: 'Connect with women in tech' },
+    { id: 'badges', label: 'Badges', desc: 'Verified badges that show what you\'ve built' },
   ];
 
   const companyInterests = [
@@ -374,7 +375,7 @@ const Onboarding = () => {
         notifyMember(currentUser.uid, {
           type: 'welcome',
           title: 'Welcome to She Model Tech!',
-          body: 'Here’s how it works: join a project in a cohort, build something real with a team, and earn verified badges. Your first step: open Projects and tap Join on a project that interests you. You can lead it, or join the team.',
+          body: 'Here’s how it works: learn with our courses, join a project team, build something real, and earn verified badges. Your first step: open Projects and tap Join on a project that interests you. You can lead it, or join the team.',
           link: '/projects',
           ctaLabel: 'Find a project',
           emailTo: currentUser.email,

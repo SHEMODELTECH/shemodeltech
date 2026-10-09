@@ -32,10 +32,11 @@ const skillTrackOpts = [
 // Same options as onboarding step 4 ("What are you looking for?"), now editable
 // here too. These feed profile completion and the AI recommendations.
 const individualInterestOpts = [
-  { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
-  { id: 'paid', label: 'Paid projects', desc: 'Paid work from verified companies' },
-  { id: 'community', label: 'Community', desc: 'Connect with people in tech' },
-  { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
+  { id: 'learning', label: 'Learning', desc: 'Courses with videos, labs and certificates' },
+  { id: 'projects', label: 'Free projects', desc: 'Build a real project with a team and earn badges (13+)' },
+  { id: 'paid', label: 'Paid projects', desc: 'Build a real project with a team and get paid, when available (18+)' },
+  { id: 'community', label: 'Community', desc: 'Connect with women in tech' },
+  { id: 'badges', label: 'Badges', desc: 'Verified badges that show what you\'ve built' },
 ];
 const companyInterestOpts = [
   { id: 'jobs', label: 'Post jobs', desc: 'Advertise full-time, part-time, contract, or internship roles' },
