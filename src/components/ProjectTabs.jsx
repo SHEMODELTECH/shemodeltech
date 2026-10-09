@@ -1,8 +1,9 @@
 // src/components/ProjectTabs.jsx
 // The tab row at the top of the project pages (like the Events filters), in
 // place of the old Projects dropdown in the sidebar:
-//   All projects · My projects · Project Vault · Payment disputes
-// plus, for staff: Create a project · Lead applications · Manage projects.
+//   All projects · My projects · Project Vault · Payment disputes · Manage
+// Manage is staff-only: it opens the project tools, which have their own
+// smaller row (Manage projects · Lead applications · Create a project).
 // Payment disputes only shows for members who've had paid work (approved on a
 // paid project, or leading one); staff always see it. Companies don't run
 // projects, so they get no tabs.
@@ -37,6 +38,13 @@ const hasPaidWork = async (uid) => {
   return yes;
 };
 
+// The staff project tools, shown as a second row under Manage.
+const MANAGE = [
+  { to: '/admin/projects', label: 'Manage projects' },
+  { to: '/admin/lead-applications', label: 'Lead applications' },
+  { to: '/admin/cohorts', label: 'Create a project' },
+];
+
 const ProjectTabs = () => {
   const { currentUser } = useAuth();
   const { pathname } = useLocation();
@@ -65,6 +73,7 @@ const ProjectTabs = () => {
 
   if (!currentUser || role === null || isCompany) return null;
   const staff = role === 'admin' || role === 'editor';
+  const inManage = staff && MANAGE.some((m) => pathname === m.to || pathname.startsWith(`${m.to}/`));
 
   const tabs = [
     { to: '/projects', label: 'All projects', active: pathname === '/projects' },
@@ -72,18 +81,12 @@ const ProjectTabs = () => {
     { to: '/project-vault', label: 'Project Vault' },
     // Only for members with paid work (and staff); also kept while she's on it.
     ...(staff || paid || pathname === '/disputes' ? [{ to: '/disputes', label: 'Payment disputes' }] : []),
-    ...(staff
-      ? [
-          { to: '/admin/cohorts', label: 'Create a project' },
-          { to: '/admin/lead-applications', label: 'Lead applications' },
-          { to: '/admin/projects', label: 'Manage projects' },
-        ]
-      : []),
+    ...(staff ? [{ to: '/admin/projects', label: 'Manage', active: inManage }] : []),
   ];
 
   return (
-    <nav aria-label="Projects" className="-mt-1 mb-6 border-b border-gray-200">
-      <div className="flex gap-5 sm:gap-7 overflow-x-auto">
+    <nav aria-label="Projects" className="-mt-1 mb-6">
+      <div className="flex gap-5 sm:gap-7 overflow-x-auto border-b border-gray-200">
         {tabs.map((t) => {
           const active = t.active ?? (pathname === t.to || pathname.startsWith(`${t.to}/`));
           return (
@@ -100,6 +103,25 @@ const ProjectTabs = () => {
           );
         })}
       </div>
+      {inManage && (
+        <div className="flex gap-2 overflow-x-auto py-3">
+          {MANAGE.map((m) => {
+            const on = pathname === m.to || pathname.startsWith(`${m.to}/`);
+            return (
+              <Link
+                key={m.to}
+                to={m.to}
+                aria-current={on ? 'page' : undefined}
+                className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-colors ${
+                  on ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {m.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </nav>
   );
 };

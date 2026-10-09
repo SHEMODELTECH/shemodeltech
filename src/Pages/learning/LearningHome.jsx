@@ -182,7 +182,7 @@ const LearningHome = ({ mine = false }) => {
     () =>
       all.map((c) => ({
         title: c.title.toLowerCase(),
-        meta: `${trackMeta(c.track).label} ${look(c.track).short} ${c.track} ${c.level}`.toLowerCase(),
+        meta: `${trackMeta(c.track).label} ${look(c.track).short} ${c.track} ${c.level} ${c.authorName || ''}`.toLowerCase(),
         // Headings stand in for part titles here: cheap, and good enough to search.
         about: `${c.summary} ${(textOf(c).match(/^#{2,3}\s+.+$/gm) || []).join(' ')} ${(c.modules || []).map((m) => m.title).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
         body: textOf(c)
@@ -241,7 +241,7 @@ const LearningHome = ({ mine = false }) => {
       {/* Hero */}
       {!mine ? (
         <section className="lr-hero">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-sm font-semibold text-pink-700 m-0">She Model Tech Learning</p>
               {['admin', 'editor'].includes(staffRole) && (
@@ -285,123 +285,8 @@ const LearningHome = ({ mine = false }) => {
       )}
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Continue learning */}
-        {!mine && lr.signedIn && inProgress.length > 0 && !q && (
-          <section className="pt-10" aria-labelledby="continue-h">
-            <h2 id="continue-h" className="text-xl font-bold text-gray-900 mb-4">Continue learning</h2>
-            <div className="lr-grid">
-              {inProgress.slice(0, 4).map((c) => (
-                <CourseCard key={c.track + c.slug} course={c} status="enrolled" progress={progressOf(c)} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* From our mentors: newest mentor-created courses, so learners notice them */}
-        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (
-          <section className="pt-10" aria-labelledby="mentors-h">
-            <div className="lr-mentor-band">
-              <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-pink-700">New in Learning</p>
-                  <h2 id="mentors-h" className="text-xl font-bold text-gray-900 mt-1">From our mentors</h2>
-                  <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-                    Courses created by She Model Tech mentors and approved by our team.
-                  </p>
-                </div>
-                {published.length > 4 && (
-                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-pink-700 hover:underline">
-                    See all {published.length}
-                  </button>
-                )}
-              </div>
-              <div className="lr-grid">
-                {[...published]
-                  .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
-                  .slice(0, 4)
-                  .map((c) => (
-                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
-                  ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Featured instructors: every mentor with a published course (free for mentors) */}
-        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (() => {
-          const byAuthor = {};
-          published.forEach((c) => {
-            if (!c.authorName) return;
-            const key = c.authorUid || c.authorName;
-            const a = byAuthor[key] || (byAuthor[key] = { key, uid: c.authorUid, name: c.authorName, photo: c.authorPhotoURL || null, courses: [], ratingSum: 0, ratingCount: 0 });
-            a.courses.push(c);
-            if (!a.photo && c.authorPhotoURL) a.photo = c.authorPhotoURL;
-            const st = statsFor(publicStats, c.track, c.slug);
-            if (st?.ratingCount) {
-              a.ratingSum += st.ratingAvg * st.ratingCount;
-              a.ratingCount += st.ratingCount;
-            }
-          });
-          const authors = Object.values(byAuthor).sort((x, y) => y.ratingCount - x.ratingCount || y.courses.length - x.courses.length);
-          if (!authors.length) return null;
-          return (
-            <section className="pt-10" aria-labelledby="instructors-h">
-              <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 to-white p-5 sm:p-6">
-                <h2 id="instructors-h" className="text-xl font-bold text-gray-900">Featured instructors</h2>
-                <p className="text-sm text-gray-600 mt-1">Mentors who create courses for She Model Tech Learning.</p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-                  {authors.map((a) => {
-                    const photo = a.photo || authorPhotos[a.uid];
-                    const avg = a.ratingCount ? a.ratingSum / a.ratingCount : 0;
-                    return (
-                      <div key={a.key} className="bg-white border border-pink-100 rounded-2xl p-5 shadow-sm flex flex-col">
-                        <div className="flex items-center gap-4">
-                          {photo ? (
-                            <img src={photo} alt="" className="w-16 h-16 rounded-full object-cover border-2 border-pink-100" />
-                          ) : (
-                            <span className="w-16 h-16 rounded-full bg-pink-600 text-white text-2xl font-bold flex items-center justify-center" aria-hidden="true">
-                              {a.name[0]}
-                            </span>
-                          )}
-                          <div className="min-w-0">
-                            <p className="font-bold text-gray-900 text-lg truncate">{a.name}</p>
-                            <span className="inline-block text-[11px] font-bold text-pink-700 bg-pink-50 border border-pink-200 rounded-full px-2 py-0.5">Mentor</span>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2 text-sm">
-                          {a.ratingCount ? (
-                            <>
-                              <span className="text-pink-500" aria-hidden="true">
-                                {'★'.repeat(Math.round(avg))}
-                                <span className="text-gray-300">{'★'.repeat(5 - Math.round(avg))}</span>
-                              </span>
-                              <span className="font-semibold text-gray-900">{avg.toFixed(1)}</span>
-                              <span className="text-gray-500">({a.ratingCount} rating{a.ratingCount === 1 ? '' : 's'})</span>
-                              <span className="sr-only">{`Rated ${avg.toFixed(1)} out of 5`}</span>
-                            </>
-                          ) : (
-                            <span className="text-gray-500">No ratings yet</span>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-600 mt-1">{a.courses.length} course{a.courses.length === 1 ? '' : 's'}</p>
-                        <ul className="mt-2 space-y-1 text-sm flex-1">
-                          {a.courses.slice(0, 3).map((c) => (
-                            <li key={c.slug}>
-                              <Link to={`/learning/${c.track}/${c.slug}`} className="text-pink-700 font-semibold hover:underline">{c.title}</Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </section>
-          );
-        })()}
-
-        {/* Filters */}
-        <section className="pt-10" aria-label="Filter courses">
+        {/* Filters: at the top, so levels and tracks are the first thing under the search. */}
+        <section id="lr-filters" className="pt-6 scroll-mt-24" aria-label="Filter courses">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
             <div className="lr-chips" role="group" aria-label="Level">
               {chip('all', 'All levels')}
@@ -436,6 +321,108 @@ const LearningHome = ({ mine = false }) => {
             </div>
           </div>
         </section>
+
+        {/* Continue learning */}
+        {!mine && lr.signedIn && inProgress.length > 0 && !q && (
+          <section className="pt-10" aria-labelledby="continue-h">
+            <h2 id="continue-h" className="text-xl font-bold text-gray-900 mb-4">Continue learning</h2>
+            <div className="lr-grid">
+              {inProgress.slice(0, 4).map((c) => (
+                <CourseCard key={c.track + c.slug} course={c} status="enrolled" progress={progressOf(c)} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* From our mentors: newest mentor-created courses, so learners notice them */}
+        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (
+          <section className="pt-10" aria-labelledby="mentors-h">
+            <div className="lr-mentor-band">
+              <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-pink-700">New in Learning</p>
+                  <h2 id="mentors-h" className="text-xl font-bold text-gray-900 mt-1">From our mentors</h2>
+                  <p className="text-sm text-gray-600 mt-1 max-w-2xl">
+                    Courses created by She Model Tech mentors and approved by our team.
+                  </p>
+                </div>
+                {published.length > 3 && (
+                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-pink-700 hover:underline">
+                    See all {published.length}
+                  </button>
+                )}
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {[...published]
+                  .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
+                  .slice(0, 3)
+                  .map((c) => (
+                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
+                  ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Featured instructors: every mentor with a published course (free for mentors) */}
+        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (() => {
+          const byAuthor = {};
+          published.forEach((c) => {
+            if (!c.authorName) return;
+            const key = c.authorUid || c.authorName;
+            const a = byAuthor[key] || (byAuthor[key] = { key, uid: c.authorUid, name: c.authorName, photo: c.authorPhotoURL || null, courses: [], ratingSum: 0, ratingCount: 0 });
+            a.courses.push(c);
+            if (!a.photo && c.authorPhotoURL) a.photo = c.authorPhotoURL;
+            const st = statsFor(publicStats, c.track, c.slug);
+            if (st?.ratingCount) {
+              a.ratingSum += st.ratingAvg * st.ratingCount;
+              a.ratingCount += st.ratingCount;
+            }
+          });
+          const authors = Object.values(byAuthor).sort((x, y) => y.ratingCount - x.ratingCount || y.courses.length - x.courses.length);
+          if (!authors.length) return null;
+          return (
+            <section className="pt-8" aria-labelledby="instructors-h">
+              <div className="flex items-baseline justify-between gap-3 mb-3">
+                <h2 id="instructors-h" className="text-lg font-bold text-gray-900">Featured instructors</h2>
+                <p className="text-xs text-gray-500 hidden sm:block">Tap a mentor to see her courses</p>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1" role="list">
+                {authors.map((a) => {
+                  const photo = a.photo || authorPhotos[a.uid];
+                  const avg = a.ratingCount ? a.ratingSum / a.ratingCount : 0;
+                  return (
+                    <button
+                      key={a.key}
+                      type="button"
+                      role="listitem"
+                      onClick={() => {
+                        setQuery(a.name);
+                        try { document.getElementById('lr-filters')?.scrollIntoView({ behavior: 'smooth' }); } catch (_) { /* ignore */ }
+                      }}
+                      className="flex-shrink-0 flex items-center gap-3 bg-white border border-pink-100 hover:border-pink-300 rounded-xl pl-2 pr-4 py-2 text-left transition-colors"
+                    >
+                      {photo ? (
+                        <img src={photo} alt="" className="w-10 h-10 rounded-full object-cover border border-pink-100" />
+                      ) : (
+                        <span className="w-10 h-10 rounded-full bg-pink-600 text-white font-bold flex items-center justify-center" aria-hidden="true">
+                          {a.name[0]}
+                        </span>
+                      )}
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold text-gray-900 truncate max-w-[11rem]">{a.name}</span>
+                        <span className="block text-xs text-gray-500">
+                          {a.courses.length} course{a.courses.length === 1 ? '' : 's'}
+                          {a.ratingCount ? <> · <span className="text-pink-600" aria-hidden="true">★</span> {avg.toFixed(1)}<span className="sr-only">{` rated ${avg.toFixed(1)} out of 5`}</span></> : null}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* Courses */}
         {mine && lr.loading ? (
