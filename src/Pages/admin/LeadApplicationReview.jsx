@@ -362,10 +362,11 @@ const LeadApplicationReview = () => {
                 ].includes(app.status);
                 return (
                   <div key={app.id} className="border-b border-gray-100 last:border-0">
+                    <div className="flex items-stretch">
                     <button
                       type="button"
                       onClick={() => setExpanded(open ? null : `${project.id}_${app.id}`)}
-                      className="w-full text-left p-4 sm:p-5 hover:bg-gray-50 transition-colors"
+                      className="flex-1 min-w-0 text-left p-4 sm:p-5 hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center gap-3 flex-wrap">
                         <span
@@ -396,6 +397,18 @@ const LeadApplicationReview = () => {
                         )}
                       </div>
                     </button>
+                    {/* Her profile, in a new tab so the review stays open. */}
+                    {(app.applicantUid || app.applicantEmail) && (
+                      <a
+                        href={`/profile/${encodeURIComponent(app.applicantUid || app.applicantEmail)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0 self-center mr-4 sm:mr-5 text-xs font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-3 py-1.5 rounded-lg"
+                      >
+                        View profile
+                      </a>
+                    )}
+                    </div>
 
                     {open && (
                       <ApplicantPanel

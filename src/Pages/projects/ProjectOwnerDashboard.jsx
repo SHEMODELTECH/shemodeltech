@@ -766,7 +766,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
             {approvedApps.map(app => (
               <div key={app.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3">
                 <div>
-                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">{app.applicantName}</Link>
+                  <Link to={`/profile/${encodeURIComponent(app.applicantUid || app.applicantEmail)}`} className="text-pink-700 text-sm font-semibold underline decoration-pink-200 underline-offset-2 hover:decoration-pink-600">{app.applicantName}</Link>
                   <p className="text-gray-500 text-xs">{app.role}{project.isPaid && (Number(app.payAmount) || 0) > 0 ? ` · $${Number(app.payAmount).toLocaleString()} on completion` : ''}</p>
                   <div className="flex items-center gap-3 mt-1">
                     {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">Portfolio</a>}
@@ -901,7 +901,10 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
             <div key={app.id} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div>
-                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 font-semibold text-sm hover:text-pink-600 hover:underline">{app.applicantName}</Link>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link to={`/profile/${encodeURIComponent(app.applicantUid || app.applicantEmail)}`} className="text-pink-700 font-semibold text-sm underline decoration-pink-200 underline-offset-2 hover:decoration-pink-600">{app.applicantName}</Link>
+                    <Link to={`/profile/${encodeURIComponent(app.applicantUid || app.applicantEmail)}`} className="text-[11px] font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-2 py-0.5 rounded-md">View profile</Link>
+                  </div>
                   <p className="text-gray-400 text-xs mt-1">Role: <span className="text-gray-900">{app.role}</span></p>
                   <p className="text-gray-400 text-xs">Skills: <span className="text-gray-900">{app.skills}</span></p>
                   {app.message && <p className="text-gray-600 text-xs mt-2 italic">"{app.message}"</p>}

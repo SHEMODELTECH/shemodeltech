@@ -84,7 +84,7 @@ const PaidApplicants = ({ cohort }) => {
                     {a.coverNote && <p className="text-sm text-gray-800 whitespace-pre-wrap mt-3">{a.coverNote}</p>}
                     {a.interviewAt && <p className="text-xs text-gray-600">Interview: {a.interviewAt}{a.meetLink ? ` · ${a.meetLink}` : ''}</p>}
                     <div className="flex flex-wrap gap-2">
-                      <button onClick={() => navigate(`/profile/${encodeURIComponent(a.applicantEmail || a.applicantUid)}`)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">View profile</button>
+                      <button onClick={() => navigate(`/profile/${encodeURIComponent(a.applicantUid || a.applicantEmail)}`)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">View profile</button>
                       {a.applicantUid && (
                         <button onClick={() => navigate(`/messages?to=${a.applicantUid}`)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">Message her</button>
                       )}

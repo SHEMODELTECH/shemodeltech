@@ -1676,7 +1676,11 @@ const AdminPanel = ({ only = null, bare = false }) => {
                     <div key={a.id} className="bg-white border border-gray-200 rounded-xl p-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-gray-900 font-semibold">{a.applicantName}</p>
+                          {(a.applicantUid || a.applicantEmail) ? (
+                            <a href={`/profile/${encodeURIComponent(a.applicantUid || a.applicantEmail)}`} target="_blank" rel="noopener noreferrer" className="text-pink-700 font-semibold underline decoration-pink-200 underline-offset-2 hover:decoration-pink-600">{a.applicantName}</a>
+                          ) : (
+                            <p className="text-gray-900 font-semibold">{a.applicantName}</p>
+                          )}
                           <p className="text-gray-400 text-xs">{a.applicantEmail} · applied {fmtDate(a.createdAt)}</p>
                           <p className="text-xs text-gray-600 mt-1">
                             Tracks: {(a.tracks || []).map((t) => (TEACH_TRACKS.find(([id]) => id === t) || [t, t])[1]).join(', ') || 'none'}
