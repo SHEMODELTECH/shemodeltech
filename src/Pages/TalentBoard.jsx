@@ -5,13 +5,14 @@ import { useAuth } from '../context/AuthContext';
 
 import { doc, getDoc } from 'firebase/firestore';
 import MentorBadge from '../components/MentorBadge';
-import PremiumBadge from '../components/PremiumBadge';
 import { isFeaturedTalent } from '../config/premium';
 import { mentorStatsByUid } from '../utils/mentorStats';
 import { db } from '../firebase/config';
 import AccessBanner from '../components/AccessBanner';
-import { BADGE_TRACKS, badgesInTrack } from '../config/badgeTracks';
+import { BADGE_TRACKS, badgesInTrack, levelForCount } from '../config/badgeTracks';
 import { loadMemberDirectory } from '../utils/memberIndex';
+import TierBadge from '../components/TierBadge';
+import { trackStandings } from '../components/BadgeShowcase';
 
 const badgeOptions = [
   { id: '', label: 'All Tracks' },
@@ -60,7 +61,7 @@ const TalentBoard = () => {
 
   // The Talent Board is open to every signed-in member - no plan check.
 
-  // Everyone listed (a badge, or a mentor), from the member directory: a few
+  // Every member (with or without a badge; not companies), from the member directory: a few
   // reads instead of one per member (src/utils/memberIndex.js).
   useEffect(() => {
     if (!currentUser) { setLoading(false); return undefined; }
@@ -69,7 +70,7 @@ const TalentBoard = () => {
       .then((entries) => {
         if (!alive) return;
         setTalents(entries
-          .filter((e) => e.listed && e.uid !== currentUser.uid)
+          .filter((e) => !e.isCompany && e.uid !== currentUser.uid)
           .map((e) => ({ ...e, id: e.uid }))
           .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || '')));
       })
@@ -83,9 +84,13 @@ const TalentBoard = () => {
   // Mentors rank first: highest-rated (with at least one rating), then by
   // published courses; everyone else follows alphabetically.
   // Mentors are featured first; everyone else is ranked on skills and badges.
+  // Then members with badges, highest level first; then everyone else.
   const rank = (t) => {
     const featuredBoost = isFeaturedTalent(t) ? 1000 : 0;
-    if (!isMentor(t)) return featuredBoost;
+    if (!isMentor(t)) {
+      const top = trackStandings(t)[0];
+      return featuredBoost + (top ? Math.min(top.count, 99) / 100 : 0);
+    }
     const st = statsOf(t);
     return featuredBoost + 1 + (st?.ratingCount ? st.avg * 10 + Math.min(st.ratingCount, 50) / 10 : 0) + (t.mentorApprovedCourses || 0) / 100;
   };
@@ -125,7 +130,7 @@ const TalentBoard = () => {
     
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Talent Board</h1>
-        <p className="text-gray-500 text-sm mb-6">Discover and connect with verified women in tech.</p>
+        <p className="text-gray-500 text-sm mb-6">Discover women in tech on She Model Tech. Badges show verified work.</p>
 
         {/* Where a company stands on access. Says up front that the free
             period is temporary, so charging later is expected rather than a
@@ -184,7 +189,7 @@ const TalentBoard = () => {
           <div className="text-center py-12 px-4 border border-dashed border-gray-300 rounded-2xl">
             <p className="text-gray-900 font-semibold mb-1">The Talent Board is just getting started</p>
             <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
-              Members appear here once they earn a badge on a She Model Tech project, so companies can see verified work.
+              Members appear here as they join. Badges, earned on real projects, show verified work.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
               <Link to="/projects" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
@@ -198,44 +203,49 @@ const TalentBoard = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filtered.slice(0, shown).map(talent => (
-              <div
-                key={talent.id}
-                onClick={() => navigate(`/profile/${encodeURIComponent(talent.uid)}`)}
-                className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-pink-300 hover:shadow-sm transition-all cursor-pointer"
-              >
-                {talent.photoURL ? (
-                  <img src={talent.photoURL} alt={talent.displayName} loading="lazy" width={64} height={64} className="w-16 h-16 rounded-full mx-auto mb-3 object-cover border-2 border-gray-100" />
-                ) : (
-                  <div className="w-16 h-16 rounded-full mx-auto mb-3 bg-pink-600 flex items-center justify-center text-white font-bold text-lg">
-                    {(talent.displayName || 'U')[0]}
-                  </div>
-                )}
-                <p className="text-gray-900 text-sm font-semibold truncate">{talent.displayName || 'User'}</p>
-                <p className="text-gray-400 text-xs mt-0.5 truncate">{talent.specialization || talent.primarySkillTrack || 'Tech Professional'}</p>
-                {talent.primarySkillTrack && (
-                  <span className="inline-block mt-2 text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-600 rounded-md">
-                    {badgeOptions.find(b => b.id === talent.primarySkillTrack)?.label || talent.primarySkillTrack}
-                  </span>
-                )}
-                {talent.badges && talent.badges.length > 0 && (
-                  <p className="text-gray-400 text-xs mt-1">{talent.badges.length} badge{talent.badges.length !== 1 ? 's' : ''}</p>
-                )}
-                {isFeaturedTalent(talent) && (
-                  <div className="mt-2 flex justify-center"><PremiumBadge kind="featured" /></div>
-                )}
-                {isMentor(talent) && (
-                  <div className="mt-2 flex flex-col items-center gap-1">
-                    <MentorBadge count={talent.mentorApprovedCourses || 0} isMentor size="sm" />
-                    {statsOf(talent)?.ratingCount > 0 && (
-                      <p className="text-xs font-semibold text-pink-600">
-                        ★ {statsOf(talent).avg.toFixed(1)} <span className="text-gray-400 font-normal">({statsOf(talent).ratingCount})</span>
-                      </p>
+            {filtered.slice(0, shown).map((talent) => {
+              const top = trackStandings(talent)[0];
+              const lvl = top ? (levelForCount(top.count) || 'Novice') : null;
+              const trackLabel = badgeOptions.find((x) => x.id === talent.primarySkillTrack)?.label || talent.primarySkillTrack;
+              return (
+                <button
+                  type="button"
+                  key={talent.id}
+                  onClick={() => navigate(`/profile/${encodeURIComponent(talent.uid)}`)}
+                  className="bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 hover:shadow-sm rounded-2xl p-4 text-center transition-all"
+                >
+                  {/* Photo, with her current badge pinned to it */}
+                  <span className="relative block w-20 h-20 sm:w-24 sm:h-24 mx-auto">
+                    {talent.photoURL ? (
+                      <img src={talent.photoURL} alt="" loading="lazy" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <span className="w-full h-full rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-2xl">
+                        {(talent.displayName || 'U')[0]}
+                      </span>
                     )}
-                  </div>
-                )}
-              </div>
-            ))}
+                    {top && (
+                      <span className="absolute -bottom-1 -right-1" title={`${top.name} ${lvl}`}>
+                        <TierBadge image={top.img} alt={`${top.name} ${lvl}`} level={lvl} size={22} showLabel={false} />
+                      </span>
+                    )}
+                  </span>
+                  <span className="block mt-3 text-gray-900 text-sm sm:text-base font-bold truncate">{talent.displayName || 'Member'}</span>
+                  <span className="block text-xs text-gray-600 truncate">
+                    {top ? `${top.name} ${lvl}` : (trackLabel || 'Member')}
+                  </span>
+                  {isMentor(talent) && (
+                    <span className="mt-2 flex flex-col items-center gap-1">
+                      <MentorBadge count={talent.mentorApprovedCourses || 0} isMentor size="sm" />
+                      {statsOf(talent)?.ratingCount > 0 && (
+                        <span className="text-xs font-semibold text-pink-600">
+                          ★ {statsOf(talent).avg.toFixed(1)} <span className="text-gray-400 font-normal">({statsOf(talent).ratingCount})</span>
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         )}
         {!loading && filtered.length > shown && (

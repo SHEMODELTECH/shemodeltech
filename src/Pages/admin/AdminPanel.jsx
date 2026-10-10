@@ -1246,9 +1246,6 @@ const AdminPanel = ({ only = null, bare = false }) => {
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
             <h3 className="text-gray-900 font-bold">Active projects ({activeProjects.length})</h3>
-            <Link to="/project-vault" className="text-xs font-semibold text-pink-700 hover:underline">
-              {projects.filter((p) => p.status === 'completed').length} completed projects are in the Project Vault
-            </Link>
           </div>
           {activeProjects.length === 0 ? (
             <p className="text-gray-400 text-sm">No active projects.</p>
