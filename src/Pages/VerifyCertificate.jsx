@@ -16,6 +16,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { verifyCertificate } from '../utils/certificateVerification';
 import { BRAND } from '../config/brand';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const VerifyCertificate = () => {
   const { certificateId } = useParams();
@@ -55,9 +56,9 @@ const VerifyCertificate = () => {
   const valid = result?.found && result?.valid;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <div className="max-w-xl mx-auto px-4 py-12 sm:py-16">
+      <div className="flex-1 w-full max-w-xl mx-auto px-4 py-12 sm:py-16">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Verify a certificate</h1>
           <p className="text-gray-500 text-sm mt-1">
@@ -163,6 +164,7 @@ const VerifyCertificate = () => {
           </Link>
         </p>
       </div>
+      <Footer />
     </div>
   );
 };
