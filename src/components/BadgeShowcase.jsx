@@ -35,7 +35,7 @@ export const BadgeTile = ({ profile, className = '' }) => {
   if (!top) {
     const t = ownTrack(profile);
     return (
-      <Link to="/badges" className={`flex flex-col items-center text-center rounded-xl bg-gray-50 border border-gray-200 px-5 py-4 w-full sm:w-44 ${className}`}>
+      <Link to="/badges" className={`flex flex-col items-center text-center rounded-xl bg-[#FDF2F7] border border-pink-100 px-5 py-4 w-full sm:w-44 ${className}`}>
         <TierBadge image={t.img} alt="No badge yet" level="Novice" size={56} showLabel={false} earned={false} />
         <p className="mt-2 text-sm font-bold text-gray-700">No badge yet</p>
         <p className="text-xs text-gray-500">Current badge</p>

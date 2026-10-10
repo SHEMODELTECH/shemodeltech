@@ -226,8 +226,10 @@ const DashboardOverview = () => {
                   {note && <p className="text-gray-400 text-xs mt-0.5">{note}</p>}
                 </>
               );
+              // The badge box is pink, like the badge on her profile.
+              const tint = label === 'Badges earned' ? 'bg-[#FDF2F7] hover:bg-pink-50' : 'hover:bg-gray-50';
               return to
-                ? <Link key={label} to={to} className="p-4 hover:bg-gray-50">{body}</Link>
+                ? <Link key={label} to={to} className={`p-4 ${tint}`}>{body}</Link>
                 : <div key={label} className="p-4">{body}</div>;
             })}
           </div>
