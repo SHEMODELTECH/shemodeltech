@@ -13,7 +13,6 @@ import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { getPublicCourseStats, showPublicStats, short, statsFor } from '../../utils/courseStats';
 import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
 import BuiltInCourseStaffTools, { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
-import { useStaffRole } from '../../components/MentorCourseStaffTools';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -96,7 +95,6 @@ const LearningHome = ({ mine = false }) => {
   const navigate = useNavigate();
   const lr = useLearning();
   const overridesVersion = useCourseOverridesVersion(); // staff edits to built-in courses
-  const staffRole = useStaffRole();
   // ?q= opens the catalog already searched (e.g. "See her courses" on the Proof Wall).
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(() => searchParams.get('q') || '');
@@ -223,11 +221,6 @@ const LearningHome = ({ mine = false }) => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-sm font-semibold text-pink-700 m-0">She Model Tech Learning</p>
-              {['admin', 'editor'].includes(staffRole) && (
-                <div className="flex gap-2">
-                  <Link to="/teacher" className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Add a course</Link>
-                </div>
-              )}
             </div>
             <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">
               Learn the skills. Prove them on real projects.
