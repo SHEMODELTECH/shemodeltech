@@ -217,8 +217,8 @@ const ProofWall = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-  // Line the feed up under the top search bar so its centre matches the
-  // search bar's centre (laptop widths; phones use the full width).
+  // Line the feed up under the top search bar so it starts where the search
+  // bar starts (laptop widths; phones use the full width).
   const wallRef = useRef(null);
   const feedRef = useRef(null);
   const [wallShift, setWallShift] = useState(null);
@@ -228,12 +228,17 @@ const ProofWall = () => {
       const wall = wallRef.current;
       const feed = feedRef.current;
       if (!search || !wall || !feed || window.innerWidth < 1024) { setWallShift(null); return; }
-      const parent = wall.parentElement.getBoundingClientRect();
+      // Measure the page's content area (inside its padding), which is what the margin moves within.
+      const box = wall.parentElement.getBoundingClientRect();
+      const cs = getComputedStyle(wall.parentElement);
+      const padL = parseFloat(cs.paddingLeft) || 0;
+      const padR = parseFloat(cs.paddingRight) || 0;
+      const parent = { left: box.left + padL, width: box.width - padL - padR };
       const s = search.getBoundingClientRect();
       const wallRect = wall.getBoundingClientRect();
       const feedRect = feed.getBoundingClientRect();
       const feedOffset = feedRect.left - wallRect.left; // where the feed sits inside the wall
-      const desiredFeedLeft = s.left + s.width / 2 - feedRect.width / 2;
+      const desiredFeedLeft = s.left; // the feed starts where the search bar starts
       const maxShift = Math.max(0, parent.width - wallRect.width);
       setWallShift(Math.min(maxShift, Math.max(0, desiredFeedLeft - feedOffset - parent.left)));
     };
