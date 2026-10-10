@@ -1,10 +1,11 @@
 // src/components/UpdateActions.jsx
 // LinkedIn-style actions under a member's update: React (emojis), Comment,
-// Repost, and Send. Only for updates, not other Proof Wall items.
+// Repost, and Share. Only for updates, not other Proof Wall items.
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { REACTIONS, listComments, notifyReaction, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
 import CommentThread from './CommentThread';
+import { ShareDialogButton } from './ShareButtons';
 import ReactionsModal from './ReactionsModal';
 import { usePhotos } from '../hooks/usePhotos';
 
@@ -46,13 +47,6 @@ const UpdateActions = ({ a, me, onChange }) => {
     const nextOpen = !open;
     setOpen(nextOpen);
     if (nextOpen && comments === null) setComments(await listComments(a.id).catch(() => []));
-  };
-  const send = async () => {
-    const url = postUrl(a.id);
-    try {
-      if (navigator.share) await navigator.share({ title: 'She Model Tech', text: `${a.actorName || 'A member'} on She Model Tech`, url });
-      else { await navigator.clipboard.writeText(url); toast.success('Link copied. Paste it in a message.'); }
-    } catch (_) { /* cancelled */ }
   };
 
   return (
@@ -103,7 +97,12 @@ const UpdateActions = ({ a, me, onChange }) => {
         <button type="button" onClick={() => setPicker((p) => !p)} aria-label="Choose a reaction" className="px-1 text-gray-400 hover:text-gray-700 text-xs">▾</button>
         <Btn onClick={toggleComments} label="Comment"><span aria-hidden="true">💬</span>Comment</Btn>
         <Btn onClick={() => setReposting((r) => !r)} label="Repost"><span aria-hidden="true">🔁</span>Repost</Btn>
-        <Btn onClick={send} label="Send"><span aria-hidden="true">📤</span>Send</Btn>
+        <ShareDialogButton
+          url={postUrl(a.id)}
+          text={`${a.actorName || 'A member'} on She Model Tech: ${String(a.text || '').replace(/\s+/g, ' ').slice(0, 120)}`}
+          title={a.projectTitle ? `${a.projectTitle} on She Model Tech` : 'An update on She Model Tech'}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors text-gray-600 hover:bg-gray-100"
+        />
       </div>
 
       {reposting && (

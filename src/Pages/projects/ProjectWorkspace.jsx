@@ -793,7 +793,7 @@ const ProjectWorkspace = () => {
               <div key={post.id} id={`forum-${post.id}`} className={`bg-white border rounded-xl p-4 transition-colors ${highlightId === post.id ? 'border-pink-400 ring-2 ring-pink-100' : 'border-gray-200'}`}>
                 {/* Header: avatar + name, side by side */}
                 <div className="flex items-center gap-3">
-                  <a href={`/profile/${encodeURIComponent(post.authorEmail || '')}`} className="flex-shrink-0">
+                  <a href={`/profile/${encodeURIComponent(post.authorId || post.authorEmail || '')}`} className="flex-shrink-0">
                     {post.authorPhoto ? (
                       <img src={post.authorPhoto} alt={post.authorName} className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                     ) : (
@@ -802,7 +802,7 @@ const ProjectWorkspace = () => {
                   </a>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <a href={`/profile/${encodeURIComponent(post.authorEmail || '')}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">{post.authorName}</a>
+                      <a href={`/profile/${encodeURIComponent(post.authorId || post.authorEmail || '')}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">{post.authorName}</a>
                       <span className="text-gray-400 text-xs">{formatTime(post.createdAt)}</span>
                       {post.editedAt && <span className="text-gray-400 text-[10px] italic">edited</span>}
                     </div>
@@ -874,7 +874,7 @@ const ProjectWorkspace = () => {
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <a href={`/profile/${encodeURIComponent(reply.authorEmail || '')}`} className="text-gray-900 text-xs font-semibold hover:text-pink-600 hover:underline">{reply.authorName}</a>
+                                <a href={`/profile/${encodeURIComponent(reply.authorId || reply.authorEmail || '')}`} className="text-gray-900 text-xs font-semibold hover:text-pink-600 hover:underline">{reply.authorName}</a>
                                 <span className="text-gray-400 text-[10px]">{formatTime(reply.createdAt)}</span>
                                 {reply.editedAt && <span className="text-gray-400 text-[10px] italic">edited</span>}
                               </div>
@@ -1077,7 +1077,7 @@ const ProjectWorkspace = () => {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <a href={`/profile/${encodeURIComponent(member.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">
+                      <a href={`/profile/${encodeURIComponent(member.applicantUid || member.uid || member.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">
                         {member.displayName || member.applicantName}
                       </a>
                       <p className="text-gray-500 text-xs">{member.role}</p>

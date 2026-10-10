@@ -194,6 +194,16 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
   const badgeLevel = String(badgeData.badgeLevel || 'novice').charAt(0).toUpperCase() + String(badgeData.badgeLevel || 'novice').slice(1);
   const contribution = String(badgeData.contribution || 'good');
   const skills = Array.isArray(badgeData.skillsDisplayed) ? badgeData.skillsDisplayed : [];
+  // "Add to LinkedIn": opens LinkedIn's Add license or certification form, filled in.
+  const now = new Date();
+  const linkedInUrl = `https://www.linkedin.com/profile/add?${new URLSearchParams({
+    startTask: 'CERTIFICATION_NAME',
+    name: `${badgeInfo.name.replace(/ Badge$/, '')} ${badgeLevel} badge, She Model Tech`,
+    organizationName: 'SHE MODEL TECH Inc.',
+    issueYear: String(now.getFullYear()),
+    issueMonth: String(now.getMonth() + 1),
+    certUrl: `${SITE}/badges`,
+  }).toString()}`;
 
   return {
     to: memberData.memberEmail,
@@ -249,6 +259,7 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
                 </div>` : ''}
               <div style="text-align: center; margin: 30px 0;">
                 <a href="${esc(badgesUrl)}" class="button">View Your Badge Collection</a>
+                <p style="margin: 6px 0 0 0;"><a href="${esc(linkedInUrl)}" style="color: #0A66C2; font-weight: bold; text-decoration: none;">Add it to LinkedIn</a></p>
               </div>
             </div>
             <div class="footer">
@@ -259,7 +270,7 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
         </body>
       </html>
     `,
-    text: `Congratulations! You've Earned a ${badgeInfo.name}\n\nDear ${memberData.memberName || 'Team Member'},\nBadge: ${badgeInfo.name} (${badgeLevel})\nProject: ${projectData.projectTitle}\nRole: ${memberData.memberRole || 'Team Member'}\n\nView your badges: ${badgesUrl}`
+    text: `Congratulations! You've Earned a ${badgeInfo.name}\n\nDear ${memberData.memberName || 'Team Member'},\nBadge: ${badgeInfo.name} (${badgeLevel})\nProject: ${projectData.projectTitle}\nRole: ${memberData.memberRole || 'Team Member'}\n\nView your badges: ${badgesUrl}\nAdd it to LinkedIn: ${linkedInUrl}`
   };
 }
 

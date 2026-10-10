@@ -13,12 +13,6 @@ import ReactionsModal from './ReactionsModal';
 import { usePhotos } from '../hooks/usePhotos';
 import { writeErrorMessage } from '../utils/emailVerification';
 
-const Eye = () => (
-  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-  </svg>
-);
 const Pointer = () => (
   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
@@ -26,15 +20,17 @@ const Pointer = () => (
 );
 
 // "👁 120 views · 34 clicks"
+// Shown under a card: how many members opened what it links to. View counts
+// aren't shown (a small number can feel discouraging), and nothing shows
+// until someone has clicked.
 export const WallStats = ({ stats = {}, className = '' }) => (
-  <div className={`flex items-center gap-3 text-[11px] text-gray-500 ${className}`}>
-    <span className="inline-flex items-center gap-1" title="Members who saw this">
-      <Eye />{compact(stats.views)} view{stats.views === 1 ? '' : 's'}
-    </span>
-    <span className="inline-flex items-center gap-1" title="Members who opened what it links to">
-      <Pointer />{compact(stats.clicks)} click{stats.clicks === 1 ? '' : 's'}
-    </span>
-  </div>
+  stats.clicks > 0 ? (
+    <div className={`flex items-center gap-3 text-[11px] text-gray-500 ${className}`}>
+      <span className="inline-flex items-center gap-1" title="Members who opened what it links to">
+        <Pointer />{compact(stats.clicks)} click{stats.clicks === 1 ? '' : 's'}
+      </span>
+    </div>
+  ) : null
 );
 
 // Count a view when the card is at least half visible (once per member per day).

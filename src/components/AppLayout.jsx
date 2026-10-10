@@ -336,7 +336,7 @@ const AppLayout = ({ children, flush = false }) => {
         {/* User + Logout */}
         <div className="border-t border-gray-200 p-3 space-y-2">
           {currentUser && (
-            <Link to={`/profile/${currentUser.email}`} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <Link to={`/profile/${currentUser.uid}`} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
               {currentUser.photoURL ? (
                 <img src={currentUser.photoURL} alt="" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
               ) : (

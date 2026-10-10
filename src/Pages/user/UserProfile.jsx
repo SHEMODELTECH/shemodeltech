@@ -7,7 +7,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
-import { BadgeTile } from '../../components/BadgeShowcase';
+import { BadgeTile, trackStandings } from '../../components/BadgeShowcase';
+import { levelForCount } from '../../config/badgeTracks';
+import { badgeLinkedInUrl } from '../../utils/badgeLinkedIn';
 import CollapseToggle, { useCollapsed } from '../../components/CollapseToggle';
 import { collection, query, where, limit, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -303,6 +305,7 @@ const UserProfile = () => {
     );
   }
 
+  const topBadge = trackStandings(profile)[0] || null;
   const isOwnProfile = currentUser?.uid === profile.uid || currentUser?.email?.toLowerCase() === profile.email?.toLowerCase();
   if (profile.isMinor && !isOwnProfile && !viewerStaff) {
     return (
@@ -330,7 +333,6 @@ const UserProfile = () => {
     ['LinkedIn', safeUrl(profile.linkedinUrl)],
     ['GitHub', safeUrl(profile.githubUrl)],
     ['Portfolio', safeUrl(profile.portfolioUrl)],
-    ['Email', profile.emailPublic && profile.email ? `mailto:${profile.email}` : null],
   ].filter(([, href]) => href).map(([label, href]) => ({ label, href }));
   const skillList = [...new Set(
     (profile.skillsText ? profile.skillsText.split(',') : Array.isArray(profile.skills) ? profile.skills : [])
@@ -413,7 +415,21 @@ const UserProfile = () => {
                 </button>
               </div>
             )}
-            {!profile.isCompany && <BadgeTile profile={profile} />}
+            {!profile.isCompany && (
+              <div className="flex flex-col items-center gap-1.5 w-full sm:w-auto">
+                <BadgeTile profile={profile} />
+                {isOwnProfile && topBadge && (
+                  <a
+                    href={badgeLinkedInUrl(topBadge.name, levelForCount(topBadge.count) || 'Novice')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-semibold text-[#0A66C2] hover:underline print:hidden"
+                  >
+                    Add to LinkedIn
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {profile.bio && (

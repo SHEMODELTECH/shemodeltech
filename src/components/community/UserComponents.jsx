@@ -16,7 +16,9 @@ export const EnhancedClickableUserName = ({ user, className = '', children, show
     e.stopPropagation();
 
     try {
-      if (user?.email) {
+      if (user?.uid) {
+        navigate(`/profile/${user.uid}`);
+      } else if (user?.email) {
         const encodedEmail = encodeURIComponent(user.email);
         navigate(`/profile/${encodedEmail}`);
       } else if (user?.uid) {
@@ -57,7 +59,9 @@ export const TaggedUsers = ({ taggedUsers = [], onRemoveTag }) => {
 
   const handleUserClick = (user) => {
     try {
-      if (user.email) {
+      if (user.uid) {
+        navigate(`/profile/${user.uid}`);
+      } else if (user.email) {
         const encodedEmail = encodeURIComponent(user.email);
         navigate(`/profile/${encodedEmail}`);
       } else if (user.uid) {

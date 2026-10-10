@@ -929,7 +929,7 @@ const ProofWall = () => {
           <div className="flex flex-col gap-2.5">
             {talent.map((m) => {
               const k = statKey('t', m.uid);
-              const profile = m.email ? `/profile/${encodeURIComponent(m.email)}` : null;
+              const profile = m.uid ? `/profile/${m.uid}` : null;
               const facts = [m.track, m.level].filter(Boolean);
               return (
                 <ViewBox key={m.uid} statKey={k} me={me} ownerUid={m.uid} onView={() => addOne(k, 'views')} ready={statsReady.has(k)}
@@ -1129,7 +1129,7 @@ const ProofWall = () => {
                     </div>
                     {m.email && (
                       <button
-                        onClick={clickThen(statKey('t', m.uid), m.uid, () => navigate(`/profile/${encodeURIComponent(m.email)}`))}
+                        onClick={clickThen(statKey('t', m.uid), m.uid, () => navigate(`/profile/${m.uid}`))}
                         className="flex-shrink-0 text-pink-600 text-xs font-semibold hover:underline"
                       >
                         Profile →
@@ -1196,8 +1196,8 @@ const ProofWall = () => {
                           return (
                             <button
                               type="button"
-                              onClick={() => p.email && ck(() => navigate(`/profile/${p.email}`))()}
-                              className={`w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ${p.email ? 'cursor-pointer hover:ring-2 hover:ring-pink-200 transition-all' : 'cursor-default'}`}
+                              onClick={() => a.actorId && ck(() => navigate(`/profile/${a.actorId}`))()}
+                              className={`w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ${a.actorId ? 'cursor-pointer hover:ring-2 hover:ring-pink-200 transition-all' : 'cursor-default'}`}
                               aria-label={
                                 p.email ? `View ${a.actorName || 'member'}'s profile` : undefined
                               }
@@ -1238,7 +1238,7 @@ const ProofWall = () => {
                       )}
                       <div className="min-w-0 flex-1 text-sm sm:text-[15px] text-gray-900 leading-snug">
                         {renderHeadline(a, {
-                          profile: a.actorId && posterInfo[a.actorId]?.email ? ck(() => navigate(`/profile/${posterInfo[a.actorId].email}`)) : undefined,
+                          profile: a.actorId ? ck(() => navigate(`/profile/${a.actorId}`)) : undefined,
                           project: a.projectId ? ck(() => navigate(`/projects/${a.projectId}`)) : undefined,
                           badges: ck(() => navigate('/badges')),
                         })}
@@ -1355,7 +1355,7 @@ const ProofWall = () => {
                       {a.type !== 'lead' && a.type !== 'update' && (a.projectId || (a.actorId && posterInfo[a.actorId]?.email)) && (
                         <button
                           onClick={ck(() => ((a.type === 'badge' || !a.projectId)
-                            ? navigate(`/profile/${posterInfo[a.actorId]?.email}`)
+                            ? navigate(`/profile/${a.actorId}`)
                             : navigate(`/projects/${a.projectId}`)))}
                           className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
                         >

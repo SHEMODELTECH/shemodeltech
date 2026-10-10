@@ -431,7 +431,7 @@ const LearningCourse = ({ reading = false }) => {
               <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
                 By{' '}
                 {author?.email ? (
-                  <Link to={`/profile/${encodeURIComponent(author.email)}`} className="font-semibold hover:underline">
+                  <Link to={`/profile/${encodeURIComponent(authorUid || author.email)}`} className="font-semibold hover:underline">
                     {course.authorName}
                   </Link>
                 ) : (
@@ -646,7 +646,7 @@ const LearningCourse = ({ reading = false }) => {
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
                 {author?.email && (
-                  <Link to={`/profile/${encodeURIComponent(author.email)}`}
+                  <Link to={`/profile/${encodeURIComponent(authorUid || author.email)}`}
                     className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">
                     View profile
                   </Link>

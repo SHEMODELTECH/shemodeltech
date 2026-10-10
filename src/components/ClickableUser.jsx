@@ -29,7 +29,9 @@ export const ClickableUserAvatar = ({
 
     // Navigate to user profile
     try {
-      if (user.email) {
+      if (user.uid) {
+        navigate(`/profile/${user.uid}`);
+      } else if (user.email) {
         const encodedEmail = encodeURIComponent(user.email);
         navigate(`/profile/${encodedEmail}`);
       } else if (user.uid) {
@@ -147,7 +149,9 @@ export const ClickableUserName = ({
 
     // Navigate to user profile
     try {
-      if (user.email) {
+      if (user.uid) {
+        navigate(`/profile/${user.uid}`);
+      } else if (user.email) {
         const encodedEmail = encodeURIComponent(user.email);
         navigate(`/profile/${encodedEmail}`);
       } else if (user.uid) {
@@ -241,7 +245,9 @@ export const ClickableUserCard = ({
 
     // Navigate to user profile
     try {
-      if (user.email) {
+      if (user.uid) {
+        navigate(`/profile/${user.uid}`);
+      } else if (user.email) {
         const encodedEmail = encodeURIComponent(user.email);
         navigate(`/profile/${encodedEmail}`);
       } else if (user.uid) {

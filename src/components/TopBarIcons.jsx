@@ -56,7 +56,7 @@ const TopBarIcons = ({ unreadMessages = 0, unreadNotifications = 0, messagesOnMo
   const { currentUser } = useAuth();
   const { pathname } = useLocation();
   if (!currentUser) return null;
-  const myProfile = `/profile/${currentUser.email}`;
+  const myProfile = `/profile/${currentUser.uid}`;
   const onProfile = pathname === myProfile || decodeURIComponent(pathname) === myProfile;
   const at = (p) => pathname === p || pathname.startsWith(`${p}/`);
   const initial = (currentUser.displayName || currentUser.email || 'U').trim().charAt(0).toUpperCase();

@@ -6,6 +6,7 @@
 // The link is a /s/... address, so LinkedIn and WhatsApp show a preview card with
 // the event's or project's own title, description, and image.
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
 
 const ICONS = {
@@ -90,7 +91,9 @@ export const ShareDialogButton = ({ url, text, title, label = 'Share', className
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v14" /></svg>
         {label}
       </button>
-      {open && (
+      {/* Drawn above the whole page (not inside the card), so a card that moves
+          on hover can't drag the window with it or make it flicker. */}
+      {open && createPortal(
         <div
           className="fixed inset-0 z-[60] bg-black/40 flex items-end sm:items-center justify-center p-4"
           onClick={(e) => { e.stopPropagation(); setOpen(false); }}
@@ -106,7 +109,8 @@ export const ShareDialogButton = ({ url, text, title, label = 'Share', className
             </div>
             <div className="mt-4"><ShareButtons url={url} text={text} title={title} /></div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
