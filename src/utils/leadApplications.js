@@ -115,7 +115,7 @@ export const applyToLead = async ({
     type: 'lead_application_submitted',
     title: 'New project lead application',
     body: `${applicant.displayName || applicant.email} applied to lead a project.`,
-    link: '/admin',
+    link: '/admin/projects?view=applications',
     roles: ['admin', 'editor'],
   });
   return ref.id;
@@ -442,4 +442,48 @@ export const suggestAnotherProjectToLead = async ({ appId, applicant, projectId,
     createdAt: serverTimestamp(),
   }).catch(() => {});
   return { reviewer };
+};
+
+/**
+ * Staff suggest a different way for an applicant to take part, without
+ * deciding her application: lead a project, or join one as a collaborator
+ * (the same project she applied to, or another). She gets a notification and
+ * an email with a link to the project, where she can apply. The suggestion is
+ * recorded on her application so the team can see it.
+ *
+ *   kind: 'lead' | 'collaborate'
+ *   source: 'lead' (lead_applications) | 'collaborator' (project_applications)
+ */
+export const suggestToApplicant = async ({ source, appId, applicant, kind, projectId, projectTitle, role, message, reviewer }) => {
+  if (!applicant?.applicantUid) throw new Error('This applicant has no account to notify.');
+  if (!projectId) throw new Error('Choose a project.');
+  const title = projectTitle || 'a She Model Tech project';
+  const roleText = kind === 'collaborate' && role ? ` as ${role}` : '';
+  const body = `${message ? `${message.trim()} ` : ''}${
+    kind === 'lead'
+      ? `We think you'd be a great lead for "${title}". Take a look and apply to lead it.`
+      : `We'd love you on the "${title}" team${roleText}. Take a look and join the project.`
+  }`;
+  await notify(
+    applicant.applicantUid,
+    {
+      type: 'staff_suggestion',
+      title: kind === 'lead' ? `We'd like you to consider leading "${title}"` : `We'd love you on the "${title}" team`,
+      body,
+      link: `/projects/${projectId}`,
+      projectId,
+    },
+    applicant.applicantEmail
+  );
+  const record = {
+    kind,
+    projectId,
+    projectTitle: title,
+    role: kind === 'collaborate' ? (role || null) : null,
+    by: reviewer?.email || null,
+    at: new Date().toISOString(),
+  };
+  const col = source === 'lead' ? 'lead_applications' : 'project_applications';
+  await updateDoc(doc(db, col, appId), { staffSuggestions: arrayUnion(record) }).catch(() => {});
+  return record;
 };

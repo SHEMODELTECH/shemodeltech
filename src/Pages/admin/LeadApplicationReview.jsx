@@ -1,6 +1,12 @@
 // src/Pages/admin/LeadApplicationReview.jsx
 //
-// The reviewer queue for lead applications. Admin OR editor.
+// Applications, in one place, for admins and editors: everyone who applied to
+// LEAD a project and everyone who applied to COLLABORATE on one, shown
+// together under each project (Projects → Manage → Manage projects →
+// Applications). For any applicant, staff can open her profile and suggest
+// she leads or collaborates on this project or another (SuggestBox).
+// Collaborators are approved or declined by the project's lead, from the
+// project dashboard.
 //
 // The view is organised BY PROJECT rather than by applicant, because that is
 // the decision you're actually making: "four people want to lead Project A and
@@ -31,6 +37,7 @@ import {
   rejectAsLeadInviteAsContributor,
   rejectApplication,
   suggestAnotherProjectToLead,
+  suggestToApplicant,
   getFallbackCandidates,
   LEAD_APP_STATUS,
 } from '../../utils/leadApplications';
@@ -51,13 +58,18 @@ const STATUS_LABEL = {
   [LEAD_APP_STATUS.REJECTED]: 'Not selected',
 };
 
-const LeadApplicationReview = () => {
+// `bare`: shown inside Manage projects (no page heading or padding).
+const LeadApplicationReview = ({ bare = false }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const { isReviewer, loading: permsLoading } = usePermissions(currentUser?.uid);
 
   const [projects, setProjects] = useState([]);
   const [applications, setApplications] = useState([]);
+  // Collaborator applications waiting for a decision, by project id.
+  const [collabByProject, setCollabByProject] = useState({});
+  // Every active She Model Tech project (for suggesting another project).
+  const [allProjects, setAllProjects] = useState([]);
   // Mentors and team members are considered first when applicants are equally
   // qualified, so their applications are tagged. uid -> { mentor, team }
   const [tags, setTags] = useState({});
@@ -88,20 +100,29 @@ const LeadApplicationReview = () => {
       // Every active She Model Tech project (including ones that already have a
       // lead, so their other applicants stay visible and can be offered a team
       // role), and every lead application except withdrawn ones.
-      const [projSnap, appSnap] = await Promise.all([
+      const [projSnap, appSnap, collabSnap] = await Promise.all([
         getDocs(query(collection(db, 'projects'), where('isActive', '==', true))),
         getDocs(collection(db, 'lead_applications')),
+        getDocs(query(collection(db, 'project_applications'), where('status', '==', 'submitted'))).catch(() => null),
       ]);
+      const collab = {};
+      (collabSnap ? collabSnap.docs : []).forEach((d) => {
+        const a = { id: d.id, ...d.data() };
+        if (!a.projectId) return;
+        (collab[a.projectId] = collab[a.projectId] || []).push(a);
+      });
+      Object.values(collab).forEach((list) => list.sort((x, y) => (x.createdAt?.seconds || 0) - (y.createdAt?.seconds || 0)));
+      setCollabByProject(collab);
       const apps = appSnap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
         .filter((a) => a.status !== LEAD_APP_STATUS.WITHDRAWN)
         .sort((x, y) => (x.createdAt?.seconds || 0) - (y.createdAt?.seconds || 0));
-      const wanted = new Set(apps.flatMap((a) => a.rankedProjectIds || []));
-      setProjects(
-        projSnap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter((p) => !p.isCompanyPost && p.status !== 'completed' && (!p.leadConfirmed || wanted.has(p.id)))
-      );
+      const wanted = new Set([...apps.flatMap((a) => a.rankedProjectIds || []), ...Object.keys(collab)]);
+      const active = projSnap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((p) => !p.isCompanyPost && p.status !== 'completed');
+      setAllProjects(active);
+      setProjects(active.filter((p) => !p.leadConfirmed || wanted.has(p.id)));
       setApplications(apps);
       // Tag mentors (a published course) and team members (an approved team application).
       (async () => {
@@ -112,7 +133,7 @@ const LeadApplicationReview = () => {
         } catch (_) { /* optional */ }
         // Applicants' profiles, 30 at a time in parallel (one read per
         // applicant, one after another, was slow with many applications).
-        const uids = [...new Set(apps.map((a) => a.applicantUid).filter(Boolean))];
+        const uids = [...new Set([...apps, ...Object.values(collab).flat()].map((a) => a.applicantUid).filter(Boolean))];
         const profiles = {};
         const chunks = [];
         for (let i = 0; i < uids.length; i += 30) chunks.push(uids.slice(i, i + 30));
@@ -121,7 +142,7 @@ const LeadApplicationReview = () => {
             .then((snap) => snap.docs.forEach((d) => { profiles[d.id] = d.data(); }))
             .catch(() => {})));
         const out = {};
-        for (const a of apps) {
+        for (const a of [...apps, ...Object.values(collab).flat()]) {
           if (!a.applicantUid || out[a.applicantUid]) continue;
           const d = profiles[a.applicantUid] || {};
           out[a.applicantUid] = {
@@ -163,20 +184,21 @@ const LeadApplicationReview = () => {
 
   // Show every applicant (including decided ones) under each project they ranked.
   const grouped = groupByProject(applications, projects, { includeDecided: true })
-    .filter((g) => !g.project.leadConfirmed || g.applicants.length > 0)
+    .filter((g) => !g.project.leadConfirmed || g.applicants.length > 0 || (collabByProject[g.project.id] || []).length > 0)
     .sort((a, b) => Number(a.project.leadConfirmed || false) - Number(b.project.leadConfirmed || false));
   const waiting = applications.filter((a) => ['submitted', 'interview_scheduled'].includes(a.status));
+  const collabWaiting = Object.values(collabByProject).reduce((n, l) => n + l.length, 0);
   const unled = projects.filter((p) => !p.leadConfirmed);
   const assignedCount = applications.filter((a) => a.status === LEAD_APP_STATUS.ASSIGNED).length;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-        Lead applications
-      </h1>
-      <p className="text-gray-500 text-sm mb-8">
-        {waiting.length} application{waiting.length === 1 ? '' : 's'} waiting &middot;{' '}
-        {unled.length} project{unled.length === 1 ? '' : 's'} need{unled.length === 1 ? 's' : ''} a lead &middot; applications are open all the time
+    <div className={bare ? '' : 'max-w-5xl mx-auto px-4 py-8 sm:py-12'}>
+      {!bare && (
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Applications</h1>
+      )}
+      <p className="text-gray-500 text-sm mb-6">
+        {waiting.length} to lead &middot; {collabWaiting} to collaborate &middot;{' '}
+        {unled.length} project{unled.length === 1 ? '' : 's'} need{unled.length === 1 ? 's' : ''} a lead
       </p>
 
       <LeadWaitlist />
@@ -325,8 +347,7 @@ const LeadApplicationReview = () => {
                       {project.projectTitle || project.title}
                     </h2>
                     <p className="text-gray-500 text-xs mt-0.5">
-                      {project.industryTrack} &middot; {applicants.length} applicant
-                      {applicants.length === 1 ? '' : 's'}
+                      {[project.industryTrack, `${applicants.length} to lead`, `${(collabByProject[project.id] || []).length} to collaborate`].filter(Boolean).join(' · ')}
                     </p>
                   </div>
                   {project.leadConfirmed ? (
@@ -379,6 +400,7 @@ const LeadApplicationReview = () => {
                         <span className="font-semibold text-gray-900 text-sm">
                           {app.applicantName}
                         </span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-600 text-white">Lead</span>
                         {tags[app.applicantUid]?.mentor && (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700 border border-pink-100" title="Considered first when equally qualified">Mentor</span>
                         )}
@@ -415,11 +437,75 @@ const LeadApplicationReview = () => {
                         app={app}
                         project={project}
                         projects={projects}
+                        allProjects={allProjects}
                         decided={decided}
                         busy={busy}
                         reviewer={currentUser}
                         onAct={act}
                       />
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Collaborator applications for this project (decided by its lead). */}
+              {(collabByProject[project.id] || []).map((app) => {
+                const open = expanded === `${project.id}_c_${app.id}`;
+                return (
+                  <div key={app.id} className="border-b border-gray-100 last:border-0">
+                    <div className="flex items-stretch">
+                      <button
+                        type="button"
+                        onClick={() => setExpanded(open ? null : `${project.id}_c_${app.id}`)}
+                        className="flex-1 min-w-0 text-left p-4 sm:p-5 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="font-semibold text-gray-900 text-sm">{app.applicantName}</span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-900 text-white">Collaborator</span>
+                          {app.role && <span className="text-gray-500 text-xs">{app.role}</span>}
+                          {tags[app.applicantUid]?.mentor && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700 border border-pink-100">Mentor</span>
+                          )}
+                          {(app.staffSuggestions || []).length > 0 && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">Suggested</span>
+                          )}
+                        </div>
+                      </button>
+                      {(app.applicantUid || app.applicantEmail) && (
+                        <a
+                          href={`/profile/${encodeURIComponent(app.applicantUid || app.applicantEmail)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-shrink-0 self-center mr-4 sm:mr-5 text-xs font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-3 py-1.5 rounded-lg"
+                        >
+                          View profile
+                        </a>
+                      )}
+                    </div>
+                    {open && (
+                      <div className="px-4 sm:px-5 pb-5 bg-gray-50/60 space-y-3">
+                        <div className="text-sm text-gray-700 space-y-1">
+                          {app.skills && <p><span className="text-gray-500">Skills:</span> {app.skills}</p>}
+                          {app.applicantBadgeLevel && <p><span className="text-gray-500">Badge level:</span> {app.applicantBadgeLevel}</p>}
+                          {app.message && <p className="whitespace-pre-wrap">{app.message}</p>}
+                          {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-700 text-xs font-semibold hover:underline">Portfolio</a>}
+                        </div>
+                        <p className="text-xs text-gray-600">
+                          {project.leadConfirmed
+                            ? <>The lead approves or declines collaborators. <a href={`/projects/owner-dashboard#project-${project.id}`} className="text-pink-700 font-semibold hover:underline">Open the project dashboard</a></>
+                            : 'This project has no lead yet; collaborators are decided once a lead is chosen.'}
+                        </p>
+                        <SuggestBox
+                          source="collaborator"
+                          app={app}
+                          applied="collaborate"
+                          project={project}
+                          allProjects={allProjects}
+                          busy={busy}
+                          reviewer={currentUser}
+                          onAct={act}
+                        />
+                      </div>
                     )}
                   </div>
                 );
@@ -433,8 +519,85 @@ const LeadApplicationReview = () => {
 };
 
 // ---------------------------------------------------------------------
+// Suggest a different way to take part: lead or collaborate, on this project
+// or another. She's notified and emailed; her application stays as it is.
 
-const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct }) => {
+const SuggestBox = ({ source, app, applied, project, allProjects, busy, reviewer, onAct }) => {
+  const [kind, setKind] = useState(applied === 'lead' ? 'collaborate' : 'lead');
+  const [picked, setProjectId] = useState(project.id);
+  const [role, setRole] = useState('');
+  const [note, setNote] = useState('');
+  const needsLead = (p) => !p.leadConfirmed;
+  // Leading: only projects still needing a lead (plus this one). Collaborating: any.
+  const options = allProjects.filter((p) => kind === 'collaborate' || needsLead(p) || p.id === project.id);
+  const projectId = options.some((p) => p.id === picked) ? picked : project.id;
+  const target = allProjects.find((p) => p.id === projectId) || project;
+  const same = projectId === project.id && kind === applied;
+  const key = `${app.id}_suggest`;
+  const past = app.staffSuggestions || [];
+  const send = () => onAct(
+    key,
+    () => (source === 'lead' && kind === 'lead' && projectId !== project.id
+      ? suggestAnotherProjectToLead({ appId: app.id, applicant: app, projectId, projectTitle: target.projectTitle || target.title, message: note, reviewer })
+      : suggestToApplicant({ source, appId: app.id, applicant: app, kind, projectId, projectTitle: target.projectTitle || target.title, role, message: note, reviewer })),
+    `Suggestion sent to ${app.applicantName || 'the applicant'}.`
+  );
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg p-3">
+      <p className="text-xs font-bold text-gray-900 mb-2">Suggest something else</p>
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <span className="text-gray-600">Suggest she</span>
+        <select value={kind} onChange={(e) => setKind(e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1.5 bg-white text-sm" aria-label="Lead or collaborate">
+          <option value="lead">leads</option>
+          <option value="collaborate">collaborates on</option>
+        </select>
+        <select value={projectId} onChange={(e) => setProjectId(e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1.5 bg-white text-sm max-w-full sm:max-w-xs" aria-label="Project">
+          {options.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.id === project.id ? 'this project' : (p.projectTitle || p.title)}{kind === 'lead' && p.leadConfirmed && p.id === project.id ? ' (has a lead)' : ''}
+            </option>
+          ))}
+        </select>
+        {kind === 'collaborate' && (
+          <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="Role (optional)" className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm w-44" aria-label="Role" />
+        )}
+      </div>
+      <textarea
+        rows={2}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Optional personal note"
+        className="mt-2 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+      />
+      <div className="mt-2 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          disabled={same || busy === key}
+          onClick={send}
+          className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+        >
+          {busy === key ? 'Sending…' : 'Send suggestion'}
+        </button>
+        {same && <span className="text-xs text-gray-500">That's what she applied for.</span>}
+        {kind === 'lead' && target.leadConfirmed && !same && <span className="text-xs text-gray-500">This project already has a lead.</span>}
+      </div>
+      {past.length > 0 && (
+        <ul className="mt-3 pt-2 border-t border-gray-100 space-y-1">
+          {past.map((x, i) => (
+            <li key={i} className="text-xs text-gray-600">
+              Suggested {x.kind === 'lead' ? 'leading' : 'collaborating on'} "{x.projectTitle}"{x.role ? ` as ${x.role}` : ''}
+              {x.by ? ` · ${x.by}` : ''}{x.at ? ` · ${new Date(x.at).toLocaleDateString()}` : ''}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------
+
+const ApplicantPanel = ({ app, project, projects, allProjects = projects, decided, busy, reviewer, onAct }) => {
   const [notes, setNotes] = useState(app.reviewerNotes || '');
   const [meetLink, setMeetLink] = useState(app.meetLink || '');
   const [when, setWhen] = useState(app.interviewScheduledAt || '');
@@ -720,6 +883,19 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
           {app.suggestedRole ? `, offered ${app.suggestedRole}` : ''}.
         </p>
       )}
+
+      <div className="mt-4">
+        <SuggestBox
+          source="lead"
+          app={app}
+          applied="lead"
+          project={project}
+          allProjects={allProjects}
+          busy={busy}
+          reviewer={reviewer}
+          onAct={onAct}
+        />
+      </div>
     </div>
   );
 };

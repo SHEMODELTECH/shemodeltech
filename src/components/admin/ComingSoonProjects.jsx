@@ -73,7 +73,7 @@ const ComingSoonProjects = ({ projects }) => {
                   <p className="text-xs text-gray-500">{STAGE[stageOf(p)]}{p.cohortPaid ? ' · Paid' : ''}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <Link to="/admin/lead-applications" className="font-semibold bg-gray-100 text-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-200">
+                  <Link to="/admin/projects?view=applications" className="font-semibold bg-gray-100 text-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-200">
                     {c.leads ?? '…'} lead application{c.leads === 1 ? '' : 's'}
                   </Link>
                   {needsLead && (

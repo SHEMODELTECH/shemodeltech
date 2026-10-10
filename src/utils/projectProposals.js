@@ -49,7 +49,7 @@ export const proposeProject = async (user, form) => {
     type: 'project_proposal',
     title: 'A member proposed a project',
     body: `${user.displayName || user.email} proposed "${form.title.trim()}" and would like to lead it.`,
-    link: '/admin/lead-applications',
+    link: '/admin/projects?view=applications',
     roles: ['admin', 'editor'],
   });
   return ref;

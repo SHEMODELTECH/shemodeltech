@@ -116,7 +116,7 @@ export const submitProjectForReview = async (project, owner, submission) => {
     type: 'project_review_submitted',
     title: 'Project submitted for review',
     body: `"${project.projectTitle || project.title || 'A project'}" was submitted by ${owner?.displayName || owner?.email || 'its lead'} and needs review.`,
-    link: '/admin',
+    link: '/admin/projects?view=review',
     roles: ['admin', 'editor'],
   });
 

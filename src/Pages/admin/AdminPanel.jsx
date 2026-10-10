@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, addDoc, Timestamp, getCountFromServer } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { isReviewerRole, isAdminRole, roleLabel } from '../../utils/permissions';
 import { toast } from 'react-toastify';
@@ -42,6 +42,7 @@ import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 import GiftsAdmin from '../../components/admin/GiftsAdmin';
 import { roleSlotsOf } from '../../utils/projectSlots';
 import ComingSoonProjects from '../../components/admin/ComingSoonProjects';
+import LeadApplicationReview from './LeadApplicationReview';
 import HeardFromSummary from '../../components/admin/HeardFromSummary';
 import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
 import FeedbackSummary from '../../components/admin/FeedbackSummary';
@@ -100,6 +101,20 @@ const AdminPanel = ({ only = null, bare = false }) => {
     (ADMIN_ONLY_TABS.includes(rawTab) && !isAdmin) || (REVIEWER_TABS.includes(rawTab) && !isReviewer)
   )) ? 'overview' : rawTab;
   const setTab = (t) => navigate(MOVED_TABS[t] || (t === 'overview' ? '/admin' : `/admin?tab=${t}`));
+  // Manage projects has four tabs (?view=): projects to review, coming soon,
+  // active projects, and applications (to lead and to collaborate, together).
+  const view = only === 'projects' ? (searchParams.get('view') || 'review') : null;
+  const showView = (v) => only !== 'projects' || view === v;
+  const isSoonProject = (p) => p.isActive === false || ['lead_recruitment', 'setup'].includes(p.status);
+  // Applications waiting (to lead and to collaborate), for the tab label.
+  const [appCount, setAppCount] = useState(null);
+  useEffect(() => {
+    if (only !== 'projects') return;
+    Promise.all([
+      getCountFromServer(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))).then((x) => x.data().count).catch(() => 0),
+      getCountFromServer(query(collection(db, 'project_applications'), where('status', '==', 'submitted'))).then((x) => x.data().count).catch(() => 0),
+    ]).then(([a, b]) => setAppCount(a + b));
+  }, [only, view]);
   useEffect(() => {
     if (!only && MOVED_TABS[rawTab]) navigate(MOVED_TABS[rawTab], { replace: true });
   }, [only, rawTab, navigate]);
@@ -763,6 +778,16 @@ const AdminPanel = ({ only = null, bare = false }) => {
     </div>
   );
 
+  // Manage projects tabs: running projects only under Active.
+  const activeProjects = projects.filter((p) => p.status !== 'completed' && !isSoonProject(p));
+  const soonCount = projects.filter((p) => p.status !== 'completed' && isSoonProject(p)).length;
+  const viewTabs = [
+    ['review', `Projects to review (${reviewProjects.length})`],
+    ['soon', `Coming soon (${soonCount})`],
+    ['active', `Active (${activeProjects.length})`],
+    ['applications', `Applications${appCount === null ? '' : ` (${appCount})`}`],
+  ];
+
   return (
     <div className={bare ? '' : 'max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8'}>
       {/* Inside another page's Manage area the tabs already name the section. */}
@@ -783,10 +808,28 @@ const AdminPanel = ({ only = null, bare = false }) => {
         {only === 'reviews'
           ? 'Projects submitted by their leads for She Model Tech review.'
           : only === 'projects'
-          ? 'Projects to review, extra-time requests, and every active project (view or delete).'
+          ? 'Projects to review, coming soon, active projects, and applications to lead or collaborate.'
           : tab === 'overview' ? 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.' : `${isAdmin ? 'Admin' : 'Editor'} · choose another section from the ${isAdmin ? 'Admin' : 'Editor'} menu.`}
       </p>
       </>)}
+      {only === 'projects' && (
+        <nav aria-label="Manage projects" className="mb-6 border-b border-gray-200">
+          <div className="flex gap-4 sm:gap-6 overflow-x-auto">
+            {viewTabs.map(([v, label]) => (
+              <Link
+                key={v}
+                to={`/admin/projects?view=${v}`}
+                aria-current={view === v ? 'page' : undefined}
+                className={`whitespace-nowrap px-1 py-2.5 text-sm font-semibold border-b-2 transition-colors ${
+                  view === v ? 'text-pink-600 border-pink-600' : 'text-gray-600 border-transparent hover:text-pink-600'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
 
 
       {loadingData && <div className="py-10 text-center text-gray-400 text-sm">Loading…</div>}
@@ -873,7 +916,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
         }
       />
 
-      {(tab === 'reviews' || only === 'projects') && (
+      {(tab === 'reviews' || (only === 'projects' && view === 'review')) && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -1039,7 +1082,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
       )}
 
       {/* PROJECTS */}
-      {!loadingData && tab === 'projects' && smtPaid.length > 0 && (
+      {!loadingData && tab === 'projects' && showView('active') && smtPaid.length > 0 && (
         <div className="mb-6">
           <h3 className="text-gray-900 font-bold mb-2">She Model Tech paid projects</h3>
           {smtPaid.map((c) => (
@@ -1054,10 +1097,11 @@ const AdminPanel = ({ only = null, bare = false }) => {
         </div>
       )}
 
-      {!loadingData && tab === 'projects' && <ComingSoonProjects projects={projects} />}
+      {!loadingData && tab === 'projects' && showView('soon') && <ComingSoonProjects projects={projects} />}
+      {!loadingData && tab === 'projects' && only === 'projects' && view === 'applications' && <LeadApplicationReview bare />}
 
       {/* Leads asking for more people on a paid project; staff approve how many. */}
-      {!loadingData && tab === 'projects' && projects.some((p) => p.sizeRequest?.status === 'pending') && (
+      {!loadingData && tab === 'projects' && showView('active') && projects.some((p) => p.sizeRequest?.status === 'pending') && (
         <div className="mb-6">
           <h3 className="text-gray-900 font-bold mb-2">More people requested by leads</h3>
           {projects.filter((p) => p.sizeRequest?.status === 'pending').map((p) => {
@@ -1137,7 +1181,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
           })}
         </div>
       )}
-      {!loadingData && tab === 'projects' && projects.some((p) => p.extensionRequest?.status === 'pending') && (
+      {!loadingData && tab === 'projects' && showView('active') && projects.some((p) => p.extensionRequest?.status === 'pending') && (
         <div className="mb-6">
           <h3 className="text-gray-900 font-bold mb-2">Extra time requested by leads</h3>
           {projects.filter((p) => p.extensionRequest?.status === 'pending').map((p) => (
@@ -1198,18 +1242,18 @@ const AdminPanel = ({ only = null, bare = false }) => {
           ))}
         </div>
       )}
-      {!loadingData && tab === 'projects' && (
+      {!loadingData && tab === 'projects' && showView('active') && (
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-            <h3 className="text-gray-900 font-bold">Active projects ({projects.filter((p) => p.status !== 'completed').length})</h3>
+            <h3 className="text-gray-900 font-bold">Active projects ({activeProjects.length})</h3>
             <Link to="/project-vault" className="text-xs font-semibold text-pink-700 hover:underline">
               {projects.filter((p) => p.status === 'completed').length} completed projects are in the Project Vault
             </Link>
           </div>
-          {projects.filter((p) => p.status !== 'completed').length === 0 ? (
+          {activeProjects.length === 0 ? (
             <p className="text-gray-400 text-sm">No active projects.</p>
           ) : (
-            projects.filter((p) => p.status !== 'completed').slice(0, projectLimit).map((p) => (
+            activeProjects.slice(0, projectLimit).map((p) => (
               <div
                 key={p.id}
                 className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
@@ -1254,7 +1298,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
               </div>
             ))
           )}
-          {projects.filter((p) => p.status !== 'completed').length > projectLimit && (
+          {activeProjects.length > projectLimit && (
             <button type="button" onClick={() => setProjectLimit((n) => n + LIST_PAGE)}
               className="w-full text-sm font-semibold text-pink-700 bg-white border border-gray-200 rounded-lg py-2.5 hover:bg-pink-50">
               Show more projects

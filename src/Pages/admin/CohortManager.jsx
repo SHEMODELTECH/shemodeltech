@@ -623,7 +623,7 @@ const CohortManager = () => {
                   </button>
                 )}
                 <Link
-                  to="/admin/lead-applications"
+                  to="/admin/projects?view=applications"
                   className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 text-xs font-semibold px-4 py-2 rounded-lg"
                 >
                   Lead applications

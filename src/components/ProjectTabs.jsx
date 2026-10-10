@@ -43,7 +43,6 @@ const hasPaidWork = async (uid) => {
 // The staff project tools, shown as a second row under Manage.
 const MANAGE = [
   { to: '/admin/projects', label: 'Manage projects' },
-  { to: '/admin/lead-applications', label: 'Lead applications' },
   { to: '/admin/cohorts', label: 'Create a project' },
 ];
 
