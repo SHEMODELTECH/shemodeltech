@@ -27,7 +27,6 @@ import { approveProposal, declineProposal, listOpenCohorts, listProposals, TRACK
 import NoteDialog from '../../components/NoteDialog';
 import { createCohort } from '../../utils/cohorts';
 import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
-import LeadWaitlist from '../../components/admin/LeadWaitlist';
 import {
   getApplicationsForCohort,
   groupByProject,
@@ -201,20 +200,6 @@ const LeadApplicationReview = ({ bare = false }) => {
         {unled.length} project{unled.length === 1 ? '' : 's'} need{unled.length === 1 ? 's' : ''} a lead
       </p>
 
-      <LeadWaitlist />
-
-      {/* Projects nobody wants - the thing most likely to be missed */}
-      {unled.some((p) => !grouped.find((g) => g.project.id === p.id)?.applicants.length) && (
-        <div className="bg-gray-50 border border-gray-300 rounded-xl p-4 mb-8">
-          <p className="text-gray-900 text-sm font-semibold mb-1">
-            Some projects have no applicants
-          </p>
-          <p className="text-gray-900 text-xs">
-            Consider promoting them in the weekly email, or closing them, a
-            project with no lead can&rsquo;t run, and fewer full teams beat more empty ones.
-          </p>
-        </div>
-      )}
 
       {proposals.length > 0 && (
         <div className="mb-8">

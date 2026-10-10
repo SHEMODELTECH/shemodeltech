@@ -449,7 +449,7 @@ const CohortManager = () => {
   const preview = startDate ? buildSchedule(startDate) : null;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 sm:py-14">
+    <div className="max-w-5xl pt-2 pb-10">
       <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Cohorts</h1>
@@ -626,7 +626,7 @@ const CohortManager = () => {
                   to="/admin/projects?view=applications"
                   className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 text-xs font-semibold px-4 py-2 rounded-lg"
                 >
-                  Lead applications
+                  Applications
                 </Link>
                 {projects.length > 0 && (
                   <button
