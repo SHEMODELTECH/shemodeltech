@@ -8,7 +8,7 @@ import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import DiscoverTrack from '../../components/DiscoverTrack';
-import TierBadge from '../../components/TierBadge';
+import BadgeShowcase from '../../components/BadgeShowcase';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import EventsCard from '../../components/EventsCard';
@@ -21,26 +21,7 @@ import {
   computeCompanyDisbursements,
   formatMoney,
 } from '../../utils/paidProjects';
-import { levelForCount } from '../../config/badgeTracks';
 
-const badgeData = [
-  { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
-  { id: 'techqa', title: 'TechQA', image: '/Images/TechQA.png', label: 'Quality Assurance' },
-  { id: 'techdev', title: 'TechDev', image: '/Images/TechDev.png', label: 'Development' },
-  {
-    id: 'techleads',
-    title: 'TechLeads',
-    image: '/Images/TechLeads.png',
-    label: 'Non-Technical Roles',
-  },
-  {
-    id: 'techarchs',
-    title: 'TechArchs',
-    image: '/Images/TechArchs.png',
-    label: 'Low/No-Code Developer',
-  },
-  { id: 'techguard', title: 'TechGuard', image: '/Images/TechGuard.png', label: 'Cybersecurity' },
-];
 
 const DashboardOverview = () => {
   const { currentUser } = useAuth();
@@ -328,117 +309,8 @@ const DashboardOverview = () => {
           {/* Your Badges */}
           {!profileData?.isCompany && (
             <div className={`bg-white border border-gray-200 rounded-xl p-6 ${showEarnings ? 'lg:col-start-3 lg:row-start-1' : 'lg:col-span-3'}`}>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
-              <p className="text-gray-500 text-xs mb-4">
-                The badges you’ve earned. Each project you complete in a track adds to its level.
-              </p>
-
-              {/* Badge Levels */}
-              <div className="flex flex-wrap items-center gap-1.5 mb-4 p-2.5 bg-gray-50 rounded-lg">
-                <p className="text-gray-500 text-[10px] font-medium mr-0.5">Levels:</p>
-                {['Novice', 'Associate', 'Advanced', 'Expert'].map((level, i) => (
-                  <span
-                    key={level}
-                    className={`text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${
-                      i === 0
-                        ? 'bg-pink-50 text-pink-600'
-                        : i === 1
-                          ? 'bg-pink-100 text-pink-700'
-                          : i === 2
-                            ? 'bg-amber-50 text-amber-600'
-                            : 'bg-amber-100 text-amber-700'
-                    }`}
-                  >
-                    {level}
-                  </span>
-                ))}
-              </div>
-
-              {/* All 6 Badges */}
-              <div className={showEarnings ? 'space-y-3' : 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3'}>
-                {badgeData.filter((badge) => {
-                  const key = (s) => (s || '').toString().toLowerCase();
-                  return (profileData?.badges || []).some(
-                    (b) => key(b.id) === key(badge.id) || key(b.title) === key(badge.title) || key(b.category) === key(badge.title) || key(b.category) === key(badge.id)
-                  );
-                }).length === 0 && (
-                  <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center sm:col-span-2 lg:col-span-3">
-                    <p className="text-sm font-semibold text-gray-800">No badges yet</p>
-                    <p className="text-xs text-gray-500 mt-1">Badges show the skills you've proven on real projects. Each one is reviewed and verified, and it appears on your profile and the Talent Board.</p>
-                  </div>
-                )}
-                {badgeData.map((badge) => {
-                  // Match all earned badges in this category (robust: id / title / category, case-insensitive).
-                  const key = (s) => (s || '').toString().toLowerCase();
-                  const matches = (profileData?.badges || []).filter(
-                    (b) =>
-                      key(b.id) === key(badge.id) ||
-                      key(b.title) === key(badge.title) ||
-                      key(b.category) === key(badge.title) ||
-                      key(b.category) === key(badge.id)
-                  );
-                  const earned = matches.length > 0;
-                  if (!earned) return null; // only the badges this member has earned
-                  // Level is derived LIVE from how many badges earned in this track,
-                  // so it advances as more are earned (Novice 1-2, Associate 3-6, Advanced 7-11, Expert 12+).
-                  const count = matches.length;
-                  const level = levelForCount(count) || 'Novice';
-                  return (
-                    <div
-                      key={badge.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border ${earned ? 'border-pink-200 bg-pink-50/30' : 'border-gray-100 bg-gray-50/50'}`}
-                    >
-                      <TierBadge
-                        image={badge.image}
-                        alt={badge.title}
-                        level={level}
-                        size={40}
-                        earned={!!earned}
-                        showLabel={!!earned}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p
-                            className={`text-sm font-semibold ${earned ? 'text-gray-900' : 'text-gray-400'}`}
-                          >
-                            {badge.title}
-                          </p>
-                          {earned && (
-                            <span className="text-[10px] font-medium px-1.5 py-0.5 bg-pink-100 text-pink-700 rounded-full">
-                              {level}
-                              {count > 1 ? ` · ${count}` : ''}
-                            </span>
-                          )}
-                        </div>
-                        <p className={`text-xs ${earned ? 'text-gray-600' : 'text-gray-400'}`}>
-                          {badge.label}
-                        </p>
-                      </div>
-                      {earned ? (
-                        <svg
-                          className="w-5 h-5 text-pink-600 flex-shrink-0"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        <span className="text-gray-300 text-xs flex-shrink-0">Locked</span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-4 text-center">
-              <Link to="/badges" className="inline-flex items-center gap-1 text-sm font-semibold text-pink-700 hover:underline">
-                Learn how badges work
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </Link>
-              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Your badge</h3>
+              <BadgeShowcase profile={profileData} />
             </div>
           )}
 

@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
-import TierBadge from '../../components/TierBadge';
+import BadgeShowcase from '../../components/BadgeShowcase';
 import { collection, query, where, limit, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import FollowButton from '../../components/community/FollowButton';
@@ -16,43 +16,8 @@ import { listMentorCertificates } from '../../utils/learningCertificates';
 import { mentorStatsByUid } from '../../utils/mentorStats';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
-import { levelForCount } from '../../config/badgeTracks';
 import PresenceBadge from '../../components/PresenceBadge';
 
-const badgeData = [
-  { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
-  { id: 'techqa', title: 'TechQA', image: '/Images/TechQA.png', label: 'Quality Assurance' },
-  { id: 'techdev', title: 'TechDev', image: '/Images/TechDev.png', label: 'Development' },
-  { id: 'techleads', title: 'TechLeads', image: '/Images/TechLeads.png', label: 'Non-Technical Roles' },
-  { id: 'techarchs', title: 'TechArchs', image: '/Images/TechArchs.png', label: 'Low/No-Code Developer' },
-  { id: 'techguard', title: 'TechGuard', image: '/Images/TechGuard.png', label: 'Cybersecurity' },
-];
-
-// Track aliases so we can count badges per track regardless of how category/id is stored.
-const TRACK_ALIASES = {
-  development: ['development', 'techdev', 'developer'],
-  'quality-assurance': ['quality-assurance', 'techqa', 'quality', 'qa'],
-  security: ['security', 'techguard', 'cybersecurity', 'network'],
-  leadership: ['leadership', 'techleads', 'leader', 'non-technical'],
-  design: ['design', 'techarchs', 'architecture', 'low-code', 'no-code'],
-  mentorship: ['mentorship', 'techpo', 'techmo', 'product', 'project-owner'],
-};
-
-// Derive a badge's tier LIVE from how many badges the user holds in the same track
-// (matches dashboard + certificate). This replaces the unreliable frozen badge.level.
-const deriveBadgeLevel = (allBadges, badge) => {
-  const fieldsOf = (b) => [b.category, b.id, b.title, b.badgeCategory].map(x => (x || '').toString().toLowerCase());
-  const mine = fieldsOf(badge);
-  let aliases = mine;
-  for (const [, group] of Object.entries(TRACK_ALIASES)) {
-    if (group.some(a => mine.some(f => f === a || f.includes(a)))) { aliases = group; break; }
-  }
-  const count = (allBadges || []).filter(b => {
-    const f = fieldsOf(b);
-    return aliases.some(a => f.some(fl => fl === a || fl.includes(a)));
-  }).length;
-  return levelForCount(count) || 'Novice';
-};
 
 // Only open web links (http/https) that members typed into their profile.
 const safeUrl = (u) => {
@@ -520,42 +485,11 @@ const UserProfile = () => {
           </div>
         )}
 
-        {/* Badges Section */}
-        {!profile.isCompany && userBadges.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid">
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Badges</h2>
-            <p className="text-gray-400 text-xs mb-4">Each badge shows the level reached and the contribution rating given by the project owner - verified proof of real collaborative work.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {userBadges.map((badge, i) => {
-                const bd = badgeData.find(b => b.id === badge.id || b.title === badge.title || b.id === badge.id?.toLowerCase());
-                const contribStyle = {
-                  excellent: 'bg-gray-900 text-white',
-                  good: 'bg-pink-100 text-pink-700',
-                  fair: 'bg-white text-pink-700 border border-pink-200',
-                }[badge.contribution] || 'bg-gray-100 text-gray-600';
-                // Tier is derived from how many badges this user has in this track
-                // (live), so it matches the dashboard/certificate - not the frozen level.
-                const trackLevel = deriveBadgeLevel(userBadges, badge);
-                return (
-                  <div key={i} className="text-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="flex justify-center mb-1">
-                      <TierBadge image={bd?.image || '/Images/TechDev.png'} alt={badge.title || badge.id} level={trackLevel} size={40} showLabel={false} />
-                    </div>
-                    <p className="text-xs text-gray-900 font-medium">{bd?.label || badge.title || badge.id}</p>
-                    <p className="text-xs text-gray-400">{trackLevel}</p>
-                    {badge.contribution && (
-                      <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ${contribStyle}`}>
-                        {badge.contribution}
-                      </span>
-                    )}
-                    {badge.projectTitle && (
-                      <p className="text-[10px] text-gray-400 mt-1 truncate" title={badge.projectTitle}>{badge.projectTitle}</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        {/* Badges: her current level at a glance (src/components/BadgeShowcase.jsx). */}
+        {!profile.isCompany && (userBadges.length > 0 || isOwnProfile) && (
+          <Card title="Badges">
+            <BadgeShowcase profile={profile} own={isOwnProfile} />
+          </Card>
         )}
 
         {/* Courses completed, each with its certificate. */}

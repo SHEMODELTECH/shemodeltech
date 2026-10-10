@@ -1,85 +1,70 @@
 // src/Pages/Badges.jsx
-// How badges work: tracks, levels, and what they unlock.
+// How badges work, shown mostly with the medals themselves: how you earn one,
+// the four levels, the six tracks, and what they unlock. Few words.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TierBadge from '../components/TierBadge';
-
-const TRACKS = [
-  ['TechPO', '/Images/TechMO.png', 'Product / Project Owner', 'Leading projects, planning, and product decisions.'],
-  ['TechQA', '/Images/TechQA.png', 'Quality Assurance', 'Testing, finding bugs, and making sure the product works.'],
-  ['TechDev', '/Images/TechDev.png', 'Development', 'Writing code: frontend, backend, data, and AI.'],
-  ['TechLeads', '/Images/TechLeads.png', 'Non-Technical Roles', 'Design, research, content, marketing, and operations.'],
-  ['TechArchs', '/Images/TechArchs.png', 'Low/No-Code Developer', 'Building with tools like Webflow, Bubble, and automation platforms.'],
-  ['TechGuard', '/Images/TechGuard.png', 'Cybersecurity', 'Keeping products and people safe.'],
-];
+import { BADGE_TRACKS } from '../config/badgeTracks';
 
 const LEVELS = [
-  ['Novice', '', 'Your 1st and 2nd completed projects in a track.'],
-  ['Associate', '', 'Your 3rd to 6th projects in a track.'],
-  ['Advanced', '', 'Your 7th to 11th projects in a track.'],
-  ['Expert', '', 'Your 12th project in a track, and beyond.'],
+  ['Novice', '1+ project', 56],
+  ['Associate', '3+ projects', 64],
+  ['Advanced', '7+ projects', 72],
+  ['Expert', '12+ projects', 80],
 ];
 
 const Badges = () => (
   <div className="max-w-4xl mx-auto">
     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">How badges work</h1>
-    <p className="text-gray-600 mt-2 max-w-[65ch]">
-      Badges are verified proof of real work. You earn one each time you complete a project on She Model Tech, in the track
-      that matches your role on the team. They’re never bought, and never given for courses alone.
-    </p>
+    <p className="text-gray-600 mt-2">Verified proof of real work. Earned on projects, never bought.</p>
 
-    <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">How you earn one</h2>
-    <ol className="grid sm:grid-cols-3 gap-3 list-none p-0">
-      {[
-        ['Join a project', 'Apply for a role on a free She Model Tech project, or lead one.'],
-        ['Build with your team', 'Work together in the project workspace until the work is done.'],
-        ['Get reviewed', 'She Model Tech reviews the finished work and awards badges based on each person’s role and contribution.'],
-      ].map(([t, d], i) => (
-        <li key={t} className="rounded-xl bg-white border border-gray-200 p-4">
-          <p className="text-sm font-bold text-pink-700">{i + 1}. {t}</p>
-          <p className="text-sm text-gray-700 mt-1">{d}</p>
+    {/* How you earn one */}
+    <ol className="mt-6 grid grid-cols-3 gap-2 sm:gap-3 list-none p-0">
+      {['Join a project', 'Build with your team', 'Get reviewed'].map((t, i) => (
+        <li key={t} className="rounded-xl bg-white border border-gray-200 p-3 sm:p-4 text-center">
+          <span className="mx-auto w-7 h-7 rounded-full bg-pink-600 text-white text-sm font-bold flex items-center justify-center">{i + 1}</span>
+          <p className="mt-2 text-sm font-semibold text-gray-900">{t}</p>
         </li>
       ))}
     </ol>
-    <p className="text-xs text-gray-500 mt-2">Paid projects pay you instead of awarding badges, and give you a verified paid work-experience record.</p>
 
+    {/* Four levels, per track */}
+    <section className="mt-8 rounded-2xl bg-[#FDF2F7] border border-pink-100 p-5 sm:p-6" aria-labelledby="levels-h">
+      <h2 id="levels-h" className="text-lg font-bold text-gray-900">Four levels in each track</h2>
+      <div className="mt-5 grid grid-cols-4 gap-2 items-end">
+        {LEVELS.map(([lvl, needs, size]) => (
+          <div key={lvl} className="flex flex-col items-center text-center">
+            <TierBadge image="/Images/TechDev.png" alt={`${lvl} badge`} level={lvl} size={size} showLabel={false} />
+            <p className="mt-2 text-sm font-bold text-gray-900">{lvl}</p>
+            <p className="text-xs text-gray-600">{needs}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Six tracks */}
     <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">Six tracks</h2>
-    <div className="grid sm:grid-cols-2 gap-3">
-      {TRACKS.map(([name, img, label, desc]) => (
-        <div key={name} className="flex items-center gap-4 rounded-xl bg-white border border-gray-200 p-4">
-          <TierBadge image={img} alt={name} level="Novice" size={48} showLabel={false} />
-          <div className="min-w-0">
-            <p className="font-semibold text-gray-900">{name} <span className="text-gray-500 font-normal">· {label}</span></p>
-            <p className="text-sm text-gray-600">{desc}</p>
-          </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {BADGE_TRACKS.map((t) => (
+        <div key={t.key} className="flex flex-col items-center text-center rounded-xl bg-white border border-gray-200 p-4">
+          <TierBadge image={t.img} alt={t.name} level="Novice" size={52} showLabel={false} />
+          <p className="mt-2 font-semibold text-gray-900">{t.name}</p>
+          <p className="text-xs text-gray-600">{t.label}</p>
         </div>
       ))}
     </div>
 
-    <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">Four levels</h2>
-    <p className="text-sm text-gray-600 mb-3">Each track has its own level. The more projects you complete in a track, the higher it goes.</p>
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      {LEVELS.map(([lvl, metal, desc]) => (
-        <div key={lvl} className="rounded-xl bg-white border border-gray-200 p-4 text-center">
-          <div className="flex justify-center">
-            <TierBadge image="/Images/TechDev.png" alt={`${lvl} badge`} level={lvl} size={56} />
-          </div>
-          <p className="font-bold text-gray-900 mt-2">{lvl}</p>
-          {metal && <p className="text-xs text-gray-500">{metal}</p>}
-          <p className="text-sm text-gray-700 mt-2">{desc}</p>
-        </div>
-      ))}
-    </div>
-
+    {/* What they unlock */}
     <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">What badges unlock</h2>
-    <ul className="space-y-2 text-sm text-gray-700 list-disc pl-5">
-      <li><strong>The Talent Board:</strong> your first badge lists you where hiring companies search for talent.</li>
-      <li><strong>Paid work:</strong> paid projects are open to members with at least one earned badge.</li>
-      <li><strong>A verifiable record:</strong> every badge links to the real project, so employers can see exactly what you built.</li>
-    </ul>
+    <div className="flex flex-wrap gap-2">
+      {['A place on the Talent Board', 'Paid projects', 'A record employers can check'].map((t) => (
+        <span key={t} className="text-sm font-semibold px-3 py-1.5 rounded-full bg-white border border-pink-200 text-gray-800">{t}</span>
+      ))}
+    </div>
+    <p className="text-xs text-gray-500 mt-3">Paid projects pay you instead of awarding a badge.</p>
 
     <div className="mt-8 rounded-2xl bg-pink-50 border border-pink-100 p-5 flex flex-wrap items-center justify-between gap-3">
-      <p className="m-0 font-semibold text-gray-900">Ready to earn your next badge?</p>
+      <p className="m-0 font-semibold text-gray-900">Ready for your next badge?</p>
       <Link to="/projects" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">Find a project</Link>
     </div>
   </div>
