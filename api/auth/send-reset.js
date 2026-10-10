@@ -138,6 +138,6 @@ module.exports = async function handler(req, res) {
  } catch (err) {
  console.error('send-reset error:', err.message);
  console.error('send-reset failed:', err && err.message);
- return res.status(500).json({ error: 'We couldn’t send the reset email just now. Please try again in a few minutes, or email shemodeltech@gmail.com for help.' });
+ return res.status(500).json({ error: 'We couldn’t send the reset email just now. Please try again in a few minutes, or contact us at shemodeltech.com/contact for help.' });
  }
 };

@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 // The one site footer, used on every public page so it stays consistent:
-// logo · Team · Mentors · Support Us · Terms · Privacy · social links.
+// logo · Team · Mentors · Support Us · Contact · Terms · Privacy · social links.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
@@ -10,6 +10,7 @@ export const FOOTER_LINKS = [
   ['/team', 'Team'],
   ['/teach', 'Mentors'],
   ['/support-our-mission', 'Support Us'],
+  ['/contact', 'Contact'],
   ['/terms', 'Terms'],
   ['/privacy', 'Privacy'],
 ];

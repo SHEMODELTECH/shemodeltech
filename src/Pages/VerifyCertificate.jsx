@@ -149,12 +149,10 @@ const VerifyCertificate = () => {
             <p className="text-gray-600 text-sm mb-3">{result.reason}</p>
             <p className="text-gray-500 text-xs leading-relaxed">
               Check the ID for typos, it&rsquo;s printed at the bottom of the certificate. If it
-              still doesn&rsquo;t match, the certificate may not have been issued by us. You can
-              email{' '}
-              <a href={`mailto:${BRAND.supportEmail}`} className="text-pink-600 font-semibold">
-                {BRAND.supportEmail}
-              </a>{' '}
-              and we&rsquo;ll check.
+              still doesn&rsquo;t match, the certificate may not have been issued by us.{' '}
+              <Link to={`/contact?topic=certificate${(certificateId || input) ? `&ref=${encodeURIComponent(certificateId || input)}` : ''}`} className="text-pink-600 font-semibold">
+                Ask us to check it
+              </Link>.
             </p>
           </div>
         )}

@@ -246,6 +246,7 @@ if (MODE !== 'orig') {
     ['funding: extra field', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, staffAlerted: true }), 'denied'],
     ['funding: sent as already funded', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, status: 'funded' }), 'denied'],
     ['funding: backdated', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, createdAt: OLD }), 'denied'],
+    ['funding: a link in the message', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, message: 'Details here: https://evil.example.com' }), 'denied'],
     ['funding: bad email', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, email: 'not-an-email' }), 'denied'],
     ['funding: empty message', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, message: '' }), 'denied'],
     ['funding: member reads a request', 'verU', () => getDoc(doc(asMember(), 'funding_requests', 'fr1')), 'denied'],
@@ -253,6 +254,43 @@ if (MODE !== 'orig') {
     ['funding: admin reads a request', 'staff1', () => getDoc(doc(asAdmin(), 'funding_requests', 'fr1')), 'allowed'],
     ['funding: admin marks it in touch', 'staff1', () => updateDoc(doc(asAdmin(), 'funding_requests', 'fr1'), { status: 'in_touch', teamNote: 'Called', updatedBy: 'staff1@x.test', updatedAt: serverTimestamp() }), 'allowed'],
     ['funding: member changes a request', 'verU', () => updateDoc(doc(asMember(), 'funding_requests', 'fr1'), { status: 'closed' }), 'denied'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
+// ---- Contact us (shemodeltech.com/contact) ----
+// Anyone can send a message, signed in or not; only admins can read or change them.
+if (MODE !== 'orig') {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), 'contact_messages', 'cm1'), { name: 'Ada', email: 'ada@x.test', topic: 'general', reference: '', message: 'Hi', status: 'new', createdAt: OLD });
+  });
+  const anon = () => env.unauthenticatedContext().firestore();
+  const good = { name: 'Ada Lovelace', email: 'ada@example.org', topic: 'letter', reference: '', message: 'Could I get a volunteer letter?', status: 'new', createdAt: serverTimestamp() };
+  const cases = [
+    ['contact: visitor sends a message', 'anon', () => addDoc(collection(anon(), 'contact_messages'), good), 'allowed'],
+    ['contact: member sends a message', 'verU', () => addDoc(collection(ctxFor('verU', true).firestore(), 'contact_messages'), { ...good, topic: 'certificate', reference: 'SMT-123' }), 'allowed'],
+    ['contact: unknown topic', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, topic: 'hack' }), 'denied'],
+    ['contact: extra field', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, staffAlerted: true }), 'denied'],
+    ['contact: a link in the message', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, message: 'Please log in at https://evil.example.com/login' }), 'denied'],
+    ['contact: www link in the message', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, message: 'Visit www.evil.com today' }), 'denied'],
+    ['contact: an email address in the message is fine', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, message: 'You can also reach me at ada@example.org about Node.js/React' }), 'allowed'],
+    ['contact: empty message', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { ...good, message: '' }), 'denied'],
+    ['contact: member reads a message', 'verU', () => getDoc(doc(ctxFor('verU', true).firestore(), 'contact_messages', 'cm1')), 'denied'],
+    ['contact: admin reads a message', 'staff1', () => getDoc(doc(ctxFor('staff1', false).firestore(), 'contact_messages', 'cm1')), 'allowed'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
+// ---- Join the team (Team page): profile link from LinkedIn, GitHub, Behance, or Dribbble; no other links ----
+if (MODE !== 'orig') {
+  const anon = () => env.unauthenticatedContext().firestore();
+  const app = { name: 'Ada Lovelace', email: 'ada@example.org', phone: '+1 555 0100', linkedinOrPortfolio: 'https://www.linkedin.com/in/ada',
+    socialPlatform: 'Instagram', socialHandle: '@ada', role: 'content', otherRoles: [], hours: '3', why: 'I would love to help women grow in tech.',
+    status: 'new', createdAt: serverTimestamp() };
+  const cases = [
+    ['team application: LinkedIn profile', 'anon', () => addDoc(collection(anon(), 'team_applications'), app), 'allowed'],
+    ['team application: profile link on another site', 'anon', () => addDoc(collection(anon(), 'team_applications'), { ...app, linkedinOrPortfolio: 'https://evil.example.com/linkedin.com' }), 'denied'],
+    ['team application: a link in "why"', 'anon', () => addDoc(collection(anon(), 'team_applications'), { ...app, why: 'See my work at www.evil.com' }), 'denied'],
   ];
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
@@ -305,7 +343,9 @@ if (MODE !== 'orig') {
     ['events: host publishes her own event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evMine'), { published: true }), 'denied'],
     ['events: host edits her published event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evMineLive'), { title: 'Changed' }), 'denied'],
     ['events: member edits someone else\'s event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evOther'), { title: 'Mine now' }), 'denied'],
-    ['events: host sets her joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evMine', 'private', 'info'), { joinUrl: 'https://meet.example.com/x' }), 'allowed'],
+    ['events: host sets her joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evMine', 'private', 'info'), { joinUrl: 'https://meet.google.com/abc-defg-hij' }), 'allowed'],
+    ['events: host sets a joining link that isn\'t a meeting service', 'verU', () => setDoc(doc(as('verU'), 'events', 'evMine', 'private', 'info'), { joinUrl: 'https://evil.example.com/zoom.us' }), 'denied'],
+    ['events: a link in the event description', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { description: 'Sign up first at bit.ly/free-prize to get a seat at this workshop.' })), 'denied'],
     ['events: member sets another host\'s joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evOther', 'private', 'info'), { joinUrl: 'https://evil.example.com' }), 'denied'],
     ['events: host deletes her published event', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMineLive')), 'denied'],
     ['events: staff publishes a member event', 'staff1', () => updateDoc(doc(ctxFor('staff1', false).firestore(), 'events', 'evOther'), { published: true, reviewStatus: 'approved' }), 'allowed'],

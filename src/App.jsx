@@ -53,6 +53,7 @@ const LearningManage = lazy(() => import('./Pages/learning/LearningManage'));
 const EventsManage = lazy(() => import('./Pages/EventsManage'));
 const HostEvent = lazy(() => import('./Pages/HostEvent'));
 const SupportMission = lazy(() => import('./Pages/SupportMission'));
+const Contact = lazy(() => import('./Pages/Contact'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -262,6 +263,7 @@ function App() {
                 <Route path="/events/:id" element={<MemberFrame><EventDetail /></MemberFrame>} />
                 <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
+                <Route path="/contact" element={<MemberFrame><Contact /></MemberFrame>} />
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}
                 <Route path="/projects/propose" element={<Navigate to="/projects" replace />} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />

@@ -20,7 +20,7 @@ const TermsOfService = () => {
     { title: '16. Disclaimers', content: 'She Model Tech is provided "as is" without warranties of any kind. We do not warrant that the Platform will be uninterrupted, error-free, or secure. We are not responsible for losses arising from your use of the Platform, including project participation or financial transactions.' },
     { title: '17. Limitation of Liability', content: 'To the maximum extent permitted by law, She Model Tech shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Platform, including payment disputes, listing inaccuracies, or user misconduct.' },
     { title: '18. Changes to Terms', content: 'We may update these Terms from time to time. Continued use after changes are posted constitutes acceptance of the updated Terms.' },
-    { title: '19. Contact', content: 'Questions about these Terms? Contact us at shemodeltech@gmail.com or through our Support page.' },
+    { title: '19. Contact', content: 'Questions about these Terms? Contact us through our Contact us page at shemodeltech.com/contact.' },
   ];
 
   return (

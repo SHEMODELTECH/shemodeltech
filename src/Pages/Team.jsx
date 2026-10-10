@@ -1,5 +1,6 @@
 // src/Pages/Team.jsx
 // Team page: the founder, why join, the roles we need, and the team application.
+import { hasLink, isProfileLink, normalizeLink, NO_LINKS_MSG } from '../utils/noLinks';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -23,7 +24,6 @@ const FounderPhoto = () => {
 
 const EMPTY = { name: '', email: '', phone: '', linkedinOrPortfolio: '', socialPlatform: 'Instagram', socialHandle: '', role: '', otherRoles: [], why: '', hours: '' };
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-const isUrl = (v) => /^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(v.trim());
 const words = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 const MIN_WHY = 20;
 
@@ -52,7 +52,8 @@ const Team = () => {
     if (f.name.trim().length < 2) return toast.error('Enter your full name.');
     if (!isEmail(f.email)) return toast.error('Enter a valid email address.');
     if (f.phone.replace(/\D/g, '').length < 7) return toast.error('Enter your phone number, with your country code.');
-    if (!isUrl(f.linkedinOrPortfolio)) return toast.error('Add your LinkedIn profile or a link to your portfolio.');
+    if (!isProfileLink(f.linkedinOrPortfolio)) return toast.error('Add your LinkedIn profile (or your GitHub, Behance, or Dribbble profile).');
+    if ([f.name, f.phone, f.socialHandle, f.why, f.hours].some(hasLink)) return toast.error(NO_LINKS_MSG);
     if (f.socialHandle.trim().length < 2) return toast.error(`Add your ${f.socialPlatform} handle.`);
     if (!f.role) return toast.error('Choose the role you’re applying for.');
     if (words(f.why) < MIN_WHY) return toast.error(`Tell us why you’d like to join, in at least ${MIN_WHY} words (you’ve written ${words(f.why)}).`);
@@ -62,7 +63,7 @@ const Team = () => {
         name: f.name.trim().slice(0, 120),
         email: f.email.trim().toLowerCase().slice(0, 200),
         phone: f.phone.trim().slice(0, 40),
-        linkedinOrPortfolio: f.linkedinOrPortfolio.trim().slice(0, 300),
+        linkedinOrPortfolio: normalizeLink(f.linkedinOrPortfolio).slice(0, 300),
         socialPlatform: f.socialPlatform,
         socialHandle: f.socialHandle.trim().slice(0, 100),
         role: f.role,
@@ -114,10 +115,11 @@ const Team = () => {
         <section className="mt-14" aria-labelledby="benefits-h">
           <h2 id="benefits-h" className="text-2xl font-bold text-gray-900 mb-5">Why join She Model Tech team</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {TEAM_BENEFITS.map(([t, d]) => (
+            {TEAM_BENEFITS.map(([t, d, to]) => (
               <div key={t} className="rounded-xl border border-gray-200 p-5">
                 <p className="font-bold text-gray-900">{t}</p>
                 <p className="text-sm text-gray-600 mt-1 leading-relaxed">{d}</p>
+                {to && <Link to={to} className="inline-block mt-2 text-sm font-semibold text-pink-700 hover:underline">Request it</Link>}
               </div>
             ))}
           </div>
@@ -172,7 +174,7 @@ const Team = () => {
               <label className={label}>Full name *<input className={input} value={f.name} onChange={set('name')} autoComplete="name" /></label>
               <label className={label}>Email *<input className={input} type="email" value={f.email} onChange={set('email')} autoComplete="email" /></label>
               <label className={label}>Phone number * <span className="font-normal text-gray-500">(with country code)</span><input className={input} type="tel" value={f.phone} onChange={set('phone')} autoComplete="tel" placeholder="+1 410 555 0123" /></label>
-              <label className={label}>LinkedIn profile or portfolio link *<input className={input} value={f.linkedinOrPortfolio} onChange={set('linkedinOrPortfolio')} placeholder="linkedin.com/in/yourname" /></label>
+              <label className={label}>LinkedIn profile * <span className="font-normal text-gray-500">(or GitHub, Behance, Dribbble)</span><input className={input} value={f.linkedinOrPortfolio} onChange={set('linkedinOrPortfolio')} placeholder="linkedin.com/in/yourname" /></label>
               <div className="sm:col-span-2">
                 <span className={label}>Social media handle * <span className="font-normal text-gray-500">(Instagram, X, or LinkedIn)</span></span>
                 <div className="mt-1 flex gap-2">

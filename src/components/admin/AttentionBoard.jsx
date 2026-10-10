@@ -20,7 +20,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     let alive = true;
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs, teamApps,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs, teamApps, contactNew,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -57,9 +57,10 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         count(query(collection(db, 'jobs'), where('status', '==', 'removal_requested'))),
         count(query(collection(db, 'projects'), where('sizeRequest.status', '==', 'pending'))),
         count(query(collection(db, 'team_applications'), where('status', '==', 'new'))),
+        isAdmin ? count(query(collection(db, 'contact_messages'), where('status', '==', 'new'))) : 0,
       ]);
       if (!alive) return;
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs, teamApps });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs, teamApps, contactNew });
     })();
     return () => { alive = false; };
   }, [isAdmin]);
@@ -71,6 +72,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Leads asking for more time', { to: '/admin/projects' }],
     ['More people requests', c.sizeReqs, 'Leads asking to add people to a paid project', { to: '/admin/projects' }],
+    ...(isAdmin ? [['Contact messages', c.contactNew, 'Messages from Contact us', { to: '/admin?tab=messages' }]] : []),
     ...(isAdmin ? [['Team applications', c.teamApps, 'People applying to join She Model Tech team', { to: '/admin?tab=team' }]] : []),
     ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],

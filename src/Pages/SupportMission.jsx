@@ -3,6 +3,7 @@
 // Companies that fund a cohort are thanked with their logo; sponsors don't
 // choose projects or members. "Contact us to fund a cohort" opens a short form;
 // requests go to Admin → Sponsors (and the team inbox), like team applications.
+import { hasLink, NO_LINKS_MSG } from '../utils/noLinks';
 import React, { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -46,6 +47,7 @@ const FundForm = ({ onClose }) => {
     if (!isEmail(f.email)) return toast.error('Enter a valid email address.');
     if (needsOrg && f.organization.trim().length < 2) return toast.error(`Enter the name of your ${f.giverType === 'company' ? 'company' : 'foundation'}.`);
     if (f.message.trim().length < 10) return toast.error('Tell us a little about what you have in mind.');
+    if ([f.name, f.organization, f.phone, f.message].some(hasLink)) return toast.error(NO_LINKS_MSG);
     setBusy(true);
     try {
       const ref = await addDoc(collection(db, 'funding_requests'), {

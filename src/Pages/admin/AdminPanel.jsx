@@ -34,6 +34,7 @@ import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../uti
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import EventsAdmin from '../../components/admin/EventsAdmin';
 import FundingRequestsAdmin from '../../components/admin/FundingRequestsAdmin';
+import ContactMessagesAdmin from '../../components/admin/ContactMessagesAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
@@ -1050,6 +1051,8 @@ const AdminPanel = ({ only = null, bare = false }) => {
           <ProtectProjectLinks />
         </div>
       )}
+      {/* Contact messages (admins): from Contact us. */}
+      {!loadingData && tab === 'messages' && isAdmin && <ContactMessagesAdmin />}
       {/* Sponsors tab (admins): sponsor thank-yous and recorded gifts. */}
       {!loadingData && tab === 'sponsors' && isAdmin && (
         <div>

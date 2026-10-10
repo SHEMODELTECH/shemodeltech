@@ -1,5 +1,6 @@
 // api/public-request.js
-// Alerts She Model Tech about a new team application or funding request
+// Alerts She Model Tech about a new team application, funding request, or
+// Contact us message
 // (from "Fund a cohort" on Support our mission; signed in or not): a bell notification for staff, an email to the
 // team inbox (SUPPORT_EMAIL) and to staff, and a confirmation to the requester.
 //
@@ -16,7 +17,10 @@ const KINDS = {
   // (Organization requests and Summit partner requests are retired.)
   team: { col: 'team_applications', title: (d) => `New team application: ${headerSafe(d.name).slice(0, 100) || 'someone'}` },
   funding: { col: 'funding_requests', title: (d) => `New funding request: ${headerSafe(d.organization || d.name).slice(0, 100) || 'someone'}` },
+  contact: { col: 'contact_messages', title: (d) => `New message (${CONTACT_TOPICS[d.topic] || 'General'}): ${headerSafe(d.name).slice(0, 100) || 'someone'}` },
 };
+// Contact us topics (src/Pages/Contact.jsx).
+const CONTACT_TOPICS = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', other: 'Something else' };
 const FUNDING_LABELS = {
   giverType: { company: 'Company', foundation: 'Foundation or trust', individual: 'Individual', other: 'Other' },
   fundingFor: { cohort: 'A whole cohort', team: 'One team', laptops: 'Laptops and internet', unsure: 'Not sure yet' },
@@ -140,10 +144,12 @@ module.exports = async function handler(req, res) {
     const staff = await db.collection('users').where('role', 'in', ['admin', 'editor']).get();
     const esc = (t) => escapeHtml(t || '');
     // Team applications use name/email; the rest of this file reads contactEmail.
-    if (req.body.kind === 'team' || req.body.kind === 'funding') { result.contactEmail = result.email; result.contactName = result.name; }
-    const adminLink = req.body.kind === 'team' ? '/admin?tab=team' : req.body.kind === 'funding' ? '/admin?tab=sponsors' : '/admin';
+    if (req.body.kind === 'team' || req.body.kind === 'funding' || req.body.kind === 'contact') { result.contactEmail = result.email; result.contactName = result.name; }
+    const adminLink = req.body.kind === 'team' ? '/admin?tab=team' : req.body.kind === 'funding' ? '/admin?tab=sponsors' : req.body.kind === 'contact' ? '/admin?tab=messages' : '/admin';
     const TEAM_ROLE = { community: 'Community Manager', communication: 'Communication Strategist', social: 'Social Media Manager', brand: 'Brand Strategist', partnership: 'Partnership Manager', sponsorship: 'Sponsorship Manager', program: 'Program Manager', designer: 'Designer', content: 'Content Strategist' };
-    const lines = req.body.kind === 'funding'
+    const lines = req.body.kind === 'contact'
+      ? [['Name', result.name], ['Email', result.email], ['Topic', CONTACT_TOPICS[result.topic] || result.topic], [result.topic === 'certificate' ? 'Certificate ID' : 'Reference', result.reference], ['Message', result.message]]
+      : req.body.kind === 'funding'
       ? [['Name', result.name], ['Organization', result.organization], ['Giving as', FUNDING_LABELS.giverType[result.giverType]], ['Would like to fund', FUNDING_LABELS.fundingFor[result.fundingFor]], ['Amount in mind', FUNDING_LABELS.amount[result.amount]], ['Email', result.email], ['Phone', result.phone], ['Message', result.message]]
       : req.body.kind === 'team'
       ? [['Name', result.name], ['Role', TEAM_ROLE[result.role] || result.role], ['Also interested in', (result.otherRoles || []).map((r) => TEAM_ROLE[r] || r).join(', ')], ['Email', result.email], ['Phone', result.phone], ['LinkedIn or portfolio', result.linkedinOrPortfolio], [result.socialPlatform, result.socialHandle], ['Hours a week', result.hours], ['Why', result.why]]
@@ -164,7 +170,7 @@ module.exports = async function handler(req, res) {
     if (result.contactEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.contactEmail)) {
       await sendMail({
         to: result.contactEmail,
-        subject: req.body.kind === 'team' ? 'We received your team application - She Model Tech' : req.body.kind === 'funding' ? 'Thank you for offering to fund a cohort - She Model Tech' : 'We received your request - She Model Tech',
+        subject: req.body.kind === 'team' ? 'We received your team application - She Model Tech' : req.body.kind === 'contact' ? 'We received your message - She Model Tech' : req.body.kind === 'funding' ? 'Thank you for offering to fund a cohort - She Model Tech' : 'We received your request - She Model Tech',
         text: `${req.body.kind === 'funding' ? 'Thank you for offering to support women in tech through She Model Tech. We received your message and will reply within a few working days.' : 'Thank you for contacting She Model Tech. We received your request and will reply within a few working days.'}\n\n${detailText}`,
         html: `<p>${req.body.kind === 'funding' ? 'Thank you for offering to support women in tech through She Model Tech. We received your message and will reply within a few working days.' : 'Thank you for contacting She Model Tech. We received your request and will reply within a few working days.'}</p>${detailHtml}`,
       }).catch(() => {});
@@ -174,7 +180,7 @@ module.exports = async function handler(req, res) {
         await db.collection('notifications').add({
           userId: u.id,
           recipientId: u.id,
-          type: req.body.kind === 'org' ? 'org_request' : req.body.kind === 'team' ? 'team_application' : req.body.kind === 'funding' ? 'funding_request' : 'summit_partner',
+          type: req.body.kind === 'org' ? 'org_request' : req.body.kind === 'team' ? 'team_application' : req.body.kind === 'funding' ? 'funding_request' : req.body.kind === 'contact' ? 'contact_message' : 'summit_partner',
           title,
           body: 'Review it in the Admin dashboard.',
           message: title,

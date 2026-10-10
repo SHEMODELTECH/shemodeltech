@@ -15,8 +15,8 @@ export const TEAM_ROLES = [
 export const roleTitle = (id) => TEAM_ROLES.find((r) => r.id === id)?.title || id;
 
 export const TEAM_BENEFITS = [
-  ['A recommendation letter', 'Email us at shemodeltech@gmail.com to request a letter of recommendation for a job, school, or program you’re applying to.'],
-  ['A volunteer service letter', 'Email us at shemodeltech@gmail.com to request a letter confirming your role and the dates you served with a registered 501(c)(3) nonprofit.'],
+  ['A recommendation letter', 'Request a letter of recommendation for a job, school, or program you’re applying to.', '/contact?topic=letter'],
+  ['A volunteer service letter', 'Request a letter confirming your role and the dates you served with a registered 501(c)(3) nonprofit.', '/contact?topic=letter'],
   ['Get experience', 'Get real-world experience in your own field, and see how a nonprofit runs, from partnerships and fundraising to events and community.'],
   ['Make an impact', 'Help members grow in tech and shape our programs. Team members who go above and beyond are celebrated in a Spotlight.'],
   ['Lead paid cohorts', 'Apply to lead paid cohorts. When applicants are equally qualified, team members are considered first.'],

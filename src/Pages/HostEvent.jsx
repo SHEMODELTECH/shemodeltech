@@ -12,6 +12,7 @@ import { db } from '../firebase/config';
 import { alertStaff } from '../utils/staffAlerts';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
 import { EventsTabs } from './Events';
+import { hasLink, isMeetingLink, normalizeLink, MEETING_SERVICES } from '../utils/noLinks';
 import {
   CATEGORY_LABEL, EVENT_CATEGORIES, formatWhen, getJoinUrl, isPast, listMyHostedEvents, listRegistrations, submitHostedEvent,
 } from '../utils/events';
@@ -104,7 +105,8 @@ const HostEvent = () => {
     if (!f.when) return toast.error('Choose the date and time.');
     if (new Date(f.when).getTime() < Date.now() + 24 * 3600 * 1000) return toast.error('Choose a time at least a day from now, so there’s time to review and share it.');
     if (f.description.trim().split(/\s+/).filter(Boolean).length < 10) return toast.error('Add a short description (at least 10 words).');
-    if (!/^https:\/\//i.test(f.joinUrl.trim())) return toast.error('Add the joining link (Zoom, Google Meet…), starting with https://');
+    if (!isMeetingLink(f.joinUrl)) return toast.error(`Add the joining link from ${MEETING_SERVICES}.`);
+    if ([f.title, f.hosts, f.description].some(hasLink)) return toast.error('Please remove web links from the title, hosts, and description. Only the joining link can be a link.');
     setBusy(true);
     try {
       const data = {
@@ -120,7 +122,7 @@ const HostEvent = () => {
         projectTitle: f.projectId ? f.projectTitle : null,
       };
       const isNew = editing === 'new';
-      await submitHostedEvent(isNew ? null : editing, data, f.joinUrl.trim(), { uid: currentUser.uid, name: myName });
+      await submitHostedEvent(isNew ? null : editing, data, normalizeLink(f.joinUrl), { uid: currentUser.uid, name: myName });
       alertStaff({
         type: 'event_review',
         title: `${isNew ? 'New event to review' : 'Event updated, review again'}: ${data.title}`,
@@ -204,7 +206,7 @@ const HostEvent = () => {
                 <label className={label}>Places <span className="font-normal text-gray-500">(empty = no limit)</span><input type="number" min="1" className={`${input} mt-1`} value={f.capacity} onChange={set('capacity')} /></label>
                 <label className={`${label} sm:col-span-2`}>Host and speakers<input className={`${input} mt-1`} value={f.hosts} onChange={set('hosts')} /></label>
                 <label className={`${label} sm:col-span-2`}>Description *<textarea rows={4} className={`${input} mt-1`} value={f.description} onChange={set('description')} placeholder="What you’ll cover, who it’s for, and what people will leave with." /></label>
-                <label className={`${label} sm:col-span-2`}>Joining link * <span className="font-normal text-gray-500">(Zoom, Google Meet…; only people with a place see it)</span><input className={`${input} mt-1`} value={f.joinUrl} onChange={set('joinUrl')} placeholder="https://" /></label>
+                <label className={`${label} sm:col-span-2`}>Joining link * <span className="font-normal text-gray-500">({MEETING_SERVICES}; only people with a place see it)</span><input className={`${input} mt-1`} value={f.joinUrl} onChange={set('joinUrl')} placeholder="https://" /></label>
                 <div className="sm:col-span-2">
                   <span className={label}>Image or flyer <span className="font-normal text-gray-500">(optional)</span></span>
                   {f.imageUrl ? (
