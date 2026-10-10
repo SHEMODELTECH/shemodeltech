@@ -1,7 +1,10 @@
 // src/Pages/user/UserProfile.jsx
+// A member's profile, laid out as a portfolio: who she is (photo, headline,
+// About, links), then the proof - finished projects, badges, courses
+// completed (with certificates), mentoring - then skills and education.
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import TierBadge from '../../components/TierBadge';
@@ -51,6 +54,33 @@ const deriveBadgeLevel = (allBadges, badge) => {
   return levelForCount(count) || 'Novice';
 };
 
+// Only open web links (http/https) that members typed into their profile.
+const safeUrl = (u) => {
+  const v = String(u || '').trim();
+  if (!v) return null;
+  const withScheme = /^https?:\/\//i.test(v) ? v : /^[a-z][a-z0-9+.-]*:/i.test(v) ? null : `https://${v}`;
+  try {
+    const url = new URL(withScheme);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+  } catch (_) {
+    return null;
+  }
+};
+
+const EDUCATION_LABEL = { high_school: 'High school', undergrad: 'Undergraduate', masters: 'Master\u2019s', phd: 'PhD' };
+
+const toMs = (v) => (v?.toMillis ? v.toMillis() : v?.seconds ? v.seconds * 1000 : v ? new Date(v).getTime() || 0 : 0);
+
+const Card = ({ title, children, action }) => (
+  <section className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid">
+    <div className="flex items-center justify-between gap-3 mb-4">
+      <h2 className="text-lg font-bold text-gray-900">{title}</h2>
+      {action}
+    </div>
+    {children}
+  </section>
+);
+
 const UserProfile = () => {
   const { userEmail } = useParams();
   const { currentUser } = useAuth();
@@ -73,7 +103,10 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [photoLightbox, setPhotoLightbox] = useState(false); // full-size profile picture viewer
-  const [completedCount, setCompletedCount] = useState(0);
+  // Finished projects (as lead or team member) and course certificates.
+  const [doneProjects, setDoneProjects] = useState([]);
+  const completedCount = doneProjects.length;
+  const [courseCerts, setCourseCerts] = useState([]);
 
   useEffect(() => {
     if (!currentUser) { navigate('/login'); }
@@ -123,6 +156,17 @@ const UserProfile = () => {
         if (userData) {
           setProfile(userData);
           if (userData?.uid) {
+            // Course certificates (public, like the certificate pages themselves).
+            getDocs(query(collection(db, 'learning_certificates'), where('uid', '==', userData.uid)))
+              .then((snap) => {
+                if (!active) return;
+                const list = snap.docs
+                  .map((d) => ({ id: d.id, ...d.data() }))
+                  .filter((c) => c.type !== 'mentor')
+                  .sort((a, b) => String(b.completedOn || '').localeCompare(String(a.completedOn || '')));
+                setCourseCerts(list);
+              })
+              .catch(() => { if (active) setCourseCerts([]); });
             listMentorCertificates(userData.uid)
               .then((certs) => {
                 if (!active) return;
@@ -142,10 +186,18 @@ const UserProfile = () => {
           // this user was a team member (tracked by uid OR email in the
           // members array) or the owner. Deduped by project id.
           try {
-            const done = new Set();
+            const done = new Map();
             const collect = (snap) => snap.docs.forEach(d => {
               const p = d.data();
-              if (p.status === 'completed') done.add(d.id);
+              if (p.status === 'completed' && !done.has(d.id)) {
+                done.set(d.id, {
+                  id: d.id,
+                  title: p.projectTitle || p.title || 'Project',
+                  lead: p.submitterId === userData.uid,
+                  paid: !!p.isPaid,
+                  at: toMs(p.completedAt || p.updatedAt || p.createdAt),
+                });
+              }
             });
             try {
               collect(await getDocs(query(collection(db, 'projects'), where('members', 'array-contains', userData.uid))));
@@ -158,7 +210,7 @@ const UserProfile = () => {
             try {
               collect(await getDocs(query(collection(db, 'projects'), where('submitterId', '==', userData.uid))));
             } catch (_) {}
-            if (active) setCompletedCount(done.size);
+            if (active) setDoneProjects([...done.values()].sort((a, b) => b.at - a.at));
           } catch (e) {
             console.log('Could not fetch completed projects:', e.message);
           }
@@ -186,11 +238,6 @@ const UserProfile = () => {
     return email?.[0]?.toUpperCase() || '?';
   };
 
-  const formatDate = (ts) => {
-    if (!ts) return null;
-    const date = ts.toDate ? ts.toDate() : new Date(ts);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-  };
 
   if (loading) {
     return (
@@ -238,6 +285,26 @@ const UserProfile = () => {
     'TechDev': 'Development', 'TechQA': 'Quality Assurance', 'TechPO': 'Product / Project Owner', 'TechMO': 'Product / Project Owner',
     'TechArchs': 'Architecture', 'TechLeads': 'Leadership', 'TechGuard': 'Cybersecurity'
   };
+
+  const memberSinceMs = toMs(profile.createdAt);
+  const memberSince = memberSinceMs ? new Date(memberSinceMs).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : null;
+  const headline = profile.isCompany ? null : [
+    skillTrackLabels[profile.primarySkillTrack] || profile.primarySkillTrack,
+    profile.experienceLevel && profile.experienceLevel[0].toUpperCase() + profile.experienceLevel.slice(1),
+    [profile.city, profile.country].filter(Boolean).join(', '),
+  ].filter(Boolean).join(' · ');
+  const links = [
+    ['LinkedIn', safeUrl(profile.linkedinUrl)],
+    ['GitHub', safeUrl(profile.githubUrl)],
+    ['Portfolio', safeUrl(profile.portfolioUrl)],
+    ['Email', profile.emailPublic && profile.email ? `mailto:${profile.email}` : null],
+  ].filter(([, href]) => href).map(([label, href]) => ({ label, href }));
+  const skillList = [...new Set(
+    (profile.skillsText ? profile.skillsText.split(',') : Array.isArray(profile.skills) ? profile.skills : [])
+      .map((x) => String(x).trim())
+      .filter(Boolean)
+  )].slice(0, 20);
+  const education = [EDUCATION_LABEL[profile.highestEducation], profile.specialization].filter(Boolean).join(', ');
 
   return (
     <div className="min-h-screen bg-white pb-12">
@@ -318,36 +385,73 @@ const UserProfile = () => {
             {profile.isCompany && profile.companyProfile?.companyName && (
               <p className="text-gray-700 text-sm font-semibold">{profile.companyProfile.companyName}</p>
             )}
-            {profile.specialization && (
-              <p className="text-gray-600 text-sm">{profile.specialization}</p>
-            )}
-            {profile.createdAt && (
-              <p className="text-gray-400 text-xs mt-1">Member since {formatDate(profile.createdAt)}</p>
+            {headline && <p className="text-gray-700 text-sm mt-0.5">{headline}</p>}
+            {profile.bio && (
+              <p className="text-gray-800 text-[15px] leading-relaxed mt-3 max-w-2xl whitespace-pre-line">{profile.bio}</p>
             )}
 
-            {/* Stats Row - Badges, Certificates, and total Projects done.
-                Projects auto-populates after every successful completion,
-                paid or free. (The skill track still shows in Details below.) */}
-            <div className="flex flex-wrap gap-3 mt-5">
-              {!profile.isCompany && (
-                <>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-center">
-                    <p className="text-xl font-bold text-gray-900">{userBadges.length}</p>
-                    <p className="text-gray-500 text-xs">Badges</p>
+            {/* Links */}
+            {links.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {links.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target={l.href.startsWith('mailto:') ? undefined : '_blank'}
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-3 py-1.5 rounded-lg"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {memberSince && <p className="text-gray-400 text-xs mt-4">Member since {memberSince}</p>}
+
+            {/* Badges, projects finished, and courses completed. */}
+            {!profile.isCompany && (
+              <div className="grid grid-cols-3 gap-3 mt-4 max-w-md">
+                {[
+                  [userBadges.length, userBadges.length === 1 ? 'Badge' : 'Badges'],
+                  [completedCount, completedCount === 1 ? 'Project done' : 'Projects done'],
+                  [courseCerts.length, courseCerts.length === 1 ? 'Course completed' : 'Courses completed'],
+                ].map(([n, label]) => (
+                  <div key={label} className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-center">
+                    <p className="text-xl font-bold text-gray-900">{n}</p>
+                    <p className="text-gray-500 text-xs">{label}</p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-center">
-                    <p className="text-xl font-bold text-gray-900">{completedCount}</p>
-                    <p className="text-gray-500 text-xs">Certificates</p>
-                  </div>
-                  <div className="bg-pink-50 border border-pink-200 rounded-lg px-4 py-3 text-center">
-                    <p className="text-xl font-bold text-pink-700">{completedCount}</p>
-                    <p className="text-pink-500 text-xs">Projects Done</p>
-                  </div>
-                </>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Projects she finished: the strongest proof, so it comes first. */}
+        {!profile.isCompany && (doneProjects.length > 0 || isOwnProfile) && (
+          <Card title="Projects">
+            {doneProjects.length > 0 ? (
+              <ul className="divide-y divide-gray-100">
+                {doneProjects.map((p) => (
+                  <li key={p.id} className="py-3 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <Link to={`/projects/${p.id}`} className="text-sm font-semibold text-gray-900 hover:text-pink-700 hover:underline">{p.title}</Link>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {[p.lead ? 'Project lead' : 'Team member', p.paid ? 'Paid project' : null, p.at ? new Date(p.at).getFullYear() : null].filter(Boolean).join(' · ')}
+                      </p>
+                    </div>
+                    <span className="flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">Completed</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-sm text-gray-600">Projects you finish show here, with your role.</p>
+                <Link to="/projects" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-center print:hidden">Find a project</Link>
+              </div>
+            )}
+          </Card>
+        )}
 
         {/* Mentor: badge, published courses, and certificates (public; prints too) */}
         {(profile.isTeacher || (profile.mentorApprovedCourses || 0) > 0 || mentorCerts.length > 0) && (
@@ -360,7 +464,7 @@ const UserProfile = () => {
                   </svg>
                 </span>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">She Model Tech Mentor</h3>
+                  <h2 className="text-lg font-bold text-gray-900">She Model Tech Mentor</h2>
                   <p className="text-gray-500 text-xs">
                     {mentorCerts.length
                       ? `${mentorCerts.length} course${mentorCerts.length === 1 ? '' : 's'} published in She Model Tech Learning${
@@ -413,8 +517,8 @@ const UserProfile = () => {
 
         {/* Badges Section */}
         {!profile.isCompany && userBadges.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">Badges Earned</h3>
+          <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid">
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Badges</h2>
             <p className="text-gray-400 text-xs mb-4">Each badge shows the level reached and the contribution rating given by the project owner - verified proof of real collaborative work.</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {userBadges.map((badge, i) => {
@@ -449,79 +553,65 @@ const UserProfile = () => {
           </div>
         )}
 
-        {/* Details Section */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Details</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {profile.experienceLevel && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Experience Level</p>
-                <p className="text-gray-900 font-medium text-sm capitalize">{profile.experienceLevel}</p>
+        {/* Courses completed, each with its certificate. */}
+        {!profile.isCompany && (courseCerts.length > 0 || isOwnProfile) && (
+          <Card title="Courses completed">
+            {courseCerts.length > 0 ? (
+              <ul className="divide-y divide-gray-100">
+                {courseCerts.map((c) => (
+                  <li key={c.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900">{c.courseTitle}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {[c.trackLabel, c.completedOn && `Completed ${new Date(`${c.completedOn}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`].filter(Boolean).join(' · ')}
+                      </p>
+                    </div>
+                    <Link to={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-pink-700 border border-pink-200 px-3 py-1.5 rounded-lg hover:bg-pink-50 print:hidden">
+                      Certificate
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-sm text-gray-600">Finish a course and its certificate shows here.</p>
+                <Link to="/learning" className="text-sm font-semibold border border-gray-300 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-lg text-center print:hidden">Browse courses</Link>
               </div>
             )}
-            {profile.primarySkillTrack && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Skill Track</p>
-                <p className="text-gray-900 font-medium text-sm">{skillTrackLabels[profile.primarySkillTrack] || profile.primarySkillTrack}</p>
-              </div>
-            )}
-            {(profile.country || profile.city || profile.state) && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Location</p>
-                <p className="text-gray-900 font-medium text-sm">{[profile.city, profile.state, profile.country].filter(Boolean).join(', ')}</p>
-              </div>
-            )}
-            {profile.linkedinUrl && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">LinkedIn</p>
-                <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.linkedinUrl}</a>
-              </div>
-            )}
-            {profile.githubUrl && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">GitHub</p>
-                <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.githubUrl}</a>
-              </div>
-            )}
-            {profile.portfolioUrl && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Portfolio</p>
-                <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.portfolioUrl}</a>
-              </div>
-            )}
-            {profile.emailPublic && profile.email && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Email</p>
-                <p className="text-gray-900 font-medium text-sm">{profile.email}</p>
-              </div>
-            )}
-            {profile.isCompany && profile.companyProfile?.companyName && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100 sm:col-span-2">
-                <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Company</p>
-                <p className="text-gray-900 font-medium text-sm">{profile.companyProfile.companyName}</p>
-                {profile.companyProfile.companyLocation && (
-                  <p className="text-gray-400 text-xs mt-0.5">{profile.companyProfile.companyLocation}</p>
-                )}
-              </div>
-            )}
-          </div>
+          </Card>
+        )}
 
-          {/* Empty state */}
-          {!profile.experienceLevel && !profile.primarySkillTrack && !profile.country && !profile.city && !profile.linkedinUrl && !profile.githubUrl && !profile.portfolioUrl && (
-            <div className="text-center py-6">
-              <p className="text-gray-500 text-sm">
-                {isOwnProfile
-                  ? 'Your profile is empty. Add your details in Settings.'
-                  : "This member hasn't filled in their profile yet."}
-              </p>
-              {isOwnProfile && (
-                <button onClick={() => navigate('/settings')} className="mt-3 px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-medium hover:bg-pink-700 transition-all">
-                  Complete Your Profile
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+        {/* Skills and education */}
+        {!profile.isCompany && (skillList.length > 0 || education) && (
+          <Card title="Skills & education">
+            {skillList.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {skillList.map((k) => (
+                  <span key={k} className="text-sm px-3 py-1 rounded-full bg-gray-100 text-gray-800">{k}</span>
+                ))}
+              </div>
+            )}
+            {education && <p className={`text-sm text-gray-700 ${skillList.length ? 'mt-4' : ''}`}>{education}</p>}
+          </Card>
+        )}
+
+        {/* Companies: their details */}
+        {profile.isCompany && profile.companyProfile?.companyName && (
+          <Card title="Company">
+            <p className="text-gray-900 font-medium text-sm">{profile.companyProfile.companyName}</p>
+            {profile.companyProfile.companyLocation && (
+              <p className="text-gray-500 text-xs mt-0.5">{profile.companyProfile.companyLocation}</p>
+            )}
+          </Card>
+        )}
+
+        {/* Her own, nearly empty profile: one nudge to fill it in. */}
+        {isOwnProfile && !profile.isCompany && !profile.bio && !links.length && !skillList.length && (
+          <div className="rounded-xl border border-dashed border-pink-300 bg-pink-50/40 p-5 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 print:hidden">
+            <p className="text-sm text-gray-700">Add a short About line, your skills and your LinkedIn so companies and teammates know you.</p>
+            <button onClick={() => navigate('/settings')} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Complete your profile</button>
+          </div>
+        )}
 
       </div>
 

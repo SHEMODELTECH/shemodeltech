@@ -49,6 +49,9 @@ const _UA = typeof navigator !== 'undefined' ? navigator.userAgent : '';
 const IS_IOS = /iPhone|iPad|iPod/i.test(_UA);
 const IS_SAFARI = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(_UA);
 
+// The short "About you" line on a member's profile.
+const BIO_MAX = 300;
+
 const Settings = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -65,6 +68,7 @@ const Settings = () => {
   const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
   const [form, setForm] = useState({
     displayName: '',
+    bio: '',
     specialization: '',
     experienceLevel: '',
     primarySkillTrack: '',
@@ -132,6 +136,7 @@ const Settings = () => {
           setPushPref(['important', 'off'].includes(data.pushPreference) ? data.pushPreference : 'all');
           setForm({
             displayName: data.displayName || '',
+            bio: data.bio || '',
             specialization: data.specialization || '',
             highestEducation: data.highestEducation || '',
             skills: data.skillsText || (Array.isArray(data.skills) ? data.skills.join(', ') : ''),
@@ -184,6 +189,7 @@ const Settings = () => {
       const requiredCommon = !!form.displayName.trim() && !!form.country.trim() && hasInterests;
       await updateDoc(doc(db, 'users', currentUser.uid), {
         displayName: form.displayName.trim(),
+        bio: form.bio.trim().slice(0, BIO_MAX) || null,
         interests: form.interests,
         industryInterests: form.industryInterests,
         specialization: form.specialization.trim() || null,
@@ -320,6 +326,19 @@ const Settings = () => {
               className={inputCls}
               placeholder="Your full name"
             />
+          </div>
+          <div>
+            <label className={labelCls} htmlFor="settings-bio">About you</label>
+            <textarea
+              id="settings-bio"
+              value={form.bio}
+              maxLength={BIO_MAX}
+              rows={3}
+              onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
+              className={inputCls}
+              placeholder="A line or two about you: what you're learning, building, or looking for."
+            />
+            <p className="text-xs text-gray-500 mt-1">Optional. Shown at the top of your profile. {form.bio.length}/{BIO_MAX}</p>
           </div>
           <div>
             <label className={labelCls}>Primary Skill Track</label>
