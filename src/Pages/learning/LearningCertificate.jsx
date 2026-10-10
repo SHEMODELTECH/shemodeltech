@@ -60,7 +60,7 @@ const LearningCertificate = () => {
   return (
     <LearningLayout accent={L}>
       <style>{CERT_CSS}</style>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content [&>*]:max-w-5xl py-8 sm:py-10">
         <div className="cert-actions flex flex-wrap items-center justify-between gap-3 mb-6">
           <p className="text-sm text-gray-600">
             <span className="inline-flex items-center gap-1.5 font-semibold text-pink-700">

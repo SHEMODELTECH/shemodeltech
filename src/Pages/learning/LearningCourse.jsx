@@ -401,7 +401,7 @@ const LearningCourse = ({ reading = false }) => {
   return (
     <LearningLayout accent={L}>
       <section style={{ background: L.tint }} className="border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-10 items-start">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content py-10 sm:py-14 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-10 items-start">
           <div>
             <nav className="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
               <Link to="/learning" className="hover:underline">Learning</Link>
@@ -495,7 +495,7 @@ const LearningCourse = ({ reading = false }) => {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content grid lg:grid-cols-[minmax(0,1fr)_320px] gap-10">
         {/* Syllabus */}
         <section className="pt-10" aria-labelledby="syl-h">
           <h2 id="syl-h" className="text-xl font-bold text-gray-900 mb-4">What&rsquo;s in this course</h2>

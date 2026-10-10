@@ -982,7 +982,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
     <div>
       <div className="fd-readbar" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content py-6 sm:py-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <button onClick={onBack} className="fd-back">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

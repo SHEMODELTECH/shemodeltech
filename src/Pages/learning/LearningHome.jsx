@@ -218,7 +218,7 @@ const LearningHome = ({ mine = false }) => {
       {/* Hero */}
       {!mine ? (
         <section className="lr-hero">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content py-8 sm:py-10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-sm font-semibold text-pink-700 m-0">She Model Tech Learning</p>
             </div>
@@ -245,7 +245,7 @@ const LearningHome = ({ mine = false }) => {
           </div>
         </section>
       ) : (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content pt-10">
           <h1 className="fd-display text-3xl sm:text-4xl text-gray-900">My learning</h1>
           <p className="text-gray-600 mt-2">
             {lr.signedIn && !lr.loading
@@ -255,7 +255,7 @@ const LearningHome = ({ mine = false }) => {
         </section>
       )}
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content pb-12">
         {/* Filters: at the top, so levels and tracks are the first thing under the search. */}
         <section id="lr-filters" className="pt-6 scroll-mt-24" aria-label="Filter courses">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">

@@ -222,12 +222,13 @@ const ProofWall = () => {
   const wallRef = useRef(null);
   const feedRef = useRef(null);
   const [wallShift, setWallShift] = useState(null);
+  const [wallMax, setWallMax] = useState(null);
   useEffect(() => {
     const align = () => {
       const search = document.querySelector('form[role="search"]');
       const wall = wallRef.current;
       const feed = feedRef.current;
-      if (!search || !wall || !feed || window.innerWidth < 1024) { setWallShift(null); return; }
+      if (!search || !wall || !feed || window.innerWidth < 1024) { setWallShift(null); setWallMax(null); return; }
       // Measure the page's content area (inside its padding), which is what the margin moves within.
       const box = wall.parentElement.getBoundingClientRect();
       const cs = getComputedStyle(wall.parentElement);
@@ -239,7 +240,13 @@ const ProofWall = () => {
       const feedRect = feed.getBoundingClientRect();
       const feedOffset = feedRect.left - wallRect.left; // where the feed sits inside the wall
       const desiredFeedLeft = s.left; // the feed starts where the search bar starts
-      const maxShift = Math.max(0, parent.width - wallRect.width);
+      // The feed is as wide as the search bar, so it ends where the search bar ends
+      // (on wide screens the side column and its gap sit beside it).
+      const side = feed.nextElementSibling; // the side column (wide screens only)
+      const sideW = window.innerWidth >= 1280 && side ? side.getBoundingClientRect().width + (parseFloat(getComputedStyle(wall).columnGap) || 0) : 0;
+      const target = Math.min(parent.width, s.width + sideW);
+      setWallMax(target);
+      const maxShift = Math.max(0, parent.width - target);
       setWallShift(Math.min(maxShift, Math.max(0, desiredFeedLeft - feedOffset - parent.left)));
     };
     align();
@@ -703,10 +710,10 @@ const ProofWall = () => {
   return (
     // Feed plus a side panel on wide screens (like LinkedIn), so the page sits
     // balanced in the space instead of a narrow column floating off-centre.
-    <div ref={wallRef} style={wallShift != null ? { marginLeft: wallShift, marginRight: 0 } : undefined} className="w-full max-w-[600px] xl:max-w-[880px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-6 xl:items-start">
+    <div ref={wallRef} style={wallShift != null ? { marginLeft: wallShift, marginRight: 0, maxWidth: wallMax || undefined } : undefined} className="w-full max-w-[600px] xl:max-w-[880px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-6 xl:items-start">
     {/* LinkedIn-like width: a narrower feed with the side panel close beside it,
         and open space on both sides on wide screens. */}
-    <div ref={feedRef} className="w-full max-w-[600px] mx-auto xl:max-w-none">
+    <div ref={feedRef} className="w-full max-w-[600px] mx-auto lg:max-w-none">
       {/* Header: title + a filter dropdown (like a social feed's "Sort by") */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Proof Wall</h1>

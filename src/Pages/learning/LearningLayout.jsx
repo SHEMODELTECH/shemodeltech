@@ -116,7 +116,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
           <style>{FD_CSS}</style>
           {/* Course reading view (bare) has its own Back button: no tab row. */}
           {!bare && <nav aria-label="Learning" className="border-b border-gray-200 bg-white">
-            <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl flex gap-3 sm:gap-7 overflow-x-auto">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content flex gap-4 sm:gap-7 overflow-x-auto">
               {tabs.map((it) => (
                 <NavLink key={it.to} to={it.to} end={it.to === '/learning'} className={(a) => tabCls({ isActive: it.active ?? a.isActive })}>{it.label}</NavLink>
               ))}

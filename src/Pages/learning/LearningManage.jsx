@@ -19,7 +19,7 @@ const LearningManage = ({ section = 'courses' }) => {
   const current = SECTIONS.find((s) => s.key === section) || SECTIONS[0];
   return (
     <LearningLayout>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content py-6 pb-12">
         <StaffGate>
           <ManagePills label="Manage Learning" items={SECTIONS} />
           {current.only ? <AdminPanel key={current.only} only={current.only} bare /> : <ManageCourses embedded />}

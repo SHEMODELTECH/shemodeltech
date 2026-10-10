@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TrackGuide from '../components/TrackGuide';
+import TrackPicker from '../components/TrackPicker';
 import { useAuth } from '../context/AuthContext';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -62,7 +62,7 @@ const Onboarding = () => {
     guardianConsent: false,
     heardFrom: '', // how she found She Model Tech
     dateOfBirth: '',
-    primarySkillTrack: '', // TechPO, TechQA, TechDev, TechLeads, TechArchs, TechGuard, others, notsure
+    primarySkillTrack: '', // TechPO, TechQA, TechDev, TechLeads, TechArchs, TechGuard, notsure
     highestEducation: '', // high_school | undergrad | masters | phd
     specialization: '',
     skillsList: [],
@@ -93,31 +93,6 @@ const Onboarding = () => {
     { id: 'expert', label: 'Expert', desc: '7+ years of experience, leading and mentoring' },
   ];
 
-  // "Which track fits me?": the careers in each track, tap to open.
-  const [showTrackGuide, setShowTrackGuide] = useState(false);
-
-  const skillTracks = [
-    { id: 'TechDev', label: 'Coding Developer', desc: 'Frontend, backend, mobile, full-stack' },
-    {
-      id: 'TechArchs',
-      label: 'Low/No-Code Developer',
-      desc: 'Build with low-code and no-code platforms',
-    },
-    { id: 'TechQA', label: 'Quality Tester', desc: 'Testing, reviews, quality control' },
-    { id: 'TechGuard', label: 'Network & Cybersecurity', desc: 'Security, cloud, DevOps' },
-    {
-      id: 'TechPO',
-      label: 'Product / Project Owner',
-      desc: 'Own product vision, requirements, and backlog',
-    },
-    {
-      id: 'TechLeads',
-      label: 'Non-Technical Roles',
-      desc: 'Management, writing, research, coordination',
-    },
-    { id: 'others', label: 'Others', desc: 'A tech role not listed here' },
-    { id: 'notsure', label: 'Not sure yet', desc: 'Help me discover the right track' },
-  ];
 
   const educationLevels = [
     { id: 'high_school', label: 'High School' },
@@ -504,38 +479,11 @@ const Onboarding = () => {
             </div>
             <div>
               <label className={labelClass}>Your Track *</label>
-              <select
+              <p className="text-xs text-gray-500 mb-2">Tap a track to see the careers that fit it. We use it to match you with projects.</p>
+              <TrackPicker
                 value={formData.primarySkillTrack}
-                onChange={(e) => setFormData((p) => ({ ...p, primarySkillTrack: e.target.value }))}
-                className={inputClass}
-              >
-                <option value="">Select your track</option>
-                {skillTracks.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label} - {t.desc}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                We use this to match you with projects that fit you. Not sure? Pick "Not sure yet"
-                and we'll help you discover one.
-              </p>
-              <button
-                type="button"
-                onClick={() => setShowTrackGuide((v) => !v)}
-                aria-expanded={showTrackGuide}
-                className="mt-2 text-sm font-semibold text-pink-700 hover:underline"
-              >
-                {showTrackGuide ? 'Hide the careers in each track' : 'Which track fits me? See the careers in each track'}
-              </button>
-              {showTrackGuide && (
-                <div className="mt-3">
-                  <TrackGuide
-                    selected={formData.primarySkillTrack}
-                    onChoose={(name) => { setFormData((p) => ({ ...p, primarySkillTrack: name })); setShowTrackGuide(false); }}
-                  />
-                </div>
-              )}
+                onChange={(v) => setFormData((p) => ({ ...p, primarySkillTrack: v }))}
+              />
             </div>
             <div>
               <label className={labelClass}>Highest Level of Education *</label>

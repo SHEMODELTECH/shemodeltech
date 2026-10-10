@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import TrackGuide from '../components/TrackGuide';
+import TrackPicker from '../components/TrackPicker';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
@@ -20,15 +20,6 @@ import { useFeatures } from '../utils/features';
 import PayoutDetails from '../components/PayoutDetails';
 import DobSettings from '../components/DobSettings';
 import { PRESENCE_PREF_EVENT } from '../utils/presence';
-
-const skillTrackOpts = [
-  { id: 'TechDev', label: 'Development' },
-  { id: 'TechQA', label: 'Quality Assurance' },
-  { id: 'TechPO', label: 'Product / Project Owner' },
-  { id: 'TechArchs', label: 'Low/No-Code Developer' },
-  { id: 'TechLeads', label: 'Non-Technical Roles' },
-  { id: 'TechGuard', label: 'Cybersecurity' },
-];
 
 // Same options as onboarding step 4 ("What are you looking for?"), now editable
 // here too. These feed profile completion and the AI recommendations.
@@ -68,7 +59,6 @@ const Settings = () => {
   const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
   const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
   const [loadFailed, setLoadFailed] = useState(false);
-  const [showTrackGuide, setShowTrackGuide] = useState(false);
   const [form, setForm] = useState({
     displayName: '',
     bio: '',
@@ -145,7 +135,7 @@ const Settings = () => {
             highestEducation: data.highestEducation || '',
             skills: data.skillsText || (Array.isArray(data.skills) ? data.skills.join(', ') : ''),
             experienceLevel: data.experienceLevel || '',
-            primarySkillTrack: data.primarySkillTrack || '',
+            primarySkillTrack: data.primarySkillTrack === 'others' ? 'notsure' : (data.primarySkillTrack || ''),
             country: data.country || '',
             city: data.city || '',
             state: data.state || '',
@@ -357,35 +347,11 @@ const Settings = () => {
             <p className="text-xs text-gray-500 mt-1">Optional. Shown at the top of your profile. {form.bio.length}/{BIO_MAX}</p>
           </div>
           <div>
-            <label className={labelCls}>Primary Skill Track</label>
-            <select
+            <label className={labelCls}>Your track</label>
+            <TrackPicker
               value={form.primarySkillTrack}
-              onChange={(e) => setForm((p) => ({ ...p, primarySkillTrack: e.target.value }))}
-              className={inputCls}
-            >
-              <option value="">Select a track</option>
-              {skillTrackOpts.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => setShowTrackGuide((v) => !v)}
-              aria-expanded={showTrackGuide}
-              className="mt-2 text-sm font-semibold text-pink-700 hover:underline"
-            >
-              {showTrackGuide ? 'Hide the careers in each track' : 'Which track fits me? See the careers in each track'}
-            </button>
-            {showTrackGuide && (
-              <div className="mt-3">
-                <TrackGuide
-                  selected={form.primarySkillTrack}
-                  onChoose={(name) => { setForm((p) => ({ ...p, primarySkillTrack: name })); setShowTrackGuide(false); }}
-                />
-              </div>
-            )}
+              onChange={(v) => setForm((p) => ({ ...p, primarySkillTrack: v }))}
+            />
           </div>
           <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Education & skills</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

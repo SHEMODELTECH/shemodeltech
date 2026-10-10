@@ -84,7 +84,7 @@ const TeachApply = () => {
   return (
     <LearningLayout>
       {/* Same frame as the Mentor Hub: a plain title, then the page. */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content py-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Become a mentor</h1>
       <p className="text-gray-600 mt-1">Share what you know. Approved mentors build and present courses in the Mentor Hub.</p>
 

@@ -9,6 +9,7 @@ import FindFirstProject from '../../components/FindFirstProject';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import { trackStandings } from '../../components/BadgeShowcase';
+import { isRealTrack } from '../../components/TrackPicker';
 import TierBadge from '../../components/TierBadge';
 import { BADGE_TRACKS, levelForCount } from '../../config/badgeTracks';
 import GettingStarted from '../../components/GettingStarted';
@@ -298,7 +299,7 @@ const DashboardOverview = () => {
           {!loading && <FindFirstProject profile={profileData} uid={currentUser?.uid} currentUser={currentUser} />}
       {/* Help users who haven't settled on a track (new to tech or unsure) discover one. */}
       {!loading &&
-        !profileData?.primarySkillTrack &&
+        !isRealTrack(profileData?.primarySkillTrack) &&
         ongoingProjects.length === 0 &&
         completedProjects.length === 0 && (
           <div className="mb-6">
