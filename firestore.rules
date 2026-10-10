@@ -721,14 +721,45 @@ service cloud.firestore {
  }
 
  // Events (all online). Anyone can see published events; staff manage them.
+ // Member-hosted events (Events → Host an event): adult members (not companies)
+ // submit an event that waits for staff review. While it is unpublished, the
+ // host can edit or delete it; staff publish it (or decline it with a note).
+ function isAdultMember() {
+ return isVerified() && hasProfile()
+ && myUserDoc().get('ageGroup', null) == '18plus'
+ && myUserDoc().get('isCompany', false) != true;
+ }
+ function validHostedEvent(d) {
+ return d.keys().hasOnly(['title', 'category', 'startAt', 'durationMins', 'hosts', 'description', 'capacity',
+ 'imageUrl', 'published', 'status', 'hostUid', 'hostName', 'reviewStatus', 'reviewNote', 'createdAt', 'updatedAt'])
+ && d.hostUid == myUid()
+ && d.published == false
+ && d.status == 'scheduled'
+ && d.reviewStatus == 'pending'
+ && d.title is string && d.title.size() >= 3 && d.title.size() <= 120
+ && d.description is string && d.description.size() <= 4000
+ && d.category in ['workshop', 'talk', 'conference', 'demoday', 'shoutout']
+ && d.startAt is string
+ && d.durationMins is number && d.durationMins >= 15 && d.durationMins <= 600;
+ }
  match /events/{id} {
- allow read: if (resource != null && resource.data.get('published', false) == true) || isReviewer();
+ allow read: if (resource != null && resource.data.get('published', false) == true) || isReviewer()
+ || (isSignedIn() && resource != null && resource.data.get('hostUid', '') == myUid());
  allow write: if isReviewer();
- // The joining link: staff, and people who have a place.
+ allow create: if isAdultMember() && validHostedEvent(request.resource.data);
+ allow update: if isAdultMember() && resource.data.get('hostUid', '') == myUid()
+ && resource.data.get('published', false) == false
+ && validHostedEvent(request.resource.data)
+ && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['hostUid', 'createdAt', 'reviewNote']);
+ allow delete: if isSignedIn() && resource.data.get('hostUid', '') == myUid()
+ && resource.data.get('published', false) == false;
+ // The joining link: staff, the host, and people who have a place.
  match /private/{doc} {
  allow read: if isReviewer() || (isSignedIn()
  && exists(/databases/$(database)/documents/eventRegistrations/$(id + '_' + myUid()))
  && get(/databases/$(database)/documents/eventRegistrations/$(id + '_' + myUid())).data.status == 'registered');
+ allow read, write: if isSignedIn()
+ && get(/databases/$(database)/documents/events/$(id)).data.get('hostUid', '') == myUid();
  allow write: if isReviewer();
  }
  }

@@ -286,7 +286,7 @@ export const EventDetail = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-8">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-10"><div className="max-w-6xl mx-auto [&>*]:max-w-3xl">
         <Link to="/events" className="text-sm font-semibold text-pink-700 hover:underline">← All events</Link>
         {e === undefined ? (
           <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600" /></div>
@@ -311,6 +311,12 @@ export const EventDetail = () => {
             <h1 className="mt-3 text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
             <p className="mt-2 font-semibold text-gray-800">{formatWhen(e)}{e.durationMins ? ` · ${e.durationMins} min` : ''}</p>
             {e.hosts && <p className="mt-1 text-gray-600">With {e.hosts}</p>}
+            {e.hostUid && <p className="mt-1 text-sm text-gray-600">Hosted by <Link to={`/profile/${e.hostUid}`} className="font-semibold text-pink-700 hover:underline">{e.hostName || 'a member'}</Link></p>}
+            {!e.published && (
+              <p className="mt-4 rounded-lg bg-gray-50 border border-gray-200 px-4 py-3 text-sm text-gray-700">
+                {e.reviewStatus === 'declined' ? 'This event wasn’t approved.' : 'Waiting for review.'} Only you and the She Model Tech team can see it.
+              </p>
+            )}
             {e.description && <p className="mt-5 text-gray-700 leading-relaxed whitespace-pre-line">{e.description}</p>}
 
             <div className="mt-6">
@@ -337,24 +343,26 @@ export const EventDetail = () => {
             )}
           </article>
         )}
-      </main>
+      </div></main>
       <Footer />
     </div>
   );
 };
 
-// Staff only: All events · Manage (create, publish, registrations). Members
-// and visitors don't see a tab row on Events.
+// Signed-in members: All events · Host an event; staff also get Manage.
+// Visitors don't see a tab row.
 export const EventsTabs = () => {
   const { currentUser } = useAuth();
   const role = useStaffRole();
-  if (!currentUser || (role !== 'admin' && role !== 'editor')) return null;
+  if (!currentUser) return null;
+  const staff = role === 'admin' || role === 'editor';
   return (
     <SectionTabs
       label="Events"
       tabs={[
         { to: '/events', label: 'All events', exact: true },
-        { to: '/events/manage', label: 'Manage' },
+        { to: '/events/host', label: 'Host an event' },
+        ...(staff ? [{ to: '/events/manage', label: 'Manage' }] : []),
       ]}
     />
   );
@@ -392,12 +400,11 @@ const Events = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-10"><div className="max-w-6xl mx-auto">
         <EventsTabs />
-        <p className="text-sm font-semibold text-pink-700">Events</p>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-1">Learn, share, and celebrate together</h1>
-        <p className="text-gray-600 text-lg mt-3 max-w-2xl">
-          Free online workshops, tech talks, conferences, and demo days where teams show what they built.
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Events</h1>
+        <p className="text-gray-600 mt-1 max-w-2xl">
+          Free online workshops, tech talks, conferences, and demo days. Learn, share, and celebrate together.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter by type">
@@ -438,7 +445,7 @@ const Events = () => {
             )}
           </>
         )}
-      </main>
+      </div></main>
       <Footer />
     </div>
   );

@@ -8,7 +8,7 @@ import { StaffGate } from '../components/SectionTabs';
 import { EventsTabs } from './Events';
 
 const EventsManage = () => (
-  <main className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+  <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content pt-4 sm:pt-6 lg:pt-8 pb-10">
     <StaffGate>
       <EventsTabs />
       <AdminPanel only="events" bare />

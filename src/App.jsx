@@ -51,6 +51,7 @@ const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
 const LearningManage = lazy(() => import('./Pages/learning/LearningManage'));
 const EventsManage = lazy(() => import('./Pages/EventsManage'));
+const HostEvent = lazy(() => import('./Pages/HostEvent'));
 const SupportMission = lazy(() => import('./Pages/SupportMission'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
@@ -256,6 +257,7 @@ function App() {
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/events" element={<MemberFrame><Events /></MemberFrame>} />
+                <Route path="/events/host" element={<BasicProtectedRoute><AppShell flush><HostEvent /></AppShell></BasicProtectedRoute>} />
                 <Route path="/events/manage" element={<BasicProtectedRoute><AppShell flush><EventsManage /></AppShell></BasicProtectedRoute>} />
                 <Route path="/events/:id" element={<MemberFrame><EventDetail /></MemberFrame>} />
                 <Route path="/summit" element={<Navigate to="/events" replace />} />

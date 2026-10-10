@@ -133,6 +133,33 @@ export const saveEvent = async (id, data, joinUrl) => {
 };
 export const deleteEvent = (id) => deleteDoc(doc(db, 'events', id));
 
+// ---- Members hosting (Events → Host an event) ----
+// Adult members submit an event; it waits for staff review (published: false,
+// reviewStatus: 'pending'). Editing it sends it back for review.
+export const listMyHostedEvents = async (uid) => {
+  const s = await getDocs(query(collection(db, 'events'), where('hostUid', '==', uid)));
+  return s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => toMs(b.startAt) - toMs(a.startAt));
+};
+export const submitHostedEvent = async (id, data, joinUrl, host) => {
+  const fields = {
+    ...data,
+    published: false,
+    status: 'scheduled',
+    reviewStatus: 'pending',
+    hostUid: host.uid,
+    hostName: host.name,
+  };
+  let eventId = id;
+  if (id) {
+    await updateDoc(doc(db, 'events', id), { ...fields, updatedAt: serverTimestamp() });
+  } else {
+    const ref = await addDoc(collection(db, 'events'), { ...fields, createdAt: serverTimestamp() });
+    eventId = ref.id;
+  }
+  await setDoc(doc(db, 'events', eventId, 'private', 'info'), { joinUrl: joinUrl || '' }, { merge: true });
+  return eventId;
+};
+
 // ---- Registrations ----
 const regId = (eventId, uid) => `${eventId}_${uid}`;
 export const getMyRegistration = async (eventId, uid) => {

@@ -15,6 +15,7 @@ import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { authFetch } from '../../utils/authFetch';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 import { useFeatures } from '../../utils/features';
+import { SectionTabs } from '../../components/SectionTabs';
 import { hasPerk } from '../../config/tiers';
 import {
   JOB_LIMITS,
@@ -126,6 +127,23 @@ const JobCard = ({ j }) => (
 );
 
 // ---------- Board ----------
+// Companies and staff: All jobs · My job posts · Post a job (same tab row as
+// Projects and Events). Members only browse, so they get no tab row.
+const JobsTabs = ({ profile }) => {
+  const staff = ['admin', 'editor'].includes(profile?.role);
+  if (!profile || !(profile.isCompany || staff)) return null;
+  return (
+    <SectionTabs
+      label="Jobs"
+      tabs={[
+        { to: '/jobs', label: 'All jobs', exact: true },
+        { to: '/jobs/mine', label: 'My job posts' },
+        { to: '/jobs/new', label: 'Post a job' },
+      ]}
+    />
+  );
+};
+
 export const JobsBoard = () => {
   const profile = useMyProfile();
   const features = useFeatures();
@@ -176,7 +194,8 @@ export const JobsBoard = () => {
 
   const input = 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
-    <div className="max-w-6xl mx-auto [&>*]:max-w-4xl">
+    <div className="max-w-6xl mx-auto [&>*:not(nav)]:max-w-4xl">
+      <JobsTabs profile={profile} />
       {isStaff && deletionReqs.length > 0 && (
         <div className="mb-6 rounded-xl border border-gray-300 bg-gray-50 p-4">
           <p className="font-semibold text-gray-900 mb-2">Deletion requests ({deletionReqs.length})</p>
@@ -203,12 +222,6 @@ export const JobsBoard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
           <p className="text-gray-600 text-sm mt-1">Full-time, part-time, contract, and internship roles from companies hiring on She Model Tech.</p>
         </div>
-        {(profile?.isCompany || isStaff) && (
-          <div className="flex gap-2">
-            <Link to="/jobs/mine" className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">My job posts</Link>
-            <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>
-          </div>
-        )}
       </div>
 
       {/* AI-powered job matches: free for every member */}
@@ -244,13 +257,23 @@ export const JobsBoard = () => {
         <p className="text-gray-500 text-sm">Loading jobs...</p>
       ) : jobs.length === 0 ? (
         <div className="border border-dashed border-gray-300 rounded-2xl p-8 text-center">
-          <p className="text-gray-900 font-semibold mb-1">
-            {(features.jobPosting || features.companyTiers) ? 'No open jobs right now' : 'Jobs from hiring companies are coming soon'}
-          </p>
-          <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
-            Companies look for proof of real work. Build yours on a She Model Tech project, so you're ready when roles open.
-          </p>
-          <Link to="/projects" className="inline-block text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
+          {profile?.isCompany ? (
+            <>
+              <p className="text-gray-900 font-semibold mb-1">No open jobs right now</p>
+              <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">Post a role and members will see it here.</p>
+              <Link to="/jobs/new" className="inline-block text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Post a job</Link>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-900 font-semibold mb-1">
+                {(features.jobPosting || features.companyTiers) ? 'No open jobs right now' : 'Jobs from hiring companies are coming soon'}
+              </p>
+              <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
+                Companies look for proof of real work. Build yours on a She Model Tech project, so you're ready when roles open.
+              </p>
+              <Link to="/projects" className="inline-block text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
+            </>
+          )}
         </div>
       ) : shown.length === 0 ? (
         <div className="border border-dashed border-gray-300 rounded-xl p-8 text-center">
@@ -392,9 +415,10 @@ export const MyJobs = () => {
     }
   };
   return (
-    <div className="max-w-6xl mx-auto [&>*]:max-w-4xl">
+    <div className="max-w-6xl mx-auto [&>*:not(nav)]:max-w-4xl">
+      <JobsTabs profile={profile} />
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-bold text-gray-900">My job posts</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My job posts</h1>
         <NoteDialog
           open={!!deleteFor}
           title="Request deletion"
@@ -409,7 +433,6 @@ export const MyJobs = () => {
             await act(() => requestJobDeletion(j, { uid: profile.uid }, reason), 'Request sent. The post is unpublished while we review it.');
           }}
         />
-        {<Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
       </div>
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading...</p>
@@ -535,8 +558,10 @@ export const JobForm = () => {
   const label = 'block text-sm font-semibold text-gray-800 mb-1';
   const hintCls = 'font-normal text-gray-500';
   return (
-    <form onSubmit={(e) => (locked ? e.preventDefault() : submit(e))} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">{id ? 'Edit job' : 'Post a job'}</h1>
+    <div className="max-w-6xl mx-auto">
+    <JobsTabs profile={profile} />
+    <form onSubmit={(e) => (locked ? e.preventDefault() : submit(e))} className="max-w-3xl bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{id ? 'Edit job' : 'Post a job'}</h1>
       {locked && (
         <div className="rounded-xl border border-gray-300 bg-gray-50 p-4 flex flex-wrap items-center justify-between gap-3">
           <p className="m-0 text-sm text-gray-800"><strong>Coming soon.</strong> {lockedMessage}</p>
@@ -601,5 +626,6 @@ export const JobForm = () => {
       </button>
       </fieldset>
     </form>
+    </div>
   );
 };

@@ -271,6 +271,49 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Member-hosted events (Events → Host an event) ----
+// Adult members (not companies, not under-18s) submit an event for review; it
+// stays unpublished until staff publish it. Hosts edit or delete only their own
+// unpublished events, and set the joining link on their own events.
+if (MODE !== 'orig') {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    const db = ctx.firestore();
+    await setDoc(doc(db, 'users', 'teenU'), member('teenU', { ageGroup: '13-17', createdAt: OLD }));
+    await setDoc(doc(db, 'users', 'coU'), member('coU', { isCompany: true, createdAt: OLD }));
+    const base = { title: 'Intro to Git', category: 'workshop', startAt: '2026-12-01T18:00:00.000Z', durationMins: 60, hosts: 'verU',
+      description: 'A friendly hands-on start with Git and GitHub.', capacity: null, imageUrl: null, status: 'scheduled', createdAt: OLD };
+    await setDoc(doc(db, 'events', 'evMine'), { ...base, hostUid: 'verU', hostName: 'verU', published: false, reviewStatus: 'pending' });
+    await setDoc(doc(db, 'events', 'evMineLive'), { ...base, hostUid: 'verU', hostName: 'verU', published: true, reviewStatus: 'approved' });
+    await setDoc(doc(db, 'events', 'evOther'), { ...base, hostUid: 'bob', hostName: 'bob', published: false, reviewStatus: 'pending' });
+  });
+  const as = (uid) => ctxFor(uid, true).firestore();
+  const ev = (uid, extra = {}) => ({
+    title: 'Resume clinic', category: 'workshop', startAt: '2026-12-05T17:00:00.000Z', durationMins: 60, hosts: uid,
+    description: 'Bring your resume and we will review it together.', capacity: 30, imageUrl: null, published: false,
+    status: 'scheduled', hostUid: uid, hostName: uid, reviewStatus: 'pending', createdAt: serverTimestamp(), ...extra,
+  });
+  const cases = [
+    ['events: adult member submits an event for review', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU')), 'allowed'],
+    ['events: member submits it already published', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { published: true })), 'denied'],
+    ['events: member submits it as approved', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { reviewStatus: 'approved' })), 'denied'],
+    ['events: member submits for someone else', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('bob')), 'denied'],
+    ['events: under-18 submits an event', 'teenU', () => addDoc(collection(as('teenU'), 'events'), ev('teenU')), 'denied'],
+    ['events: company submits an event', 'coU', () => addDoc(collection(as('coU'), 'events'), ev('coU')), 'denied'],
+    ['events: host reads her unpublished event', 'verU', () => getDoc(doc(as('verU'), 'events', 'evMine')), 'allowed'],
+    ['events: member reads someone else\'s unpublished event', 'verU', () => getDoc(doc(as('verU'), 'events', 'evOther')), 'denied'],
+    ['events: host edits her event under review', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evMine'), { title: 'Intro to Git and GitHub', updatedAt: serverTimestamp() }), 'allowed'],
+    ['events: host publishes her own event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evMine'), { published: true }), 'denied'],
+    ['events: host edits her published event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evMineLive'), { title: 'Changed' }), 'denied'],
+    ['events: member edits someone else\'s event', 'verU', () => updateDoc(doc(as('verU'), 'events', 'evOther'), { title: 'Mine now' }), 'denied'],
+    ['events: host sets her joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evMine', 'private', 'info'), { joinUrl: 'https://meet.example.com/x' }), 'allowed'],
+    ['events: member sets another host\'s joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evOther', 'private', 'info'), { joinUrl: 'https://evil.example.com' }), 'denied'],
+    ['events: host deletes her published event', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMineLive')), 'denied'],
+    ['events: staff publishes a member event', 'staff1', () => updateDoc(doc(ctxFor('staff1', false).firestore(), 'events', 'evOther'), { published: true, reviewStatus: 'approved' }), 'allowed'],
+    ['events: host deletes her event under review', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMine')), 'allowed'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);

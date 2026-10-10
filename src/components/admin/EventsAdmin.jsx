@@ -52,7 +52,9 @@ const EventsAdmin = () => {
   const [openRegs, setOpenRegs] = useState(null); // { event, rows }
   const [recording, setRecording] = useState('');
 
-  const load = () => listAllEvents().then(setEvents).catch(() => setEvents([]));
+  // Member events waiting for review come first.
+  const waiting = (e) => !!e.hostUid && !e.published && e.reviewStatus !== 'declined';
+  const load = () => listAllEvents().then((xs) => setEvents([...xs.filter(waiting), ...xs.filter((x) => !waiting(x))])).catch(() => setEvents([]));
   useEffect(() => { load(); }, []);
 
   const set = (k) => (e) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
@@ -89,9 +91,19 @@ const EventsAdmin = () => {
         capacity: Number(f.capacity) > 0 ? Number(f.capacity) : null,
         imageUrl: f.imageUrl || null,
         published: announce ? true : !!f.published,
+        ...(original?.hostUid && (announce || f.published) ? { reviewStatus: 'approved' } : {}),
       };
       const id = await saveEvent(editing === 'new' ? null : editing, data, f.joinUrl.trim());
       const ev = { id, ...data };
+
+      // A member's event just approved: tell the host.
+      if (original?.hostUid && data.published && !original.published) {
+        notifyMember(original.hostUid, {
+          type: 'event_approved', title: `Your event is live: ${data.title}`,
+          body: `${formatWhen(ev)}. Members can now register. Share it to spread the word.`,
+          link: `/events/${id}`, ctaLabel: 'See your event',
+        });
+      }
 
       // A published event whose time changed: tell everyone registered.
       if (original && original.published && tellChange && original.startAt !== data.startAt) {
@@ -149,6 +161,24 @@ const EventsAdmin = () => {
       toast.error('Could not cancel the event.');
     }
     setBusy(false);
+  };
+
+  // A member's event that isn't right for Events: send it back with a note.
+  const decline = async (e) => {
+    const note = window.prompt(`Why isn't "${e.title}" approved? The host will see this note and can edit and resend it.`, '');
+    if (note === null) return;
+    try {
+      await updateDoc(doc(db, 'events', e.id), { reviewStatus: 'declined', reviewNote: note.trim().slice(0, 500) });
+      notifyMember(e.hostUid, {
+        type: 'event_declined', title: `Your event wasn't approved: ${e.title}`,
+        body: note.trim() ? `Note from the team: ${note.trim()}` : 'You can edit it and send it for review again.',
+        link: '/events/host', ctaLabel: 'See your events',
+      });
+      toast.success('Sent back to the host.');
+      load();
+    } catch (err) {
+      toast.error('Could not update it.');
+    }
   };
 
   const remove = async (e) => {
@@ -347,14 +377,21 @@ const EventsAdmin = () => {
                 <p className="font-semibold text-gray-900">{e.title}</p>
                 <p className="text-xs text-gray-600">
                   {CATEGORY_LABEL[e.category] || 'Event'} · {formatWhen(e)} ·{' '}
-                  {e.status === 'cancelled' ? 'Cancelled' : !e.published ? 'Draft' : isPast(e) ? 'Past' : e.announcedAt ? 'Published and announced' : 'Published'}
+                  {e.status === 'cancelled' ? 'Cancelled' : !e.published ? (e.hostUid ? (e.reviewStatus === 'declined' ? 'Not approved' : 'Waiting for review') : 'Draft') : isPast(e) ? 'Past' : e.announcedAt ? 'Published and announced' : 'Published'}
+                  {e.hostUid ? ` · Hosted by ${e.hostName || 'a member'}` : ''}
                   {e.hasRecording ? ' · Has recording' : ''}
                   {e.published && (isPast(e) || e.status === 'cancelled') ? (e.showOnPage ? ' · Shown on Events page' : ' · Hidden from Events page') : ''}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button onClick={() => showRegs(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Registrations</button>
-                {e.status !== 'cancelled' && <button onClick={() => startEdit(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Edit</button>}
+                {e.hostUid && !e.published && e.reviewStatus !== 'declined' && (
+                  <>
+                    <button onClick={() => startEdit(e)} className="text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg">Review and publish</button>
+                    <button onClick={() => decline(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Decline</button>
+                  </>
+                )}
+                {e.status !== 'cancelled' && !(e.hostUid && !e.published && e.reviewStatus !== 'declined') && <button onClick={() => startEdit(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Edit</button>}
                 {e.published && e.status !== 'cancelled' && !isPast(e) && (
                   <button disabled={busy} onClick={() => cancelEvent(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Cancel event</button>
                 )}
