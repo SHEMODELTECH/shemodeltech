@@ -8,7 +8,9 @@ import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import DiscoverTrack from '../../components/DiscoverTrack';
-import { BadgeRow } from '../../components/BadgeShowcase';
+import { trackStandings } from '../../components/BadgeShowcase';
+import TierBadge from '../../components/TierBadge';
+import { BADGE_TRACKS, levelForCount } from '../../config/badgeTracks';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import EventsCard from '../../components/EventsCard';
@@ -196,6 +198,41 @@ const DashboardOverview = () => {
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
 
+      {/* Her numbers first, in one slim row; the badge box shows her medal. */}
+      {!profileData?.isCompany && (() => {
+        const top = trackStandings(profileData)[0];
+        const own = BADGE_TRACKS.find((t) => t.name === profileData?.primarySkillTrack) || BADGE_TRACKS[0];
+        const lvl = top ? (levelForCount(top.count) || 'Novice') : 'Novice';
+        return (
+          <div className="mb-6 bg-white border border-gray-200 rounded-xl grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200 overflow-hidden">
+            {[
+              ['Projects completed', stats.projectsCompleted, null],
+              ['Ongoing projects', stats.ongoingProjects, null],
+              ['Badges earned', stats.badgesEarned, null, '/badges'],
+              ['Talent Board', 'Listed', stats.badgesEarned > 0 ? 'Recruiters can find you' : 'A badge moves you up', '/talent-board'],
+            ].map(([label, value, note, to]) => {
+              const body = (
+                <>
+                  <p className="text-gray-500 text-xs sm:text-sm">{label}</p>
+                  {label === 'Badges earned' ? (
+                    <div className="flex items-center gap-2 mt-1">
+                      <TierBadge image={(top || own).img} alt={top ? `${top.name} ${lvl}` : 'No badge yet'} level={lvl} size={32} showLabel={false} earned={!!top} />
+                      <span className="text-xl sm:text-2xl font-bold text-gray-900">{value}</span>
+                    </div>
+                  ) : (
+                    <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">{value}</p>
+                  )}
+                  {note && <p className="text-gray-400 text-xs mt-0.5">{note}</p>}
+                </>
+              );
+              return to
+                ? <Link key={label} to={to} className="p-4 hover:bg-gray-50">{body}</Link>
+                : <div key={label} className="p-4">{body}</div>;
+            })}
+          </div>
+        );
+      })()}
+
       {/* 1. Things that need her: set up a project she leads, payout details, notifications. */}
       {/* Approved lead: her project is hers to prepare before it starts. */}
       {!loading &&
@@ -257,22 +294,6 @@ const DashboardOverview = () => {
           {/* 3. Courses she's started, and how many she's finished. */}
           <ContinueLearning profile={profileData} uid={currentUser?.uid} />
 
-          {/* 4. Her numbers, in one slim row. */}
-          <div className="mb-6 bg-white border border-gray-200 rounded-xl grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200 overflow-hidden">
-            {[
-              ['Projects completed', stats.projectsCompleted, null],
-              ['Ongoing projects', stats.ongoingProjects, null],
-              ['Badges earned', stats.badgesEarned, null],
-              ['Talent Board', stats.badgesEarned > 0 ? 'Listed' : 'Not yet', stats.badgesEarned > 0 ? 'Recruiters can find you' : 'Earn a badge to get listed'],
-            ].map(([label, value, note]) => (
-              <div key={label} className="p-4">
-                <p className="text-gray-500 text-xs sm:text-sm">{label}</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">{value}</p>
-                {note && <p className="text-gray-400 text-xs mt-0.5">{note}</p>}
-              </div>
-            ))}
-          </div>
-
           {/* 5. Up to three projects that fit her (AI pick first), then featured jobs and projects. */}
           {!loading && <FindFirstProject profile={profileData} uid={currentUser?.uid} currentUser={currentUser} />}
       {/* Help users who haven't settled on a track (new to tech or unsure) discover one. */}
@@ -306,17 +327,9 @@ const DashboardOverview = () => {
 
         {/* Right column */}
         <div className={profileData?.isCompany ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'}>
-          {/* Your Badges */}
-          {!profileData?.isCompany && (
-            <div className={`bg-white border border-gray-200 rounded-xl px-5 py-4 ${showEarnings ? 'lg:col-start-3 lg:row-start-1' : 'lg:col-span-3'}`}>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Your badge</h3>
-              <BadgeRow profile={profileData} />
-            </div>
-          )}
-
           {/* Earnings: only for members with paid work (earned or pending). */}
           {!profileData?.isCompany && showEarnings && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2">
+          <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-3">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">My Account</h3>
               <Link to="/account" className="text-pink-600 text-sm font-medium hover:underline">
