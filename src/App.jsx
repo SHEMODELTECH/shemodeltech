@@ -49,7 +49,8 @@ const EventDetail = lazy(() => import('./Pages/Events').then((m) => ({ default: 
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
-const ManageCoursesPage = lazy(() => import('./Pages/learning/ManageCourses').then((m) => ({ default: m.ManageCourses })));
+const LearningManage = lazy(() => import('./Pages/learning/LearningManage'));
+const EventsManage = lazy(() => import('./Pages/EventsManage'));
 const SupportMission = lazy(() => import('./Pages/SupportMission'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
@@ -257,6 +258,7 @@ function App() {
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/events" element={<MemberFrame><Events /></MemberFrame>} />
+                <Route path="/events/manage" element={<BasicProtectedRoute><AppShell flush><EventsManage /></AppShell></BasicProtectedRoute>} />
                 <Route path="/events/:id" element={<MemberFrame><EventDetail /></MemberFrame>} />
                 <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
@@ -277,7 +279,11 @@ function App() {
                 <Route path="/mentor" element={<Navigate to="/teacher" replace />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
-                <Route path="/learning/manage" element={<StaffRoute><ManageCoursesPage /></StaffRoute>} />
+                {/* Learning → Manage (staff): courses, learners, mentors, course feedback. */}
+                <Route path="/learning/manage" element={<BasicProtectedRoute><LearningManage section="courses" /></BasicProtectedRoute>} />
+                <Route path="/learning/manage/learners" element={<BasicProtectedRoute><LearningManage section="learners" /></BasicProtectedRoute>} />
+                <Route path="/learning/manage/mentors" element={<BasicProtectedRoute><LearningManage section="mentors" /></BasicProtectedRoute>} />
+                <Route path="/learning/manage/feedback" element={<BasicProtectedRoute><LearningManage section="feedback" /></BasicProtectedRoute>} />
                 <Route path="/learning/manage/:track/:slug" element={<StaffRoute><EditCourse /></StaffRoute>} />
                 <Route path="/learning/certificate/:id" element={<LearningCertificate />} />
                 <Route path="/learning/:track/:slug" element={<LearningCourse />} />

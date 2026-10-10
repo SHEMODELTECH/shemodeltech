@@ -155,7 +155,7 @@ const AppLayout = ({ children, flush = false }) => {
         // Sections under small headings (People, Content, Business, System);
         // a heading only shows when this person can see something under it.
         children: (() => {
-          const mine = ADMIN_SECTIONS.filter(([, , who]) => who === 'all' || who === 'reviewer' || userRole === 'admin');
+          const mine = ADMIN_SECTIONS.filter(([, , who, , moved]) => !moved && (who === 'all' || who === 'reviewer' || userRole === 'admin'));
           const out = [];
           let last = null;
           mine.forEach(([key, label, , group]) => {

@@ -73,7 +73,19 @@ const countWords = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).le
 const ADMIN_ONLY_TABS = ADMIN_SECTIONS.filter((x) => x[2] === 'admin').map((x) => x[0]);
 const REVIEWER_TABS = ADMIN_SECTIONS.filter((x) => x[2] === 'reviewer').map((x) => x[0]);
 
-const AdminPanel = ({ only = null }) => {
+// Sections that moved out of the Admin menu to their own pages (Learning and
+// Events each have a staff-only Manage tab). Old links like /admin?tab=learners
+// still work: they open the new page.
+const MOVED_TABS = {
+  learners: '/learning/manage/learners',
+  teachers: '/learning/manage/mentors',
+  coursefeedback: '/learning/manage/feedback',
+  events: '/events/manage',
+};
+
+// `bare`: no page padding or title, for sections shown inside another page's
+// Manage area (Learning, Events).
+const AdminPanel = ({ only = null, bare = false }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
@@ -87,7 +99,10 @@ const AdminPanel = ({ only = null }) => {
   const tab = (!checking && !only && (
     (ADMIN_ONLY_TABS.includes(rawTab) && !isAdmin) || (REVIEWER_TABS.includes(rawTab) && !isReviewer)
   )) ? 'overview' : rawTab;
-  const setTab = (t) => navigate(t === 'overview' ? '/admin' : `/admin?tab=${t}`);
+  const setTab = (t) => navigate(MOVED_TABS[t] || (t === 'overview' ? '/admin' : `/admin?tab=${t}`));
+  useEffect(() => {
+    if (!only && MOVED_TABS[rawTab]) navigate(MOVED_TABS[rawTab], { replace: true });
+  }, [only, rawTab, navigate]);
   const [sizeApprove, setSizeApprove] = useState({}); // how many more people to approve, per project
   const [sizeNote, setSizeNote] = useState({}); // staff's reason, per project (required to decline)
 
@@ -241,7 +256,7 @@ const AdminPanel = ({ only = null }) => {
         .then(setLetterReqs)
         .catch(() => setLetterReqs([]));
     }
-  }, [tab, isAdmin]);
+  }, [tab, isAdmin, isReviewer]);
 
   // Declining opens a dialog so the note can be as long as needed.
   const [declineApp, setDeclineApp] = useState(null);
@@ -749,7 +764,9 @@ const AdminPanel = ({ only = null }) => {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className={bare ? '' : 'max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8'}>
+      {/* Inside another page's Manage area the tabs already name the section. */}
+      {!bare && (<>
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 flex items-center gap-3">
         {only === 'reviews' ? 'Project reviews' : only === 'projects' ? 'Projects' : (ADMIN_SECTIONS.find(([k]) => k === tab)?.[1] || (isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'))}
         {myRole && (
@@ -769,6 +786,7 @@ const AdminPanel = ({ only = null }) => {
           ? 'Projects to review, extra-time requests, and every active project (view or delete).'
           : tab === 'overview' ? 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.' : `${isAdmin ? 'Admin' : 'Editor'} · choose another section from the ${isAdmin ? 'Admin' : 'Editor'} menu.`}
       </p>
+      </>)}
 
 
       {loadingData && <div className="py-10 text-center text-gray-400 text-sm">Loading…</div>}

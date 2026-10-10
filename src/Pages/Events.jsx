@@ -13,6 +13,8 @@ import { db } from '../firebase/config';
 import { signInAndReturn } from './learning/LearningLayout';
 import { alertStaff, notifyMember } from '../utils/staffAlerts';
 import { ShareDialogButton, shareUrl } from '../components/ShareButtons';
+import { SectionTabs } from '../components/SectionTabs';
+import { useStaffRole } from '../components/MentorCourseStaffTools';
 import {
   CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl, getRecordingUrl,
   getEvent, getMyRegistration, googleCalendarUrl, isListed, isPast, listPublishedEvents, myRegistrations, register,
@@ -123,7 +125,7 @@ const EventActions = ({ e, reg, currentUser, onChange, onRegistered, share = nul
           type: 'demo_presenter',
           title: `Demo day presenter: ${project.title}`,
           body: `${currentUser.displayName || currentUser.email} would like to present "${project.title}" at ${e.title}.`,
-          link: '/admin?tab=events',
+          link: '/events/manage',
           sendEmail: false,
         });
       }
@@ -341,6 +343,23 @@ export const EventDetail = () => {
   );
 };
 
+// Staff only: All events · Manage (create, publish, registrations). Members
+// and visitors don't see a tab row on Events.
+export const EventsTabs = () => {
+  const { currentUser } = useAuth();
+  const role = useStaffRole();
+  if (!currentUser || (role !== 'admin' && role !== 'editor')) return null;
+  return (
+    <SectionTabs
+      label="Events"
+      tabs={[
+        { to: '/events', label: 'All events', exact: true },
+        { to: '/events/manage', label: 'Manage' },
+      ]}
+    />
+  );
+};
+
 const Events = () => {
   const { currentUser } = useAuth();
   const [params] = useSearchParams();
@@ -374,6 +393,7 @@ const Events = () => {
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+        <EventsTabs />
         <p className="text-sm font-semibold text-pink-700">Events</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-1">Learn, share, and celebrate together</h1>
         <p className="text-gray-600 text-lg mt-3 max-w-2xl">

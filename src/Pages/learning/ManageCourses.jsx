@@ -12,7 +12,8 @@ import { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTo
 
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
-export const ManageCourses = () => {
+// `embedded`: shown inside Learning → Manage, which has its own padding.
+export const ManageCourses = ({ embedded = false }) => {
   const role = useStaffRole();
   const { currentUser } = useAuth();
   useCourseOverridesVersion();
@@ -20,7 +21,7 @@ export const ManageCourses = () => {
   if (!['admin', 'editor'].includes(role)) return <p className="p-8 text-gray-600">This page is for She Model Tech staff.</p>;
   const hidden = hiddenCourses();
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className={embedded ? 'max-w-3xl' : 'max-w-3xl mx-auto px-4 py-8'}>
       <h1 className="text-2xl font-bold text-gray-900">Manage courses</h1>
       <p className="text-gray-600 mt-1">Edit any She Model Tech course from its card in Learning. Removed courses are listed here so you can bring them back.</p>
       <div className="mt-5 rounded-xl border border-pink-200 bg-pink-50/50 p-4 flex flex-wrap items-center justify-between gap-3">

@@ -40,15 +40,20 @@ const LearningLayout = ({ children, accent, bare = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   // Staff and approved teachers get a Teacher link in the Learning header.
   const [canTeach, setCanTeach] = useState(false);
+  // Staff also get a Manage tab (courses, learners, mentors, course feedback).
+  const [isStaff, setIsStaff] = useState(false);
   useEffect(() => {
     if (!currentUser) {
       setCanTeach(false);
+      setIsStaff(false);
       return;
     }
     getDoc(doc(db, 'users', currentUser.uid))
       .then((snap) => {
         const d = snap.data() || {};
-        setCanTeach(d.role === 'admin' || d.role === 'editor' || !!d.isTeacher);
+        const staff = d.role === 'admin' || d.role === 'editor';
+        setIsStaff(staff);
+        setCanTeach(staff || !!d.isTeacher);
       })
       .catch(() => setCanTeach(false));
   }, [currentUser]);
@@ -67,7 +72,8 @@ const LearningLayout = ({ children, accent, bare = false }) => {
     }`;
 
   // "Learning" (all courses) is lit on every Learning page except My learning.
-  const onLearning = location.pathname.startsWith('/learning') && !location.pathname.startsWith('/learning/my');
+  const onManage = location.pathname.startsWith('/learning/manage');
+  const onLearning = location.pathname.startsWith('/learning') && !location.pathname.startsWith('/learning/my') && !onManage;
   const items = [
     { to: '/learning', label: 'Learning', active: onLearning },
     ...(currentUser ? [] : [{ to: '/projects', label: 'Projects' }]),
@@ -98,6 +104,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
       { to: '/learning', label: 'All courses', active: onLearning },
       { to: '/learning/my', label: 'My learning' },
       canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' },
+      ...(isStaff ? [{ to: '/learning/manage', label: 'Manage', active: onManage }] : []),
     ];
     const tabCls = ({ isActive }) =>
       `whitespace-nowrap px-1 py-3 text-sm sm:text-base font-semibold border-b-2 transition-colors ${
@@ -109,7 +116,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
           <style>{FD_CSS}</style>
           {/* Course reading view (bare) has its own Back button: no tab row. */}
           {!bare && <nav aria-label="Learning" className="border-b border-gray-200 bg-white">
-            <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl flex gap-5 sm:gap-7 overflow-x-auto">
+            <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl flex gap-3 sm:gap-7 overflow-x-auto">
               {tabs.map((it) => (
                 <NavLink key={it.to} to={it.to} end={it.to === '/learning'} className={(a) => tabCls({ isActive: it.active ?? a.isActive })}>{it.label}</NavLink>
               ))}

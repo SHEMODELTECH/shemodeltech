@@ -226,7 +226,6 @@ const LearningHome = ({ mine = false }) => {
               {['admin', 'editor'].includes(staffRole) && (
                 <div className="flex gap-2">
                   <Link to="/teacher" className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Add a course</Link>
-                  <Link to="/learning/manage" className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg">Manage courses</Link>
                 </div>
               )}
             </div>
