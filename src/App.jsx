@@ -12,6 +12,7 @@ import PresenceTracker from './components/PresenceTracker';
 import { getUserDocCached } from './utils/firestoreHelpers';
 import AppShell from './components/AppShell';
 import ProjectTabs from './components/ProjectTabs';
+import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
 import { COMPANY_COHORTS_ENABLED } from './config/companyAccess';
@@ -293,22 +294,24 @@ function App() {
                 <Route
                   path="/terms"
                   element={
-                    <div className="min-h-screen bg-white">
+                    <div className="min-h-screen bg-white flex flex-col">
                       <Navbar />
-                      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+                      <div className="flex-1 container mx-auto px-4 sm:px-6 py-12 sm:py-16">
                         <TermsOfService />
                       </div>
+                      <Footer />
                     </div>
                   }
                 />
                 <Route
                   path="/privacy"
                   element={
-                    <div className="min-h-screen bg-white">
+                    <div className="min-h-screen bg-white flex flex-col">
                       <Navbar />
-                      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+                      <div className="flex-1 container mx-auto px-4 sm:px-6 py-12 sm:py-16">
                         <PrivacyPolicy />
                       </div>
+                      <Footer />
                     </div>
                   }
                 />
