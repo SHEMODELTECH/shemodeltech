@@ -519,12 +519,12 @@ const Onboarding = () => {
             <div>
               <label className={labelClass}>Your skills *</label>
               <p className="text-xs text-gray-500 mb-2">
-                Pick what you can already do. Non-technical strengths count too, and if something is
-                missing you can type it in.
+                Tap what you can already do. Search for anything else, or type your own.
               </p>
               <SkillPicker
                 value={formData.skillsList}
                 onChange={(list) => setFormData((p) => ({ ...p, skillsList: list }))}
+                track={formData.primarySkillTrack}
               />
             </div>
             <div>

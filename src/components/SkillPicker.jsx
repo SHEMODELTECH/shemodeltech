@@ -7,15 +7,18 @@
 // "add your own" path exists because no list is complete, and telling a woman
 // her skill isn't on our list is a poor first impression.
 //
-// Groups start collapsed except the first: seven expanded lists of ~20 skills
-// is an intimidating wall on a phone.
+// No category boxes: she sees a dozen chips straight away, picked for the track
+// she chose (a general mix if she hasn't chosen one), and "Show more skills"
+// opens every other skill as one flat list. Search covers everything.
 
 import React, { useState, useMemo } from 'react';
-import { SKILL_GROUPS, searchSkills } from '../utils/skillOptions';
+import { ALL_SKILLS, suggestedFor, searchSkills } from '../utils/skillOptions';
 
-const SkillPicker = ({ value = [], onChange, max = 20 }) => {
+const SkillPicker = ({ value = [], onChange, max = 20, track = '' }) => {
   const [query, setQuery] = useState('');
-  const [openGroup, setOpenGroup] = useState(SKILL_GROUPS[0].track);
+  const [showAll, setShowAll] = useState(false);
+  const suggested = suggestedFor(track);
+  const rest = useMemo(() => ALL_SKILLS.filter((x) => !suggested.includes(x)), [suggested]);
   const selected = Array.isArray(value) ? value : [];
 
   const results = useMemo(() => searchSkills(query), [query]);
@@ -99,44 +102,30 @@ const SkillPicker = ({ value = [], onChange, max = 20 }) => {
         </div>
       )}
 
-      {/* Grouped browse */}
+      {/* Suggested chips, then every other skill on request */}
       {!query.trim() && (
-        <div className="space-y-1.5">
-          {SKILL_GROUPS.map((g) => {
-            const open = openGroup === g.track;
-            const countInGroup = g.skills.filter((s) => selected.includes(s)).length;
-            return (
-              <div key={g.track} className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenGroup(open ? null : g.track)}
-                  className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <span className="text-sm font-semibold text-gray-900">
-                    {g.track}
-                    {countInGroup > 0 && (
-                      <span className="ml-2 text-[10px] font-bold text-pink-600">
-                        {countInGroup}
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-gray-400 text-xs">{open ? '−' : '+'}</span>
-                </button>
-                {open && (
-                  <div className="flex flex-wrap gap-1.5 p-3 pt-0">
-                    {g.skills.map((s) => (
-                      <Chip
-                        key={s}
-                        skill={s}
-                        selected={selected.includes(s)}
-                        onClick={() => toggle(s)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div>
+          <p className="text-xs font-semibold text-gray-500 mb-2">{track && suggested !== suggestedFor('') ? `Popular for ${track}` : 'Popular skills'}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {suggested.map((s) => (
+              <Chip key={s} skill={s} selected={selected.includes(s)} onClick={() => toggle(s)} />
+            ))}
+          </div>
+          {showAll && (
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
+              {rest.map((s) => (
+                <Chip key={s} skill={s} selected={selected.includes(s)} onClick={() => toggle(s)} />
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            aria-expanded={showAll}
+            className="mt-2 text-sm font-semibold text-pink-700 hover:underline"
+          >
+            {showAll ? 'Show fewer skills' : 'Show more skills'}
+          </button>
         </div>
       )}
 
