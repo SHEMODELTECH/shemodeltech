@@ -73,8 +73,10 @@ const ProjectTabs = () => {
     return () => { alive = false; };
   }, [currentUser]);
 
-  if (!currentUser || role === null || isCompany) return null;
   const staff = role === 'admin' || role === 'editor';
+  // Companies don't get tabs, but staff always do, even on an account that is
+  // also set up as a company.
+  if (!currentUser || role === null || (isCompany && !staff)) return null;
   const inManage = staff && MANAGE.some((m) => pathname === m.to || pathname.startsWith(`${m.to}/`));
 
   const tabs = [

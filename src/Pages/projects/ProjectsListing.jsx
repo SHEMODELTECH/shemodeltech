@@ -266,7 +266,7 @@ const ProjectsListing = () => {
   const [introHidden, toggleIntro] = useCollapsed('projects-intro', currentUser?.uid);
   const filtering = !!(searchQuery || filters.industryTrack || filters.timeline || filters.payType);
   // Members have the Projects tabs above, so the big heading would repeat them.
-  const showHeading = !!myProfile?.isCompany;
+  const showHeading = !!myProfile?.isCompany && !['admin', 'editor'].includes(myProfile?.role);
 
   const selectClass =
     'bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-pink-500 focus:outline-none transition-all appearance-none';
