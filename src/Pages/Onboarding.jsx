@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TrackGuide from '../components/TrackGuide';
 import { useAuth } from '../context/AuthContext';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -91,6 +92,9 @@ const Onboarding = () => {
     { id: 'advanced', label: 'Advanced', desc: '3-7 years of experience, strong contributor' },
     { id: 'expert', label: 'Expert', desc: '7+ years of experience, leading and mentoring' },
   ];
+
+  // "Which track fits me?": the careers in each track, tap to open.
+  const [showTrackGuide, setShowTrackGuide] = useState(false);
 
   const skillTracks = [
     { id: 'TechDev', label: 'Coding Developer', desc: 'Frontend, backend, mobile, full-stack' },
@@ -516,6 +520,22 @@ const Onboarding = () => {
                 We use this to match you with projects that fit you. Not sure? Pick "Not sure yet"
                 and we'll help you discover one.
               </p>
+              <button
+                type="button"
+                onClick={() => setShowTrackGuide((v) => !v)}
+                aria-expanded={showTrackGuide}
+                className="mt-2 text-sm font-semibold text-pink-700 hover:underline"
+              >
+                {showTrackGuide ? 'Hide the careers in each track' : 'Which track fits me? See the careers in each track'}
+              </button>
+              {showTrackGuide && (
+                <div className="mt-3">
+                  <TrackGuide
+                    selected={formData.primarySkillTrack}
+                    onChoose={(name) => { setFormData((p) => ({ ...p, primarySkillTrack: name })); setShowTrackGuide(false); }}
+                  />
+                </div>
+              )}
             </div>
             <div>
               <label className={labelClass}>Highest Level of Education *</label>

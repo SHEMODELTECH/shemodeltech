@@ -4,7 +4,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TierBadge from '../components/TierBadge';
-import { BADGE_TRACKS } from '../config/badgeTracks';
+import TrackGuide from '../components/TrackGuide';
 
 const LEVELS = [
   ['Novice', '1+ project', 56],
@@ -42,17 +42,10 @@ const Badges = () => (
       </div>
     </section>
 
-    {/* Six tracks */}
-    <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">Six tracks</h2>
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {BADGE_TRACKS.map((t) => (
-        <div key={t.key} className="flex flex-col items-center text-center rounded-xl bg-white border border-gray-200 p-4">
-          <TierBadge image={t.img} alt={t.name} level="Novice" size={52} showLabel={false} />
-          <p className="mt-2 font-semibold text-gray-900">{t.name}</p>
-          <p className="text-xs text-gray-600">{t.label}</p>
-        </div>
-      ))}
-    </div>
+    {/* Six tracks: tap one to see what it's about and the careers that fit */}
+    <h2 className="text-lg font-bold text-gray-900 mt-8">Six tracks</h2>
+    <p className="text-sm text-gray-600 mt-1 mb-3">Tap a track to see the careers that fit it.</p>
+    <TrackGuide columns={2} />
 
     {/* What they unlock */}
     <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">What badges unlock</h2>

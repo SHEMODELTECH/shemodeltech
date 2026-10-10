@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import TrackGuide from '../components/TrackGuide';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
@@ -67,6 +68,7 @@ const Settings = () => {
   const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
   const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
   const [loadFailed, setLoadFailed] = useState(false);
+  const [showTrackGuide, setShowTrackGuide] = useState(false);
   const [form, setForm] = useState({
     displayName: '',
     bio: '',
@@ -368,6 +370,22 @@ const Settings = () => {
                 </option>
               ))}
             </select>
+            <button
+              type="button"
+              onClick={() => setShowTrackGuide((v) => !v)}
+              aria-expanded={showTrackGuide}
+              className="mt-2 text-sm font-semibold text-pink-700 hover:underline"
+            >
+              {showTrackGuide ? 'Hide the careers in each track' : 'Which track fits me? See the careers in each track'}
+            </button>
+            {showTrackGuide && (
+              <div className="mt-3">
+                <TrackGuide
+                  selected={form.primarySkillTrack}
+                  onChoose={(name) => { setForm((p) => ({ ...p, primarySkillTrack: name })); setShowTrackGuide(false); }}
+                />
+              </div>
+            )}
           </div>
           <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Education & skills</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

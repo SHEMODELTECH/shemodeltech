@@ -14,6 +14,62 @@ export const BADGE_TRACKS = [
 ];
 export const trackByKey = (k) => BADGE_TRACKS.find((t) => t.key === k) || null;
 
+// What each track is about, in one line, and the careers that fit it. Shown
+// as tap-to-open panels on How badges work and at sign-up, so members can see
+// where they belong (src/components/TrackGuide.jsx). Keyed by track name.
+export const TRACK_GUIDE = {
+  TechDev: {
+    about: 'You write code to build websites, apps, data tools and AI.',
+    careers: [
+      'Frontend Developer', 'Backend Developer', 'Full-Stack Developer', 'Web Developer', 'Mobile App Developer (iOS, Android)',
+      'Software Engineer', 'API Developer', 'Game Developer', 'Data Engineer', 'Data Scientist', 'Data Analyst (with code)',
+      'Machine Learning Engineer', 'AI Engineer', 'Embedded Systems Developer', 'AR/VR Developer', 'Blockchain Developer',
+    ],
+  },
+  TechArchs: {
+    about: 'You build working products with visual tools, using little or no code.',
+    careers: [
+      'No-Code Developer', 'Low-Code Developer', 'Website Builder (Webflow, Wix, Squarespace, WordPress)', 'App Builder (Bubble, Glide, FlutterFlow)',
+      'Automation Specialist (Zapier, Make)', 'Power Platform Developer (Power Apps, Power Automate)', 'Salesforce Administrator',
+      'CRM Administrator (HubSpot)', 'Systems Builder (Airtable, Notion)', 'E-commerce Store Builder (Shopify)', 'Chatbot Builder',
+      'Business Process Automation', 'Solutions Architect',
+    ],
+  },
+  TechQA: {
+    about: 'You make sure products work: you test, find bugs and check quality.',
+    careers: [
+      'QA Tester', 'Manual Tester', 'QA Engineer', 'Test Automation Engineer', 'Software Development Engineer in Test (SDET)',
+      'API Tester', 'Mobile App Tester', 'Performance Tester', 'Accessibility Tester', 'Usability Tester', 'Game Tester',
+      'User Acceptance Testing (UAT) Lead', 'Localization Tester', 'Quality Analyst', 'Data Quality Analyst',
+    ],
+  },
+  TechGuard: {
+    about: 'You keep systems, networks, data and people safe and running.',
+    careers: [
+      'Cybersecurity Analyst', 'Security Operations (SOC) Analyst', 'Penetration Tester / Ethical Hacker', 'Incident Responder',
+      'Digital Forensics Analyst', 'Network Engineer', 'Network Administrator', 'Systems Administrator', 'IT Support Specialist',
+      'Cloud Engineer', 'Cloud Security Engineer', 'DevOps Engineer', 'Site Reliability Engineer',
+      'Identity and Access Management (IAM) Specialist', 'Governance, Risk and Compliance (GRC) Analyst', 'Privacy Analyst',
+    ],
+  },
+  TechPO: {
+    about: 'You lead: you own the plan, the priorities and the team’s direction. Project leads earn this badge.',
+    careers: [
+      'Product Owner', 'Product Manager', 'Technical Product Manager', 'Project Manager', 'Program Manager', 'Scrum Master',
+      'Agile Coach', 'Delivery Manager', 'Business Analyst', 'Product Analyst', 'Team Lead', 'Startup Founder',
+    ],
+  },
+  TechLeads: {
+    about: 'You make tech work for people, with no coding needed: design, research, writing, marketing and coordination.',
+    careers: [
+      'UX/UI Designer', 'Product Designer', 'Graphic Designer', 'UX Researcher', 'Content Writer', 'Technical Writer', 'Copywriter',
+      'Content Strategist', 'Social Media Manager', 'Digital Marketer', 'SEO Specialist', 'Community Manager',
+      'Data Analyst (spreadsheets, dashboards)', 'Customer Success', 'Business Development', 'Sales', 'Operations Coordinator',
+      'Recruiter', 'Trainer / Educator', 'AI Ethics and Policy',
+    ],
+  },
+};
+
 // The track that best matches a role title (the suggestion shown first).
 export const suggestTrack = (role) => {
   const r = String(role || '').toLowerCase();
