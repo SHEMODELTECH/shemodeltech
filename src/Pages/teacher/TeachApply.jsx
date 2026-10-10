@@ -224,7 +224,7 @@ const MENTOR_BENEFITS = [
   ['Public recognition', 'your name on your courses, and new courses featured in "From our mentors" in Learning'],
   ['A teaching portfolio', 'learner ratings, comments, enrollments, and completions that show the impact of your teaching'],
   ['Grow and connect', 'teaching and leadership experience, and a network of learners and mentors'],
-  ['Lead paid projects', 'apply to lead paid projects. When applicants are equally qualified, mentors are considered first'],
+  ['Lead paid cohorts', 'apply to lead paid cohorts. When applicants are equally qualified, mentors are considered first'],
   ['Speaking opportunities', 'want to lead a workshop or talk at one of our online events? Message She Model Tech from the Mentor Hub, and we’ll let you know if it fits'],
   ['Tools and support', 'the Mentor Hub for written, video, and interactive courses, full-screen Present mode, and a direct line to She Model Tech'],
 ];
