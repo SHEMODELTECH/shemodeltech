@@ -388,7 +388,7 @@ export const markDelivered = async ({ cohortId, company }) => {
         type: 'work_record_issued',
         title: 'Your work experience record is ready',
         body: `${c.companyName} marked "${c.title}" complete. Confirm when you\u2019ve been paid.`,
-        link: '/account?tab=work',
+        link: '/account', // her paid work and payments
       });
     } catch (e) {
       console.error('work record failed for', app.applicantEmail, e);

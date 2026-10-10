@@ -129,11 +129,11 @@ const Account = () => {
           </div>
         </div>
         {disbursements.rows.length === 0 ? (
-          <p className="text-gray-400 text-xs text-center py-2">No paid projects yet. Post a paid project to hire a team - you set the pay per person for every role.</p>
+          <p className="text-gray-400 text-xs text-center py-2">No paid projects. She Model Tech runs paid projects itself; to support one, see Support our mission.</p>
         ) : (
           <div className="space-y-1.5">
             {disbursements.rows.map((r, i) => (
-              <div key={i} onClick={() => navigate((r.state === 'awaiting' || r.state === 'disputed') ? `/disputes/${r.projectId}` : '/projects/owner-dashboard')} className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer hover:bg-gray-100 transition-all">
+              <div key={i} className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-100">
                 <div className="min-w-0">
                   <p className="text-gray-900 text-sm font-medium truncate">{r.projectTitle}</p>
                   <p className="text-gray-400 text-xs">{formatMoney(r.disbursed)} disbursed · {formatMoney(r.pending)} pending</p>

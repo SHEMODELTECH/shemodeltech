@@ -28,6 +28,7 @@ import { sendPush } from '../utils/pushNotifications';
 import { useFeatures } from '../utils/features';
 import { FREE_MESSAGE_LIMIT, companyTier } from '../config/tiers';
 import { usePresenceMany } from '../utils/presence';
+import { loadMemberDirectory } from '../utils/memberIndex';
 import { isConfirmEmailError, writeErrorMessage } from '../utils/emailVerification';
 import PresenceBadge, { PresenceView } from '../components/PresenceBadge';
 
@@ -91,8 +92,10 @@ const Messages = () => {
   const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState([]);
-  // Who in the inbox is on She Model Tech right now (green dot beside their name).
-  const presence = usePresenceMany(conversations.map((c) => c.otherUser?.uid));
+  // Who in the inbox is on She Model Tech right now (green dot beside their
+  // name): the 20 most recent conversations, so a long inbox doesn't watch
+  // everyone. (The open conversation shows its own status.)
+  const presence = usePresenceMany(conversations.slice(0, 20).map((c) => c.otherUser?.uid));
   const [activeConvId, setActiveConvId]   = useState(null);
   const [activeUser, setActiveUser]       = useState(null);
   const [messages, setMessages]           = useState([]);
@@ -128,20 +131,31 @@ const Messages = () => {
   }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Listen to conversations
+  // Names and photos come from the member directory (a few reads for
+  // everyone), so the inbox doesn't fetch each person separately.
   const userCacheRef = useRef({});
+  const directoryRef = useRef(null);
   useEffect(() => {
     if (!currentUser) return;
     const q = query(
       collection(db, 'conversations'),
-      where('participants', 'array-contains', currentUser.uid)
+      where('participants', 'array-contains', currentUser.uid),
+      limit(200)
     );
     const unsub = onSnapshot(q, async (snap) => {
       try {
+        if (!directoryRef.current) {
+          const entries = await loadMemberDirectory().catch(() => []);
+          directoryRef.current = new Map(entries.map((e) => [e.uid, e]));
+        }
         const convs = await Promise.all(
           snap.docs.map(async (d) => {
             const data = d.data();
             const otherId = (Array.isArray(data.participants) ? data.participants : []).find(p => p !== currentUser.uid);
             if (!otherId) return { id: d.id, ...data, otherUser: { uid: null, displayName: 'Unknown' } };
+            if (!userCacheRef.current[otherId] && directoryRef.current.has(otherId)) {
+              userCacheRef.current[otherId] = directoryRef.current.get(otherId);
+            }
             if (!userCacheRef.current[otherId]) {
               const otherSnap = await getDoc(doc(db, 'users', otherId)).catch(() => null);
               userCacheRef.current[otherId] = otherSnap?.exists()
@@ -508,7 +522,7 @@ const Messages = () => {
                       )}
                     </div>
                     <button
-                      onClick={() => navigate(`/profile/${activeUser.email || activeUser.uid}`)}
+                      onClick={() => navigate(`/profile/${encodeURIComponent(activeUser.uid || activeUser.email)}`)}
                       className="flex-shrink-0 text-xs text-pink-600 hover:text-pink-700 font-semibold px-3 py-1.5 rounded-lg hover:bg-pink-50 transition-colors min-h-[36px]"
                     >
                       Profile

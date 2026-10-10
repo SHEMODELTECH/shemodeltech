@@ -10,7 +10,6 @@ import {
   collection,
   query,
   orderBy,
-  onSnapshot,
   where,
   doc,
   getDoc,
@@ -212,9 +211,12 @@ const ProjectsListing = () => {
       collection(db, 'projects'),
       where('status', 'in', ['active', 'lead_recruitment', 'setup'])
     );
-    const unsub = onSnapshot(
-      q,
+    // Read once per visit (not a live listener): a live board re-read every
+    // project change for everyone viewing it. Reopening the page refreshes it.
+    let alive = true;
+    getDocs(q).then(
       (snap) => {
+        if (!alive) return;
         const list = snap.docs
           .map((d) => ({ id: d.id, ...d.data() }))
           // Rejected projects are dead - never show them on the board.
@@ -226,11 +228,12 @@ const ProjectsListing = () => {
       },
       (err) => {
         console.error('Error fetching projects:', err);
+        if (!alive) return;
         setSmtLoaded(true);
         setLoading(false);
       }
     );
-    return unsub;
+    return () => { alive = false; };
   }, []);
 
   useEffect(() => {
