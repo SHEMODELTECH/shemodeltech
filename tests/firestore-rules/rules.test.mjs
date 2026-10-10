@@ -257,6 +257,20 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Member directory (Talent Board and Search; written only by the server) ----
+if (MODE !== 'orig') {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), 'public_index', 'members'), { chunks: 1, count: 1 });
+  });
+  const cases = [
+    ['member directory: member reads it', 'verU', () => getDoc(doc(ctxFor('verU', true).firestore(), 'public_index', 'members')), 'allowed'],
+    ['member directory: visitor reads it', 'anon', () => getDoc(doc(env.unauthenticatedContext().firestore(), 'public_index', 'members')), 'denied'],
+    ['member directory: member rewrites it', 'verU', () => setDoc(doc(ctxFor('verU', true).firestore(), 'public_index', 'members'), { chunks: 0 }), 'denied'],
+    ['member directory: admin rewrites it', 'staff1', () => setDoc(doc(ctxFor('staff1', false).firestore(), 'public_index', 'members_0'), { entries: [] }), 'denied'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);

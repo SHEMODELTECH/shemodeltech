@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-import { collection, getDocs, query, orderBy, limit, doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import MentorBadge from '../components/MentorBadge';
 import PremiumBadge from '../components/PremiumBadge';
 import { isFeaturedTalent } from '../config/premium';
@@ -11,6 +11,7 @@ import { mentorStatsByUid } from '../utils/mentorStats';
 import { db } from '../firebase/config';
 import AccessBanner from '../components/AccessBanner';
 import { BADGE_TRACKS, badgesInTrack } from '../config/badgeTracks';
+import { loadMemberDirectory } from '../utils/memberIndex';
 
 const badgeOptions = [
   { id: '', label: 'All Tracks' },
@@ -22,8 +23,8 @@ const badgeOptions = [
   { id: 'TechGuard', label: 'Cybersecurity' },
 ];
 
-// Talent Board data kept in memory for 5 minutes while the app is open.
-const TALENT_CACHE = { at: 0, data: null, mentor: null, mentorAt: 0 };
+// Mentor course numbers kept in memory for 5 minutes while the app is open.
+const TALENT_CACHE = { mentor: null, mentorAt: 0 };
 
 const TalentBoard = () => {
   const { currentUser } = useAuth();
@@ -59,60 +60,22 @@ const TalentBoard = () => {
 
   // The Talent Board is open to every signed-in member - no plan check.
 
+  // Everyone listed (a badge, or a mentor), from the member directory: a few
+  // reads instead of one per member (src/utils/memberIndex.js).
   useEffect(() => {
-    const fetchTalents = async () => {
-      try {
-        // Reuse data loaded in the last 5 minutes (each load reads up to
-        // 1,500 documents, which adds up in database costs).
-        let allUsers, badgedUids;
-        if (TALENT_CACHE.data && Date.now() - TALENT_CACHE.at < 5 * 60 * 1000) {
-          ({ allUsers, badgedUids } = TALENT_CACHE.data);
-        } else {
-          // Fetch users; don't orderBy a field that some docs may lack (that silently drops them).
-          const q = query(collection(db, 'users'), limit(500));
-          const snap = await getDocs(q);
-          allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-          // Collect uids that have earned a badge from the member_badges collection too,
-          // so anyone with a badge there is included even if their user doc wasn't denormalized.
-          badgedUids = new Set();
-          try {
-            const mbSnap = await getDocs(query(collection(db, 'member_badges'), limit(1000)));
-            mbSnap.docs.forEach(d => {
-              // Badge records store the member as memberUid (older ones may use other names).
-              const uid = d.data().memberUid || d.data().userId || d.data().uid || d.data().memberId;
-              if (uid) badgedUids.add(uid);
-            });
-          } catch (e) { /* ignore */ }
-          TALENT_CACHE.data = { allUsers, badgedUids };
-          TALENT_CACHE.at = Date.now();
-        }
-
-        const users = allUsers
-          .filter(u => {
-            if (u.isCompany) return false;
-            if (u.isMinor) return false; // learners under 18 are never listed
-            const thisUid = u.uid || u.id;
-            if (thisUid === currentUser?.uid) return false;
-            if (u.onboardingComplete === false) return false;
-            const hasBadgeArray = Array.isArray(u.badges) && u.badges.length > 0;
-            const hasTotal = (u.totalBadges || 0) > 0;
-            const hasBadgeCounts = u.badgeCounts && Object.values(u.badgeCounts).some(n => (n || 0) > 0);
-            const hasCertificates = Array.isArray(u.certificates) && u.certificates.length > 0;
-            const inMemberBadges = badgedUids.has(thisUid);
-            // Mentors are listed too, even before they earn a project badge.
-            const isMentor = !!u.isTeacher || (u.mentorApprovedCourses || 0) > 0;
-            return hasBadgeArray || hasTotal || hasBadgeCounts || hasCertificates || inMemberBadges || isMentor;
-          })
-          .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
-        setTalents(users);
-      } catch (e) {
-        console.error('Error fetching talents:', e);
-      }
-      setLoading(false);
-    };
-    if (currentUser) fetchTalents();
-    else setLoading(false);
+    if (!currentUser) { setLoading(false); return undefined; }
+    let alive = true;
+    loadMemberDirectory()
+      .then((entries) => {
+        if (!alive) return;
+        setTalents(entries
+          .filter((e) => e.listed && e.uid !== currentUser.uid)
+          .map((e) => ({ ...e, id: e.uid }))
+          .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || '')));
+      })
+      .catch((e) => console.error('Error fetching talents:', e))
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
   }, [currentUser]);
 
   const isMentor = (t) => !!t.isTeacher || (t.mentorApprovedCourses || 0) > 0;
@@ -178,7 +141,7 @@ const TalentBoard = () => {
               {topMentors.map((t) => {
                 const st = statsOf(t);
                 return (
-                  <button key={t.id} onClick={() => navigate(`/profile/${encodeURIComponent(t.email)}`)}
+                  <button key={t.id} onClick={() => navigate(`/profile/${encodeURIComponent(t.uid)}`)}
                     className="bg-white rounded-xl border border-pink-100 p-3 text-left hover:border-pink-300">
                     <p className="text-sm font-semibold text-gray-900 truncate">{t.displayName || 'Mentor'}</p>
                     <p className="text-xs text-pink-600 font-semibold mt-0.5">
@@ -238,7 +201,7 @@ const TalentBoard = () => {
             {filtered.slice(0, shown).map(talent => (
               <div
                 key={talent.id}
-                onClick={() => navigate(`/profile/${encodeURIComponent(talent.email)}`)}
+                onClick={() => navigate(`/profile/${encodeURIComponent(talent.uid)}`)}
                 className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-pink-300 hover:shadow-sm transition-all cursor-pointer"
               >
                 {talent.photoURL ? (

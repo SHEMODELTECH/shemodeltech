@@ -57,7 +57,6 @@ const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ 
 const Messages = lazy(() => import('./Pages/Messages'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
 const LeadApplicationReview = lazy(() => import('./Pages/admin/LeadApplicationReview'));
-const CompanyCohortList = lazy(() => import('./Pages/company/CompanyCohortList'));
 const CompanyCohortDetail = lazy(() => import('./Pages/company/CompanyCohortDetail'));
 const VerifyCertificate = lazy(() => import('./Pages/VerifyCertificate'));
 const SinglePost = lazy(() => import('./Pages/community/SinglePost'));

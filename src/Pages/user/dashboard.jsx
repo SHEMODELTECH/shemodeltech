@@ -13,7 +13,6 @@ import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import EventsCard from '../../components/EventsCard';
 import ContinueLearning from '../../components/ContinueLearning';
-import OrgMembershipsCard from '../../components/OrgMembershipsCard';
 import { TIER_LABEL, companyTier } from '../../config/tiers';
 import PayoutReminder from '../../components/PayoutReminder';
 import PushPrompt from '../../components/PushPrompt';

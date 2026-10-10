@@ -3,15 +3,15 @@
 //   - MEMBERS by name or specialization (links to their profile - profiles
 //     are viewable by everyone; this is a simple name lookup, NOT the curated
 //     Talent Board with badge filtering and ranking)
-//   - PROJECTS by title or field (free and paid)
+//   - PROJECTS that are open now, by title, field or description (free and
+//     paid; finished projects are in the Project Vault)
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../utils/learningPublished';
 import MentorBadge from '../components/MentorBadge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, getDocs, limit } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { loadMemberDirectory } from '../utils/memberIndex';
 import ProjectPayBadge from '../components/ProjectPayBadge';
 
 // Search data kept in memory for 5 minutes while the app is open.
@@ -64,15 +64,17 @@ const SearchPage = () => {
           setProjects(SEARCH_CACHE.data.projects);
           return;
         }
-        const [uSnap, pSnap] = await Promise.all([
-          getDocs(query(collection(db, 'users'), limit(500))),
-          getDocs(query(collection(db, 'projects'), limit(300))),
+        // Members from the member directory (a few reads, everyone included);
+        // open projects from the same list the public board uses (cached on
+        // the server, so it costs no database reads here).
+        const [members, projects] = await Promise.all([
+          loadMemberDirectory().catch(() => []),
+          fetch('/api/public-request')
+            .then((r) => (r.ok ? r.json() : { projects: [] }))
+            .then((j) => j.projects || [])
+            .catch(() => []),
         ]);
         if (!active) return;
-        const members = uSnap.docs
-          .map(d => ({ uid: d.id, ...d.data() }))
-          .filter(u => u.onboardingComplete !== false && (u.displayName || u.companyName));
-        const projects = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         SEARCH_CACHE.data = { members, projects };
         SEARCH_CACHE.at = Date.now();
         setMembers(members);
@@ -169,7 +171,7 @@ const SearchPage = () => {
                 {memberResults.map(u => (
                   <button
                     key={u.uid}
-                    onClick={() => navigate(`/profile/${u.email || u.uid}`)}
+                    onClick={() => navigate(`/profile/${encodeURIComponent(u.uid)}`)}
                     className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-pink-300 hover:bg-pink-50/40 transition-all text-left"
                   >
                     {u.photoURL ? (
@@ -206,7 +208,7 @@ const SearchPage = () => {
                     <div className="min-w-0 flex-1">
                       <p className="text-gray-900 text-sm font-semibold truncate">{p.projectTitle || 'Untitled project'}</p>
                       <p className="text-gray-400 text-xs truncate capitalize">
-                        {(p.projectField || p.field || 'Project')}{p.status ? ` · ${p.status === 'awaiting_payment_confirmation' ? 'awaiting payment' : p.status}` : ''}
+                        {(p.projectField || p.field || 'Project')}{p.status ? ` · ${({ active: 'open', lead_recruitment: 'looking for a lead', setup: 'getting set up' })[p.status] || p.status}` : ''}
                       </p>
                     </div>
                     <ProjectPayBadge isPaid={p.isPaid} size="sm" />

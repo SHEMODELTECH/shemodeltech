@@ -206,9 +206,11 @@ export const MentionTextarea = ({
                   <div className="font-medium text-sm sm:text-base truncate">
                     {user.displayName || 'No Display Name'}
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-400 truncate">
-                    {user.email}
-                  </div>
+                  {(user.specialization || user.companyName) && (
+                    <div className="text-xs sm:text-sm text-gray-400 truncate">
+                      {user.specialization || user.companyName}
+                    </div>
+                  )}
                 </div>
                 
                 {/* Mention Preview - Hidden on very small screens */}

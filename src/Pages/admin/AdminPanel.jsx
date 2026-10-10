@@ -32,7 +32,6 @@ import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
-import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
 import EventsAdmin from '../../components/admin/EventsAdmin';
 import FundingRequestsAdmin from '../../components/admin/FundingRequestsAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';

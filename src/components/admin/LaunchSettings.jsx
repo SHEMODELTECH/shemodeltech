@@ -9,11 +9,11 @@ import { setFeature, useFeatures } from '../../utils/features';
 import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
 
 const ROWS = [
-  ['paidProjects', 'Paid projects from companies', `Companies post paid projects${COMPANY_COHORTS_ENABLED ? ', company cohorts,' : ''} and freelance work. Members need a badge to apply.`, 'badgeHolders', 20, 'members with a badge'],
-  ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
+  ['paidProjects', 'Company paid projects (retired)', `Shows paid projects posted by companies${COMPANY_COHORTS_ENABLED ? ' and company cohorts' : ''}. She Model Tech now runs paid projects itself, and those always show; leave this off.`, 'badgeHolders', 20, 'members with a badge'],
+  ['sponsorships', 'Company-sponsored cohorts (retired)', 'Companies no longer sponsor cohorts directly. Funding offers now come through the form on Support our mission (Admin → Sponsors). Leave this off.', 'completedCohorts', 2, 'completed cohorts'],
   ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
   ['companyTiers', 'Company tiers', 'Supporter and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
-  ['donations', 'Online donations', 'The Fund a cohort button on Support our mission opens your donation link (REACT_APP_DONATION_LINK). While off, it says “Contact us to fund a cohort”.', null, null, 'Bank account and a donation tool (Zeffy or Stripe) set up'],
+  ['donations', 'Online donations', 'The Fund a cohort button on Support our mission opens your donation link (REACT_APP_DONATION_LINK). While off, it says “Contact us to fund a cohort” and opens a short form; requests arrive in Admin → Sponsors.', null, null, 'Bank account and a donation tool (Zeffy or Stripe) set up'],
   ['premiumPayments', 'Tier payments', 'Companies can pay for a tier online (links in REACT_APP_TIER_SUPPORTER_LINK, _PARTNER_LINK, _CHAMPION_LINK). While off, they “Ask about” a tier and you set it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
 ];
 

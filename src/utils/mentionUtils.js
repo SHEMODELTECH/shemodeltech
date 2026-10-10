@@ -1,6 +1,5 @@
 // utils/mentionUtils.js - Updated for Professional Names (Clean Version)
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { loadMemberDirectory } from './memberIndex';
 
 // Helper function to get professional display name
 export const getProfessionalDisplayName = (user) => {
@@ -37,28 +36,10 @@ export const formatUserForMention = (user) => {
   return `@${handle}`;
 };
 
-// Cache the user pool so we don't re-read 200 docs on every keystroke.
-// Refreshes at most once per minute.
-let _userCache = null;
-let _userCacheAt = 0;
-const USER_CACHE_MS = 60 * 1000;
-
-let _userPoolPromise = null; // shared in-flight load, so fast typing doesn't start several reads
-
-const getUserPool = async () => {
-  const now = Date.now();
-  if (_userCache && (now - _userCacheAt) < USER_CACHE_MS) return _userCache;
-  if (!_userPoolPromise) {
-    _userPoolPromise = getDocs(query(collection(db, 'users'), limit(200)))
-      .then((snapshot) => {
-        _userCache = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
-        _userCacheAt = Date.now();
-        return _userCache;
-      })
-      .finally(() => { _userPoolPromise = null; });
-  }
-  return _userPoolPromise;
-};
+// The people you can @-mention: everyone in the member directory (a few
+// reads, kept for 10 minutes; src/utils/memberIndex.js). It used to read the
+// first 200 member records, so later members couldn't be mentioned here.
+const getUserPool = () => loadMemberDirectory();
 
 // Search users function - searches by name and email, client-side for reliability
 // (no composite indexes needed, case-insensitive). `term` is the typed query.

@@ -951,6 +951,14 @@ service cloud.firestore {
 
  // Public course numbers for the catalog (rating, enrolled, completed), one
  // document written by the daily job and by staff (utils/courseStats.js).
+ // Member directory for the Talent Board and Search (lib/memberIndex.js):
+ // built by the server only; signed-in members can read it. No emails, no
+ // learners under 18.
+ match /public_index/{id} {
+ allow read: if isSignedIn();
+ allow write: if false;
+ }
+
  match /public_stats/{id} {
  allow read: if true;
  allow write: if isReviewer();
