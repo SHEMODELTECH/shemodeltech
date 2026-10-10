@@ -8,7 +8,7 @@ import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import DiscoverTrack from '../../components/DiscoverTrack';
-import BadgeShowcase from '../../components/BadgeShowcase';
+import { BadgeRow } from '../../components/BadgeShowcase';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import EventsCard from '../../components/EventsCard';
@@ -308,9 +308,9 @@ const DashboardOverview = () => {
         <div className={profileData?.isCompany ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'}>
           {/* Your Badges */}
           {!profileData?.isCompany && (
-            <div className={`bg-white border border-gray-200 rounded-xl p-6 ${showEarnings ? 'lg:col-start-3 lg:row-start-1' : 'lg:col-span-3'}`}>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Your badge</h3>
-              <BadgeShowcase profile={profileData} />
+            <div className={`bg-white border border-gray-200 rounded-xl px-5 py-4 ${showEarnings ? 'lg:col-start-3 lg:row-start-1' : 'lg:col-span-3'}`}>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Your badge</h3>
+              <BadgeRow profile={profileData} />
             </div>
           )}
 

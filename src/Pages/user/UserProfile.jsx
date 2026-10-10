@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
-import BadgeShowcase from '../../components/BadgeShowcase';
+import { BadgeTile } from '../../components/BadgeShowcase';
 import CollapseToggle, { useCollapsed } from '../../components/CollapseToggle';
 import { collection, query, where, limit, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -37,8 +37,8 @@ const EDUCATION_LABEL = { high_school: 'High school', undergrad: 'Undergraduate'
 
 const toMs = (v) => (v?.toMillis ? v.toMillis() : v?.seconds ? v.seconds * 1000 : v ? new Date(v).getTime() || 0 : 0);
 
-const Card = ({ title, children, action, folded = false }) => (
-  <section className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid">
+const Card = ({ title, children, action, folded = false, id }) => (
+  <section id={id} className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid scroll-mt-24">
     <div className={`flex items-center justify-between gap-3 ${folded ? 'print:mb-4' : 'mb-4'}`}>
       <h2 className="text-lg font-bold text-gray-900">{title}</h2>
       {action}
@@ -254,7 +254,6 @@ const UserProfile = () => {
   }
   const displayName = profile.displayName || profile.email?.split('@')[0] || 'Member';
   const initials = getInitials(displayName, profile.email);
-  const userBadges = profile.badges || [];
   const skillTrackLabels = {
     'TechDev': 'Development', 'TechQA': 'Quality Assurance', 'TechPO': 'Product / Project Owner', 'TechMO': 'Product / Project Owner',
     'TechArchs': 'Architecture', 'TechLeads': 'Leadership', 'TechGuard': 'Cybersecurity'
@@ -292,14 +291,11 @@ const UserProfile = () => {
           Back
         </button>
 
-        {/* Profile Card */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
-          <div className="h-20 bg-gradient-to-r from-pink-50 to-pink-100" />
-
-          <div className="px-6 pb-6">
-            {/* Avatar + Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-10 mb-4">
-              <div>
+        {/* Profile header: who she is, her numbers, and her current badge. */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-8">
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              <div className="flex-shrink-0">
                 {profile.photoURL ? (
                   <button
                     type="button"
@@ -307,97 +303,106 @@ const UserProfile = () => {
                     className="rounded-full cursor-zoom-in hover:ring-2 hover:ring-pink-300 transition-all"
                     aria-label={`View ${displayName}'s profile picture`}
                   >
-                    <img src={profile.photoURL} alt={displayName} className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm" />
+                    <img src={profile.photoURL} alt={displayName} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border border-gray-200" />
                   </button>
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-pink-600 flex items-center justify-center border-4 border-white shadow-sm">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-pink-600 flex items-center justify-center">
                     <span className="text-2xl text-white font-bold">{initials}</span>
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2 print:hidden">
-                <button onClick={() => window.print()} className="px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-all">
-                  Print
-                </button>
-                {isOwnProfile && (
-                  <button onClick={() => navigate('/settings')} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all">
-                    Edit Profile
-                  </button>
+              <div className="min-w-0">
+                <h1 className="text-2xl font-bold text-gray-900 mb-0.5 flex items-center gap-2 flex-wrap">
+                  {displayName}
+                  <MentorBadge count={profile.mentorApprovedCourses || 0} isMentor={!!profile.isTeacher} showCount />
+                  {/* Companies show a badge only with Premium: the gold Verified Partner badge. */}
+                  {isVerifiedPartner(profile) && <PremiumBadge kind="partner" size="md" />}
+                  {profile.isCompany && (
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-pink-100 text-pink-700 rounded-full">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                      Company / Organisation
+                    </span>
+                  )}
+                </h1>
+                {/* Active now / Last active … (nothing if they've turned it off) */}
+                {profile.uid && <PresenceBadge uid={profile.uid} className="mb-1" />}
+                {profile.isCompany && profile.companyProfile?.companyName && (
+                  <p className="text-gray-700 text-sm font-semibold">{profile.companyProfile.companyName}</p>
                 )}
-                {!isOwnProfile && (
-                  <>
-                    <FollowButton targetUser={profile} currentUser={currentUser} size="sm" />
-                    <button
-                      onClick={() => navigate(`/messages?to=${profile.uid}`)}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg text-sm font-medium transition-all"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                      Message
-                    </button>
-                  </>
-                )}
+                {headline && <p className="text-gray-700 text-sm mt-0.5">{headline}</p>}
               </div>
             </div>
 
-            {/* Name */}
-            <h1 className="text-2xl font-bold text-gray-900 mb-0.5 flex items-center gap-2 flex-wrap">
-              {displayName}
-              <MentorBadge count={profile.mentorApprovedCourses || 0} isMentor={!!profile.isTeacher} showCount />
-              {/* Companies show a badge only with Premium: the gold Verified Partner badge. */}
-              {isVerifiedPartner(profile) && <PremiumBadge kind="partner" size="md" />}
-              {profile.isCompany && (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-pink-100 text-pink-700 rounded-full">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                  Company / Organisation
-                </span>
-              )}
-            </h1>
-            {/* Active now / Last active … (nothing if they've turned it off) */}
-            {profile.uid && <PresenceBadge uid={profile.uid} className="mb-1" />}
-            {profile.isCompany && profile.companyProfile?.companyName && (
-              <p className="text-gray-700 text-sm font-semibold">{profile.companyProfile.companyName}</p>
-            )}
-            {headline && <p className="text-gray-700 text-sm mt-0.5">{headline}</p>}
-            {profile.bio && (
-              <p className="text-gray-800 text-[15px] leading-relaxed mt-3 max-w-2xl whitespace-pre-line">{profile.bio}</p>
-            )}
-
-            {/* Links */}
-            {links.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                {links.map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    target={l.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-3 py-1.5 rounded-lg"
-                  >
-                    {l.label}
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {memberSince && <p className="text-gray-400 text-xs mt-4">Member since {memberSince}</p>}
-
-            {/* Badges, projects finished, and courses completed. */}
+            {/* Her numbers, then her current badge (like a trophy card). */}
             {!profile.isCompany && (
-              <div className="grid grid-cols-3 gap-3 mt-4 max-w-md">
-                {[
-                  [userBadges.length, userBadges.length === 1 ? 'Badge' : 'Badges'],
-                  [completedCount, completedCount === 1 ? 'Project done' : 'Projects done'],
-                  [courseCerts.length, courseCerts.length === 1 ? 'Course completed' : 'Courses completed'],
-                ].map(([n, label]) => (
-                  <div key={label} className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-center">
-                    <p className="text-xl font-bold text-gray-900">{n}</p>
-                    <p className="text-gray-500 text-xs">{label}</p>
-                  </div>
-                ))}
+              <div className="flex items-center gap-8 sm:gap-10">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-tight">Completed<br />projects</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{completedCount}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { try { document.getElementById('courses-completed')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) { /* ignore */ } }}
+                  className="text-left group"
+                >
+                  <span className="block text-xs sm:text-sm text-gray-500 leading-tight">Certificates<br />awarded</span>
+                  <span className="flex items-center gap-1 text-2xl font-bold text-gray-900 mt-1">
+                    {courseCerts.length}
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-pink-600 print:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                  </span>
+                </button>
               </div>
             )}
+            {!profile.isCompany && <BadgeTile profile={profile} />}
+          </div>
+
+          {profile.bio && (
+            <p className="text-gray-800 text-[15px] leading-relaxed mt-5 max-w-2xl whitespace-pre-line">{profile.bio}</p>
+          )}
+
+          {/* Links */}
+          {links.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {links.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target={l.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-pink-700 border border-pink-200 hover:bg-pink-50 px-3 py-1.5 rounded-lg"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-gray-400 text-xs">{memberSince ? `Member since ${memberSince}` : ''}</p>
+            <div className="flex items-center gap-2 print:hidden">
+              <button onClick={() => window.print()} className="px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-all">
+                Print
+              </button>
+              {isOwnProfile && (
+                <button onClick={() => navigate('/settings')} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all">
+                  Edit Profile
+                </button>
+              )}
+              {!isOwnProfile && (
+                <>
+                  <FollowButton targetUser={profile} currentUser={currentUser} size="sm" />
+                  <button
+                    onClick={() => navigate(`/messages?to=${profile.uid}`)}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg text-sm font-medium transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Message
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -494,16 +499,10 @@ const UserProfile = () => {
           </div>
         )}
 
-        {/* Badges: her current level at a glance (src/components/BadgeShowcase.jsx). */}
-        {!profile.isCompany && (userBadges.length > 0 || isOwnProfile) && (
-          <Card title="Badges">
-            <BadgeShowcase profile={profile} own={isOwnProfile} />
-          </Card>
-        )}
-
         {/* Courses completed, each with its certificate. */}
         {!profile.isCompany && (courseCerts.length > 0 || isOwnProfile) && (
           <Card
+            id="courses-completed"
             title="Courses completed"
             folded={coursesFolded && courseCerts.length > 0}
             action={courseCerts.length > 0 ? (
