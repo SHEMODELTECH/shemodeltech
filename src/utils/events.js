@@ -1,6 +1,6 @@
 // src/utils/events.js
-// She Model Tech events: workshops, tech talks, podcasts, live demos, demo days,
-// and team shout-outs. All events are online.
+// She Model Tech events: workshops, tech talks, conferences, demo days, and
+// spotlights. All events are online.
 //
 //   events/{id}: title, category, description, hosts, startAt (ISO, UTC),
 //     durationMins, capacity (number or null), published, status
@@ -25,12 +25,12 @@ import { db } from '../firebase/config';
 export const EVENT_CATEGORIES = [
   ['workshop', 'Workshop'],
   ['talk', 'Tech talk'],
-  ['podcast', 'Podcast'],
-  ['demo', 'Live demo'],
+  ['conference', 'Conference'],
   ['demoday', 'Demo day'],
-  ['shoutout', 'Team shout-out'],
+  ['shoutout', 'Spotlight'],
 ];
-export const CATEGORY_LABEL = Object.fromEntries(EVENT_CATEGORIES);
+// Retired types stay labelled so older events still show correctly.
+export const CATEGORY_LABEL = { podcast: 'Podcast', demo: 'Live demo', ...Object.fromEntries(EVENT_CATEGORIES) };
 
 const SITE = typeof window !== 'undefined' ? window.location.origin : 'https://shemodeltech.com';
 const toMs = (iso) => (iso ? new Date(iso).getTime() : 0);

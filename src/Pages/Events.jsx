@@ -397,7 +397,7 @@ const Events = () => {
         <p className="text-sm font-semibold text-pink-700">Events</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-1">Learn, share, and celebrate together</h1>
         <p className="text-gray-600 text-lg mt-3 max-w-2xl">
-          Free online workshops, tech talks, podcasts, live demos, and demo days where teams show what they built.
+          Free online workshops, tech talks, conferences, and demo days where teams show what they built.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter by type">

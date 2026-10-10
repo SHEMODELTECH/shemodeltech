@@ -27,7 +27,7 @@ const FUNDING_LABELS = {
 // project's own title, description, and image, so LinkedIn, WhatsApp, and
 // others show a proper preview card. People are sent straight on to the page.
 const htmlEsc = (t) => escapeHtml(t || '');
-const CATEGORY = { workshop: 'Workshop', talk: 'Tech talk', podcast: 'Podcast', demo: 'Live demo', demoday: 'Demo day', shoutout: 'Team shout-out' };
+const CATEGORY = { workshop: 'Workshop', talk: 'Tech talk', conference: 'Conference', podcast: 'Podcast', demo: 'Live demo', demoday: 'Demo day', shoutout: 'Spotlight' };
 const shareCard = async (req, res) => {
   const kind = req.query.share === 'p' ? 'p' : 'e';
   const id = String(req.query.id || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 60);

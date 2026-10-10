@@ -225,7 +225,7 @@ const EventsAdmin = () => {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Events</h2>
-          <p className="text-sm text-gray-600">Online workshops, talks, podcasts, live demos, demo days, and team shout-outs.</p>
+          <p className="text-sm text-gray-600">Online workshops, talks, conferences, demo days, and spotlights.</p>
         </div>
         <button onClick={startNew} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">New event</button>
       </div>
