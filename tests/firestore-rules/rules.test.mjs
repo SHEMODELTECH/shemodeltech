@@ -309,6 +309,8 @@ if (MODE !== 'orig') {
     ['events: member sets another host\'s joining link', 'verU', () => setDoc(doc(as('verU'), 'events', 'evOther', 'private', 'info'), { joinUrl: 'https://evil.example.com' }), 'denied'],
     ['events: host deletes her published event', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMineLive')), 'denied'],
     ['events: staff publishes a member event', 'staff1', () => updateDoc(doc(ctxFor('staff1', false).firestore(), 'events', 'evOther'), { published: true, reviewStatus: 'approved' }), 'allowed'],
+    ['events: team member hosts a demo day for her project', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { category: 'demoday', projectId: 'p1', projectTitle: 'Team app' })), 'allowed'],
+    ['events: links an event to a project she is not on', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { projectId: 'p2', projectTitle: 'Other' })), 'denied'],
     ['events: host deletes her event under review', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMine')), 'allowed'],
   ];
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);

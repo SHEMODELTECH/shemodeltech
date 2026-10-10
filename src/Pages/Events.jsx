@@ -311,7 +311,11 @@ export const EventDetail = () => {
             <h1 className="mt-3 text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
             <p className="mt-2 font-semibold text-gray-800">{formatWhen(e)}{e.durationMins ? ` · ${e.durationMins} min` : ''}</p>
             {e.hosts && <p className="mt-1 text-gray-600">With {e.hosts}</p>}
-            {e.hostUid && <p className="mt-1 text-sm text-gray-600">Hosted by <Link to={`/profile/${e.hostUid}`} className="font-semibold text-pink-700 hover:underline">{e.hostName || 'a member'}</Link></p>}
+            {e.hostUid && (e.projectId ? (
+              <p className="mt-1 text-sm text-gray-600">Hosted by the <Link to={`/projects/${e.projectId}`} className="font-semibold text-pink-700 hover:underline">{e.projectTitle || 'project'}</Link> team</p>
+            ) : (
+              <p className="mt-1 text-sm text-gray-600">Hosted by <Link to={`/profile/${e.hostUid}`} className="font-semibold text-pink-700 hover:underline">{e.hostName || 'a member'}</Link></p>
+            ))}
             {!e.published && (
               <p className="mt-4 rounded-lg bg-gray-50 border border-gray-200 px-4 py-3 text-sm text-gray-700">
                 {e.reviewStatus === 'declined' ? 'This event wasn’t approved.' : 'Waiting for review.'} Only you and the She Model Tech team can see it.

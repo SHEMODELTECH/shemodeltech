@@ -4,7 +4,7 @@
 // members can register. The host sees her events, their status, and who
 // registered.
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +16,7 @@ import {
   CATEGORY_LABEL, EVENT_CATEGORIES, formatWhen, getJoinUrl, isPast, listMyHostedEvents, listRegistrations, submitHostedEvent,
 } from '../utils/events';
 
-const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '' };
+const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', projectId: null, projectTitle: null };
 const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-pink-500';
 const label = 'block text-sm font-semibold text-gray-800';
 
@@ -56,6 +56,34 @@ const HostEvent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canHost]);
 
+  // Opened from a project workspace (?project=ID&type=demoday): a team event,
+  // pre-filled and linked to the project. Only the project's own team can link it.
+  const [params, setParams] = useSearchParams();
+  const fromProject = params.get('project');
+  useEffect(() => {
+    if (!canHost || !fromProject) return;
+    getDoc(doc(db, 'projects', fromProject)).then((snap) => {
+      if (!snap.exists()) return;
+      const p = snap.data();
+      const onTeam = p.submitterId === currentUser.uid || (p.members || []).includes(currentUser.uid);
+      if (!onTeam) return;
+      const title = p.projectTitle || p.title || 'Our project';
+      const type = params.get('type') === 'demoday' ? 'demoday' : 'workshop';
+      setRegs(null);
+      setEditing('new');
+      setF({
+        ...EMPTY,
+        category: type,
+        title: type === 'demoday' ? `${title} demo day` : '',
+        hosts: `The ${title} team`,
+        projectId: fromProject,
+        projectTitle: title,
+      });
+      setParams({}, { replace: true });
+    }).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canHost, fromProject]);
+
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const myName = profile?.displayName || currentUser?.displayName || 'A member';
 
@@ -67,6 +95,7 @@ const HostEvent = () => {
     setF({
       title: e.title || '', category: e.category || 'workshop', when: toLocalInput(e.startAt), durationMins: e.durationMins || 60,
       hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '',
+      projectId: e.projectId || null, projectTitle: e.projectTitle || null,
     });
   };
 
@@ -87,6 +116,8 @@ const HostEvent = () => {
         description: f.description.trim().slice(0, 4000),
         capacity: Number(f.capacity) > 0 ? Number(f.capacity) : null,
         imageUrl: f.imageUrl || null,
+        projectId: f.projectId || null,
+        projectTitle: f.projectId ? f.projectTitle : null,
       };
       const isNew = editing === 'new';
       await submitHostedEvent(isNew ? null : editing, data, f.joinUrl.trim(), { uid: currentUser.uid, name: myName });
@@ -137,7 +168,7 @@ const HostEvent = () => {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Host an event</h1>
-            <p className="text-gray-600 mt-1">Share what you know with a workshop, talk, or spotlight. We review every event before it goes live.</p>
+            <p className="text-gray-600 mt-1">Share what you know with a workshop, talk, or spotlight. Finished a project? Host a demo day for your team. We review every event before it goes live.</p>
           </div>
           {canHost && !editing && (
             <button onClick={startNew} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">New event</button>
@@ -156,6 +187,12 @@ const HostEvent = () => {
           <>
             {editing && (
               <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 grid sm:grid-cols-2 gap-4">
+                {f.projectId && (
+                  <p className="sm:col-span-2 text-sm text-gray-700 rounded-lg bg-pink-50/60 border border-pink-100 px-3 py-2">
+                    Team event for <span className="font-semibold">{f.projectTitle}</span>.{' '}
+                    <button type="button" onClick={() => setF({ ...f, projectId: null, projectTitle: null })} className="font-semibold text-pink-700 hover:underline">Not a team event</button>
+                  </p>
+                )}
                 <label className={`${label} sm:col-span-2`}>Title *<input className={`${input} mt-1`} value={f.title} onChange={set('title')} maxLength={120} placeholder="For example: Your first pull request" /></label>
                 <label className={label}>Type *
                   <select className={`${input} mt-1`} value={f.category} onChange={set('category')}>

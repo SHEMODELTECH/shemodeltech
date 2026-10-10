@@ -729,9 +729,16 @@ service cloud.firestore {
  && myUserDoc().get('ageGroup', null) == '18plus'
  && myUserDoc().get('isCompany', false) != true;
  }
+ // A team event (from the project workspace) may only be linked to her own project.
+ function onProjectTeam(pid) {
+ let p = get(/databases/$(database)/documents/projects/$(pid)).data;
+ return p.get('submitterId', '') == myUid() || myUid() in p.get('members', []);
+ }
  function validHostedEvent(d) {
  return d.keys().hasOnly(['title', 'category', 'startAt', 'durationMins', 'hosts', 'description', 'capacity',
- 'imageUrl', 'published', 'status', 'hostUid', 'hostName', 'reviewStatus', 'reviewNote', 'createdAt', 'updatedAt'])
+ 'imageUrl', 'published', 'status', 'hostUid', 'hostName', 'reviewStatus', 'reviewNote', 'createdAt', 'updatedAt',
+ 'projectId', 'projectTitle'])
+ && (d.get('projectId', null) == null || onProjectTeam(d.projectId))
  && d.hostUid == myUid()
  && d.published == false
  && d.status == 'scheduled'

@@ -7,6 +7,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { notifyMember, notifyMembers } from '../../utils/staffAlerts';
+import { logActivity as logProof } from '../../utils/activityFeed';
 import { readUsersForSending } from '../../utils/readUsersPaged';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import {
@@ -103,6 +104,17 @@ const EventsAdmin = () => {
           body: `${formatWhen(ev)}. Members can now register. Share it to spread the word.`,
           link: `/events/${id}`, ctaLabel: 'See your event',
         });
+        // A team event: celebrate it on the Proof Wall.
+        if (original.projectId) {
+          logProof({
+            type: 'milestone',
+            actorId: original.hostUid,
+            actorName: `The ${original.projectTitle || 'project'} team`,
+            projectId: original.projectId,
+            projectTitle: original.projectTitle || null,
+            meta: `is hosting ${data.category === 'demoday' ? 'a demo day' : `a ${(CATEGORY_LABEL[data.category] || 'event').toLowerCase()}`}: ${data.title}`,
+          });
+        }
       }
 
       // A published event whose time changed: tell everyone registered.
@@ -378,7 +390,7 @@ const EventsAdmin = () => {
                 <p className="text-xs text-gray-600">
                   {CATEGORY_LABEL[e.category] || 'Event'} · {formatWhen(e)} ·{' '}
                   {e.status === 'cancelled' ? 'Cancelled' : !e.published ? (e.hostUid ? (e.reviewStatus === 'declined' ? 'Not approved' : 'Waiting for review') : 'Draft') : isPast(e) ? 'Past' : e.announcedAt ? 'Published and announced' : 'Published'}
-                  {e.hostUid ? ` · Hosted by ${e.hostName || 'a member'}` : ''}
+                  {e.hostUid ? (e.projectId ? ` · Team event: ${e.projectTitle || 'project'}` : ` · Hosted by ${e.hostName || 'a member'}`) : ''}
                   {e.hasRecording ? ' · Has recording' : ''}
                   {e.published && (isPast(e) || e.status === 'cancelled') ? (e.showOnPage ? ' · Shown on Events page' : ' · Hidden from Events page') : ''}
                 </p>
