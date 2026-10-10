@@ -74,6 +74,7 @@ const Settings = () => {
     linkedinUrl: '',
     githubUrl: '',
     emailPublic: false,
+    showInSearch: true,
     interests: [],
     industryInterests: [],
   });
@@ -143,6 +144,7 @@ const Settings = () => {
             linkedinUrl: data.linkedinUrl || '',
             githubUrl: data.githubUrl || '',
             emailPublic: data.emailPublic || false,
+            showInSearch: data.hideFromSearch !== true,
             interests: Array.isArray(data.interests) ? data.interests : [],
             industryInterests: Array.isArray(data.industryInterests) ? data.industryInterests : [],
           });
@@ -208,6 +210,7 @@ const Settings = () => {
         linkedinUrl: form.linkedinUrl.trim() || null,
         githubUrl: form.githubUrl.trim() || null,
         emailPublic: form.emailPublic,
+        hideFromSearch: !form.showInSearch,
         // Mark complete when the required set is satisfied
         profileComplete: profileData?.isCompany
           ? requiredCommon
@@ -563,6 +566,28 @@ const Settings = () => {
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${form.emailPublic ? 'translate-x-6' : 'translate-x-1'}`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <div>
+              <p className="text-gray-900 text-sm font-medium">Show my updates in search</p>
+              <p className="text-gray-500 text-xs mt-0.5">
+                {form.showInSearch
+                  ? 'Search engines like Google can show a short preview of your Proof Wall updates'
+                  : 'Your Proof Wall updates stay out of search engines'}
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={form.showInSearch}
+              aria-label="Show my updates in search"
+              onClick={() => setForm((p) => ({ ...p, showInSearch: !p.showInSearch }))}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${form.showInSearch ? 'bg-pink-600' : 'bg-gray-300'}`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${form.showInSearch ? 'translate-x-6' : 'translate-x-1'}`}
               />
             </button>
           </div>

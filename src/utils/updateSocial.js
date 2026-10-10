@@ -77,7 +77,9 @@ export const repostUpdate = async (original, me, text) => {
   await updateDoc(doc(db, 'activity', src.id || original.id), { repostCount: increment(1) }).catch(() => {});
 };
 
-export const postUrl = (id) => `${window.location.origin}/proof-wall?post=${id}`;
+// The public preview page (title and first lines), so shared links show a
+// proper card; members tap "Already a member? Open it" to see the full post.
+export const postUrl = (id) => `${window.location.origin}/update/${id}`;
 
 // Tagged someone with "@First Last": they get a bell notification linking to the update.
 export const notifyMentions = (mentions, me, activityId) => {

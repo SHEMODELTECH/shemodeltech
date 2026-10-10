@@ -58,6 +58,18 @@
       "dest": "/api/public-request?share=$1&id=$2"
     },
     {
+      "src": "/update/([^/]+)",
+      "dest": "/api/public-request?preview=u&id=$1"
+    },
+    {
+      "src": "/project/([^/]+)",
+      "dest": "/api/public-request?preview=p&id=$1"
+    },
+    {
+      "src": "/sitemap-content.xml",
+      "dest": "/api/public-request?sitemap=1"
+    },
+    {
       "src": "/(.*)",
       "headers": {
         "Cache-Control": "no-cache"

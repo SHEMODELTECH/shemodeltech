@@ -2,7 +2,8 @@
 // One course. Two routes share this page:
 //   /learning/:track/:slug         the course page: overview, syllabus, enroll
 //   /learning/:track/:slug/learn   the reader, one part at a time (?part=N)
-// Anyone can view the course page; reading needs an account and enrollment
+// Anyone can view the course page and read part 1 of a written course (a free
+// taster); reading the rest needs an account and enrollment
 // (opening the reader while signed in enrolls automatically).
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -287,7 +288,11 @@ const LearningCourse = ({ reading = false }) => {
     );
   }
   if (!course) return <Navigate to="/learning" replace />;
-  if (reading && !lr.loading && !lr.signedIn) return <Navigate to={`/learning/${track}/${slug}`} replace />;
+  // Visitors may read the first part of a written course for free (a taster);
+  // everything else needs an account.
+  const textCourse = course.kind !== 'interactive' && course.kind !== 'published-html';
+  const taster = !lr.signedIn && textCourse;
+  if (reading && !lr.loading && !lr.signedIn && !(taster && part === 1)) return <Navigate to={`/learning/${track}/${slug}`} replace />;
 
   // The Start Here course is an orientation: no summaries, no forum reply,
   // and no certificate (certificates are for skill courses).
@@ -308,6 +313,7 @@ const LearningCourse = ({ reading = false }) => {
   const L = look(track);
   const readerUrl = (p) => `/learning/${track}/${slug}/learn${p > 1 ? `?part=${p}` : ''}`;
   const start = () => {
+    if (taster) return navigate(readerUrl(1));
     if (!lr.signedIn) return signInAndReturn(navigate, location.pathname);
     navigate(readerUrl(enrolled && !done ? lastPart : 1));
   };
@@ -359,6 +365,14 @@ const LearningCourse = ({ reading = false }) => {
   if (reading) {
     return (
       <LearningLayout accent={L}>
+        {taster && (
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 box-content pt-4">
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-pink-100 bg-pink-50/60 px-3 py-2 text-sm">
+              <p className="flex-1 min-w-0 text-gray-800">You’re reading part 1 free. Sign in to keep going, save your progress, and earn the certificate.</p>
+              <button onClick={() => signInAndReturn(navigate, readerUrl(2))} className="flex-shrink-0 text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg">Get Started</button>
+            </div>
+          </div>
+        )}
         <CourseReader
           key={course.slug}
           course={course}
@@ -369,13 +383,13 @@ const LearningCourse = ({ reading = false }) => {
           isDone={!!done}
           next={courses[index + 1] || null}
           part={part - 1}
-          onPart={(i) => setParams(i > 0 ? { part: String(i + 1) } : {})}
+          onPart={(i) => (!lr.signedIn && i > 0 ? signInAndReturn(navigate, readerUrl(i + 1)) : setParams(i > 0 ? { part: String(i + 1) } : {}))}
           onBack={() => navigate(`/learning/${track}/${slug}`)}
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
-          onComplete={() => lr.markComplete(track, slug, noCert ? null : course)}
-          onCertificate={noCert ? null : openCertificate}
+          onComplete={() => (lr.signedIn ? lr.markComplete(track, slug, noCert ? null : course) : signInAndReturn(navigate, readerUrl(1)))}
+          onCertificate={noCert || !lr.signedIn ? null : openCertificate}
           quizDone={lr.quizDoneFor(track, slug)}
-          onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
+          onQuizDone={(partId) => lr.signedIn && lr.saveQuizDone(track, slug, partId)}
           summaries={summaries}
           onSummary={currentUser && !noCert ? saveSummary : null}
           forum={{ ...(noCert ? { required: false, done: true } : forumReq), url: `/learning/${track}/${slug}#forum` }}
@@ -384,7 +398,9 @@ const LearningCourse = ({ reading = false }) => {
     );
   }
 
-  const ctaLabel = !lr.signedIn
+  const ctaLabel = taster
+    ? 'Read part 1 free'
+    : !lr.signedIn
     ? 'Sign in to enroll'
     : done
     ? 'Review the course'
@@ -522,7 +538,9 @@ const LearningCourse = ({ reading = false }) => {
                     onClick={() =>
                       lr.signedIn
                         ? navigate(course.kind === 'interactive' || course.kind === 'published-html' ? readerUrl(1) : readerUrl(i + 1))
-                        : signInAndReturn(navigate, location.pathname)
+                        : taster && i === 0
+                        ? navigate(readerUrl(1))
+                        : signInAndReturn(navigate, readerUrl(i + 1))
                     }
                     className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-gray-50"
                   >
