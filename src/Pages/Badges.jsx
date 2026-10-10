@@ -14,7 +14,7 @@ const LEVELS = [
 ];
 
 const Badges = () => (
-  <div className="max-w-4xl mx-auto">
+  <div className="max-w-6xl mx-auto [&>*]:max-w-4xl">
     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">How badges work</h1>
     <p className="text-gray-600 mt-2">Verified proof of real work. Earned on projects, never bought.</p>
 

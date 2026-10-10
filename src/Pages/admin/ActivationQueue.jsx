@@ -152,7 +152,7 @@ const ActivationQueue = () => {
   const partners = companies.filter((c) => c.tier === 'partner');
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 sm:py-14">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-3xl">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Access &amp; activation</h1>
       <p className="text-gray-500 text-sm mb-6">
         Confirm payments and switch company access on. Access is granted here and nowhere else,

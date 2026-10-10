@@ -83,22 +83,12 @@ const TeachApply = () => {
 
   return (
     <LearningLayout>
-      <section className="lr-hero" style={{ background: 'linear-gradient(180deg,#FDF2F7 0%,#fff 100%)' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <p className="text-sm font-semibold text-pink-700 mb-3">Become a mentor at She Model Tech</p>
-          <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">Share what you know. Help others build real skills.</h1>
-          <p className="text-gray-600 text-lg mt-4 max-w-2xl">
-            Mentors create lessons, video courses, and guides for our tracks, and help others grow. Approved mentors get
-            access to the Mentor Hub, our space for building and presenting courses.
-          </p>
-        </div>
-      </section>
+      {/* Same frame as the Mentor Hub: a plain title, then the page. */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Become a mentor</h1>
+      <p className="text-gray-600 mt-1">Share what you know. Approved mentors build and present courses in the Mentor Hub.</p>
 
-      {/* Main column: the application, then the FAQ right under it. "How it works"
-          is a sidebar beside both (it stays in view on wide screens), so there's
-          no empty space between the form and the FAQ. On phones: form, How it
-          works, then FAQ. */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-x-10 gap-y-10 items-start">
+      <div className="mt-6 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-x-10 gap-y-10 items-start">
         <div className="lg:col-start-1 lg:row-start-1">
           {state.loading ? (
             <div className="flex justify-center py-16">
@@ -221,6 +211,7 @@ const TeachApply = () => {
         </div>
         </section>
       </div>
+      </div>
     </LearningLayout>
   );
 };
@@ -233,7 +224,7 @@ const MENTOR_BENEFITS = [
   ['Public recognition', 'your name on your courses, and new courses featured in "From our mentors" in Learning'],
   ['A teaching portfolio', 'learner ratings, comments, enrollments, and completions that show the impact of your teaching'],
   ['Grow and connect', 'teaching and leadership experience, and a network of learners and mentors'],
-  ['Lead paid cohorts', 'apply to lead paid cohorts. When applicants are equally qualified, mentors are considered first'],
+  ['Lead paid projects', 'apply to lead paid projects. When applicants are equally qualified, mentors are considered first'],
   ['Speaking opportunities', 'want to lead a workshop or talk at one of our online events? Message She Model Tech from the Mentor Hub, and we’ll let you know if it fits'],
   ['Tools and support', 'the Mentor Hub for written, video, and interactive courses, full-screen Present mode, and a direct line to She Model Tech'],
 ];

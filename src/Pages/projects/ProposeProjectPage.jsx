@@ -39,7 +39,7 @@ const ProposeProjectPage = () => {
     );
   }
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-3xl">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Propose a project</h1>
       <ProposeProject startOpen />
     </div>

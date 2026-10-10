@@ -23,6 +23,7 @@ import { collection, doc, addDoc, getDoc, getDocs, updateDoc, query, where, orde
 import { db } from '../firebase/config';
 import { authFetch } from './authFetch';
 import { alertStaff } from './staffAlerts';
+import { logActivity as logProof } from './activityFeed';
 
 // Text for the HTML parts of an email (heading, body).
 const esc = (t) =>
@@ -254,6 +255,16 @@ export const assignAsLead = async ({ appId, projectId, applicant, reviewer }) =>
   });
 
   const title = project.projectTitle || project.title || 'your project';
+
+  // Proof Wall: "<name> stepped up to lead <project>" (non-blocking).
+  logProof({
+    type: 'lead',
+    actorId: applicant.applicantUid || null,
+    actorName: applicant.applicantName || 'A member',
+    projectId,
+    projectTitle: project.projectTitle || project.title || null,
+  });
+
   const startsOn = project.startDate
     ? ` It starts on ${new Date(project.startDate).toLocaleDateString()}, so you have time to get it ready.`
     : '';

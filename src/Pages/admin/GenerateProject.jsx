@@ -128,7 +128,7 @@ const GenerateProject = () => {
   if (!isAdmin) return null;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-3xl">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Generate Project</h1>
       <p className="text-gray-500 text-sm mb-6">Pick a project from the library of {TEMPLATE_COUNT} current AI and tech projects. Each has a problem statement, a 6-week plan, and roles across the badge tracks. Projects already on the board are skipped. It publishes in lead recruitment: anyone can apply to lead, and the confirmed lead adds any extra roles and opens the team.</p>
 

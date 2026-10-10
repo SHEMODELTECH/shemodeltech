@@ -40,7 +40,7 @@ const ProjectFeedback = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-xl">
       <h1 className="text-2xl font-bold text-gray-900">How was your project?</h1>
       <p className="text-gray-500 text-sm mt-1">{project?.projectTitle || 'Your project'} · It takes less than a minute, and helps us improve She Model Tech.</p>
       {done ? (

@@ -36,7 +36,7 @@ const Premium = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-5xl">
       <p className="text-sm font-semibold text-pink-700">For companies</p>
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Company tiers</h1>
       <p className="text-gray-600 mt-2 max-w-2xl">

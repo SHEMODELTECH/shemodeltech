@@ -222,7 +222,7 @@ const ApplyToLead = () => {
 
   if (!hasOpen && !(existing && existing.status !== LEAD_APP_STATUS.WITHDRAWN)) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div className="max-w-6xl mx-auto [&>*]:max-w-2xl py-10 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">No projects need a lead right now</h1>
         <p className="text-gray-600 mb-6">
           New cohorts open throughout the year. Join the waitlist and we&rsquo;ll email you when new
@@ -251,7 +251,7 @@ const ApplyToLead = () => {
 
   if (existing && existing.status !== LEAD_APP_STATUS.WITHDRAWN) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16">
+      <div className="max-w-6xl mx-auto [&>*]:max-w-2xl">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Your lead application is in
         </h1>
@@ -268,7 +268,7 @@ const ApplyToLead = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10 sm:py-16">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-2xl">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
         Apply to lead a project
       </h1>

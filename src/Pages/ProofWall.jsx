@@ -149,20 +149,13 @@ const headlineText = (a) => {
 
 const FILTERS = [
   { id: 'all', label: 'All Activity' },
+  { id: 'ship', label: 'Completed' },
+  { id: 'badge', label: 'Badges' },
   { id: 'update', label: 'Updates' },
   { id: 'lead', label: 'Needs a lead' },
   { id: 'open', label: 'Open projects' },
 ];
 
-// Companies see All Activity, Updates plus a "Top Talent" discovery tab (recent badge
-// earners). Individuals get the contributor tabs.
-const COMPANY_FILTERS = [
-  { id: 'all', label: 'All Activity' },
-  { id: 'badge', label: 'Badges earned' },
-  { id: 'ship', label: 'Projects shipped' },
-  { id: 'update', label: 'Updates' },
-  { id: 'talent', label: 'Top Talent' },
-];
 // Companies see everything members see, plus a Top Talent tab.
 const filtersFor = (isCompany) => (isCompany ? [...FILTERS, { id: 'talent', label: 'Top Talent' }] : FILTERS);
 
@@ -393,7 +386,10 @@ const ProofWall = () => {
       // 'all' (and non-type tabs like 'open'/'talent') load the unfiltered feed.
       const typeFilter = ACTIVITY_TYPE_FILTERS.includes(f) ? f : null;
       // Hide entries for projects that were deleted (admins also clear them out).
-      setItems(await withoutDeletedProjects(await getActivity(50, typeFilter), { cleanUp: isAdminRef.current }));
+      let rows = await withoutDeletedProjects(await getActivity(50, typeFilter), { cleanUp: isAdminRef.current });
+      // "Needs a lead" is only the calls for a lead, not "X stepped up to lead".
+      if (f === 'lead') rows = rows.filter((r) => !r.actorId);
+      setItems(rows);
     } catch (e) {
       console.error('load proof wall failed', e);
       toast.error('Could not load the Proof Wall. Please refresh.');
@@ -1155,9 +1151,13 @@ const ProofWall = () => {
               </div>
               <p className="text-gray-900 font-semibold">Nothing here yet</p>
               <p className="text-gray-500 text-sm mt-1">
-                {myData?.isCompany
-                  ? 'Updates from across She Model Tech will show up here.'
-                  : 'Share a project update, and it shows up here as proof of your work.'}
+                {filter === 'ship'
+                  ? 'Finished projects show up here.'
+                  : filter === 'badge'
+                    ? 'Badges show up here as members earn them.'
+                    : filter === 'lead'
+                      ? 'Projects looking for a lead show up here.'
+                      : 'New badges, finished projects, and updates show up here.'}
               </p>
             </div>
           ) : (
@@ -1358,8 +1358,16 @@ const ProofWall = () => {
                           View project →
                         </button>
                       )}
+                      {a.type === 'lead' && a.actorId && !myData?.isCompany && (
+                        <button
+                          onClick={ck(() => navigate(a.projectId ? `/projects/${a.projectId}` : '/projects'))}
+                          className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
+                        >
+                          View project →
+                        </button>
+                      )}
                       {/* Needs-a-lead items are clickable: go to the project to apply. */}
-                      {a.type === 'lead' && !myData?.isCompany && (
+                      {a.type === 'lead' && !a.actorId && !myData?.isCompany && (
                         <button
                           onClick={ck(() => navigate(a.projectId ? `/projects/${a.projectId}` : '/projects'))}
                           className="inline-flex items-center gap-1 mt-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
@@ -1371,7 +1379,7 @@ const ProofWall = () => {
                       <div className="text-xs text-gray-400 mt-1.5">
                         {a.type === 'update'
                           ? 'Project update'
-                          : ACTIVITY_TYPES[a.type]?.label || 'Activity'}
+                          : a.type === 'lead' && a.actorId ? 'New lead' : ACTIVITY_TYPES[a.type]?.label || 'Activity'}
                         {a.meta && a.type !== 'milestone' ? <> · {a.meta}</> : null}
                         {a.createdAt ? <> · {fmtAgo(a.createdAt)}</> : null}
                       </div>

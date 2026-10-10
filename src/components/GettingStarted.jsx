@@ -1,5 +1,5 @@
 // src/components/GettingStarted.jsx
-// "Getting started" checklist at the top of a member's dashboard: five steps
+// "Getting started" checklist at the top of a member's dashboard: four steps
 // that tick themselves off as she does each one, each with a "Show me" link to
 // the right page. It hides itself once every step is done, or when she taps
 // "Hide" to fold it into a slim bar, and "Show" to open it again (saved on
@@ -29,7 +29,6 @@ const GettingStarted = ({ uid, profile }) => {
   // Older versions saved gettingStartedHidden; treat that as collapsed.
   const [collapsed, setCollapsed] = useState(!!(profile?.gettingStartedCollapsed ?? profile?.gettingStartedHidden));
   const [joined, setJoined] = useState(null);
-  const [posted, setPosted] = useState(null);
 
   useEffect(() => {
     if (!uid) return;
@@ -41,7 +40,6 @@ const GettingStarted = ({ uid, profile }) => {
       query(collection(db, 'project_interest'), where('uid', '==', uid), limit(1)),
       query(collection(db, 'lead_intent'), where('uid', '==', uid), limit(1)),
     ]).then((v) => !dead && setJoined(v));
-    anyFound([query(collection(db, 'activity'), where('actorId', '==', uid), limit(1))]).then((v) => !dead && setPosted(v));
     return () => {
       dead = true;
     };
@@ -70,12 +68,6 @@ const GettingStarted = ({ uid, profile }) => {
       to: '/projects',
     },
     {
-      title: 'Share an update on the Proof Wall',
-      text: 'Tell the community what you’re working on.',
-      done: posted === true,
-      to: '/proof-wall',
-    },
-    {
       title: 'Earn your first badge',
       text: 'Complete a project with your team and have it reviewed.',
       done: badges > 0,
@@ -84,7 +76,7 @@ const GettingStarted = ({ uid, profile }) => {
   ];
   const doneCount = steps.filter((s) => s.done).length;
   // Still checking: don't flash steps as "not done" while the queries run.
-  if (joined === null || posted === null) return null;
+  if (joined === null) return null;
   if (doneCount === steps.length) return null;
   const next = steps.find((s) => !s.done);
 

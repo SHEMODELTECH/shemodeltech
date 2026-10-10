@@ -21,7 +21,7 @@ export const ManageCourses = ({ embedded = false }) => {
   if (!['admin', 'editor'].includes(role)) return <p className="p-8 text-gray-600">This page is for She Model Tech staff.</p>;
   const hidden = hiddenCourses();
   return (
-    <div className={embedded ? 'max-w-3xl' : 'max-w-3xl mx-auto px-4 py-8'}>
+    <div className={embedded ? 'max-w-3xl' : 'max-w-6xl mx-auto [&>*]:max-w-3xl'}>
       <h1 className="text-2xl font-bold text-gray-900">Manage courses</h1>
       <p className="text-gray-600 mt-1">Edit any She Model Tech course from its card in Learning. Removed courses are listed here so you can bring them back.</p>
       <div className="mt-5 rounded-xl border border-pink-200 bg-pink-50/50 p-4 flex flex-wrap items-center justify-between gap-3">
@@ -122,7 +122,7 @@ const EditCourse = () => {
   };
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-4xl">
       <Link to={`/learning/${track}/${slug}`} className="text-sm text-gray-500 hover:underline">← Back to the course</Link>
       <h1 className="text-2xl font-bold text-gray-900 mt-2">Edit course</h1>
       <p className="text-sm text-gray-600">{trackMeta(track).label}. Changes apply for every learner straight away; the original is kept so you can reset it.</p>

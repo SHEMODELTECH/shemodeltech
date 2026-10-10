@@ -265,7 +265,7 @@ const DashboardOverview = () => {
       {!loading && !profileData?.isCompany && currentUser && <PayoutReminder uid={currentUser.uid} profile={profileData} />}
       {!loading && currentUser && <PushPrompt />}
 
-      {/* 2. New members: five steps that tick off as she goes. */}
+      {/* 2. New members: four steps that tick off as she goes. */}
       {!loading && currentUser && <GettingStarted uid={currentUser.uid} profile={profileData} />}
 
       {/* An event in the next 7 days she hasn't signed up for (otherwise nothing). */}

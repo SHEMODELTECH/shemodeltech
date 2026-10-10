@@ -147,7 +147,7 @@ const CompanyCohortDetail = () => {
   }
   if (!cohort) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div className="max-w-6xl mx-auto [&>*]:max-w-2xl py-10 text-center">
         <p className="text-gray-600">This project isn&rsquo;t available.</p>
         <Link to="/paid-projects" className="text-pink-600 font-semibold hover:underline">
           Browse paid projects
@@ -173,7 +173,7 @@ const CompanyCohortDetail = () => {
     !eligibility.reason?.startsWith('Could not');
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10 sm:py-14">
+    <div className="max-w-6xl mx-auto [&>*]:max-w-2xl">
       {/* Company header */}
       <div className="flex items-center gap-3 mb-5">
         {cohort.companyLogo && (

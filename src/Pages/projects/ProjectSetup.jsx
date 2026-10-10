@@ -371,7 +371,7 @@ const ProjectSetup = () => {
       setSaving(false);
     };
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto [&>*]:max-w-3xl">
         <h1 className="text-2xl font-bold text-gray-900">{form.projectTitle}</h1>
         <div className="mt-4 rounded-xl border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
           <strong>Paid cohort project.</strong> She Model Tech has set the brief, roles, number of people, pay, and dates.
