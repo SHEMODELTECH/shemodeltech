@@ -88,7 +88,7 @@ const ProjectTabs = () => {
   ];
 
   return (
-    <nav aria-label="Projects" className="-mt-1 mb-6">
+    <nav aria-label="Projects" className="-mt-1 mb-6 max-w-6xl mx-auto">
       <div className="flex gap-4 sm:gap-7 overflow-x-auto border-b border-gray-200">
         {tabs.map((t) => {
           const active = t.active ?? (pathname === t.to || pathname.startsWith(`${t.to}/`));

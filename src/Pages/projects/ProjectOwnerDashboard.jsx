@@ -515,13 +515,13 @@ const ProjectOwnerDashboard = () => {
           onCancel={() => setDeleteFor(null)}
           onConfirm={(reason) => sendDeletionRequest(deleteFor, reason)}
         />
-        <main className="pb-16 sm:pb-20">
-          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-5xl">
+        <div className="pb-16 sm:pb-20">
+          <div className="max-w-6xl mx-auto">
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Projects</span></h1>
-                <p className="text-gray-400 text-sm mt-1">{view === 'joined' && !isCompany ? 'Projects you applied to or joined' : isCompany ? `${myProjects.length} paid project${myProjects.length !== 1 ? 's' : ''} you posted · ${sponsored.length} sponsored` : `${myProjects.length} project${myProjects.length !== 1 ? 's' : ''} you lead`}</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My projects</h1>
+                <p className="text-gray-600 mt-1">{view === 'joined' && !isCompany ? 'Projects you applied to or joined' : isCompany ? `${myProjects.length} paid project${myProjects.length !== 1 ? 's' : ''} you posted · ${sponsored.length} sponsored` : `${myProjects.length} project${myProjects.length !== 1 ? 's' : ''} you lead`}</p>
               </div>
               {isCompany ? (
                 <div className="flex flex-wrap gap-2">
@@ -668,7 +668,7 @@ const ProjectOwnerDashboard = () => {
             </>
             )}
           </div>
-        </main>
+        </div>
       </div>
     </>
   );

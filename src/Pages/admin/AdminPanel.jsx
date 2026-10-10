@@ -789,7 +789,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
   ];
 
   return (
-    <div className={bare ? '' : only === 'projects' ? 'max-w-5xl pt-2 pb-8' : 'max-w-6xl mx-auto [&>*]:max-w-5xl'}>
+    <div className={bare ? '' : only === 'projects' ? 'max-w-6xl mx-auto pt-2 pb-8' : 'max-w-6xl mx-auto [&>*]:max-w-5xl'}>
       {/* Inside another page's Manage area the tabs already name the section. */}
       {!bare && (<>
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 flex items-center gap-3">

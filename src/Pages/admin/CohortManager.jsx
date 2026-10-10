@@ -449,7 +449,7 @@ const CohortManager = () => {
   const preview = startDate ? buildSchedule(startDate) : null;
 
   return (
-    <div className="max-w-5xl pt-2 pb-10">
+    <div className="max-w-6xl mx-auto pt-2 pb-10">
       <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Cohorts</h1>
