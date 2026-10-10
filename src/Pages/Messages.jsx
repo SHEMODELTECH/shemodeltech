@@ -92,7 +92,7 @@ const Messages = () => {
   const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState([]);
-  // Who in the inbox is on She Model Tech right now (green dot beside their
+  // Who in the inbox is on She Model Tech right now (pink dot beside their
   // name): the 20 most recent conversations, so a long inbox doesn't watch
   // everyone. (The open conversation shows its own status.)
   const presence = usePresenceMany(conversations.slice(0, 20).map((c) => c.otherUser?.uid));

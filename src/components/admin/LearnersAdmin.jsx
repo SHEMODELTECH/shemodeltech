@@ -264,7 +264,7 @@ const LearnersAdmin = ({ users = [] }) => {
                     {l.email && <p className="text-xs text-gray-500 truncate">{l.email}</p>}
                   </div>
                   <p className={`text-xs whitespace-nowrap flex items-center gap-1 ${l.seen.online ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                    {l.seen.online && <span className="w-2 h-2 rounded-full bg-green-500" aria-hidden="true" />}
+                    {l.seen.online && <span className="w-2 h-2 rounded-full bg-pink-600" aria-hidden="true" />}
                     {seenLabel(l.seen)}
                   </p>
                 </div>

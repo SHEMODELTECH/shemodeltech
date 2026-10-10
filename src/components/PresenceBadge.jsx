@@ -1,6 +1,6 @@
 // src/components/PresenceBadge.jsx
 // Shows whether a member is on She Model Tech right now.
-//   online  -> green dot + "Active now"
+//   online  -> pink dot + "Active now"
 //   offline -> grey dot + "Last active 3 hours ago"
 //   hidden (turned off in Settings) or unknown -> nothing
 // Pass `uid` (it subscribes itself) or a ready `info` from usePresenceMany.
@@ -10,7 +10,7 @@ import { timeAgo, usePresence } from '../utils/presence';
 const Dot = ({ online, className = '' }) => (
   <span
     aria-hidden="true"
-    className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${online ? 'bg-green-500 ring-2 ring-green-100' : 'bg-gray-300'} ${className}`}
+    className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${online ? 'bg-pink-600 ring-2 ring-pink-100' : 'bg-gray-300'} ${className}`}
   />
 );
 
@@ -27,7 +27,7 @@ export const PresenceView = ({ info, compact = false, className = '' }) => {
     );
   }
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs ${info.online ? 'text-green-700 font-semibold' : 'text-gray-500'} ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 text-xs ${info.online ? 'text-pink-700 font-semibold' : 'text-gray-500'} ${className}`}>
       <Dot online={info.online} />
       {text}
     </span>
