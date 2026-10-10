@@ -2,7 +2,7 @@
 // Lightweight, transparent project matching for the "find your first project" wizard.
 // No ML, a weighted score on profile overlap. Easy to reason about and tune.
 
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { suggestTracks, trackForRole } from './roleTaxonomy';
 
@@ -129,7 +129,9 @@ const loadOpenProjects = () => {
   const promise = getDocs(
     query(
       collection(db, 'projects'),
-      where('status', 'in', ['active', 'lead_recruitment', 'setup'])
+      where('status', 'in', ['active', 'lead_recruitment', 'setup']),
+      // A cap so the dashboard card stays cheap as the board grows.
+      limit(80)
     )
   ).then((snap) =>
     snap.docs

@@ -66,6 +66,7 @@ const Settings = () => {
   const [reminders, setReminders] = useState(true);
   const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
   const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
+  const [loadFailed, setLoadFailed] = useState(false);
   const [form, setForm] = useState({
     displayName: '',
     bio: '',
@@ -82,6 +83,7 @@ const Settings = () => {
     githubUrl: '',
     emailPublic: false,
     interests: [],
+    industryInterests: [],
   });
 
   // Delete account state
@@ -155,6 +157,7 @@ const Settings = () => {
         }
       } catch (e) {
         console.error('Error fetching profile:', e);
+        setLoadFailed(true);
       }
       setLoading(false);
     };
@@ -162,6 +165,11 @@ const Settings = () => {
   }, [currentUser]);
 
   const handleSaveProfile = async () => {
+    // Never save a blank form over a profile that didn't load.
+    if (loadFailed) {
+      toast.error('Your profile didn’t load, so nothing was saved. Check your connection and refresh the page.');
+      return;
+    }
     if (!form.displayName.trim()) {
       toast.error('Name is required');
       return;
@@ -253,6 +261,12 @@ const Settings = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Settings</h1>
+      {loadFailed && (
+        <div className="mb-6 rounded-xl border border-pink-200 bg-pink-50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" role="alert">
+          <p className="text-sm text-gray-800">We couldn’t load your profile. Check your connection, then try again.</p>
+          <button type="button" onClick={() => window.location.reload()} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Try again</button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-gray-200">

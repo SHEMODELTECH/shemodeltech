@@ -51,7 +51,8 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
           ]);
           return Math.max(review + removal - both, 0);
         })(),
-        isAdmin ? count(query(collection(db, 'sponsor_requests'), where('status', '==', 'new'))) : 0,
+        // Funding requests from Support our mission (the old company sponsor requests are retired).
+        isAdmin ? count(query(collection(db, 'funding_requests'), where('status', '==', 'new'))) : 0,
         count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
         count(query(collection(db, 'jobs'), where('status', '==', 'removal_requested'))),
         count(query(collection(db, 'projects'), where('sizeRequest.status', '==', 'pending'))),
@@ -75,7 +76,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),
     ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),
-    ...(isAdmin ? [['Sponsorship requests', c.sponsors, 'Companies asking to sponsor a cohort', { to: '/admin/cohorts' }]] : []),
+    ...(isAdmin ? [['Funding requests', c.sponsors, 'People and companies offering to fund a cohort', { to: '/admin?tab=sponsors' }]] : []),
     ['Job post deletion requests', c.jobDeletes, 'Companies asking to delete a job post (unpublished meanwhile)', { to: '/jobs' }],
     ...(isAdmin ? [['Deletion requests', c.deletions, 'Leads asking to delete a project', { tab: 'deletions' }]] : []),
   ];

@@ -86,7 +86,12 @@ const UserProfile = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const userParam = userEmail ? decodeURIComponent(userEmail).trim() : '';
+  // The router has already decoded the address; decode again only if that's
+  // safe (a stray % would otherwise crash the page).
+  const userParam = (() => {
+    if (!userEmail) return '';
+    try { return decodeURIComponent(userEmail).trim(); } catch (_) { return String(userEmail).trim(); }
+  })();
 
   const [profile, setProfile] = useState(null);
   const [mentorCerts, setMentorCerts] = useState([]);
@@ -260,8 +265,8 @@ const UserProfile = () => {
             <button onClick={() => navigate(-1)} className="flex-1 bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-200 transition-all">
               Go Back
             </button>
-            <button onClick={() => navigate('/members-directory')} className="flex-1 bg-pink-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-pink-700 transition-all">
-              Browse Members
+            <button onClick={() => navigate('/proof-wall')} className="flex-1 bg-pink-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-pink-700 transition-all">
+              Go to the Proof Wall
             </button>
           </div>
         </div>

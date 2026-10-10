@@ -100,7 +100,7 @@ const gatherProjectCandidates = async (currentUser, appliedProjectIds) => {
     const snap = await getDocs(query(
       collection(db, 'projects'),
       where('status', 'in', ['active', 'lead_recruitment']),
-      limit(300) // safety cap: this runs on every dashboard visit
+      limit(100) // safety cap: only runs when the saved answer has expired
     ));
     const applied = new Set(appliedProjectIds || []);
     return snap.docs
@@ -184,20 +184,25 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
   const { userDoc, appliedProjectIds, profile } = await gatherProfile(currentUser);
   if (userDoc?.isCompany) return null; // individuals only
 
-  const [projectCandidates] = await Promise.all([
-    gatherProjectCandidates(currentUser, appliedProjectIds),
-  ]);
+  // Serve the saved answer first (fresh, and her profile hasn't changed), so a
+  // dashboard visit doesn't re-read every open project just to confirm it.
+  // New projects are picked up when the saved answer expires (CACHE_HOURS).
+  const profileKey = fingerprint({ v: 3, profile });
+  const cached = userDoc?.aiRecs;
+  const fresh = cached?.generatedAt && (Date.now() - cached.generatedAt) < CACHE_HOURS * 3600 * 1000;
+  if (!opts.force && fresh && cached.profileKey === profileKey && cached.data) {
+    return { ...cached.data, generatedAt: cached.generatedAt, fromCache: true };
+  }
 
+  const projectCandidates = await gatherProjectCandidates(currentUser, appliedProjectIds);
   const key = fingerprint({
     v: 2, // bump when the recommendation shape/logic changes to invalidate old caches
     profile,
     p: projectCandidates.map(p => p.id),
   });
-
-  // Serve from cache if fresh and the inputs haven't changed.
-  const cached = userDoc?.aiRecs;
-  const fresh = cached?.generatedAt && (Date.now() - cached.generatedAt) < CACHE_HOURS * 3600 * 1000;
   if (!opts.force && fresh && cached.key === key && cached.data) {
+    // Same profile inputs and projects as last time: just remember the profile key.
+    updateDoc(doc(db, 'users', currentUser.uid), { 'aiRecs.profileKey': profileKey }).catch(() => {});
     return { ...cached.data, generatedAt: cached.generatedAt, fromCache: true };
   }
 
@@ -245,7 +250,7 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
   // Cache on the user doc (best-effort; a cache failure shouldn't break the UI).
   try {
     await updateDoc(doc(db, 'users', currentUser.uid), {
-      aiRecs: { data: result, generatedAt, key },
+      aiRecs: { data: result, generatedAt, key, profileKey },
     });
   } catch (_) {}
 

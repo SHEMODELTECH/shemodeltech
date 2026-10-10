@@ -34,6 +34,7 @@ import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../uti
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
 import EventsAdmin from '../../components/admin/EventsAdmin';
+import FundingRequestsAdmin from '../../components/admin/FundingRequestsAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
@@ -1010,6 +1011,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
       {/* Sponsors tab (admins): sponsor thank-yous and recorded gifts. */}
       {!loadingData && tab === 'sponsors' && isAdmin && (
         <div>
+          <FundingRequestsAdmin />
           <SponsorsAdmin />
           <GiftsAdmin />
         </div>
@@ -1152,7 +1154,9 @@ const AdminPanel = ({ only = null, bare = false }) => {
                 <div className="flex gap-2">
                   <button
                     onClick={async () => {
-                      const d = new Date(`${p.endDate}T12:00:00`);
+                      // No (or a broken) deadline on the project: extend from today.
+                      let d = new Date(`${p.endDate}T12:00:00`);
+                      if (!p.endDate || Number.isNaN(d.getTime())) d = new Date();
                       d.setDate(d.getDate() + Number(p.extensionRequest.days || 7));
                       const newEnd = d.toISOString().slice(0, 10);
                       const data = {

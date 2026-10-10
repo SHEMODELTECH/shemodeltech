@@ -415,8 +415,9 @@ const ProofWall = () => {
       try {
         const { collection: col, getDocs, query: q, where, limit: lim } = await import('firebase/firestore');
         // Avoid composite-index needs: filter by status only, then refine in JS.
-        // Capped so the feed never downloads an unbounded project list.
-        const snap = await getDocs(q(col(db, 'projects'), where('status', '==', 'active'), lim(200)));
+        // Capped so the feed never downloads an unbounded project list. The
+        // "all" feed only shows two open projects, so it fetches just a few.
+        const snap = await getDocs(q(col(db, 'projects'), where('status', '==', 'active'), lim(filter === 'all' ? 6 : 200)));
         const list = snap.docs
           .map((d) => ({ id: d.id, ...d.data() }))
           .filter((p) => p.applicationsOpen !== false);
@@ -533,7 +534,7 @@ const ProofWall = () => {
   // Views, clicks and reactions for the cards on screen.
   const statKeysKey = [
     ...items.map((a) => statKey('a', a.id)),
-    ...openProjects.map((p) => statKey('p', p.id)),
+    ...(filter === 'all' ? openProjects.slice(0, 2) : openProjects).map((p) => statKey('p', p.id)),
     ...talent.map((m) => statKey('t', m.uid)),
   ].filter(Boolean).sort().join(',');
   useEffect(() => {

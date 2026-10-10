@@ -108,28 +108,9 @@ export const AuthProvider = ({ children }) => {
               }
             });
             console.log('✅ Existing user auto-subscribed to both digests');
-          } else {
-            // 🔥 OPTIONAL: Auto-subscribe existing users who have dailyDigest = false
-            const currentPrefs = userData.emailPreferences;
-            if (currentPrefs.dailyDigest === false) {
-              console.log('🔄 Enabling daily digest for existing user');
-              await updateDoc(userDocRef, {
-                'emailPreferences.dailyDigest': true,
-                'emailPreferences.lastUpdated': new Date()
-              });
-              console.log('✅ Existing user auto-subscribed to daily digest');
-            }
-            
-            // Ensure weekly digest is also enabled
-            if (currentPrefs.weeklyDigest === false) {
-              console.log('🔄 Enabling weekly digest for existing user');
-              await updateDoc(userDocRef, {
-                'emailPreferences.weeklyDigest': true,
-                'emailPreferences.lastUpdated': new Date()
-              });
-              console.log('✅ Existing user auto-subscribed to weekly digest');
-            }
           }
+          // Members who turned a digest off in Settings keep it off: signing in
+          // again never re-subscribes them.
         }
       }
 

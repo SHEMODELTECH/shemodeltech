@@ -13,8 +13,10 @@ import { useEffect, useState } from 'react';
 import { collection, doc, documentId, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
-const HEARTBEAT_MS = 3 * 60 * 1000; // refresh every 3 minutes while visible
-export const ONLINE_WINDOW_MS = 6 * 60 * 1000; // no refresh for 6 minutes = offline
+// Every 10 minutes keeps database writes low on the free plan; switching away
+// or closing the tab still marks a member offline straight away.
+const HEARTBEAT_MS = 10 * 60 * 1000; // refresh every 10 minutes while visible
+export const ONLINE_WINDOW_MS = 15 * 60 * 1000; // no refresh for 15 minutes = offline
 
 const write = (uid, state, hidden = false) =>
   setDoc(doc(db, 'presence', uid), { state, hidden, lastActive: serverTimestamp() }).catch(() => {});

@@ -404,7 +404,7 @@ const SinglePost = () => {
             recipientUids: combined.map((u) => u.uid).filter(Boolean),
             title: 'You were mentioned',
             body: `${currentUser.displayName || 'A member'} mentioned you in a reply.`,
-            link: `/community/post/${postId}`,
+            link: `/post/${postId}`,
             level: 'social',
           });
 

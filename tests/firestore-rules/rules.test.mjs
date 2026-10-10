@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import {
-  doc, setDoc, addDoc, updateDoc, deleteDoc, collection, serverTimestamp, Timestamp, writeBatch,
+  doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, serverTimestamp, Timestamp, writeBatch,
   increment, arrayUnion, arrayRemove, deleteField,
 } from 'firebase/firestore';
 
@@ -223,6 +223,38 @@ check('users create with backdated createdAt', 'freshC', await signupCreate('fre
     const want = MODE === 'orig' ? 'allowed' : wantNew;
     check(name, who, await attempt(fn), want);
   }
+}
+
+// ---- Funding requests (Support our mission → "Contact us to fund a cohort") ----
+// Anyone can send one, signed in or not; only admins can read or change them.
+if (MODE !== 'orig') {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), 'funding_requests', 'fr1'), { name: 'Ada', email: 'ada@x.test', status: 'new', createdAt: OLD });
+  });
+  const anon = () => env.unauthenticatedContext().firestore();
+  const asMember = () => ctxFor('verU', true).firestore();
+  const asAdmin = () => ctxFor('staff1', false).firestore();
+  const asEditor = () => ctxFor('newStaff', false).firestore();
+  const good = {
+    name: 'Ada Lovelace', email: 'ada@example.org', organization: 'Analytical Ltd', phone: '',
+    giverType: 'company', fundingFor: 'cohort', amount: 'unsure', message: 'We would like to fund a team.',
+    status: 'new', createdAt: serverTimestamp(),
+  };
+  const cases = [
+    ['funding: visitor sends the form (SupportMission)', 'anon', () => addDoc(collection(anon(), 'funding_requests'), good), 'allowed'],
+    ['funding: member sends the form', 'verU', () => addDoc(collection(asMember(), 'funding_requests'), good), 'allowed'],
+    ['funding: extra field', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, staffAlerted: true }), 'denied'],
+    ['funding: sent as already funded', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, status: 'funded' }), 'denied'],
+    ['funding: backdated', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, createdAt: OLD }), 'denied'],
+    ['funding: bad email', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, email: 'not-an-email' }), 'denied'],
+    ['funding: empty message', 'anon', () => addDoc(collection(anon(), 'funding_requests'), { ...good, message: '' }), 'denied'],
+    ['funding: member reads a request', 'verU', () => getDoc(doc(asMember(), 'funding_requests', 'fr1')), 'denied'],
+    ['funding: editor reads a request', 'newStaff', () => getDoc(doc(asEditor(), 'funding_requests', 'fr1')), 'denied'],
+    ['funding: admin reads a request', 'staff1', () => getDoc(doc(asAdmin(), 'funding_requests', 'fr1')), 'allowed'],
+    ['funding: admin marks it in touch', 'staff1', () => updateDoc(doc(asAdmin(), 'funding_requests', 'fr1'), { status: 'in_touch', teamNote: 'Called', updatedBy: 'staff1@x.test', updatedAt: serverTimestamp() }), 'allowed'],
+    ['funding: member changes a request', 'verU', () => updateDoc(doc(asMember(), 'funding_requests', 'fr1'), { status: 'closed' }), 'denied'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);

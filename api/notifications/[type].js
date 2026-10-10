@@ -36,10 +36,10 @@ function checkEnvVars() {
 
 function getApplicationApprovedEmail(applicationData, projectData) {
   const projectTitle = projectData?.projectTitle || applicationData.projectTitle || 'Project';
-  const groupId = projectData?.groupId;
-  const groupUrl = groupId 
-    ? `${SITE}/groups/${encodeURIComponent(groupId)}` 
-    : `${SITE}/my-groups`;
+  // The project's own page (it opens the team workspace for members).
+  const groupUrl = projectData?.projectId
+    ? `${SITE}/projects/${encodeURIComponent(projectData.projectId)}`
+    : `${SITE}/my-workspaces`;
 
   return {
     to: applicationData.applicantEmail,
@@ -92,7 +92,7 @@ function getApplicationApprovedEmail(applicationData, projectData) {
                 <li>Use our AI-powered Career Navigator for personalized guidance</li>
               </ul>
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${esc(groupUrl)}" class="button">Join Your Team Group</a>
+                <a href="${esc(groupUrl)}" class="button">Open your project</a>
               </div>
             </div>
             <div class="footer">
@@ -103,7 +103,7 @@ function getApplicationApprovedEmail(applicationData, projectData) {
         </body>
       </html>
     `,
-    text: `Application Approved: Welcome to ${projectTitle}\n\nCongratulations, ${applicationData.applicantName || 'Team Member'}!\nYour application has been approved!\n\nProject: ${projectTitle}\nRole: ${applicationData.roleAppliedFor || 'Team Member'}\nProject Owner: ${projectData?.contactName || applicationData.projectOwner || 'Project Team'}\n\nJoin Your Team: ${groupUrl}`
+    text: `Application Approved: Welcome to ${projectTitle}\n\nCongratulations, ${applicationData.applicantName || 'Team Member'}!\nYour application has been approved!\n\nProject: ${projectTitle}\nRole: ${applicationData.roleAppliedFor || 'Team Member'}\nProject Owner: ${projectData?.contactName || applicationData.projectOwner || 'Project Team'}\n\nOpen your project: ${groupUrl}`
   };
 }
 
@@ -177,6 +177,10 @@ function getApplicationRejectedEmail(applicationData, projectData, rejectionReas
 }
 
 function getBadgeAwardedEmail(badgeData, projectData, memberData) {
+  // Her own profile, where the Badges section lists every badge she's earned.
+  const badgesUrl = memberData?.memberEmail
+    ? `${SITE}/profile/${encodeURIComponent(String(memberData.memberEmail).toLowerCase())}`
+    : `${SITE}/dashboard`;
   const badgeCategories = {
     'mentorship': { name: 'TechMO Badge', color: '#F59E0B', emoji: '🎓', image: '/Images/TechMO.png', description: 'Mentorship & Leadership Excellence' },
     'quality-assurance': { name: 'TechQA Badge', color: '#D41470', emoji: '🔍', image: '/Images/TechQA.png', description: 'Quality Assurance & Testing Mastery' },
@@ -244,7 +248,7 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
                   <p style="color: #92400E; margin: 0; font-style: italic;">"${esc(badgeData.adminNotes)}"</p>
                 </div>` : ''}
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${SITE}/" class="button">View Your Badge Collection</a>
+                <a href="${esc(badgesUrl)}" class="button">View Your Badge Collection</a>
               </div>
             </div>
             <div class="footer">
@@ -255,14 +259,14 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
         </body>
       </html>
     `,
-    text: `Congratulations! You've Earned a ${badgeInfo.name}\n\nDear ${memberData.memberName || 'Team Member'},\nBadge: ${badgeInfo.name} (${badgeLevel})\nProject: ${projectData.projectTitle}\nRole: ${memberData.memberRole || 'Team Member'}\n\nView your badges: ${SITE}/`
+    text: `Congratulations! You've Earned a ${badgeInfo.name}\n\nDear ${memberData.memberName || 'Team Member'},\nBadge: ${badgeInfo.name} (${badgeLevel})\nProject: ${projectData.projectTitle}\nRole: ${memberData.memberRole || 'Team Member'}\n\nView your badges: ${badgesUrl}`
   };
 }
 
 function getMentionEmail(notificationData, mentionedUser, mentioner, postData) {
   const mentionerName = mentioner.displayName || mentioner.firstName || mentioner.email || 'Someone';
   const mentionedName = mentionedUser.displayName || mentionedUser.firstName || 'there';
-  const postUrl = `${SITE}/community/post/${encodeURIComponent(notificationData?.postId || '')}`;
+  const postUrl = `${SITE}/post/${encodeURIComponent(notificationData?.postId || '')}`;
   const postContent = typeof postData?.content === 'string' ? postData.content : '';
 
   return {
@@ -414,7 +418,7 @@ async function buildApplicationDecision(type, body, user, sender) {
   if (type === 'send-application-approved') {
     return getApplicationApprovedEmail(
       { applicantEmail: to, applicantName: clip(app.applicantName, 120), roleAppliedFor: clip(app.role, 120), projectOwner: leadName },
-      { projectTitle, contactName: leadName }
+      { projectTitle, contactName: leadName, projectId: app.projectId }
     );
   }
   return getApplicationRejectedEmail(

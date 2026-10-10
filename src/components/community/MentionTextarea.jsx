@@ -22,6 +22,9 @@ const MentionTextarea = ({
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const mentionTimer = useRef(null);
+  const mentionCache = useRef(new Map());
+  const latestMentionQuery = useRef('');
   const [mentionQuery, setMentionQuery] = useState('');
   const [mentionStartIndex, setMentionStartIndex] = useState(-1);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
@@ -88,19 +91,39 @@ const MentionTextarea = ({
       setMentionStartIndex(mentionMatch.index);
       
       if (query.length >= 1) {
-        try {
-          const users = await searchUsers(query);
+        // Search once she pauses typing (not on every key), and remember
+        // recent answers, so mentions cost a few reads instead of dozens.
+        const show = (users) => {
+          if (latestMentionQuery.current !== query) return;
           setSuggestions(users);
           setShowSuggestions(users.length > 0);
           setSelectedSuggestionIndex(0);
-        } catch (error) {
-          console.error('Error fetching user suggestions:', error);
-          setShowSuggestions(false);
+        };
+        latestMentionQuery.current = query;
+        clearTimeout(mentionTimer.current);
+        const key = query.toLowerCase();
+        if (mentionCache.current.has(key)) {
+          show(mentionCache.current.get(key));
+          return;
         }
+        mentionTimer.current = setTimeout(async () => {
+          try {
+            const users = await searchUsers(query);
+            mentionCache.current.set(key, users);
+            show(users);
+          } catch (error) {
+            console.error('Error fetching user suggestions:', error);
+            if (latestMentionQuery.current === query) setShowSuggestions(false);
+          }
+        }, 300);
       } else {
+        latestMentionQuery.current = '';
+        clearTimeout(mentionTimer.current);
         setShowSuggestions(false);
       }
     } else {
+      latestMentionQuery.current = '';
+      clearTimeout(mentionTimer.current);
       setShowSuggestions(false);
     }
   };

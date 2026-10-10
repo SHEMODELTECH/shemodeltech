@@ -795,6 +795,24 @@ service cloud.firestore {
  allow read, update, delete: if isAdmin();
  }
 
+ // Funding requests from the "Fund a cohort" form on Support our mission.
+ // Anyone can send one (signed in or not); only admins read and manage them
+ // (Admin → Sponsors). The server sends the alert emails (api/public-request).
+ match /funding_requests/{id} {
+ allow create: if request.resource.data.status == 'new'
+ && request.resource.data.name is string && request.resource.data.name.size() > 1 && request.resource.data.name.size() <= 120
+ && request.resource.data.email is string && request.resource.data.email.size() <= 200 && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+ && request.resource.data.organization is string && request.resource.data.organization.size() <= 150
+ && request.resource.data.phone is string && request.resource.data.phone.size() <= 40
+ && request.resource.data.giverType in ['company', 'foundation', 'individual', 'other']
+ && request.resource.data.fundingFor in ['cohort', 'team', 'laptops', 'unsure']
+ && request.resource.data.amount in ['under1k', '1k-5k', '5k-20k', 'over20k', 'unsure']
+ && request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 3000
+ && request.resource.data.createdAt == request.time
+ && request.resource.data.keys().hasOnly(['name', 'email', 'organization', 'phone', 'giverType', 'fundingFor', 'amount', 'message', 'status', 'createdAt']);
+ allow read, update, delete: if isAdmin();
+ }
+
  match /summitPartners/{id} {
  // Retired: the Summit was replaced by Events. Old requests stay readable.
  allow create: if false;
