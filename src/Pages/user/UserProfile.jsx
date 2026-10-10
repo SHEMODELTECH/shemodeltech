@@ -8,6 +8,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import BadgeShowcase from '../../components/BadgeShowcase';
+import CollapseToggle, { useCollapsed } from '../../components/CollapseToggle';
 import { collection, query, where, limit, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import FollowButton from '../../components/community/FollowButton';
@@ -36,9 +37,9 @@ const EDUCATION_LABEL = { high_school: 'High school', undergrad: 'Undergraduate'
 
 const toMs = (v) => (v?.toMillis ? v.toMillis() : v?.seconds ? v.seconds * 1000 : v ? new Date(v).getTime() || 0 : 0);
 
-const Card = ({ title, children, action }) => (
+const Card = ({ title, children, action, folded = false }) => (
   <section className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6 print:break-inside-avoid">
-    <div className="flex items-center justify-between gap-3 mb-4">
+    <div className={`flex items-center justify-between gap-3 ${folded ? 'print:mb-4' : 'mb-4'}`}>
       <h2 className="text-lg font-bold text-gray-900">{title}</h2>
       {action}
     </div>
@@ -77,6 +78,9 @@ const UserProfile = () => {
   const [doneProjects, setDoneProjects] = useState([]);
   const completedCount = doneProjects.length;
   const [courseCerts, setCourseCerts] = useState([]);
+  // Long sections can be folded (remembered on this device; printing shows everything).
+  const [mentorFolded, toggleMentor] = useCollapsed('profile-mentor', currentUser?.uid);
+  const [coursesFolded, toggleCourses] = useCollapsed('profile-courses', currentUser?.uid);
 
   useEffect(() => {
     if (!currentUser) { navigate('/login'); }
@@ -444,10 +448,15 @@ const UserProfile = () => {
                   </p>
                 </div>
               </div>
-              <MentorBadge count={mentorCerts.length || profile.mentorApprovedCourses || 0} isMentor />
+              <div className="flex items-center gap-4">
+                <MentorBadge count={mentorCerts.length || profile.mentorApprovedCourses || 0} isMentor />
+                {mentorCerts.length > 0 && (
+                  <span className="print:hidden"><CollapseToggle collapsed={mentorFolded} onToggle={toggleMentor} controls="profile-mentor-courses" /></span>
+                )}
+              </div>
             </div>
             {mentorCerts.length > 0 && (
-              <ul className="mt-4 divide-y divide-gray-100 border-t border-gray-100">
+              <ul id="profile-mentor-courses" className={`mt-4 divide-y divide-gray-100 border-t border-gray-100 ${mentorFolded ? 'hidden print:block' : ''}`}>
                 {mentorCerts.map((c) => (
                   <li key={c.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
                     <div className="min-w-0">
@@ -494,9 +503,18 @@ const UserProfile = () => {
 
         {/* Courses completed, each with its certificate. */}
         {!profile.isCompany && (courseCerts.length > 0 || isOwnProfile) && (
-          <Card title="Courses completed">
+          <Card
+            title="Courses completed"
+            folded={coursesFolded && courseCerts.length > 0}
+            action={courseCerts.length > 0 ? (
+              <span className="flex items-center gap-3 print:hidden">
+                {coursesFolded && <span className="text-sm text-gray-500">{courseCerts.length}</span>}
+                <CollapseToggle collapsed={coursesFolded} onToggle={toggleCourses} controls="profile-courses-list" />
+              </span>
+            ) : null}
+          >
             {courseCerts.length > 0 ? (
-              <ul className="divide-y divide-gray-100">
+              <ul id="profile-courses-list" className={`divide-y divide-gray-100 ${coursesFolded ? 'hidden print:block' : ''}`}>
                 {courseCerts.map((c) => (
                   <li key={c.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
                     <div className="min-w-0">
