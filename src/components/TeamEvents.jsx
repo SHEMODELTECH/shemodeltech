@@ -2,14 +2,13 @@
 // Project workspace: team events.
 //   HostEventLink - small "Host an event" link by the workspace title, always
 //                   there for team members 18+ (a workshop, talk, or demo day).
-//   DemoDayStrip  - one slim line in the project's last week (or once it's
-//                   done): "Show what you built: host a demo day". Hideable.
+//   DemoDayStrip  - one slim line once the project is completed: "Show what
+//                   you built: host a demo day". Hideable.
 // Both open Events → Host an event with the project linked. Under-18
 // teammates are asked to let their lead host (hosting is for 18+).
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserDocCached } from '../utils/firestoreHelpers';
-import { daysUntil } from '../utils/cohorts';
 
 const useCanHost = (uid) => {
   const [profile, setProfile] = useState(undefined);
@@ -41,8 +40,9 @@ export const DemoDayStrip = ({ project, projectId, uid }) => {
   const [hidden, setHidden] = useState(() => {
     try { return localStorage.getItem(key) === '1'; } catch (_) { return false; }
   });
-  const left = project?.endDate ? daysUntil(project.endDate) : null;
-  const due = project?.status === 'completed' || (left !== null && left <= 7);
+  // Only once the project is completed, so it never pulls the team away from
+  // finishing and submitting their work.
+  const due = project?.status === 'completed';
   if (!due || hidden || can === undefined) return null;
   const hide = () => {
     setHidden(true);
