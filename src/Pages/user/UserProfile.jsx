@@ -47,6 +47,66 @@ const Card = ({ title, children, action, folded = false, id }) => (
   </section>
 );
 
+// Her latest Proof Wall updates (only her own posts, newest first). Reads a
+// handful of her activity items; no special index needed.
+const fmtDay = (ts) => {
+  const d = ts?.toDate ? ts.toDate() : null;
+  return d ? d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+};
+const RecentUpdates = ({ uid, viewerUid }) => {
+  const [items, setItems] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const [folded, toggle] = useCollapsed('profile-updates', viewerUid);
+  useEffect(() => {
+    if (!uid) return;
+    let alive = true;
+    getDocs(query(collection(db, 'activity'), where('actorId', '==', uid), limit(40)))
+      .then((s) => {
+        if (!alive) return;
+        const rows = s.docs.map((d) => ({ id: d.id, ...d.data() }))
+          .filter((a) => a.type === 'update' && (a.text || a.imageUrl))
+          .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        setItems(rows);
+      })
+      .catch(() => alive && setItems([]));
+    return () => { alive = false; };
+  }, [uid]);
+  if (!items || items.length === 0) return null;
+  const shown = showAll ? items.slice(0, 10) : items.slice(0, 3);
+  return (
+    <Card
+      title="Recent updates"
+      folded={folded}
+      action={(
+        <span className="flex items-center gap-3 print:hidden">
+          {folded && <span className="text-sm text-gray-500">{items.length}</span>}
+          <CollapseToggle collapsed={folded} onToggle={toggle} controls="profile-updates-list" />
+        </span>
+      )}
+    >
+      <div id="profile-updates-list" className={folded ? 'hidden print:block' : ''}>
+        <ul className="divide-y divide-gray-100">
+          {shown.map((a) => (
+            <li key={a.id} className="py-3 flex gap-3">
+              {a.imageUrl && <img src={a.imageUrl} alt="" className="w-16 h-16 rounded-lg object-cover border border-gray-200 flex-shrink-0" />}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-gray-500">{[a.projectTitle, fmtDay(a.createdAt)].filter(Boolean).join(' · ')}</p>
+                {a.text && <p className="text-sm text-gray-800 mt-0.5 line-clamp-3 whitespace-pre-line">{a.text}</p>}
+                <Link to={`/proof-wall?post=${a.id}`} className="inline-block mt-1 text-xs font-semibold text-pink-700 hover:underline print:hidden">View on the Proof Wall</Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {items.length > 3 && (
+          <button type="button" onClick={() => setShowAll((v) => !v)} className="mt-2 text-sm font-semibold text-pink-700 hover:underline print:hidden">
+            {showAll ? 'Show fewer' : `Show more (${Math.min(items.length, 10) - 3})`}
+          </button>
+        )}
+      </div>
+    </Card>
+  );
+};
+
 const UserProfile = () => {
   const { userEmail } = useParams();
   const { currentUser } = useAuth();
@@ -536,6 +596,9 @@ const UserProfile = () => {
             )}
           </Card>
         )}
+
+        {/* Her latest Proof Wall updates */}
+        {!profile.isCompany && profile.uid && <RecentUpdates uid={profile.uid} viewerUid={currentUser?.uid} />}
 
         {/* Skills and education */}
         {!profile.isCompany && (skillList.length > 0 || education) && (
