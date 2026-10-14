@@ -830,17 +830,11 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
         }
         return (
           <div className="mb-4 space-y-3">
-            {next && (
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-pink-50/60 border border-pink-100 px-4 py-3">
-                <p className="text-sm text-gray-800"><span className="font-semibold">Next step:</span> {next.text}</p>
-                {next.button}
-              </div>
-            )}
             <div className="flex flex-wrap items-center gap-2">
-              <Link to={`/projects/${project.id}/workspace`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg text-xs flex items-center">Open workspace</Link>
+              <Link to={`/projects/${project.id}/workspace`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center">Open workspace</Link>
               <Link to={`/projects/${project.id}`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg text-xs flex items-center">View details</Link>
               {active && !isSetup && (
-                <Link to={`/projects/${project.id}/setup`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center">Edit project</Link>
+                <Link to={`/projects/${project.id}/setup`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg text-xs flex items-center">Edit project</Link>
               )}
               {active && pendingApps.length > 0 && !isSetup && (
                 <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center">{reviewLabel}</Link>
@@ -889,6 +883,12 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                 </details>
               )}
             </div>
+            {next && (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-pink-50/60 border border-pink-100 px-4 py-3">
+                <p className="text-sm text-gray-800"><span className="font-semibold">Next step:</span> {next.text}</p>
+                {next.button}
+              </div>
+            )}
           </div>
         );
       })()}
