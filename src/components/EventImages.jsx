@@ -12,6 +12,34 @@ import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
 
 export const MAX_EVENT_IMAGES = 5;
 
+// The upload server takes files up to about 3 MB, so big photos and
+// screenshots are resized (longest side 2000px) and saved as JPEG first.
+const LIMIT = 2.5 * 1024 * 1024;
+const shrink = (file) => new Promise((resolve) => {
+  if (file.size <= LIMIT || file.type === 'image/gif') return resolve(file);
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    URL.revokeObjectURL(url);
+    const scale = Math.min(1, 2000 / Math.max(img.width, img.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.width * scale);
+    c.height = Math.round(img.height * scale);
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; // transparent PNGs get a white background
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    const tryQ = (q) => c.toBlob((b) => {
+      if (!b) return resolve(file);
+      if (b.size > LIMIT && q > 0.5) return tryQ(q - 0.15);
+      resolve(new File([b], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }));
+    }, 'image/jpeg', q);
+    tryQ(0.85);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+  img.src = url;
+});
+
 export const EventImagesInput = ({ images = [], onChange, onUploading }) => {
   const [uploading, setUploading] = useState(false);
   const add = async (files) => {
@@ -28,10 +56,12 @@ export const EventImagesInput = ({ images = [], onChange, onUploading }) => {
     for (const file of picked) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        const up = await uploadImageToBlob(file, 'events');
+        const small = await shrink(file);
+        // eslint-disable-next-line no-await-in-loop
+        const up = await uploadImageToBlob(small, 'events');
         urls.push(up.url);
-      } catch (_) {
-        toast.error('Could not upload one of the images. Please try again.');
+      } catch (err) {
+        toast.error(`Could not upload ${file.name}. ${/large|413/i.test(err?.message || '') ? 'The image is too large.' : 'Please try again.'}`);
       }
     }
     onChange([...images, ...urls].slice(0, MAX_EVENT_IMAGES));
