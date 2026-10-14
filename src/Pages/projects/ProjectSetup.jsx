@@ -304,7 +304,9 @@ const ProjectSetup = () => {
         projectLink: form.projectLink.trim(),
         resources: { ...(form.submissionUrl ? { submissionUrl: form.submissionUrl.trim() } : {}) },
         teamRoles,
-        ...(fixedSize ? {} : { maxTeamSize, roleSlots }),
+        // The team size comes from the roles only when She Model Tech didn't set
+        // one (never on a paid cohort, where it's fixed).
+        ...(fixedSize || paidByShe ? {} : { maxTeamSize, roleSlots }),
         ...(isPaid && !paidByShe ? { totalBudget: computeTotalBudget(teamRoles) } : {}),
         status: 'active',
         // Only stamp openedAt on first open; keep the original on later edits.

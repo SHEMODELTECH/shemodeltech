@@ -295,6 +295,27 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Cohort projects: the lead opens her project (Project setup) ----
+// She Model Tech sets the team size; when none was set, the lead's roles set it once.
+if (MODE !== 'orig') {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    const db = ctx.firestore();
+    const base = { projectTitle: 'Transit Planner', projectDescription: 'Plan routes', submitterId: 'verU', members: [], status: 'setup',
+      isCohort: true, cohortId: 'c1', startDate: '2026-11-01', endDate: '2026-12-01', isActive: true };
+    await setDoc(doc(db, 'projects', 'coNoSize'), { ...base, maxTeamSize: 0 });
+    await setDoc(doc(db, 'projects', 'coSized'), { ...base, maxTeamSize: 5, roleSlots: 4 });
+  });
+  const lead = () => ctxFor('verU', true).firestore();
+  const open = (extra) => ({ status: 'active', teamRoles: [{ role: 'Developer', count: 3 }], leadDetails: 'Weekly calls on Mondays', updatedAt: serverTimestamp(), ...extra });
+  const cases = [
+    ['cohort: lead opens a project with no team size set (roles set it)', 'verU', () => updateDoc(doc(lead(), 'projects', 'coNoSize'), open({ maxTeamSize: 4, roleSlots: 3 })), 'allowed'],
+    ['cohort: lead changes a team size She Model Tech set', 'verU', () => updateDoc(doc(lead(), 'projects', 'coSized'), open({ maxTeamSize: 9, roleSlots: 8 })), 'denied'],
+    ['cohort: lead opens a project with a set team size', 'verU', () => updateDoc(doc(lead(), 'projects', 'coSized'), open({})), 'allowed'],
+    ['cohort: lead changes the dates', 'verU', () => updateDoc(doc(lead(), 'projects', 'coSized'), { endDate: '2027-01-01' }), 'denied'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 // ---- Member directory (Talent Board and Search; written only by the server) ----
 if (MODE !== 'orig') {
   await env.withSecurityRulesDisabled(async (ctx) => {

@@ -68,9 +68,9 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
         // The lead can add roles but can't remove or reduce these.
         proposedRoles: t.proposedRoles,
         briefRoles: t.briefRoles || t.proposedRoles,
-        ...(teamSize ? { maxTeamSize: Number(teamSize) } : {}),
+        // The team size staff chose (0 = the lead's roles decide it on opening).
+        maxTeamSize: teamSize ? Number(teamSize) : 0,
         teamRoles: [],
-        maxTeamSize: 0,
         status: 'lead_recruitment',
         // Draft projects are hidden until a reviewer reveals the cohort.
         isActive: !draft,

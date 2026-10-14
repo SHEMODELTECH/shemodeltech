@@ -390,9 +390,12 @@ service cloud.firestore {
  && (resource.data.get('isCompanyPost', false) == true
  || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'startDate', 'endDate', 'startAt', 'problemStatement', 'weeklyPlan', 'briefRoles']))
  // Cohort projects: She Model Tech sets the dates and the number of people
- // (leads create the roles within it, and request extra time).
+ // (leads create the roles within it, and request extra time). When no team
+ // size was set, the lead's roles set it once, as she opens the project.
  && (resource.data.get('isCohort', false) != true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId', 'maxTeamSize', 'roleSlots']))
+ || (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId'])
+ && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['maxTeamSize', 'roleSlots'])
+ || (resource.data.get('maxTeamSize', 0) == 0 && resource.data.get('roleSlots', 0) == 0))))
  // Paid cohorts: the lead can't change anything She Model Tech set.
  && (resource.data.get('cohortPaid', false) != true
  || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'industryTrack', 'proposedRoles', 'maxTeamSize', 'roleSlots', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid']))

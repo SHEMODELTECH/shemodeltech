@@ -121,7 +121,27 @@ const LeadApplicationReview = ({ bare = false }) => {
         .map((d) => ({ id: d.id, ...d.data() }))
         .filter((p) => !p.isCompanyPost && p.status !== 'completed');
       setAllProjects(active);
-      setProjects(active.filter((p) => !p.leadConfirmed || wanted.has(p.id)));
+      // Applications waiting for a decision whose project isn't live any more
+      // (hidden, completed, or deleted) would otherwise be counted but never
+      // shown. Load those projects too, with a label, so nobody is missed.
+      const known = new Set(active.map((p) => p.id));
+      const missingIds = [...new Set(apps
+        .filter((a) => ['submitted', 'interview_scheduled'].includes(a.status))
+        .flatMap((a) => a.rankedProjectIds || []))].filter((id) => !known.has(id));
+      const extras = [];
+      for (let i = 0; i < missingIds.length; i += 30) {
+        const ids = missingIds.slice(i, i + 30);
+        // eslint-disable-next-line no-await-in-loop
+        const snap = await getDocs(query(collection(db, 'projects'), where(documentId(), 'in', ids))).catch(() => null);
+        const found = new Map((snap ? snap.docs : []).map((d) => [d.id, { id: d.id, ...d.data() }]));
+        ids.forEach((id) => {
+          const p = found.get(id);
+          extras.push(p
+            ? { ...p, _notLive: p.status === 'completed' ? 'Completed' : p.isCompanyPost ? 'Company post' : 'Not live' }
+            : { id, projectTitle: 'A project that was removed', leadConfirmed: false, _notLive: 'Removed' });
+        });
+      }
+      setProjects([...active.filter((p) => !p.leadConfirmed || wanted.has(p.id)), ...extras]);
       setApplications(apps);
       // Tag mentors (a published course) and team members (an approved team application).
       (async () => {
@@ -335,7 +355,11 @@ const LeadApplicationReview = ({ bare = false }) => {
                       {[project.industryTrack, `${applicants.length} to lead`, `${(collabByProject[project.id] || []).length} to collaborate`].filter(Boolean).join(' · ')}
                     </p>
                   </div>
-                  {project.leadConfirmed ? (
+                  {project._notLive ? (
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-gray-900 text-white uppercase" title="This project isn't on the Projects board. Suggest another project to the applicant, or decline.">
+                      {project._notLive}
+                    </span>
+                  ) : project.leadConfirmed ? (
                     <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700 uppercase">
                       Led by {project.submitterName}
                     </span>
