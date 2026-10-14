@@ -14,9 +14,10 @@ import { signInAndReturn } from './learning/LearningLayout';
 import { alertStaff, notifyMember } from '../utils/staffAlerts';
 import { ShareDialogButton, shareUrl } from '../components/ShareButtons';
 import { SectionTabs } from '../components/SectionTabs';
+import { EventImageCarousel } from '../components/EventImages';
 import { useStaffRole } from '../components/MentorCourseStaffTools';
 import {
-  CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl, getRecordingUrl,
+  CATEGORY_LABEL, EVENT_CATEGORIES, eventImages, cancelRegistration, downloadIcs, formatWhen, getJoinUrl, getRecordingUrl,
   getEvent, getMyRegistration, googleCalendarUrl, isListed, isPast, listPublishedEvents, myRegistrations, register,
 } from '../utils/events';
 
@@ -297,11 +298,7 @@ export const EventDetail = () => {
           </div>
         ) : (
           <article className="mt-4">
-            {e.imageUrl && (
-              <a href={e.imageUrl} target="_blank" rel="noopener noreferrer" className="block w-fit max-w-full rounded-2xl overflow-hidden border border-gray-200" aria-label="Open the flyer full size">
-                <img src={e.imageUrl} alt={`${e.title} flyer`} className="block w-auto h-auto max-w-full max-h-[520px]" />
-              </a>
-            )}
+            {eventImages(e).length > 0 && <EventImageCarousel images={eventImages(e)} title={e.title} />}
             <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold">
               <span className="px-2.5 py-1 rounded-full bg-pink-50 text-pink-700">{CATEGORY_LABEL[e.category] || 'Event'}</span>
               <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">Online</span>

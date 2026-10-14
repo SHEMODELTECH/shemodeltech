@@ -739,8 +739,9 @@ service cloud.firestore {
  }
  function validHostedEvent(d) {
  return d.keys().hasOnly(['title', 'category', 'startAt', 'durationMins', 'hosts', 'description', 'capacity',
- 'imageUrl', 'published', 'status', 'hostUid', 'hostName', 'reviewStatus', 'reviewNote', 'createdAt', 'updatedAt',
+ 'imageUrl', 'images', 'published', 'status', 'hostUid', 'hostName', 'reviewStatus', 'reviewNote', 'createdAt', 'updatedAt',
  'projectId', 'projectTitle'])
+ && (!('images' in d) || (d.images is list && d.images.size() <= 5))
  && (d.get('projectId', null) == null || onProjectTeam(d.projectId))
  && d.hostUid == myUid()
  && d.published == false

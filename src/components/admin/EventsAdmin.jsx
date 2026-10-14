@@ -9,13 +9,13 @@ import { db } from '../../firebase/config';
 import { notifyMember, notifyMembers } from '../../utils/staffAlerts';
 import { logActivity as logProof } from '../../utils/activityFeed';
 import { readUsersForSending } from '../../utils/readUsersPaged';
-import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
+import { EventImagesInput } from '../EventImages';
 import {
-  CATEGORY_LABEL, EVENT_CATEGORIES, deleteEvent, formatWhen, getJoinUrl, getRecordingUrl, isPast, listAllEvents,
+  CATEGORY_LABEL, EVENT_CATEGORIES, eventImages, deleteEvent, formatWhen, getJoinUrl, getRecordingUrl, isPast, listAllEvents,
   listRegistrations, saveEvent, saveRecording, setPresenter, setShowOnPage,
 } from '../../utils/events';
 
-const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', published: false };
+const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', images: [], published: false };
 const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
 const label = 'block text-sm font-semibold text-gray-800 mb-1';
 
@@ -68,7 +68,7 @@ const EventsAdmin = () => {
     const joinUrl = await getJoinUrl(e.id);
     setF({
       title: e.title || '', category: e.category || 'workshop', when: toLocalInput(e.startAt), durationMins: e.durationMins || 60,
-      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '', published: !!e.published,
+      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '', images: eventImages(e), published: !!e.published,
     });
   };
 
@@ -90,7 +90,8 @@ const EventsAdmin = () => {
         hosts: f.hosts.trim(),
         description: f.description.trim(),
         capacity: Number(f.capacity) > 0 ? Number(f.capacity) : null,
-        imageUrl: f.imageUrl || null,
+        images: f.images.slice(0, 5),
+        imageUrl: f.images[0] || null,
         published: announce ? true : !!f.published,
         ...(original?.hostUid && (announce || f.published) ? { reviewStatus: 'approved' } : {}),
       };
@@ -287,36 +288,8 @@ const EventsAdmin = () => {
           <label className={label}>Places <span className="font-normal text-gray-500">(empty = no limit)</span><input type="number" min="1" className={input} value={f.capacity} onChange={set('capacity')} /></label>
           <label className={`${label} sm:col-span-2`}>Host and speakers <span className="font-normal text-gray-500">(optional)</span><input className={input} value={f.hosts} onChange={set('hosts')} placeholder="For example: Ada Lovelace and Grace Hopper" /></label>
           <div className="sm:col-span-2">
-            <span className={label}>Image or flyer <span className="font-normal text-gray-500">(optional; JPG, PNG or WebP, up to 10 MB)</span></span>
-            {f.imageUrl ? (
-              <div className="mt-1 flex items-start gap-3">
-                <img src={f.imageUrl} alt="" className="w-40 rounded-lg border border-gray-200" />
-                <button type="button" onClick={() => setF({ ...f, imageUrl: '' })} className="text-sm font-semibold text-gray-600 hover:text-gray-900">Remove</button>
-              </div>
-            ) : (
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                disabled={uploading}
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  e.target.value = '';
-                  if (!file) return;
-                  const bad = validateImageFile(file);
-                  if (bad) return toast.error(bad);
-                  setUploading(true);
-                  try {
-                    const up = await uploadImageToBlob(file, 'events');
-                    setF((x) => ({ ...x, imageUrl: up.url }));
-                  } catch (err) {
-                    toast.error('Could not upload the image. Please try again.');
-                  }
-                  setUploading(false);
-                }}
-                className="mt-1 block text-sm"
-              />
-            )}
-            {uploading && <p className="text-xs text-gray-500 mt-1">Uploading…</p>}
+            <span className={label}>Images <span className="font-normal text-gray-500">(optional)</span></span>
+            <EventImagesInput images={f.images} onChange={(images) => setF((x) => ({ ...x, images }))} onUploading={setUploading} />
           </div>
           <label className={`${label} sm:col-span-2`}>Description *<textarea rows={4} className={input} value={f.description} onChange={set('description')} /></label>
           <label className={`${label} sm:col-span-2`}>Joining link <span className="font-normal text-gray-500">(Zoom, Google Meet…; only people with a place see it)</span><input className={input} value={f.joinUrl} onChange={set('joinUrl')} placeholder="https://" /></label>

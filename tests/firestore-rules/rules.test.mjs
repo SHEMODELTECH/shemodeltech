@@ -372,6 +372,8 @@ if (MODE !== 'orig') {
     ['events: staff publishes a member event', 'staff1', () => updateDoc(doc(ctxFor('staff1', false).firestore(), 'events', 'evOther'), { published: true, reviewStatus: 'approved' }), 'allowed'],
     ['events: team member hosts a demo day for her project', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { category: 'demoday', projectId: 'p1', projectTitle: 'Team app' })), 'allowed'],
     ['events: links an event to a project she is not on', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { projectId: 'p2', projectTitle: 'Other' })), 'denied'],
+    ['events: member event with 5 images', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { images: ['https://x/1.png', 'https://x/2.png', 'https://x/3.png', 'https://x/4.png', 'https://x/5.png'] })), 'allowed'],
+    ['events: member event with 6 images', 'verU', () => addDoc(collection(as('verU'), 'events'), ev('verU', { images: ['a', 'b', 'c', 'd', 'e', 'f'] })), 'denied'],
     ['events: host deletes her event under review', 'verU', () => deleteDoc(doc(as('verU'), 'events', 'evMine')), 'allowed'],
   ];
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);

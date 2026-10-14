@@ -10,14 +10,14 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
 import { alertStaff } from '../utils/staffAlerts';
-import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
+import { EventImagesInput } from '../components/EventImages';
 import { EventsTabs } from './Events';
 import { hasLink, isMeetingLink, normalizeLink, MEETING_SERVICES } from '../utils/noLinks';
 import {
-  CATEGORY_LABEL, EVENT_CATEGORIES, formatWhen, getJoinUrl, isPast, listMyHostedEvents, listRegistrations, submitHostedEvent,
+  CATEGORY_LABEL, EVENT_CATEGORIES, eventImages, formatWhen, getJoinUrl, isPast, listMyHostedEvents, listRegistrations, submitHostedEvent,
 } from '../utils/events';
 
-const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', projectId: null, projectTitle: null };
+const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', images: [], projectId: null, projectTitle: null };
 const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-pink-500';
 const label = 'block text-sm font-semibold text-gray-800';
 
@@ -95,7 +95,7 @@ const HostEvent = () => {
     const joinUrl = await getJoinUrl(e.id);
     setF({
       title: e.title || '', category: e.category || 'workshop', when: toLocalInput(e.startAt), durationMins: e.durationMins || 60,
-      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '',
+      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '', images: eventImages(e),
       projectId: e.projectId || null, projectTitle: e.projectTitle || null,
     });
   };
@@ -117,7 +117,8 @@ const HostEvent = () => {
         hosts: f.hosts.trim() || myName,
         description: f.description.trim().slice(0, 4000),
         capacity: Number(f.capacity) > 0 ? Number(f.capacity) : null,
-        imageUrl: f.imageUrl || null,
+        images: f.images.slice(0, 5),
+        imageUrl: f.images[0] || null,
         projectId: f.projectId || null,
         projectTitle: f.projectId ? f.projectTitle : null,
       };
@@ -208,36 +209,8 @@ const HostEvent = () => {
                 <label className={`${label} sm:col-span-2`}>Description *<textarea rows={4} className={`${input} mt-1`} value={f.description} onChange={set('description')} placeholder="What you’ll cover, who it’s for, and what people will leave with." /></label>
                 <label className={`${label} sm:col-span-2`}>Joining link * <span className="font-normal text-gray-500">({MEETING_SERVICES}; only people with a place see it)</span><input className={`${input} mt-1`} value={f.joinUrl} onChange={set('joinUrl')} placeholder="https://" /></label>
                 <div className="sm:col-span-2">
-                  <span className={label}>Image or flyer <span className="font-normal text-gray-500">(optional)</span></span>
-                  {f.imageUrl ? (
-                    <div className="mt-1 flex items-start gap-3">
-                      <img src={f.imageUrl} alt="" className="w-40 rounded-lg border border-gray-200" />
-                      <button type="button" onClick={() => setF({ ...f, imageUrl: '' })} className="text-sm font-semibold text-gray-600 hover:text-gray-900">Remove</button>
-                    </div>
-                  ) : (
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      disabled={uploading}
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        e.target.value = '';
-                        if (!file) return;
-                        const bad = validateImageFile(file);
-                        if (bad) return toast.error(bad);
-                        setUploading(true);
-                        try {
-                          const up = await uploadImageToBlob(file, 'events');
-                          setF((x) => ({ ...x, imageUrl: up.url }));
-                        } catch (err) {
-                          toast.error('Could not upload the image. Please try again.');
-                        }
-                        setUploading(false);
-                      }}
-                      className="mt-1 block text-sm"
-                    />
-                  )}
-                  {uploading && <p className="text-xs text-gray-500 mt-1">Uploading…</p>}
+                  <span className={label}>Images <span className="font-normal text-gray-500">(optional)</span></span>
+                  <EventImagesInput images={f.images} onChange={(images) => setF((x) => ({ ...x, images }))} onUploading={setUploading} />
                 </div>
                 <div className="sm:col-span-2 flex flex-wrap gap-2">
                   <button disabled={busy || uploading} onClick={submit} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-50">Send for review</button>

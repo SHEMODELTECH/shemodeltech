@@ -31,6 +31,8 @@ export const EVENT_CATEGORIES = [
 ];
 // Retired types stay labelled so older events still show correctly.
 export const CATEGORY_LABEL = { podcast: 'Podcast', demo: 'Live demo', ...Object.fromEntries(EVENT_CATEGORIES) };
+// An event's pictures (up to 5): the list, or the single flyer older events have.
+export const eventImages = (e) => (Array.isArray(e?.images) && e.images.length ? e.images : e?.imageUrl ? [e.imageUrl] : []);
 
 const SITE = typeof window !== 'undefined' ? window.location.origin : 'https://shemodeltech.com';
 const toMs = (iso) => (iso ? new Date(iso).getTime() : 0);
