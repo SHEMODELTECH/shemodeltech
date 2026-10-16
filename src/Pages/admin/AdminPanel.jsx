@@ -49,6 +49,7 @@ import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
 import FeedbackSummary from '../../components/admin/FeedbackSummary';
 import { ADMIN_SECTIONS } from '../../config/adminSections';
 import TeamApplicationsAdmin from '../../components/admin/TeamApplicationsAdmin';
+import { UserFilters, UsersCsvButton, matchesUserFilters } from '../../components/admin/UsersExport';
 
 const fmtDate = (ts) => {
   try {
@@ -149,6 +150,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
   const loadedTabs = useRef(new Set());
   // 'all' or 'unverified' (company accounts waiting for verification)
   const [userView, setUserView] = useState('all');
+  const [userFilters, setUserFilters] = useState({ age: 'all', type: 'all', track: 'all' });
 
   // --- Reviews tab ---
   const [reviewProjects, setReviewProjects] = useState([]);
@@ -763,6 +765,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
 
   const filteredUsers = users.filter((u) => {
     if (userView === 'unverified' && !(u.isCompany && !u.isVerified)) return false;
+    if (!matchesUserFilters(u, userFilters)) return false;
     if (!userSearch.trim()) return true;
     const q = userSearch.toLowerCase();
     return (
@@ -1367,8 +1370,12 @@ const AdminPanel = ({ only = null, bare = false }) => {
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full ${userView === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>{l}</button>
             ))}
           </div>
-          {userView === 'unverified' && filteredUsers.length === 0 && (
-            <p className="text-sm text-gray-500 mb-3">No companies are waiting for verification.</p>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <UserFilters value={userFilters} onChange={setUserFilters} />
+            {isAdmin && <UsersCsvButton users={filteredUsers} />}
+          </div>
+          {filteredUsers.length === 0 && (
+            <p className="text-sm text-gray-500 mb-3">{userView === 'unverified' ? 'No companies are waiting for verification.' : 'No one matches these filters.'}</p>
           )}
           <div className="space-y-2">
             {filteredUsers.slice(0, userLimit).map((u) => (
