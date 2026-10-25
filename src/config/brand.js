@@ -35,6 +35,10 @@ export const BRAND = {
   github: 'https://github.com/SHEMODELTECH',
   githubOrg: 'SHEMODELTECH',
 
+  // LinkedIn company page number (from linkedin.com/company/<number>/admin).
+  // "Add to LinkedIn" links use it so certificates and badges show our logo.
+  linkedinOrgId: '69187114',
+
   socials: {
     linkedin: 'https://www.linkedin.com/company/she-model-tech/',
     instagram: 'https://www.instagram.com/shemodeltech/',

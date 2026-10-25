@@ -15,6 +15,9 @@ const { escapeHtml: esc, safeUrl } = require('../../lib/escapeHtml');
 
 // Brand/config - override via Vercel env vars, never hardcode again.
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
+// Our LinkedIn page number (same as src/config/brand.js linkedinOrgId), so
+// badges added to LinkedIn show our logo.
+const LINKEDIN_ORG_ID = '69187114';
 const BRAND_NAME = 'She Model Tech';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
 
@@ -199,7 +202,7 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
   const linkedInUrl = `https://www.linkedin.com/profile/add?${new URLSearchParams({
     startTask: 'CERTIFICATION_NAME',
     name: `${badgeInfo.name.replace(/ Badge$/, '')} ${badgeLevel} badge, She Model Tech`,
-    organizationName: 'SHE MODEL TECH Inc.',
+    organizationId: LINKEDIN_ORG_ID,
     issueYear: String(now.getFullYear()),
     issueMonth: String(now.getMonth() + 1),
     certUrl: `${SITE}/badges`,

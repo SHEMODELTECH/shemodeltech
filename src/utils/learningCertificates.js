@@ -11,6 +11,7 @@
 // Certificates are public to read so anyone with the link can verify them.
 // Course certificates are issued by the server (api/notifications/issue-certificate)
 // after it checks the course is finished; they never store an email.
+import { BRAND } from '../config/brand';
 
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -66,7 +67,8 @@ export const linkedInAddUrl = (cert) => {
   const p = new URLSearchParams({
     startTask: 'CERTIFICATION_NAME',
     name: cert.type === 'mentor' ? `She Model Tech Mentor: ${cert.courseTitle}` : cert.courseTitle,
-    organizationName: 'SHE MODEL TECH Inc.',
+    // organizationId links the entry to our LinkedIn page, so our logo shows.
+    organizationId: BRAND.linkedinOrgId,
     issueYear: String(d.getFullYear()),
     issueMonth: String(d.getMonth() + 1),
     certUrl: certificateUrl(cert.id),
