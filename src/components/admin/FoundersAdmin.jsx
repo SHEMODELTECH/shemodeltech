@@ -45,7 +45,7 @@ const FoundersAdmin = () => {
       setRows((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data, decidedAt: { seconds: Date.now() / 1000 } } : x)));
       const first = (p.name || '').split(' ')[0] || 'there';
       const msg = status === 'accepted'
-        ? { title: 'You’re a She Model Tech founder!', body: `Hi ${first}, your pitch for ${p.ideaName} was accepted. ${CONFERENCE_NOTE} Your idea is now on the Founders page, so members can find you, and you can message members on the Talent Board to build your team.${note ? ` Note from She Model Tech: ${note}` : ''}`, link: '/founders', ctaLabel: 'Open Founders' }
+        ? { title: 'You’re a She Model Tech founder!', body: `Hi ${first}, your pitch for ${p.ideaName} was accepted. ${CONFERENCE_NOTE} Your idea is now on the Founders page, so members can find you, and you can message members on the Talent Board to build your team. Your teammates need at least one badge.${note ? ` Note from She Model Tech: ${note}` : ''}`, link: '/founders', ctaLabel: 'Open Founders' }
         : { title: 'Your She Model Tech pitch', body: `Hi ${first}, thank you for pitching ${p.ideaName}. We can’t accept it this time. ${note} You can improve it and apply again from the Founders page.`, link: '/founders', ctaLabel: 'Open Founders' };
       try {
         await addDoc(collection(db, 'notifications'), {

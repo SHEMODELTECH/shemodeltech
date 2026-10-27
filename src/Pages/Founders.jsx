@@ -149,6 +149,8 @@ const Founders = () => {
   }, [currentUser]);
 
   const blocker = profile === undefined ? undefined : founderBlocker(profile);
+  // Joining a founder's team also needs at least one badge.
+  const hasBadge = !!(profile?.badges || []).length;
   const shown = useMemo(() => (founders || [])
     .filter((p) => !track || (p.tracksNeeded || []).includes(track))
     .sort((a, b) => (b.decidedAt?.seconds || 0) - (a.decidedAt?.seconds || 0)), [founders, track]);
@@ -177,8 +179,8 @@ const Founders = () => {
     if (blocker === 'badge') {
       return (
         <div className="rounded-2xl border border-pink-100 bg-pink-50/60 p-5">
-          <p className="font-bold text-gray-900">Earn your first badge to apply</p>
-          <p className="text-sm text-gray-700 mt-1">Founders have finished at least one She Model Tech project. Join a project, finish it, and earn a badge, then come back and pitch your idea.</p>
+          <p className="font-bold text-gray-900">Earn your first badge to pitch or join a founder’s team</p>
+          <p className="text-sm text-gray-700 mt-1">Founders and their teams have finished at least one She Model Tech project. Join a project, finish it, and earn a badge, then come back to pitch your idea or join a founder.</p>
           <Link to="/projects" className="inline-block mt-3 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
         </div>
       );
@@ -224,6 +226,7 @@ const Founders = () => {
         <p className="text-xs font-bold uppercase tracking-wider text-pink-700">You’re a founder</p>
         <p className="font-bold text-gray-900 mt-1">{mine.ideaName}</p>
         <p className="text-sm text-gray-700 mt-1">{CONFERENCE_NOTE}</p>
+        <p className="text-sm text-gray-700 mt-1">Your teammates need at least one badge. You’ll see each member’s badges on the Talent Board and their profile.</p>
         {mine.decisionNote && <p className="text-sm text-gray-600 mt-1">Note from She Model Tech: “{mine.decisionNote}”</p>}
         <div className="mt-3 flex flex-wrap gap-2">
           <Link to="/talent-board" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find teammates on the Talent Board</Link>
@@ -238,12 +241,12 @@ const Founders = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Founders</h1>
-      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Founders pitch at She Model Tech Conference and build their teams here. See an idea you’d love to work on? Tap “I’m interested” to message the founder.</p>
+      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Founders pitch at She Model Tech Conference and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
 
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
         {[['1', 'Earn a badge', 'Finish a She Model Tech project and earn at least one badge.'],
           ['2', 'Apply to pitch', 'Tell us your idea. She Model Tech reviews every pitch.'],
-          ['3', 'Pitch and build', 'Pitch at She Model Tech Conference, and message members to join your team.']].map(([n, t, d]) => (
+          ['3', 'Pitch and build', 'Pitch at She Model Tech Conference, and build your team with members who have at least one badge.']].map(([n, t, d]) => (
           <div key={n} className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm font-bold text-gray-900"><span className="text-pink-600 mr-1.5">{n}</span>{t}</p>
             <p className="text-sm text-gray-600 mt-1">{d}</p>
@@ -290,9 +293,11 @@ const Founders = () => {
                 {p.rolesNeeded && <p className="text-sm text-gray-700 mt-2">{p.rolesNeeded}</p>}
               </div>
               <div className="mt-auto pt-4 flex flex-wrap gap-2">
-                {p.uid !== currentUser?.uid && (
+                {p.uid !== currentUser?.uid && profile !== undefined && !profile?.isCompany && (hasBadge ? (
                   <button type="button" onClick={() => navigate(`/messages?to=${p.uid}`)} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">I’m interested</button>
-                )}
+                ) : (
+                  <Link to="/projects" title="Joining a founder’s team needs at least one badge" className="text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg">Earn a badge to join</Link>
+                ))}
                 <Link to={`/profile/${encodeURIComponent(p.uid)}`} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">View profile</Link>
               </div>
             </article>

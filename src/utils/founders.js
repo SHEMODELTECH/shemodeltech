@@ -3,6 +3,7 @@
 // their idea at She Model Tech Conference. Staff accept or decline in
 // Admin → Founders. Accepted founders are listed on the Founders page with the
 // roles they need, and build their team by messaging members (Talent Board).
+// Teammates also need at least one badge ("I'm interested" shows only then).
 // One pitch per member: founder_pitches/{uid}. The database rules check the
 // same limits (firestore.rules: founder_pitches).
 import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
