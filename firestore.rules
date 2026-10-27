@@ -881,6 +881,7 @@ service cloud.firestore {
  && d.tracksNeeded is list && d.tracksNeeded.size() >= 1 && d.tracksNeeded.size() <= 6
  && d.rolesNeeded is string && d.rolesNeeded.size() <= 300
  && d.why is string && d.why.size() >= 20 && d.why.size() <= 800
+ && d.get('partnerOptIn', false) is bool
  && noLink(d.name) && noLink(d.ideaName) && noLink(d.tagline) && noLink(d.problem) && noLink(d.audience)
  && noLink(d.solution) && noLink(d.rolesNeeded) && noLink(d.why);
  }
@@ -890,15 +891,16 @@ service cloud.firestore {
  allow read: if isSignedIn() && (uid == myUid() || isReviewer());
  allow create: if isSignedIn() && uid == myUid() && canPitch()
  && validPitch(request.resource.data) && request.resource.data.status == 'pending'
- && request.resource.data.keys().hasOnly(['uid', 'name', 'ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'createdAt', 'updatedAt']);
+ && request.resource.data.keys().hasOnly(['uid', 'name', 'ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'partnerOptIn', 'status', 'createdAt', 'updatedAt']);
  allow update: if isSignedIn() && (
  // The founder sends a pending or declined pitch again (back to review).
  (uid == myUid() && canPitch() && resource.data.status in ['pending', 'declined']
  && validPitch(request.resource.data) && request.resource.data.status == 'pending'
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'updatedAt']))
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'partnerOptIn', 'status', 'updatedAt']))
  // An accepted founder updates the tracks and roles she needs.
  || (uid == myUid() && resource.data.status == 'accepted'
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'tagline', 'acceptingTeam', 'attendance', 'attendanceAt', 'updatedAt'])
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'tagline', 'acceptingTeam', 'attendance', 'attendanceAt', 'partnerOptIn', 'updatedAt'])
+ && request.resource.data.get('partnerOptIn', false) is bool
  && (!('tagline' in request.resource.data) || (request.resource.data.tagline is string && request.resource.data.tagline.size() <= 100 && noLink(request.resource.data.tagline)))
  && request.resource.data.get('acceptingTeam', true) is bool
  && request.resource.data.get('attendance', 'yes') in ['yes', 'no']

@@ -30,7 +30,8 @@ export const PITCH_LIMITS = {
 };
 export const MAX_TRACKS = 6;
 
-export const CONFERENCE_NOTE = 'Accepted founders are invited to pitch at She Model Tech Conference. Date and venue to be announced.';
+export const CONFERENCE_NOTE = 'Accepted founders pitch at She Model Tech Conference for prize money. Selected founders may also be invited to pitch at events run by our partner organizations.';
+export const PARTNER_OPT_IN = 'I’m happy for She Model Tech to put me forward to partner organizations’ pitch events.';
 
 // Who can apply: members 13 and over (not companies) with at least one badge.
 export const founderBlocker = (profile) => {
@@ -42,7 +43,7 @@ export const founderBlocker = (profile) => {
 };
 
 const ref = (uid) => doc(db, 'founder_pitches', uid);
-const FIELDS = ['ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why'];
+const FIELDS = ['ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'partnerOptIn'];
 const clean = (f) => ({
   ideaName: f.ideaName.trim(),
   tagline: f.tagline.trim(),
@@ -53,6 +54,7 @@ const clean = (f) => ({
   tracksNeeded: (f.tracksNeeded || []).slice(0, MAX_TRACKS),
   rolesNeeded: f.rolesNeeded.trim(),
   why: f.why.trim(),
+  partnerOptIn: !!f.partnerOptIn,
 });
 
 export const getMyPitch = async (uid) => {
@@ -145,5 +147,7 @@ export const slotLabel = (iso) => {
   if (Number.isNaN(d.getTime())) return '';
   return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
 };
+// Accepted founders can change their partner-events choice any time.
+export const setPartnerOptIn = (uid, on) => updateDoc(doc(db, 'founder_pitches', uid), { partnerOptIn: !!on, updatedAt: serverTimestamp() });
 // The founder says whether she'll be there.
 export const setAttendance = (uid, answer) => updateDoc(doc(db, 'founder_pitches', uid), { attendance: answer, attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() });

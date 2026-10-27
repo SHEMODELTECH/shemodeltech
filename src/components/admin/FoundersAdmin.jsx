@@ -209,7 +209,7 @@ const FoundersAdmin = () => {
       </div>
 
       {filter === 'accepted' && count('accepted') > 0 && (
-        <p className="text-sm text-gray-600 mb-3">Coming: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'yes').length} · Can’t make it: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'no').length} · No answer yet: {rows.filter((p) => p.status === 'accepted' && !p.attendance).length}</p>
+        <p className="text-sm text-gray-600 mb-3">Coming: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'yes').length} · Can’t make it: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'no').length} · No answer yet: {rows.filter((p) => p.status === 'accepted' && !p.attendance).length} · Open to partner events: {rows.filter((p) => p.status === 'accepted' && p.partnerOptIn).length}</p>
       )}
       {filter === 'conference' ? <ConferenceForm founders={rows.filter((p) => p.status === 'accepted')} by={currentUser?.email} /> : filter === 'reported' ? reportedView : (<>
       {shown.length === 0 && <p className="text-sm text-gray-500 py-8 text-center">No pitches here yet. Members with a badge apply from the Founders page.</p>}
@@ -227,6 +227,7 @@ const FoundersAdmin = () => {
                   <p className="text-sm text-gray-600">by <Link to={`/profile/${encodeURIComponent(p.uid)}`} className="font-semibold text-pink-700 hover:underline">{p.name}</Link> · {stageLabel(p.stage)}</p>
                 </div>
                 <span className="flex flex-wrap gap-1.5">
+                  {p.partnerOptIn && <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-pink-50 text-pink-700">Open to partner events</span>}
                   {p.status === 'accepted' && <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${(ATTEND[p.attendance] || ['No answer yet', 'bg-gray-100 text-gray-600'])[1]}`}>{(ATTEND[p.attendance] || ['No answer yet'])[0]}</span>}
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${cls}`}>{label}{when ? ` · ${when}` : ''}</span>
                 </span>

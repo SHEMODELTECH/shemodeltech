@@ -400,7 +400,7 @@ if (MODE !== 'orig') {
     why: 'I built the first version for my class.', status: 'pending', createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
   const cases = [
     ['founders: member with a badge pitches', 'fdr', () => setDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), pitch('fdr')), 'allowed'],
-    ['founders: teen with a badge pitches', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen')), 'allowed'],
+    ['founders: teen with a badge pitches (open to partner events)', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen', { partnerOptIn: true })), 'allowed'],
     ['founders: member without a badge pitches', 'verU', () => setDoc(doc(as('verU'), 'founder_pitches', 'verU'), pitch('verU')), 'denied'],
     ['founders: company pitches', 'fdrCo', () => setDoc(doc(as('fdrCo'), 'founder_pitches', 'fdrCo'), pitch('fdrCo')), 'denied'],
     ['founders: pitches as already accepted', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen', { status: 'accepted' })), 'denied'],
@@ -479,6 +479,8 @@ if (MODE !== 'orig') {
     ['conference: member reads the details', 'verU', () => getDoc(doc(as('verU'), 'founders_conference', 'info')), 'allowed'],
     ['founders: staff sets a pitch slot', 'staff1', () => updateDoc(doc(staff(), 'founder_pitches', 'fdrAcc'), { pitchSlot: '2027-03-20T14:15:00.000Z', slotNote: 'Room B', slotSetAt: serverTimestamp() }), 'allowed'],
     ['founders: founder sets her own pitch slot', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { pitchSlot: '2027-03-20T09:00:00.000Z' }), 'denied'],
+    ['founders: founder opts in to partner events', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { partnerOptIn: true, updatedAt: serverTimestamp() }), 'allowed'],
+    ['founders: partner opt-in that is not yes/no', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { partnerOptIn: 'maybe', updatedAt: serverTimestamp() }), 'denied'],
     ['founders: founder confirms she will be there', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { attendance: 'yes', attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() }), 'allowed'],
     ['founders: someone else answers for the founder', 'verU', () => updateDoc(doc(as('verU'), 'founder_pitches', 'fdrAcc'), { attendance: 'no', attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() }), 'denied'],
   ];

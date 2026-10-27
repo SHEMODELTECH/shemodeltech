@@ -12,15 +12,15 @@ import { BADGE_TRACKS } from '../config/badgeTracks';
 import { hasLink, NO_LINKS_MSG } from '../utils/noLinks';
 import { alertStaff } from '../utils/staffAlerts';
 import {
-  CONFERENCE_NOTE, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
+  CONFERENCE_NOTE, PARTNER_OPT_IN, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
   listFounders, stageLabel, submitPitch, updateTeamNeeds, withdrawPitch,
-  CONFERENCE_FIELDS, getConference, setAcceptingTeam, setAttendance, slotLabel,
+  CONFERENCE_FIELDS, getConference, setAcceptingTeam, setAttendance, setPartnerOptIn, slotLabel,
 } from '../utils/founders';
 import { acceptInvite, createGroup, declineInvite, groupsOf, invitesFor } from '../utils/founderGroups';
 import { doc, getDoc } from 'firebase/firestore';
 
 const trackLabel = (name) => BADGE_TRACKS.find((t) => t.name === name)?.label || name;
-const EMPTY = { ideaName: '', tagline: '', problem: '', audience: '', solution: '', stage: 'idea', tracksNeeded: [], rolesNeeded: '', why: '' };
+const EMPTY = { partnerOptIn: false, ideaName: '', tagline: '', problem: '', audience: '', solution: '', stage: 'idea', tracksNeeded: [], rolesNeeded: '', why: '' };
 const input = 'mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm font-normal text-gray-900 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200';
 const labelCls = 'block text-sm font-semibold text-gray-800';
 
@@ -93,6 +93,10 @@ const PitchForm = ({ initial, onCancel, onSubmit, busy }) => {
       </fieldset>
       <Counted label="Roles you’re looking for" hint="For example: a frontend developer, a tester, a designer." k="rolesNeeded" f={f} set={set} rows={2} />
       <Counted label="Why you?" hint="Why you’re the right person to build this." k="why" f={f} set={set} rows={3} />
+      <label className="flex items-start gap-2 text-sm text-gray-800">
+        <input type="checkbox" checked={!!f.partnerOptIn} onChange={(e) => setF((x) => ({ ...x, partnerOptIn: e.target.checked }))} className="mt-0.5 accent-pink-600" />
+        <span>{PARTNER_OPT_IN} <span className="text-gray-500">(Optional. You can change this later.)</span></span>
+      </label>
       <p className="text-xs text-gray-500">No web links, please. Your pitch is reviewed by She Model Tech before it’s listed.</p>
       <div className="flex flex-wrap gap-2">
         <button type="submit" disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-50">
@@ -147,6 +151,9 @@ const YourPitch = ({ pitch, onAttendance }) => {
   const [conf, setConf] = useState(null);
   useEffect(() => { getConference().then(setConf); }, []);
   const filled = conf ? CONFERENCE_FIELDS.filter(([k]) => conf[k]) : [];
+  const togglePartner = async (on) => {
+    try { await setPartnerOptIn(pitch.uid, on); onAttendance(pitch.attendance, on); toast.success(on ? 'We may put you forward to partner events.' : 'We won’t put you forward to partner events.'); } catch (_) { toast.error('Could not save. Please try again.'); }
+  };
   const answer = async (a) => {
     try { await setAttendance(pitch.uid, a); onAttendance(a); toast.success(a === 'yes' ? 'Thanks! We’ve noted that you’ll be there.' : 'Thanks for letting us know.'); } catch (_) { toast.error('Could not save. Please try again.'); }
   };
@@ -175,6 +182,10 @@ const YourPitch = ({ pitch, onAttendance }) => {
       ) : (
         <p className="mt-2 text-sm text-gray-600">Date, venue, and pitch format: to be announced.</p>
       )}
+      <label className="mt-4 flex items-start gap-2 text-sm text-gray-800">
+        <input type="checkbox" checked={!!pitch.partnerOptIn} onChange={(e) => togglePartner(e.target.checked)} className="mt-0.5 accent-pink-600" />
+        <span>{PARTNER_OPT_IN} <span className="text-gray-500">Selected founders may be invited; it isn’t guaranteed.</span></span>
+      </label>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="text-sm text-gray-800">Will you be there?</span>
         <button type="button" aria-pressed={pitch.attendance === 'yes'} onClick={() => answer('yes')}
@@ -356,12 +367,12 @@ const Founders = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Founders</h1>
-      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Each card shows the idea in one line; founders share the details with their team. Founders pitch at She Model Tech Conference and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
+      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Each card shows the idea in one line; founders share the details with their team. Founders pitch at She Model Tech Conference for prize money, and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
 
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
         {[['1', 'Earn a badge', 'Finish a She Model Tech project and earn at least one badge.'],
           ['2', 'Apply to pitch', 'Tell us your idea. She Model Tech reviews every pitch.'],
-          ['3', 'Pitch and build', 'Pitch at She Model Tech Conference, and build your team with members who have at least one badge.']].map(([n, t, d]) => (
+          ['3', 'Pitch and build', 'Pitch at She Model Tech Conference for prize money, and build your team with members who have at least one badge. Selected founders may also pitch at partner organizations’ events.']].map(([n, t, d]) => (
           <div key={n} className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm font-bold text-gray-900"><span className="text-pink-600 mr-1.5">{n}</span>{t}</p>
             <p className="text-sm text-gray-600 mt-1">{d}</p>
@@ -393,7 +404,7 @@ const Founders = () => {
         </div>
       )}
       {mine?.status === 'accepted' && !blocker && (
-        <div className="mb-4 max-w-3xl"><YourPitch pitch={mine} onAttendance={(a) => setMine((m) => ({ ...m, attendance: a }))} /></div>
+        <div className="mb-4 max-w-3xl"><YourPitch pitch={mine} onAttendance={(a, partner) => setMine((m) => ({ ...m, attendance: a, ...(partner === undefined ? {} : { partnerOptIn: partner }) }))} /></div>
       )}
       {myBox && <div className="mb-8 max-w-3xl">{myBox}</div>}
 
