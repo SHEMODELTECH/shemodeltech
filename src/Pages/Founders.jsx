@@ -367,12 +367,12 @@ const Founders = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Founders</h1>
-      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Each card shows the idea in one line; founders share the details with their team. Founders pitch at She Model Tech Conference for prize money, and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
+      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Find an idea you love and help build it; all you need is one badge to join.</p>
 
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
         {[['1', 'Earn a badge', 'Finish a She Model Tech project and earn at least one badge.'],
           ['2', 'Apply to pitch', 'Tell us your idea. She Model Tech reviews every pitch.'],
-          ['3', 'Pitch and build', 'Pitch at She Model Tech Conference for prize money, and build your team with members who have at least one badge. Selected founders may also pitch at partner organizations’ events.']].map(([n, t, d]) => (
+          ['3', 'Pitch and build', 'Pitch for prize money at our conference, with a chance to pitch at partner events too.']].map(([n, t, d]) => (
           <div key={n} className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm font-bold text-gray-900"><span className="text-pink-600 mr-1.5">{n}</span>{t}</p>
             <p className="text-sm text-gray-600 mt-1">{d}</p>
@@ -457,7 +457,6 @@ const Founders = () => {
         </div>
       )}
 
-      <p className="text-xs text-gray-500 mt-8 max-w-3xl">Founders own their ideas and ventures. She Model Tech helps founders pitch and meet teammates, but doesn’t own, fund, or run founder ventures, or handle any payments between members. Share sensitive details only with people you trust, and agree together how you’ll work before you start.</p>
     </div>
   );
 };

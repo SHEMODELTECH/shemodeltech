@@ -7,7 +7,6 @@ import SocialLinks from './SocialLinks';
 import { useInAppShell } from './AppShell';
 
 export const FOOTER_LINKS = [
-  ['/conference', 'Conference'],
   ['/team', 'Team'],
   ['/teach', 'Mentors'],
   ['/support-our-mission', 'Support Us'],
