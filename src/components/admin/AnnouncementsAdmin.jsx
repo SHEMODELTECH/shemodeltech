@@ -20,6 +20,7 @@ const AUDIENCES = [
   ['founders', 'Accepted founders'],
   ['founder_teams', 'Founders and their teams'],
   ['conference_notify', 'Conference: notify me list'],
+  ['conference_registered', 'Conference: registered'],
 ];
 const EMAIL_CAP = 400;
 
@@ -55,8 +56,8 @@ const AnnouncementsAdmin = () => {
       const leads = new Set(ps.map((p) => p.submitterId).filter(Boolean));
       return users.filter((u) => leads.has(u.uid));
     }
-    if (f.audience === 'conference_notify') {
-      const ids = new Set((await getDocs(collection(db, 'conference_notify'))).docs.map((d) => d.id));
+    if (f.audience === 'conference_notify' || f.audience === 'conference_registered') {
+      const ids = new Set((await getDocs(collection(db, f.audience === 'conference_notify' ? 'conference_notify' : 'conference_registrations'))).docs.map((d) => d.id));
       return users.filter((u) => ids.has(u.uid));
     }
     if (f.audience === 'founders' || f.audience === 'founder_teams') {

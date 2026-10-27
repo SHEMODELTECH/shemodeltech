@@ -6,7 +6,7 @@
 // Delete is only for spam or test entries, or when someone asks for their
 // details to be removed.
 import React, { useEffect, useState } from 'react';
-import { collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
@@ -18,7 +18,8 @@ const STATUS = {
 };
 const TOPIC = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', partner: 'Conference partnership', judge: 'Conference judge application', other: 'Something else' };
 
-const ContactMessagesAdmin = () => {
+// conferenceOnly (editors): only conference partnership and judge applications.
+const ContactMessagesAdmin = ({ conferenceOnly = false }) => {
   const { currentUser } = useAuth();
   const [rows, setRows] = useState(null);
   const [filter, setFilter] = useState('open');
@@ -26,10 +27,14 @@ const ContactMessagesAdmin = () => {
   const [busy, setBusy] = useState(null);
 
   useEffect(() => {
-    getDocs(query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc')))
-      .then((s) => setRows(s.docs.map((d) => ({ id: d.id, ...d.data() }))))
+    const q = conferenceOnly
+      ? query(collection(db, 'contact_messages'), where('topic', 'in', ['partner', 'judge']))
+      : query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc'));
+    getDocs(q)
+      .then((s) => setRows(s.docs.map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))))
       .catch(() => setRows([]));
-  }, []);
+  }, [conferenceOnly]);
 
   const save = async (r, patch, done) => {
     setBusy(r.id);
@@ -66,7 +71,7 @@ const ContactMessagesAdmin = () => {
     <section className="mb-10" aria-labelledby="contact-h">
       <h2 id="contact-h" className="text-lg font-bold text-gray-900">Contact messages</h2>
       <p className="text-sm text-gray-600 mt-1 mb-4">
-        From Contact us (shemodeltech.com/contact). Each one is also emailed to the team inbox.
+        {conferenceOnly ? 'Conference partnership and judge applications from Contact us.' : 'From Contact us (shemodeltech.com/contact). Each one is also emailed to the team inbox.'}
       </p>
       <div className="flex flex-wrap items-center gap-2 mb-4">
         {[['open', `New (${count('open')})`], ['replied', `Replied (${count('replied')})`], ['closed', `Closed (${count('closed')})`], ['all', `All (${rows.length})`]].map(([k, l]) => (
@@ -118,11 +123,13 @@ const ContactMessagesAdmin = () => {
                 </label>
               </div>
               {r.updatedBy && <p className="mt-2 text-xs text-gray-500">Last updated by {r.updatedBy}</p>}
+              {!conferenceOnly && (
               <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
                 <button type="button" disabled={busy === r.id} onClick={() => remove(r)}
                   title="For spam or test entries, or when someone asks for their details to be removed"
                   className="text-xs font-semibold text-gray-500 hover:text-red-600 disabled:opacity-50">Delete request</button>
               </div>
+              )}
             </div>
           );
         })}

@@ -6,9 +6,9 @@
 //   conference_notify/{uid} - members who tapped "Notify me" before
 //                            registration opened (Admin → Send an announcement
 //                            has this list as an audience).
-// Registration itself runs through Events: staff create the conference as an
-// event and link it here, so places, reminders, and the joining link work as
-// for any event.
+//   conference_registrations/{uid} - who registered (on this page; no cap).
+//   conference_private/info - the joining link (if online), for registered
+//                            people and staff only.
 import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
@@ -42,14 +42,23 @@ export const getConferencePage = async () => {
 };
 export const saveConferencePage = (data, by) => setDoc(ref, { ...data, updatedAt: serverTimestamp(), updatedBy: by || null }, { merge: true });
 
-// "Learn more / register" goes to the conference event in Events. Staff paste
-// the event's address (or its id).
-export const eventIdFrom = (v) => {
-  const t = String(v || '').trim();
-  const m = t.match(/\/events\/([A-Za-z0-9_-]+)/);
-  if (m && m[1] !== 'host' && m[1] !== 'manage') return m[1];
-  return /^[A-Za-z0-9_-]{6,}$/.test(t) ? t : '';
+// Registration
+const rref = (uid) => doc(db, 'conference_registrations', uid);
+export const isRegistered = async (uid) => {
+  try { return (await getDoc(rref(uid))).exists(); } catch (_) { return false; }
 };
+export const register = (uid, name) => setDoc(rref(uid), { uid, name: String(name || 'Member').slice(0, 120), createdAt: serverTimestamp() });
+export const unregister = (uid) => deleteDoc(rref(uid));
+export const listRegistrations = async () => (await getDocs(collection(db, 'conference_registrations'))).docs.map((d) => ({ id: d.id, ...d.data() }));
+
+// Joining link (registered people and staff only).
+export const getJoinLink = async () => {
+  try {
+    const s = await getDoc(doc(db, 'conference_private', 'info'));
+    return s.exists() ? (s.data().joinLink || '') : '';
+  } catch (_) { return ''; }
+};
+export const saveJoinLink = (joinLink) => setDoc(doc(db, 'conference_private', 'info'), { joinLink: String(joinLink || '').trim(), updatedAt: serverTimestamp() }, { merge: true });
 
 // Notify me
 const nref = (uid) => doc(db, 'conference_notify', uid);

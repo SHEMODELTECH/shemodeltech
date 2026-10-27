@@ -9,7 +9,49 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import { shrinkImage } from '../EventImages';
-import { SPEAKER_ROLES, eventIdFrom, getConferencePage, notifyList, saveConferencePage } from '../../utils/conference';
+import { doc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { notifyMembers } from '../../utils/staffAlerts';
+import {
+  SPEAKER_ROLES, getConferencePage, getJoinLink, listRegistrations, notifyList, saveConferencePage, saveJoinLink,
+} from '../../utils/conference';
+
+// Names and emails for a list of members (staff can read profiles).
+const peopleFor = async (rows) => Promise.all(rows.map(async (r) => {
+  try {
+    const u = await getDoc(doc(db, 'users', r.uid));
+    const d = u.exists() ? u.data() : {};
+    return { uid: r.uid, name: d.displayName || r.name || 'Member', email: d.email || '', at: r.createdAt?.toDate ? r.createdAt.toDate() : null };
+  } catch (_) { return { uid: r.uid, name: r.name || 'Member', email: '', at: null }; }
+}));
+const csv = (rows, file) => {
+  const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [['Name', 'Email', 'Date'].map(cell).join(',')].concat(rows.map((r) => [r.name, r.email, r.at ? r.at.toISOString().slice(0, 10) : ''].map(cell).join(',')));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' }));
+  a.download = file;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+const PeopleList = ({ title, rows, file, empty }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-gray-200 rounded-lg">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
+        <button type="button" onClick={() => setOpen((v) => !v)} className="text-sm font-semibold text-gray-900">{open ? '▾' : '▸'} {title} ({rows === null ? '…' : rows.length})</button>
+        {rows?.length > 0 && <button type="button" onClick={() => csv(rows, file)} className="text-xs font-semibold border border-gray-300 px-2.5 py-1 rounded-lg hover:bg-gray-50">Download CSV</button>}
+      </div>
+      {open && rows && (
+        rows.length === 0 ? <p className="px-3 pb-3 text-sm text-gray-500">{empty}</p> : (
+          <ul className="px-3 pb-3 space-y-1 max-h-64 overflow-y-auto text-sm">
+            {rows.map((r) => <li key={r.uid} className="flex justify-between gap-2"><span className="truncate text-gray-900">{r.name}</span><span className="truncate text-gray-500">{r.email}</span></li>)}
+          </ul>
+        )
+      )}
+    </div>
+  );
+};
 
 const input = 'mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-normal bg-white focus:border-pink-500 focus:outline-none';
 const label = 'block text-sm font-semibold text-gray-800';
@@ -47,34 +89,64 @@ const move = (list, i, d) => {
 const ConferenceAdmin = () => {
   const { currentUser } = useAuth();
   const [f, setF] = useState(null);
-  const [notifyCount, setNotifyCount] = useState(null);
+  const [waiting, setWaiting] = useState(null);
+  const [registered, setRegistered] = useState(null);
+  const [saved, setSaved] = useState({ open: false, noticeSent: false });
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState('');
 
   useEffect(() => {
-    getConferencePage().then((c) => setF({
-      dateText: c.dateText || '', venue: c.venue || '', eventLink: c.eventId ? `/events/${c.eventId}` : '',
-      registrationOpen: !!c.registrationOpen, speakers: c.speakers || [], partners: c.partners || [],
-    }));
-    notifyList().then((l) => setNotifyCount(l.length)).catch(() => setNotifyCount(null));
+    getConferencePage().then((c) => {
+      setF({
+        dateText: c.dateText || '', venue: c.venue || '', joinLink: '',
+        registrationOpen: !!c.registrationOpen, speakers: c.speakers || [], partners: c.partners || [],
+      });
+      setSaved({ open: !!c.registrationOpen, noticeSent: !!c.registrationNoticeSentAt });
+      getJoinLink().then((l) => setF((x) => ({ ...x, joinLink: l })));
+    });
+    notifyList().then((ids) => peopleFor(ids.map((uid) => ({ uid })))).then(setWaiting).catch(() => setWaiting([]));
+    listRegistrations().then(peopleFor).then((r) => setRegistered(r.sort((a, b) => (b.at || 0) - (a.at || 0)))).catch(() => setRegistered([]));
   }, []);
+
+  // Tell everyone on the "Notify me" list that registration is open (bell, phone, email).
+  const sendNotice = async () => {
+    const list = (waiting || []).filter((p) => !(registered || []).some((r) => r.uid === p.uid));
+    if (!list.length) { toast.info('Nobody is waiting to be notified.'); return false; }
+    await notifyMembers(list.map((p) => ({ uid: p.uid, sendEmail: !!p.email, emailTo: p.email })), {
+      type: 'conference_registration', title: 'Registration is open: She Model Tech Conference',
+      body: `You asked us to let you know. Registration is now open${f.dateText ? ` for ${f.dateText.trim()}` : ''}. It’s free for members, and it takes one tap.`,
+      link: '/conference', ctaLabel: 'Register now',
+    }, (d, total) => setProgress(`Sending: ${d} of ${total}…`));
+    setProgress('');
+    await saveConferencePage({ registrationNoticeSentAt: serverTimestamp() }, currentUser?.email);
+    setSaved((x) => ({ ...x, noticeSent: true }));
+    toast.success(`Registration notice sent to ${list.length} ${list.length === 1 ? 'person' : 'people'}.`);
+    return true;
+  };
   if (!f) return <p className="py-10 text-center text-gray-400 text-sm">Loading…</p>;
 
   const setSpeaker = (i, k, v) => setF((x) => ({ ...x, speakers: x.speakers.map((s, j) => (j === i ? { ...s, [k]: v } : s)) }));
   const setPartner = (i, k, v) => setF((x) => ({ ...x, partners: x.partners.map((p, j) => (j === i ? { ...p, [k]: v } : p)) }));
 
   const save = async () => {
-    const eventId = eventIdFrom(f.eventLink);
-    if (f.eventLink.trim() && !eventId) return toast.error('Paste the conference event’s address from Events, e.g. shemodeltech.com/events/abc123.');
-    if (f.registrationOpen && !eventId) return toast.error('Link the conference event before opening registration.');
+    if (f.joinLink.trim() && !/^https:\/\//i.test(f.joinLink.trim())) return toast.error('The joining link should start with https://');
     if (f.partners.some((p) => p.url && !/^https:\/\//i.test(p.url.trim()))) return toast.error('Partner websites should start with https://');
     setBusy(true);
     try {
       await saveConferencePage({
-        dateText: f.dateText.trim(), venue: f.venue.trim(), eventId: eventId || null, registrationOpen: !!f.registrationOpen && !!eventId,
+        dateText: f.dateText.trim(), venue: f.venue.trim(), registrationOpen: !!f.registrationOpen,
         speakers: f.speakers.filter((s) => (s.name || '').trim()).map((s) => ({ name: s.name.trim(), title: (s.title || '').trim(), role: s.role || '', topic: (s.topic || '').trim(), photoUrl: s.photoUrl || '' })),
         partners: f.partners.filter((p) => (p.name || '').trim()).map((p) => ({ name: p.name.trim(), logoUrl: p.logoUrl || '', url: (p.url || '').trim() })),
       }, currentUser?.email);
+      await saveJoinLink(f.joinLink);
       toast.success('Conference page saved.');
+      const justOpened = f.registrationOpen && !saved.open;
+      setSaved((x) => ({ ...x, open: !!f.registrationOpen }));
+      const waitingCount = (waiting || []).length;
+      if (justOpened && !saved.noticeSent && waitingCount > 0
+        && window.confirm(`Registration is now open. Send the registration notice to the ${waitingCount} ${waitingCount === 1 ? 'person' : 'people'} waiting? (Bell, phone, and email.)`)) {
+        await sendNotice();
+      }
     } catch (_) { toast.error('Could not save.'); }
     setBusy(false);
   };
@@ -94,15 +166,21 @@ const ConferenceAdmin = () => {
 
       <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3">
         <h3 className="font-bold text-gray-900">Registration</h3>
-        <p className="text-sm text-gray-600">1. Create the conference as an event in <Link to="/events/manage" className="font-semibold text-pink-700 hover:underline">Events → Manage</Link> (category Conference). 2. Paste its address here. 3. Switch registration on. The page’s Register button then opens that event.</p>
-        <label className={label}>Conference event address<input className={input} value={f.eventLink} onChange={(e) => setF({ ...f, eventLink: e.target.value })} placeholder="shemodeltech.com/events/…" /></label>
+        <p className="text-sm text-gray-600">Members register on the conference page (free, no cap). When you open registration and save, you’re offered to notify everyone who tapped “Notify me”.</p>
         <label className="flex items-center gap-2 text-sm text-gray-800">
           <input type="checkbox" checked={f.registrationOpen} onChange={(e) => setF({ ...f, registrationOpen: e.target.checked })} className="accent-pink-600" />
           Registration is open (shows “Register now”)
         </label>
-        <p className="text-sm text-gray-700 bg-pink-50/60 border border-pink-100 rounded-lg px-3 py-2">
-          <b>{notifyCount ?? '…'}</b> {notifyCount === 1 ? 'member has' : 'members have'} asked to be notified. When registration opens, use <Link to="/admin?tab=announcements" className="font-semibold text-pink-700 hover:underline">Send an announcement</Link> with the audience “Conference: notify me list”.
-        </p>
+        <label className={label}>Joining link (if online) <span className="font-normal text-gray-500">— only registered people see it</span><input className={input} value={f.joinLink} onChange={(e) => setF({ ...f, joinLink: e.target.value })} placeholder="https://" /></label>
+        {saved.open && !saved.noticeSent && (waiting || []).length > 0 && (
+          <button type="button" disabled={busy} onClick={async () => { setBusy(true); try { await sendNotice(); } catch (_) { toast.error('Could not send the notice.'); } setBusy(false); }}
+            className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg disabled:opacity-50">Send the registration notice now</button>
+        )}
+        {saved.noticeSent && <p className="text-xs text-gray-500">The registration notice has been sent to the “Notify me” list.</p>}
+        {progress && <p className="text-sm text-gray-600">{progress}</p>}
+        <PeopleList title="Registered" rows={registered} file={`conference-registrations-${new Date().toISOString().slice(0, 10)}.csv`} empty="Nobody has registered yet." />
+        <PeopleList title="Waiting to be notified" rows={waiting} file={`conference-notify-list-${new Date().toISOString().slice(0, 10)}.csv`} empty="Nobody has tapped “Notify me” yet." />
+        <p className="text-xs text-gray-500">Staff get a daily email with new registrations. You can also message these lists from <Link to="/admin?tab=announcements" className="font-semibold text-pink-700 hover:underline">Send an announcement</Link> (audiences “Conference: notify me list” and “Conference: registered”).</p>
       </section>
 
       <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3">

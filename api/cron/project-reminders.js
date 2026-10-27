@@ -35,6 +35,7 @@ const { pushToUids } = require('../../lib/push');
 const { runBackup } = require('../../lib/backupJob');
 const { buildMemberIndex, rebuildMemberIndexIfStale } = require('../../lib/memberIndex');
 const { escapeHtml, safeUrl } = require('../../lib/escapeHtml');
+const { conferenceDigest } = require('../../lib/conferenceTasks');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
@@ -545,6 +546,8 @@ module.exports = async (req, res) => {
  // ── Jobs and company tiers: new-job notices, closing reminders, tier endings ──
  try { await jobTasks(db, stats); } catch (e) { console.error('job notices skipped:', e.message); }
  try { await tierTasks(db, stats); } catch (e) { console.error('tier notices skipped:', e.message); }
+ // ── She Model Tech Conference: daily summary of new registrations for staff ──
+ try { stats.conferenceRegistrations = await conferenceDigest(db, admin); } catch (e) { console.error('conference digest skipped:', e.message); }
  // ── Member directory for the Talent Board and Search (lib/memberIndex.js) ──
  try { stats.memberIndex = await buildMemberIndex(db); } catch (e) { console.error('member index skipped:', e.message); }
  // ── Housekeeping: delete notifications older than 6 months (stops well before the time limit) ──

@@ -150,8 +150,8 @@ const About = () => {
                 desc: 'Pitch your idea at She Model Tech Conference for prize money, and build a team of members with verified skills. Selected founders may also pitch at our partner organizations’ events.',
               },
               {
-                title: 'Events',
-                desc: 'Workshops, tech talks, conferences, and demo days, all online. Members 18 and over can host their own events too.',
+                title: 'She Model Tech Conference',
+                desc: 'Our yearly conference: tech talks, workshops, leadership development, the pitch competition, ministration, and networking.',
               },
               {
                 title: 'Verified by Contribution',

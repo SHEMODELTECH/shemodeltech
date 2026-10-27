@@ -935,6 +935,24 @@ service cloud.firestore {
  allow read: if true;
  allow write: if isReviewer();
  }
+ // Conference registration (on the conference page; no cap on places). One
+ // record per person: her uid and name. She registers while registration is
+ // open and can cancel; staff read the list.
+ match /conference_registrations/{uid} {
+ allow read: if isSignedIn() && (uid == myUid() || isReviewer());
+ allow create: if isVerified() && uid == myUid()
+ && get(/databases/$(database)/documents/conference_page/info).data.get('registrationOpen', false) == true
+ && request.resource.data.uid == myUid()
+ && request.resource.data.name is string && request.resource.data.name.size() <= 120
+ && request.resource.data.keys().hasOnly(['uid', 'name', 'createdAt']);
+ allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ }
+ // The joining link (if online): only registered people and staff read it.
+ match /conference_private/{id} {
+ allow read: if isReviewer() || (isSignedIn()
+ && exists(/databases/$(database)/documents/conference_registrations/$(myUid())));
+ allow write: if isReviewer();
+ }
  // "Notify me when registration opens": one record per member, holding only
  // her uid. She adds or removes her own; staff read the list.
  match /conference_notify/{uid} {
@@ -1067,7 +1085,10 @@ service cloud.firestore {
  && request.resource.data.createdAt == request.time
  && noLink(request.resource.data.name) && noLink(request.resource.data.reference) && noLink(request.resource.data.message)
  && request.resource.data.keys().hasOnly(['name', 'email', 'topic', 'reference', 'message', 'status', 'createdAt']);
- allow read, update, delete: if isAdmin();
+ // Admins see every message; editors see conference partnership and judge
+ // applications only. Only admins delete.
+ allow read, update: if isAdmin() || (isReviewer() && resource.data.get('topic', '') in ['partner', 'judge']);
+ allow delete: if isAdmin();
  }
 
  match /summitPartners/{id} {

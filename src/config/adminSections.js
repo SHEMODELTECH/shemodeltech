@@ -13,7 +13,7 @@ export const ADMIN_SECTIONS = [
   ['teachers', 'Mentors', 'reviewer', 'People', true],
   ['team', 'Team', 'admin', 'People'],
   ['founders', 'Founders', 'reviewer', 'People'],
-  ['messages', 'Contact messages', 'admin', 'People'],
+  ['messages', 'Contact messages', 'reviewer', 'People'],
   ['deletions', 'Deletion Requests', 'admin', 'People'],
   // Content
   ['proofwall', 'Proof Wall', 'admin', 'Content'],

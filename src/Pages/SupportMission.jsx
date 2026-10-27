@@ -182,7 +182,7 @@ const SupportMission = () => {
             <li>Pay members on paid projects, so women earn while they learn</li>
             <li>Laptops and internet access for women who need them</li>
             <li>Certifications, awarded on clear and fair criteria</li>
-            <li>Events, and the platform itself</li>
+            <li>She Model Tech Conference, and the platform itself</li>
           </ul>
         </div>
         <div className="bg-white border border-pink-100 rounded-2xl p-6">

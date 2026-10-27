@@ -22,7 +22,7 @@ The menu on the left (on a phone, tap the menu icon) has everything else:
 - **Workspace**: the team space for each project you're on.
 - **Learning**: all the free courses.
 - **Jobs**: roles posted by verified companies.
-- **Events**: online workshops, tech talks, podcasts, and demo days.
+- **Conference**: She Model Tech Conference, our yearly gathering with tech talks, workshops, and the pitch competition.
 - **Support**: answers to common questions, and a form to contact us.
 - **Settings**: your profile, email settings, and payout details.
 
@@ -142,7 +142,7 @@ When a new version of She Model Tech is out, a small notice says so and offers *
      "All the free courses"
     ],
     [
-     "Jobs · Events",
+     "Jobs · Conference",
      "Roles, live sessions"
     ],
     [
@@ -172,7 +172,7 @@ When a new version of She Model Tech is out, a small notice says so and offers *
      "hl": 3
     },
     {
-     "say": "Jobs lists roles from verified companies, and Events has workshops, tech talks, podcasts and demo days.",
+     "say": "Jobs lists roles from verified companies, and Conference has everything about She Model Tech Conference.",
      "hl": 4
     },
     {

@@ -11,7 +11,9 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 import { signInAndReturn } from './learning/LearningLayout';
-import { PARTNER_PACKAGES, PROGRAM, getConferencePage, isNotified, notifyMe, stopNotify } from '../utils/conference';
+import {
+  PARTNER_PACKAGES, PROGRAM, getConferencePage, getJoinLink, isNotified, isRegistered, notifyMe, register, stopNotify, unregister,
+} from '../utils/conference';
 
 const ICONS = {
   talks: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z',
@@ -28,22 +30,57 @@ const Icon = ({ k, className = 'w-6 h-6' }) => (
 
 const TBA = 'To be announced';
 
-// Register (when open), or "coming soon" with Notify me.
+// Register (when open), or "coming soon" with Notify me. Registration is on
+// this page: registered people see their place and, if online, the link.
 const RegisterCta = ({ conf, dark = false }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [notified, setNotified] = useState(null);
-  useEffect(() => { if (currentUser) isNotified(currentUser.uid).then(setNotified); }, [currentUser]);
-  const eventPath = conf.eventId ? `/events/${conf.eventId}` : null;
+  const [registered, setRegistered] = useState(null);
+  const [joinLink, setJoinLink] = useState('');
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!currentUser) return;
+    isNotified(currentUser.uid).then(setNotified);
+    isRegistered(currentUser.uid).then((r) => { setRegistered(r); if (r) getJoinLink().then(setJoinLink); });
+  }, [currentUser]);
+  const sub = dark ? 'text-gray-300' : 'text-gray-600';
 
-  if (conf.registrationOpen && eventPath) {
+  if (conf.registrationOpen) {
+    const doRegister = async () => {
+      if (!currentUser) { signInAndReturn(navigate, '/conference'); return; }
+      setBusy(true);
+      try {
+        await register(currentUser.uid, currentUser.displayName);
+        setRegistered(true);
+        getJoinLink().then(setJoinLink);
+        toast.success('You’re registered! See you at She Model Tech Conference.');
+      } catch (_) { toast.error('Could not register. Please confirm your email address, then try again.'); }
+      setBusy(false);
+    };
+    const cancel = async () => {
+      if (!window.confirm('Cancel your registration?')) return;
+      try { await unregister(currentUser.uid); setRegistered(false); setJoinLink(''); toast.success('Your registration is cancelled.'); } catch (_) { toast.error('Could not cancel. Please try again.'); }
+    };
+    if (registered) {
+      return (
+        <div className="flex flex-col items-center gap-3">
+          <span className={`text-sm font-bold px-4 py-2 rounded-full ${dark ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'}`}>✓ You’re registered</span>
+          {joinLink && /^https:\/\//i.test(joinLink) && (
+            <a href={joinLink} target="_blank" rel="noopener noreferrer" className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Join the conference</a>
+          )}
+          <p className={`text-sm ${sub}`}>{joinLink ? 'Keep this page handy on the day.' : 'We’ll share the details before the day.'}</p>
+          <button type="button" onClick={cancel} className={`text-xs ${dark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Cancel my registration</button>
+        </div>
+      );
+    }
     return (
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <button type="button" onClick={() => (currentUser ? navigate(eventPath) : signInAndReturn(navigate, eventPath))}
-          className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-semibold text-base px-8 py-4 rounded-lg">
-          Register now
+      <div className="flex flex-col items-center gap-3">
+        <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full ${dark ? 'bg-white/10 text-pink-300' : 'bg-pink-50 text-pink-700'}`}>Registration is open</span>
+        <button type="button" disabled={busy || registered === null && !!currentUser} onClick={doRegister}
+          className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-semibold text-base px-8 py-4 rounded-lg disabled:opacity-60">
+          {currentUser ? 'Register now, free' : 'Create a free account to register'}
         </button>
-        <p className={`text-sm ${dark ? 'text-gray-300' : 'text-gray-600'}`}>Free for members. {currentUser ? '' : 'Sign in or create a free account to register.'}</p>
       </div>
     );
   }
@@ -230,7 +267,7 @@ const Conference = () => {
               {[
                 ['Who can attend?', 'The conference is free for She Model Tech members. Joining is free too: create an account, and you can register once registration opens.'],
                 ['When and where is it?', `${c.dateText ? `Date: ${c.dateText}.` : 'The date will be announced here soon.'} ${c.venue ? `Venue: ${c.venue}.` : 'The venue will be announced too.'}`],
-                ['How do I register?', 'Registration opens once the date is confirmed. Tap “Notify me” and we’ll let you know. You’ll register from the conference event in Events, where you’ll also get reminders.'],
+                ['How do I register?', 'Registration opens once the date is confirmed. Tap “Notify me” and we’ll let you know. Then register right here on this page; it’s free for members.'],
                 ['Can I be a judge or a partner?', 'Yes. Anyone with relevant experience can apply to be a judge, and organizations can choose a partner package. See “Partner with us” above.'],
                 ['Do I have to pitch?', 'No. The pitch competition is for accepted founders. Everyone else can enjoy the talks, workshops, and networking, and cheer the founders on.'],
               ].map(([q, a]) => (

@@ -6,7 +6,6 @@ import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc,
 import { db } from '../../firebase/config';
 import LeadCheckIn from '../../components/LeadCheckIn';
 import DeadlineBanner from '../../components/DeadlineBanner';
-import { DemoDayStrip, HostEventLink } from '../../components/TeamEvents';
 import { toast } from 'react-toastify';
 import { logActivity } from '../../utils/activityLog';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
@@ -746,7 +745,6 @@ const ProjectWorkspace = () => {
       <div className="flex flex-wrap items-start justify-between gap-3 mb-1">
         <h1 className="text-2xl font-bold text-gray-900">{project.projectTitle || project.title} - Workspace</h1>
         <div className="flex flex-wrap gap-2">
-        <HostEventLink projectId={projectId} uid={currentUser?.uid} />
         {isOwner && (
           <Link
             to={`/projects/owner-dashboard?project=${projectId}`}
@@ -768,9 +766,6 @@ const ProjectWorkspace = () => {
 
       {/* Deadline / grace banner for the whole team */}
       <DeadlineBanner project={{ ...project, id: projectId }} />
-
-      {/* Last week or done: a slim nudge to host a demo day */}
-      <DemoDayStrip project={project} projectId={projectId} uid={currentUser?.uid} />
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-gray-200">
