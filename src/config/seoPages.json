@@ -11,6 +11,7 @@
     "/events": { "title": "Events | She Model Tech", "description": "Free virtual events from She Model Tech: workshops, tech talks, conferences, and project demo days." },
     "/support-our-mission": { "title": "Fund a cohort | She Model Tech", "description": "Support She Model Tech by funding a cohort of real-world tech projects for members, free for everyone who joins." },
     "/learning": { "title": "Free tech courses | She Model Tech Learning", "description": "Free, hands-on courses across six tech tracks, from your first program to AI engineering, product, security and leadership. Read or watch every module." },
+    "/conference": { "title": "She Model Tech Conference", "description": "A yearly conference for women building careers in tech: tech talks, workshops, leadership development, a pitch competition, ministration, and networking. Free for members." },
     "/contact": { "title": "Contact us | She Model Tech", "description": "Send She Model Tech a message. We reply by email within a few working days." },
     "/verify": { "title": "Verify a certificate | She Model Tech", "description": "Check that a She Model Tech certificate is genuine." },
     "/terms": { "title": "Terms of Service | She Model Tech", "description": "The terms for using She Model Tech." },

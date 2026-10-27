@@ -81,6 +81,7 @@ const ProjectWorkspace = lazy(() => import('./Pages/projects/ProjectWorkspace'))
 const MyWorkspaces = lazy(() => import('./Pages/projects/MyWorkspaces'));
 const TalentBoard = lazy(() => import('./Pages/TalentBoard'));
 const Founders = lazy(() => import('./Pages/Founders'));
+const Conference = lazy(() => import('./Pages/Conference'));
 const FounderGroup = lazy(() => import('./Pages/FounderGroup'));
 const ProofWall = lazy(() => import('./Pages/ProofWall'));
 const ProjectVault = lazy(() => import('./Pages/ProjectVault'));
@@ -267,6 +268,7 @@ function App() {
                 <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
                 <Route path="/contact" element={<MemberFrame><Contact /></MemberFrame>} />
+                <Route path="/conference" element={<MemberFrame><Conference /></MemberFrame>} />
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}
                 <Route path="/projects/propose" element={<Navigate to="/projects" replace />} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />

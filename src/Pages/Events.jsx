@@ -415,6 +415,10 @@ const Events = () => {
         <p className="text-gray-600 mt-1 max-w-2xl">
           Free online workshops, tech talks, conferences, and demo days. Learn, share, and celebrate together.
         </p>
+        <Link to="/conference" className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-gray-950 text-white px-5 py-4 hover:bg-black">
+          <span><span className="block text-xs font-bold uppercase tracking-widest text-pink-400">She Model Tech Conference</span><span className="block font-semibold mt-0.5">Tech talks, workshops, leadership, a pitch competition, and more</span></span>
+          <span className="flex-shrink-0 text-sm font-semibold text-pink-300">Learn more →</span>
+        </Link>
 
         <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter by type">
           {[['all', 'All events'], ...EVENT_CATEGORIES].map(([k, l]) => (

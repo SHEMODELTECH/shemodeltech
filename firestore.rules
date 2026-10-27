@@ -929,6 +929,22 @@ service cloud.firestore {
  allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
  }
 
+ // She Model Tech Conference page (shemodeltech.com/conference): anyone can
+ // read it; staff (admins and editors) edit it in Admin → Conference.
+ match /conference_page/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+ // "Notify me when registration opens": one record per member, holding only
+ // her uid. She adds or removes her own; staff read the list.
+ match /conference_notify/{uid} {
+ allow read: if isSignedIn() && (uid == myUid() || isReviewer());
+ allow create: if isSignedIn() && uid == myUid()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.keys().hasOnly(['uid', 'createdAt']);
+ allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ }
+
  // Conference details for founders (Founders page → Your pitch): the date,
  // venue or link, pitch format, deadlines. Staff write; signed-in members read.
  match /founders_conference/{id} {

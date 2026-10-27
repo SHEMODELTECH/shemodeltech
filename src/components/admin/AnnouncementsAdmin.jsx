@@ -19,6 +19,7 @@ const AUDIENCES = [
   ['leads', 'Project leads only'],
   ['founders', 'Accepted founders'],
   ['founder_teams', 'Founders and their teams'],
+  ['conference_notify', 'Conference: notify me list'],
 ];
 const EMAIL_CAP = 400;
 
@@ -53,6 +54,10 @@ const AnnouncementsAdmin = () => {
       const ps = (await getDocs(query(collection(db, 'projects'), where('status', 'in', ['setup', 'active', 'overdue'])))).docs.map((d) => d.data());
       const leads = new Set(ps.map((p) => p.submitterId).filter(Boolean));
       return users.filter((u) => leads.has(u.uid));
+    }
+    if (f.audience === 'conference_notify') {
+      const ids = new Set((await getDocs(collection(db, 'conference_notify'))).docs.map((d) => d.id));
+      return users.filter((u) => ids.has(u.uid));
     }
     if (f.audience === 'founders' || f.audience === 'founder_teams') {
       // Accepted founders (Founders page), and with teams: everyone in their team groups.

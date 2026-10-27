@@ -20,6 +20,7 @@ export const ADMIN_SECTIONS = [
   ['moderation', 'Reports', 'all', 'Content'],
   ['coursefeedback', 'Course feedback', 'all', 'Content', true],
   ['events', 'Events', 'reviewer', 'Content', true],
+  ['conference', 'Conference', 'reviewer', 'Content'],
   ['announcements', 'Send an announcement', 'admin', 'Content'],
   // Business
   ['sponsors', 'Sponsors', 'admin', 'Business'],
