@@ -38,7 +38,7 @@ const shareCard = async (req, res) => {
   let title = 'She Model Tech';
   let description = 'Build real experience, earn verified skill badges, and get discovered.';
   let image = `${SITE}/Images/512X512.png`;
-  let target = kind === 'e' ? `${SITE}/conference` : `${SITE}/projects`;
+  let target = kind === 'e' ? `${SITE}/events` : `${SITE}/projects`;
   try {
     if (id) {
       const snap = await admin.firestore().collection(kind === 'e' ? 'events' : 'projects').doc(id).get();
@@ -113,7 +113,7 @@ main{flex:1}.card{max-width:42rem;margin:32px 0;border:1px solid #e5e7eb;border-
 footer{border-top:1px solid #e5e7eb;padding:24px 0;font-size:14px;color:#6b7280}footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:center}
 </style></head><body>
 <header><div class="wrap"><a href="/" aria-label="She Model Tech home"><img src="/Images/she-model-tech-logo.png" alt="She Model Tech"></a>
-<nav aria-label="Main"><a href="/about">About</a><a href="/projects">Projects</a><a href="/conference">Conference</a><a href="/learning">Learning</a></nav>
+<nav aria-label="Main"><a href="/about">About</a><a href="/projects">Projects</a><a href="/events">Events</a><a href="/conference">Conference</a><a href="/learning">Learning</a></nav>
 <a class="btn" href="/login">Get Started</a></div></header>
 <main><div class="wrap"><article class="card">
 <p class="kicker">${htmlEsc(kicker)}</p><h1>${htmlEsc(title)}</h1>${byline ? `<p class="by">${htmlEsc(byline)}</p>` : ''}
@@ -196,13 +196,12 @@ const contentSitemap = async (res) => {
   const add = (loc, lastmod) => urls.push(`<url><loc>${htmlEsc(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`);
   const iso = (ts) => (ts && ts.toDate ? ts.toDate().toISOString().slice(0, 10) : null);
   try {
-    const [acts, projs] = await Promise.all([
+    const [acts, projs, evs] = await Promise.all([
       db.collection('activity').orderBy('createdAt', 'desc').limit(800).select('type', 'actorId', 'text', 'isDummy', 'createdAt').get(),
       db.collection('projects').where('status', 'in', ['active', 'lead_recruitment', 'setup'])
         .select('status', 'isCompanyPost', 'reviewStatus', 'isActive', 'hidden', 'updatedAt', 'createdAt').get(),
+      db.collection('events').where('published', '==', true).select('status', 'startAt', 'durationMins', 'showOnPage').get(),
     ]);
-    // Events are hidden (She Model Tech Conference replaces them), so they're
-    // no longer listed; the conference page is in the main sitemap.
     const updates = acts.docs.map((x) => ({ id: x.id, ...x.data() }))
       .filter((a) => a.type === 'update' && !a.isDummy && String(a.text || '').trim() && a.actorId);
     const authorIds = [...new Set(updates.map((a) => a.actorId))];
@@ -214,6 +213,11 @@ const contentSitemap = async (res) => {
     }
     updates.filter((a) => !hidden.has(a.actorId)).forEach((a) => add(`${SITE}/update/${a.id}`, iso(a.createdAt)));
     projs.docs.forEach((x) => { const d = x.data(); if (PUBLIC_PROJECT(d)) add(`${SITE}/project/${x.id}`, iso(d.updatedAt) || iso(d.createdAt)); });
+    evs.docs.forEach((x) => {
+      const d = x.data();
+      const past = d.startAt && new Date(d.startAt).getTime() + (Number(d.durationMins) || 60) * 60000 < Date.now();
+      if ((past || d.status === 'cancelled') ? d.showOnPage === true : true) add(`${SITE}/events/${x.id}`, null);
+    });
   } catch (e) {
     console.error('content sitemap failed:', e.message);
   }

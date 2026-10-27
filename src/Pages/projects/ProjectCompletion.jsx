@@ -432,7 +432,8 @@ const ProjectCompletion = () => {
                 ? `Work on "${project.projectTitle || project.title}" is marked done. Your pay of $${(ev.payAmount || 0).toLocaleString()} is due from the project owner - you'll be asked to confirm once you receive it. The project closes when all members confirm payment.`
                 : badgeAwarded
                 ? `"${project.projectTitle || project.title}" is complete! You earned a ${badgeCategories[ev.badgeCategory]?.name || ev.badgeCategory} badge (${ev.badgeLevel}).${ev.chosenTrack && ev.badgeCategory !== ev.chosenTrack && ev.trackChangeReason ? ` Your lead moved it from ${badgeCategories[ev.chosenTrack]?.name || ev.chosenTrack}: ${ev.trackChangeReason.trim()}` : ''}`
-                : `"${project.projectTitle || project.title}" has been completed.`),
+                : `"${project.projectTitle || project.title}" has been completed.`)
+                + (isPaidProject ? '' : ' Show what you built: host a demo day from your project workspace.'),
               projectId: projectId,
               projectTitle: project.projectTitle || project.title,
               link: isPaidProject ? '/account' : '/project-vault',

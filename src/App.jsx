@@ -45,10 +45,14 @@ const JobDetail = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default:
 const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobForm })));
 const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
 const Premium = lazy(() => import('./Pages/Premium'));
+const Events = lazy(() => import('./Pages/Events'));
+const EventDetail = lazy(() => import('./Pages/Events').then((m) => ({ default: m.EventDetail })));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
 const LearningManage = lazy(() => import('./Pages/learning/LearningManage'));
+const EventsManage = lazy(() => import('./Pages/EventsManage'));
+const HostEvent = lazy(() => import('./Pages/HostEvent'));
 const SupportMission = lazy(() => import('./Pages/SupportMission'));
 const Contact = lazy(() => import('./Pages/Contact'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
@@ -257,10 +261,10 @@ function App() {
                 <Route path="/team" element={<Team />} />
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
-                {/* Events are hidden: She Model Tech Conference replaces them. Old
-                    event links open the conference page. (The Events code is kept.) */}
-                <Route path="/events" element={<Navigate to="/conference" replace />} />
-                <Route path="/events/*" element={<Navigate to="/conference" replace />} />
+                <Route path="/events" element={<MemberFrame><Events /></MemberFrame>} />
+                <Route path="/events/host" element={<BasicProtectedRoute><AppShell flush><HostEvent /></AppShell></BasicProtectedRoute>} />
+                <Route path="/events/manage" element={<BasicProtectedRoute><AppShell flush><EventsManage /></AppShell></BasicProtectedRoute>} />
+                <Route path="/events/:id" element={<MemberFrame><EventDetail /></MemberFrame>} />
                 <Route path="/summit" element={<Navigate to="/conference" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
                 <Route path="/contact" element={<MemberFrame><Contact /></MemberFrame>} />

@@ -14,6 +14,7 @@ import TierBadge from '../../components/TierBadge';
 import { BADGE_TRACKS, levelForCount } from '../../config/badgeTracks';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
+import EventsCard from '../../components/EventsCard';
 import ContinueLearning from '../../components/ContinueLearning';
 import { TIER_LABEL, companyTier } from '../../config/tiers';
 import PayoutReminder from '../../components/PayoutReminder';
@@ -270,6 +271,9 @@ const DashboardOverview = () => {
       {/* 2. New members: four steps that tick off as she goes. */}
       {!loading && currentUser && <GettingStarted uid={currentUser.uid} profile={profileData} />}
 
+      {/* An event in the next 7 days she hasn't signed up for (otherwise nothing). */}
+      {!loading && <EventsCard />}
+
       {profileData?.isCompany ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <Link to="/premium" className="bg-white border border-gray-200 rounded-xl p-5 hover:border-pink-300">
@@ -318,6 +322,7 @@ const DashboardOverview = () => {
               <p className="text-gray-500 text-sm mb-4">Follow projects, badges earned, and work shipped on the Proof Wall. Open any project to see the team.</p>
               <div className="flex flex-wrap gap-2">
                 <Link to="/proof-wall" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Open the Proof Wall</Link>
+                <Link to="/events" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Events</Link>
                 <Link to="/conference" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Conference</Link>
               </div>
             </div>

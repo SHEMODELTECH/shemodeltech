@@ -721,7 +721,7 @@ const Settings = () => {
               <legend className="sr-only">Phone notifications</legend>
               {[
                 ['all', 'All', 'Everything, including mentions and replies.'],
-                ['important', 'Important only', 'Conference updates, deadlines, applications, decisions, and messages.'],
+                ['important', 'Important only', 'Events, conference updates, deadlines, applications, decisions, and messages.'],
                 ['off', 'Off', 'No phone notifications.'],
               ].map(([v, l, d]) => (
                 <label key={v} className="flex items-start gap-2 text-sm text-gray-700 py-1 cursor-pointer">

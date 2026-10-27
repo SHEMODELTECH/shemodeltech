@@ -32,6 +32,7 @@ import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
+import EventsAdmin from '../../components/admin/EventsAdmin';
 import FundingRequestsAdmin from '../../components/admin/FundingRequestsAdmin';
 import ContactMessagesAdmin from '../../components/admin/ContactMessagesAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';
@@ -84,7 +85,7 @@ const MOVED_TABS = {
   learners: '/learning/manage/learners',
   teachers: '/learning/manage/mentors',
   coursefeedback: '/learning/manage/feedback',
-  events: '/admin?tab=conference', // Events are hidden; the conference replaces them
+  events: '/events/manage',
 };
 
 // `bare`: no page padding or title, for sections shown inside another page's
@@ -1783,6 +1784,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
         </div>
       )}
 
+      {!loadingData && (tab === 'events' || tab === 'summit') && isReviewer && <EventsAdmin />}
 
       {/* MODERATION: content members reported */}
       {!loadingData && tab === 'learners' && <LearnersAdmin users={users} />}
