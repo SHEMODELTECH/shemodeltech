@@ -15,7 +15,7 @@ export const MAX_EVENT_IMAGES = 5;
 // The upload server takes files up to about 3 MB, so big photos and
 // screenshots are resized (longest side 2000px) and saved as JPEG first.
 const LIMIT = 2.5 * 1024 * 1024;
-const shrink = (file) => new Promise((resolve) => {
+export const shrinkImage = (file) => new Promise((resolve) => {
   if (file.size <= LIMIT || file.type === 'image/gif') return resolve(file);
   const url = URL.createObjectURL(file);
   const img = new Image();
@@ -56,7 +56,7 @@ export const EventImagesInput = ({ images = [], onChange, onUploading }) => {
     for (const file of picked) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        const small = await shrink(file);
+        const small = await shrinkImage(file);
         // eslint-disable-next-line no-await-in-loop
         const up = await uploadImageToBlob(small, 'events');
         urls.push(up.url);

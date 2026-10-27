@@ -4,7 +4,7 @@
 // profile) or decline (a reason is required). The member gets a notification
 // and an email either way.
 import React, { useEffect, useState } from 'react';
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
@@ -12,6 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 import { sendEmailNow } from '../../utils/staffAlerts';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
 import { CONFERENCE_NOTE, stageLabel } from '../../utils/founders';
+import { closeReport } from '../../utils/founderGroups';
 
 const STATUS = { pending: ['To review', 'bg-pink-50 text-pink-700'], accepted: ['Accepted', 'bg-pink-600 text-white'], declined: ['Declined', 'bg-gray-100 text-gray-700'] };
 const MIN_DECLINE_WORDS = 10;
@@ -24,6 +25,13 @@ const FoundersAdmin = () => {
   const [filter, setFilter] = useState('pending');
   const [notes, setNotes] = useState({});
   const [busy, setBusy] = useState(null);
+  // Founder team groups a member reported (staff can read only these).
+  const [reported, setReported] = useState([]);
+  useEffect(() => {
+    getDocs(query(collection(db, 'founder_groups'), where('reported', '==', true)))
+      .then((s) => setReported(s.docs.map((d) => ({ id: d.id, ...d.data() }))))
+      .catch(() => setReported([]));
+  }, []);
 
   useEffect(() => {
     getDocs(collection(db, 'founder_pitches'))
@@ -66,6 +74,24 @@ const FoundersAdmin = () => {
     setBusy(null);
   };
 
+  const reportedView = (
+    <div className="space-y-3">
+      {reported.length === 0 && <p className="text-sm text-gray-500 py-8 text-center">No reported team groups. When a member reports a founder’s group, it shows here and in Reports, and you can open it.</p>}
+      {reported.map((g) => (
+        <div key={g.id} className="bg-white border border-gray-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="font-bold text-gray-900">{g.name}</p>
+            <p className="text-sm text-gray-600">Founder: {(g.memberNames || {})[g.founderUid] || '-'} · {(g.members || []).length} people{g.status === 'archived' ? ' · archived' : ''}</p>
+          </div>
+          <div className="flex gap-2">
+            <Link to={`/founders/group/${g.id}`} className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg">Open group</Link>
+            <button type="button" onClick={() => closeReport(g.id).then(() => { setReported((xs) => xs.filter((x) => x.id !== g.id)); toast.success('Report closed. The group is private again.'); }).catch(() => toast.error('Could not close it.'))} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Close report</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   if (rows === null) return <p className="py-10 text-center text-gray-400 text-sm">Loading…</p>;
   const shown = rows.filter((p) => filter === 'all' || p.status === filter);
   const count = (s) => rows.filter((p) => p.status === s).length;
@@ -73,11 +99,12 @@ const FoundersAdmin = () => {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        {[['pending', `To review (${count('pending')})`], ['accepted', `Accepted (${count('accepted')})`], ['declined', `Declined (${count('declined')})`], ['all', `All (${rows.length})`]].map(([k, l]) => (
+        {[['pending', `To review (${count('pending')})`], ['accepted', `Accepted (${count('accepted')})`], ['declined', `Declined (${count('declined')})`], ['all', `All (${rows.length})`], ['reported', `Reported groups (${reported.length})`]].map(([k, l]) => (
           <button key={k} type="button" onClick={() => setFilter(k)} className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${filter === k ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-gray-700 border-gray-300'}`}>{l}</button>
         ))}
       </div>
 
+      {filter === 'reported' ? reportedView : (<>
       {shown.length === 0 && <p className="text-sm text-gray-500 py-8 text-center">No pitches here yet. Members with a badge apply from the Founders page.</p>}
 
       <div className="space-y-3">
@@ -125,6 +152,7 @@ const FoundersAdmin = () => {
           );
         })}
       </div>
+      </>)}
     </div>
   );
 };

@@ -417,6 +417,41 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Founder team groups ----
+// The founder invites members with a badge; invitees join or decline
+// themselves; only members read the chat (staff only after a report).
+if (MODE !== 'orig') {
+  const badge = [{ id: 'techdev', projectId: 'p1', category: 'development' }];
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    const db = ctx.firestore();
+    await setDoc(doc(db, 'users', 'gMate'), member('gMate', { createdAt: OLD, badges: badge }));
+    await setDoc(doc(db, 'users', 'gNoBadge'), member('gNoBadge', { createdAt: OLD }));
+    await setDoc(doc(db, 'founder_groups', 'fdrAcc'), { founderUid: 'fdrAcc', name: 'Clinic Buddy team', members: ['fdrAcc'], memberNames: { fdrAcc: 'fdrAcc' }, invited: ['gMate'], status: 'active', reported: false, createdAt: OLD, updatedAt: OLD, lastMessageAt: OLD });
+    await setDoc(doc(db, 'founder_groups', 'fdrAcc', 'messages', 'm1'), { senderUid: 'fdrAcc', senderName: 'fdrAcc', text: 'Welcome!', images: [], createdAt: OLD });
+  });
+  const as = (uid) => ctxFor(uid, true).firestore();
+  const g = (uid) => doc(as(uid), 'founder_groups', 'fdrAcc');
+  const cases = [
+    ['groups: non-founder creates a group', 'verU', () => setDoc(doc(as('verU'), 'founder_groups', 'verU'), { founderUid: 'verU', name: 'x team', members: ['verU'], memberNames: {}, invited: [], status: 'active', reported: false }), 'denied'],
+    ['groups: founder invites a member without a badge', 'fdrAcc', () => updateDoc(g('fdrAcc'), { invited: ['gMate', 'gNoBadge'], updatedAt: serverTimestamp() }), 'denied'],
+    ['groups: outsider adds herself as a member', 'verU', () => updateDoc(g('verU'), { members: ['fdrAcc', 'verU'] }), 'denied'],
+    ['groups: invitee reads the chat before joining', 'gMate', () => getDoc(doc(as('gMate'), 'founder_groups', 'fdrAcc', 'messages', 'm1')), 'denied'],
+    ['groups: invitee joins', 'gMate', () => updateDoc(g('gMate'), { invited: [], members: ['fdrAcc', 'gMate'], 'memberNames.gMate': 'gMate', updatedAt: serverTimestamp() }), 'allowed'],
+    ['groups: member reads the chat', 'gMate', () => getDoc(doc(as('gMate'), 'founder_groups', 'fdrAcc', 'messages', 'm1')), 'allowed'],
+    ['groups: member sends a message with 3 images', 'gMate', () => addDoc(collection(as('gMate'), 'founder_groups', 'fdrAcc', 'messages'), { senderUid: 'gMate', senderName: 'gMate', text: 'Hi team, see github.com/x', images: ['a', 'b', 'c'], createdAt: serverTimestamp() }), 'allowed'],
+    ['groups: member sends 4 images', 'gMate', () => addDoc(collection(as('gMate'), 'founder_groups', 'fdrAcc', 'messages'), { senderUid: 'gMate', senderName: 'gMate', text: '', images: ['a', 'b', 'c', 'd'], createdAt: serverTimestamp() }), 'denied'],
+    ['groups: member edits the founder\'s message', 'gMate', () => updateDoc(doc(as('gMate'), 'founder_groups', 'fdrAcc', 'messages', 'm1'), { text: 'Changed', editedAt: serverTimestamp() }), 'denied'],
+    ['groups: staff reads an unreported group chat', 'staff1', () => getDoc(doc(ctxFor('staff1', false).firestore(), 'founder_groups', 'fdrAcc', 'messages', 'm1')), 'denied'],
+    ['groups: member reports the group', 'gMate', () => updateDoc(g('gMate'), { reported: true, reportedAt: serverTimestamp() }), 'allowed'],
+    ['groups: staff reads a reported group chat', 'staff1', () => getDoc(doc(ctxFor('staff1', false).firestore(), 'founder_groups', 'fdrAcc', 'messages', 'm1')), 'allowed'],
+    ['groups: founder deletes a member\'s message', 'fdrAcc', async () => { const r = await addDoc(collection(as('gMate'), 'founder_groups', 'fdrAcc', 'messages'), { senderUid: 'gMate', senderName: 'gMate', text: 'oops', images: [], createdAt: serverTimestamp() }); return deleteDoc(doc(as('fdrAcc'), 'founder_groups', 'fdrAcc', 'messages', r.id)); }, 'allowed'],
+    ['groups: founder archives the group', 'fdrAcc', () => updateDoc(g('fdrAcc'), { status: 'archived', updatedAt: serverTimestamp() }), 'allowed'],
+    ['groups: message in an archived group', 'gMate', () => addDoc(collection(as('gMate'), 'founder_groups', 'fdrAcc', 'messages'), { senderUid: 'gMate', senderName: 'gMate', text: 'Still here?', images: [], createdAt: serverTimestamp() }), 'denied'],
+    ['groups: member leaves', 'gMate', () => updateDoc(g('gMate'), { members: ['fdrAcc'], 'memberNames.gMate': deleteField(), updatedAt: serverTimestamp() }), 'allowed'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);

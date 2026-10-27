@@ -5,7 +5,6 @@
 // message them, and founders find teammates on the Talent Board.
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +14,8 @@ import {
   CONFERENCE_NOTE, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
   listFounders, stageLabel, submitPitch, updateTeamNeeds, withdrawPitch,
 } from '../utils/founders';
+import { acceptInvite, createGroup, declineInvite, groupsOf, invitesFor } from '../utils/founderGroups';
+import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 const trackLabel = (name) => BADGE_TRACKS.find((t) => t.name === name)?.label || name;
 const EMPTY = { ideaName: '', problem: '', audience: '', solution: '', stage: 'idea', tracksNeeded: [], rolesNeeded: '', why: '' };
@@ -140,13 +141,42 @@ const Founders = () => {
   const [editingNeeds, setEditingNeeds] = useState(false);
   const [busy, setBusy] = useState(false);
   const [track, setTrack] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [invites, setInvites] = useState([]);
+  const loadGroups = () => {
+    if (!currentUser) return;
+    groupsOf(currentUser.uid).then(setGroups).catch(() => {});
+    invitesFor(currentUser.uid).then(setInvites).catch(() => {});
+  };
 
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid)).then((s) => setProfile(s.exists() ? s.data() : null)).catch(() => setProfile(null));
     getMyPitch(currentUser.uid).then(setMine);
     listFounders().then(setFounders).catch(() => setFounders([]));
-  }, [currentUser]);
+    loadGroups();
+  }, [currentUser]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const myName = profile?.displayName || currentUser?.displayName || 'Member';
+  const myGroup = groups.find((g) => g.founderUid === currentUser?.uid);
+  const respond = async (g, join) => {
+    try {
+      if (join) { await acceptInvite(g.id, currentUser.uid, myName); toast.success(`You joined ${g.name}.`); navigate(`/founders/group/${g.id}`); }
+      else { await declineInvite(g.id, currentUser.uid); toast.success('Invite declined.'); loadGroups(); }
+    } catch (_) { toast.error('Could not do that. The invite may have been cancelled.'); loadGroups(); }
+  };
+  const startGroup = async () => {
+    try { await createGroup(currentUser.uid, myName, mine.ideaName); navigate(`/founders/group/${currentUser.uid}`); } catch (_) { toast.error('Could not create the group. Please try again.'); }
+  };
+  const toggleAccepting = async () => {
+    const next = mine.acceptingTeam === false;
+    try {
+      await updateDoc(doc(db, 'founder_pitches', currentUser.uid), { acceptingTeam: next, updatedAt: serverTimestamp() });
+      setMine((m) => ({ ...m, acceptingTeam: next }));
+      setFounders((xs) => (xs || []).map((x) => (x.uid === currentUser.uid ? { ...x, acceptingTeam: next } : x)));
+      toast.success(next ? 'You’re accepting teammates.' : 'Your team is closed to new teammates.');
+    } catch (_) { toast.error('Could not change it. Please try again.'); }
+  };
 
   const blocker = profile === undefined ? undefined : founderBlocker(profile);
   // Joining a founder's team also needs at least one badge.
@@ -233,6 +263,24 @@ const Founders = () => {
           <button type="button" onClick={() => setEditingNeeds((v) => !v)} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">{editingNeeds ? 'Close' : 'Update team needs'}</button>
           <button type="button" onClick={withdraw} className="text-sm font-semibold text-gray-500 hover:text-red-600 px-2">Remove my pitch</button>
         </div>
+        <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-900">Team group</p>
+            <p className="text-sm text-gray-600">{myGroup ? `${(myGroup.members || []).length} of 20 people${myGroup.status === 'archived' ? ' · archived' : ''}` : 'After messaging someone, invite them to a group chat for your whole team.'}</p>
+          </div>
+          {myGroup ? (
+            <Link to={`/founders/group/${myGroup.id}`} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg">Open team group</Link>
+          ) : (
+            <button type="button" onClick={startGroup} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg">Create team group</button>
+          )}
+        </div>
+        <label className="mt-4 flex items-center gap-3 text-sm text-gray-800 cursor-pointer">
+          <button type="button" role="switch" aria-checked={mine.acceptingTeam !== false} onClick={toggleAccepting}
+            className={`relative w-11 h-6 rounded-full transition-colors ${mine.acceptingTeam !== false ? 'bg-pink-600' : 'bg-gray-300'}`}>
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${mine.acceptingTeam !== false ? 'left-[22px]' : 'left-0.5'}`} />
+          </button>
+          <span><b>Accepting teammates</b> · {mine.acceptingTeam !== false ? 'members can tap “I’m interested”' : 'your card shows “Team closed”'}</span>
+        </label>
         {editingNeeds && <TeamNeedsForm pitch={mine} onSaved={(d) => { setMine((m) => ({ ...m, ...d })); setFounders((xs) => (xs || []).map((x) => (x.uid === mine.uid ? { ...x, ...d } : x))); setEditingNeeds(false); }} />}
       </div>
     );
@@ -254,6 +302,29 @@ const Founders = () => {
         ))}
       </div>
 
+      {invites.length > 0 && (
+        <div className="mb-4 max-w-3xl space-y-2">
+          {invites.map((g) => (
+            <div key={g.id} className="rounded-2xl border border-pink-200 bg-pink-50/60 p-4 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-gray-900"><b>{(g.memberNames || {})[g.founderUid] || 'A founder'}</b> invited you to join <b>{g.name}</b>.</p>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => respond(g, true)} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Join</button>
+                <button type="button" onClick={() => respond(g, false)} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">Decline</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {groups.filter((g) => g.founderUid !== currentUser?.uid).length > 0 && (
+        <div className="mb-4 max-w-3xl rounded-2xl border border-gray-200 bg-white p-4">
+          <p className="text-sm font-semibold text-gray-900">Your teams</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {groups.filter((g) => g.founderUid !== currentUser?.uid).map((g) => (
+              <Link key={g.id} to={`/founders/group/${g.id}`} className="text-sm font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">{g.name}{g.status === 'archived' ? ' (archived)' : ''}</Link>
+            ))}
+          </div>
+        </div>
+      )}
       {myBox && <div className="mb-8 max-w-3xl">{myBox}</div>}
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -293,7 +364,9 @@ const Founders = () => {
                 {p.rolesNeeded && <p className="text-sm text-gray-700 mt-2">{p.rolesNeeded}</p>}
               </div>
               <div className="mt-auto pt-4 flex flex-wrap gap-2">
-                {p.uid !== currentUser?.uid && profile !== undefined && !profile?.isCompany && (hasBadge ? (
+                {p.uid !== currentUser?.uid && p.acceptingTeam === false ? (
+                  <span className="text-sm font-semibold bg-gray-100 text-gray-500 px-4 py-2 rounded-lg">Team closed</span>
+                ) : p.uid !== currentUser?.uid && profile !== undefined && !profile?.isCompany && (hasBadge ? (
                   <button type="button" onClick={() => navigate(`/messages?to=${p.uid}`)} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">I’m interested</button>
                 ) : (
                   <Link to="/projects" title="Joining a founder’s team needs at least one badge" className="text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg">Earn a badge to join</Link>

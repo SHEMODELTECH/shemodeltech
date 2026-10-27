@@ -8,7 +8,7 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { closeReport, listReports, reasonLabel } from '../../utils/reports';
 
-const AREA = { proofwall: 'Proof Wall', team_forum: 'Project team forum', course_forum: 'Course forum' };
+const AREA = { proofwall: 'Proof Wall', team_forum: 'Project team forum', course_forum: 'Course forum', founder_group: 'Founder team group' };
 const fmt = (t) => {
   const d = t?.toDate ? t.toDate() : null;
   return d ? d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';

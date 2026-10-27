@@ -895,7 +895,8 @@ service cloud.firestore {
  && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ideaName', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'updatedAt']))
  // An accepted founder updates the tracks and roles she needs.
  || (uid == myUid() && resource.data.status == 'accepted'
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'updatedAt'])
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'acceptingTeam', 'updatedAt'])
+ && request.resource.data.get('acceptingTeam', true) is bool
  && request.resource.data.tracksNeeded is list && request.resource.data.tracksNeeded.size() >= 1 && request.resource.data.tracksNeeded.size() <= 6
  && request.resource.data.rolesNeeded is string && request.resource.data.rolesNeeded.size() <= 300 && noLink(request.resource.data.rolesNeeded))
  // Staff decide.
@@ -903,6 +904,89 @@ service cloud.firestore {
  && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'decisionNote', 'decidedBy', 'decidedAt'])));
  // The founder withdraws her pitch; admins remove spam.
  allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
+ }
+
+ // Founder team groups: founder_groups/{founderUid}, one per accepted founder.
+ // The founder invites members with at least one badge (one at a time); each
+ // invitee joins or declines herself, so nobody is added without agreeing. Up
+ // to 20 people (members + invites). Any signed-in member can see a group's
+ // name and members (shown on profiles); only members read the chat. Staff
+ // (admins and editors) can read the chat only after a member reports the
+ // group. The founder archives (read-only), reopens, or deletes it.
+ function foundersAccepted(uid) {
+ return exists(/databases/$(database)/documents/founder_pitches/$(uid))
+ && get(/databases/$(database)/documents/founder_pitches/$(uid)).data.get('status', '') == 'accepted';
+ }
+ function badgeHolder(uid) {
+ return get(/databases/$(database)/documents/users/$(uid)).data.get('badges', []).size() > 0
+ && get(/databases/$(database)/documents/users/$(uid)).data.get('isCompany', false) != true;
+ }
+ function groupOnlyChanges(keys) {
+ return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+ }
+ match /founder_groups/{gid} {
+ allow read: if isSignedIn();
+ allow create: if isSignedIn() && gid == myUid() && foundersAccepted(myUid())
+ && request.resource.data.founderUid == myUid()
+ && request.resource.data.members == [myUid()]
+ && request.resource.data.invited == []
+ && request.resource.data.status == 'active'
+ && request.resource.data.reported == false
+ && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+ && request.resource.data.memberNames is map
+ && request.resource.data.keys().hasOnly(['founderUid', 'name', 'members', 'memberNames', 'invited', 'status', 'reported', 'createdAt', 'updatedAt', 'lastMessageAt']);
+ allow update: if isSignedIn() && (
+ // Founder invites one member with a badge (room for 20 in all).
+ (gid == myUid() && groupOnlyChanges(['invited', 'updatedAt'])
+ && request.resource.data.invited.size() == resource.data.invited.size() + 1
+ && request.resource.data.invited.hasAll(resource.data.invited)
+ && !(request.resource.data.invited[request.resource.data.invited.size() - 1] in resource.data.members)
+ && badgeHolder(request.resource.data.invited[request.resource.data.invited.size() - 1])
+ && request.resource.data.members.size() + request.resource.data.invited.size() <= 20)
+ // Founder cancels invites, removes members (never herself), renames,
+ // archives or reopens.
+ || (gid == myUid() && groupOnlyChanges(['invited', 'members', 'memberNames', 'name', 'status', 'updatedAt'])
+ && resource.data.invited.hasAll(request.resource.data.invited)
+ && resource.data.members.hasAll(request.resource.data.members)
+ && myUid() in request.resource.data.members
+ && request.resource.data.status in ['active', 'archived']
+ && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80)
+ // An invitee joins: she moves herself from invited to members.
+ || (myUid() in resource.data.invited && groupOnlyChanges(['invited', 'members', 'memberNames', 'updatedAt'])
+ && request.resource.data.invited == resource.data.invited.removeAll([myUid()])
+ && request.resource.data.members == resource.data.members.concat([myUid()]))
+ // An invitee declines, or a member leaves (not the founder).
+ || (gid != myUid() && (myUid() in resource.data.invited || myUid() in resource.data.members)
+ && groupOnlyChanges(['invited', 'members', 'memberNames', 'updatedAt'])
+ && request.resource.data.invited == resource.data.invited.removeAll([myUid()])
+ && request.resource.data.members == resource.data.members.removeAll([myUid()]))
+ // A member marks the group reported (lets staff read it), or a message
+ // moves the group to the top.
+ || (myUid() in resource.data.members && groupOnlyChanges(['reported', 'reportedAt', 'lastMessageAt'])
+ && request.resource.data.get('reported', false) in [true, resource.data.get('reported', false)])
+ // Staff close a report.
+ || (isReviewer() && groupOnlyChanges(['reported', 'reportedAt']) && request.resource.data.reported == false));
+ allow delete: if isSignedIn() && (gid == myUid() || isAdmin());
+
+ match /messages/{mid} {
+ allow read: if isSignedIn()
+ && (myUid() in get(/databases/$(database)/documents/founder_groups/$(gid)).data.members
+ || (isReviewer() && get(/databases/$(database)/documents/founder_groups/$(gid)).data.get('reported', false) == true));
+ allow create: if isSignedIn()
+ && myUid() in get(/databases/$(database)/documents/founder_groups/$(gid)).data.members
+ && get(/databases/$(database)/documents/founder_groups/$(gid)).data.status == 'active'
+ && request.resource.data.senderUid == myUid()
+ && request.resource.data.text is string && request.resource.data.text.size() <= 2000
+ && request.resource.data.images is list && request.resource.data.images.size() <= 3
+ && (request.resource.data.text.size() > 0 || request.resource.data.images.size() > 0)
+ && request.resource.data.keys().hasOnly(['senderUid', 'senderName', 'text', 'images', 'createdAt']);
+ allow update: if isSignedIn() && resource.data.senderUid == myUid()
+ && get(/databases/$(database)/documents/founder_groups/$(gid)).data.status == 'active'
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt'])
+ && request.resource.data.text is string && request.resource.data.text.size() <= 2000;
+ // Her own message; the founder moderates any message; admins.
+ allow delete: if isSignedIn() && (resource.data.senderUid == myUid() || gid == myUid() || isAdmin());
+ }
  }
 
  // Funding requests from the "Fund a cohort" form on Support our mission.

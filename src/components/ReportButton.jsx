@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { REPORT_REASONS, reportContent } from '../utils/reports';
 
-const ReportButton = ({ target, me, className = '' }) => {
+const ReportButton = ({ target, me, className = '', onSent, label = 'Report' }) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
@@ -24,6 +24,7 @@ const ReportButton = ({ target, me, className = '' }) => {
     try {
       await reportContent(target, me, reason, details);
       setSent(true);
+      if (onSent) onSent();
       setOpen(false);
       toast.success('Thanks. Our team will review it.');
     } catch (err) {
@@ -35,7 +36,7 @@ const ReportButton = ({ target, me, className = '' }) => {
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} className={`text-xs font-semibold text-gray-400 hover:text-red-600 ${className}`}>
-        Report
+        {label}
       </button>
       {open && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="report-title"

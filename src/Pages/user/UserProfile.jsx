@@ -21,6 +21,7 @@ import PremiumBadge from '../../components/PremiumBadge';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
 import PresenceBadge from '../../components/PresenceBadge';
 import { founderOf } from '../../utils/founders';
+import { groupsOf } from '../../utils/founderGroups';
 
 
 // Only open web links (http/https) that members typed into their profile.
@@ -127,6 +128,14 @@ const UserProfile = () => {
   const [mentorStats, setMentorStats] = useState(null);
   // Accepted founder (Founders page): a Founder label by her name.
   const [founder, setFounder] = useState(null);
+  // Founder team groups she's in (name only; the chat is private).
+  const [teams, setTeams] = useState([]);
+  useEffect(() => {
+    let alive = true;
+    setTeams([]);
+    if (profile?.uid && currentUser) groupsOf(profile.uid).then((g) => { if (alive) setTeams(g); }).catch(() => {});
+    return () => { alive = false; };
+  }, [profile?.uid, currentUser]);
   useEffect(() => {
     let alive = true;
     setFounder(null);
@@ -404,6 +413,15 @@ const UserProfile = () => {
                   <p className="text-gray-700 text-sm font-semibold">{profile.companyProfile.companyName}</p>
                 )}
                 {headline && <p className="text-gray-700 text-sm mt-0.5">{headline}</p>}
+                {teams.length > 0 && (
+                  <p className="text-sm text-gray-600 mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                    {teams.map((g) => (
+                      <Link key={g.id} to={(g.members || []).includes(currentUser?.uid) ? `/founders/group/${g.id}` : `/founders#${g.founderUid}`} className="hover:text-pink-700 hover:underline">
+                        <span className="font-semibold text-gray-900">{g.founderUid === profile.uid ? 'Founder' : 'Member'}</span> · {g.name}
+                      </Link>
+                    ))}
+                  </p>
+                )}
               </div>
             </div>
 
