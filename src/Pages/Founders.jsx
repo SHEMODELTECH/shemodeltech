@@ -10,6 +10,7 @@ import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { BADGE_TRACKS } from '../config/badgeTracks';
 import { hasLink, NO_LINKS_MSG } from '../utils/noLinks';
+import { alertStaff } from '../utils/staffAlerts';
 import {
   CONFERENCE_NOTE, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
   listFounders, stageLabel, submitPitch, updateTeamNeeds, withdrawPitch,
@@ -189,6 +190,16 @@ const Founders = () => {
     setBusy(true);
     try {
       await submitPitch(currentUser.uid, profile?.displayName || currentUser.displayName, form, mine);
+      // Tell admins and editors: bell, phone, and email (best effort).
+      const who = profile?.displayName || currentUser.displayName || 'A member';
+      alertStaff({
+        type: 'founder_pitch',
+        title: mine ? `Founder pitch sent again: ${form.ideaName.trim()}` : `New founder pitch: ${form.ideaName.trim()}`,
+        body: `${who} ${mine ? 'updated and resent' : 'sent'} a pitch for She Model Tech Conference. ${form.problem.trim().slice(0, 160)}`,
+        link: '/admin?tab=founders',
+        roles: ['admin', 'editor'],
+        ctaLabel: 'Review the pitch',
+      });
       setMine(await getMyPitch(currentUser.uid));
       setEditing(false);
       toast.success('Your pitch is in. We’ll let you know once it’s reviewed.');
