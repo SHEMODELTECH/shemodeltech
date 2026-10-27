@@ -130,7 +130,7 @@ const Conference = () => {
               Learn. Build. <span className="text-pink-500">Lead.</span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              A yearly conference for women building careers in tech: tech talks, workshops, leadership development, a pitch competition, and a community that shows up for each other.
+              A yearly conference for women building careers in tech. Come to learn, connect, and leave ready for your next step.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm">
               <span className="bg-white/10 border border-white/10 rounded-full px-4 py-2"><span className="text-gray-400">Date:</span> <b>{c.dateText || TBA}</b></span>
