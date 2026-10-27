@@ -319,6 +319,14 @@ export const EventDetail = () => {
               </p>
             )}
             {e.description && <p className="mt-5 text-gray-700 leading-relaxed whitespace-pre-line">{e.description}</p>}
+            {/^https:\/\//i.test(e.learnMoreUrl || '') && (
+              <a href={e.learnMoreUrl} target="_blank" rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-pink-700 hover:underline">
+                Learn more about the program
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            )}
 
             <div className="mt-6">
               <EventActions

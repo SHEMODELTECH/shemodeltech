@@ -15,7 +15,7 @@ import {
   listRegistrations, saveEvent, saveRecording, setPresenter, setShowOnPage,
 } from '../../utils/events';
 
-const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', images: [], published: false };
+const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', learnMoreUrl: '', imageUrl: '', images: [], published: false };
 const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
 const label = 'block text-sm font-semibold text-gray-800 mb-1';
 
@@ -68,7 +68,7 @@ const EventsAdmin = () => {
     const joinUrl = await getJoinUrl(e.id);
     setF({
       title: e.title || '', category: e.category || 'workshop', when: toLocalInput(e.startAt), durationMins: e.durationMins || 60,
-      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, imageUrl: e.imageUrl || '', images: eventImages(e), published: !!e.published,
+      hosts: e.hosts || '', description: e.description || '', capacity: e.capacity || '', joinUrl, learnMoreUrl: e.learnMoreUrl || '', imageUrl: e.imageUrl || '', images: eventImages(e), published: !!e.published,
     });
   };
 
@@ -80,6 +80,7 @@ const EventsAdmin = () => {
     if (!f.when) return toast.error('Choose the date and time.');
     if (f.description.trim().split(/\s+/).filter(Boolean).length < 5) return toast.error('Add a short description (at least 5 words).');
     if (f.joinUrl && !/^https?:\/\//i.test(f.joinUrl.trim())) return toast.error('The joining link should start with https://');
+    if (f.learnMoreUrl && !/^https:\/\/[^\s]+\.[^\s]+/i.test(f.learnMoreUrl.trim())) return toast.error('The “Learn more” link should be a full web address starting with https://');
     setBusy(true);
     try {
       const data = {
@@ -92,6 +93,9 @@ const EventsAdmin = () => {
         capacity: Number(f.capacity) > 0 ? Number(f.capacity) : null,
         images: f.images.slice(0, 5),
         imageUrl: f.images[0] || null,
+        // Optional page about the program (“Learn more” on the event). Only on
+        // She Model Tech's own events: member-hosted events stay link-free.
+        ...(!original?.hostUid && (f.learnMoreUrl.trim() || original?.learnMoreUrl) ? { learnMoreUrl: f.learnMoreUrl.trim() || null } : {}),
         published: announce ? true : !!f.published,
         ...(original?.hostUid && (announce || f.published) ? { reviewStatus: 'approved' } : {}),
       };
@@ -292,6 +296,7 @@ const EventsAdmin = () => {
             <EventImagesInput images={f.images} onChange={(images) => setF((x) => ({ ...x, images }))} onUploading={setUploading} />
           </div>
           <label className={`${label} sm:col-span-2`}>Description *<textarea rows={4} className={input} value={f.description} onChange={set('description')} /></label>
+          {!original?.hostUid && <label className={`${label} sm:col-span-2`}>“Learn more” link <span className="font-normal text-gray-500">(optional: a page about the program, shown to everyone on the event page)</span><input className={input} value={f.learnMoreUrl} onChange={set('learnMoreUrl')} placeholder="https://" /></label>}
           <label className={`${label} sm:col-span-2`}>Joining link <span className="font-normal text-gray-500">(Zoom, Google Meet…; only people with a place see it)</span><input className={input} value={f.joinUrl} onChange={set('joinUrl')} placeholder="https://" /></label>
           {original?.published && original.startAt && (
             <label className="sm:col-span-2 flex items-center gap-2 text-sm text-gray-800">
