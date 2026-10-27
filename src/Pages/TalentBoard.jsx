@@ -13,6 +13,7 @@ import { BADGE_TRACKS, badgesInTrack, levelForCount } from '../config/badgeTrack
 import { loadMemberDirectory } from '../utils/memberIndex';
 import TierBadge from '../components/TierBadge';
 import { trackStandings } from '../components/BadgeShowcase';
+import { listFounders } from '../utils/founders';
 
 const badgeOptions = [
   { id: '', label: 'All Tracks' },
@@ -37,6 +38,11 @@ const TalentBoard = () => {
   const [viewerProfile, setViewerProfile] = useState(null);
   // Learner ratings and completions for mentors' published courses.
   const [mentorStats, setMentorStats] = useState({});
+  // Accepted founders (Founders page): a Founder label on their card.
+  const [founderIds, setFounderIds] = useState(() => new Set());
+  useEffect(() => {
+    listFounders().then((xs) => setFounderIds(new Set(xs.map((x) => x.uid)))).catch(() => {});
+  }, []);
   useEffect(() => {
     if (TALENT_CACHE.mentor && Date.now() - TALENT_CACHE.mentorAt < 5 * 60 * 1000) {
       setMentorStats(TALENT_CACHE.mentor);
@@ -106,6 +112,8 @@ const TalentBoard = () => {
         !filterBadge ||
         (filterBadge === 'mentors'
           ? isMentor(t)
+          : filterBadge === 'founders'
+          ? founderIds.has(t.uid)
           // Profile badges store the track key in `category` (e.g. 'development')
           // and a label in `title`; older ones used badgeCategory/badgeName.
           : badgesInTrack(t, BADGE_TRACKS.find(x => x.name === filterBadge)?.key || filterBadge) > 0 ||
@@ -114,7 +122,7 @@ const TalentBoard = () => {
     })
     .sort((a, b) => rank(b) - rank(a) || (a.displayName || '').localeCompare(b.displayName || ''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [talents, searchTerm, filterBadge, mentorStats]);
+  }, [talents, searchTerm, filterBadge, mentorStats, founderIds]);
   const topMentors = useMemo(() => talents
     .filter((t) => isMentor(t) && statsOf(t)?.ratingCount)
     .sort((a, b) => rank(b) - rank(a))
@@ -177,6 +185,7 @@ const TalentBoard = () => {
           >
             {badgeOptions.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
             <option value="mentors">Mentors</option>
+            <option value="founders">Founders</option>
           </select>
         </div>
         )}
@@ -233,6 +242,9 @@ const TalentBoard = () => {
                   <span className="block text-xs text-gray-600 truncate">
                     {top ? `${top.name} ${lvl}` : (trackLabel || 'Member')}
                   </span>
+                  {founderIds.has(talent.uid) && (
+                    <span className="mt-2 inline-block text-[11px] font-bold uppercase tracking-wide bg-gray-900 text-white px-2 py-0.5 rounded-full">Founder</span>
+                  )}
                   {isMentor(talent) && (
                     <span className="mt-2 flex flex-col items-center gap-1">
                       <MentorBadge count={talent.mentorApprovedCourses || 0} isMentor size="sm" />

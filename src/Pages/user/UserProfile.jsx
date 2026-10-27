@@ -20,6 +20,7 @@ import { mentorStatsByUid } from '../../utils/mentorStats';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
 import PresenceBadge from '../../components/PresenceBadge';
+import { founderOf } from '../../utils/founders';
 
 
 // Only open web links (http/https) that members typed into their profile.
@@ -124,6 +125,14 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [mentorCerts, setMentorCerts] = useState([]);
   const [mentorStats, setMentorStats] = useState(null);
+  // Accepted founder (Founders page): a Founder label by her name.
+  const [founder, setFounder] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    setFounder(null);
+    if (profile?.uid && currentUser) founderOf(profile.uid).then((f) => { if (alive) setFounder(f); });
+    return () => { alive = false; };
+  }, [profile?.uid, currentUser]);
   // Staff can view profiles of learners under 18; other members can't.
   const [viewerStaff, setViewerStaff] = useState(false);
   useEffect(() => {
@@ -377,6 +386,9 @@ const UserProfile = () => {
                 <h1 className="text-2xl font-bold text-gray-900 mb-0.5 flex items-center gap-2 flex-wrap">
                   {displayName}
                   <MentorBadge count={profile.mentorApprovedCourses || 0} isMentor={!!profile.isTeacher} showCount />
+                  {founder && (
+                    <Link to={`/founders#${founder.uid}`} title={`Founder of ${founder.ideaName}`} className="inline-flex items-center text-xs font-bold uppercase tracking-wide bg-gray-900 text-white px-2.5 py-0.5 rounded-full hover:bg-black">Founder</Link>
+                  )}
                   {/* Companies show a badge only with Premium: the gold Verified Partner badge. */}
                   {isVerifiedPartner(profile) && <PremiumBadge kind="partner" size="md" />}
                   {profile.isCompany && (

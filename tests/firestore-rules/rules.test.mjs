@@ -379,6 +379,44 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Founders (Founders page) ----
+// Members 13+ (not companies) with at least one badge pitch an idea; staff
+// accept or decline; accepted pitches are readable by members.
+if (MODE !== 'orig') {
+  const badge = [{ id: 'techdev', projectId: 'p1', category: 'development' }];
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    const db = ctx.firestore();
+    await setDoc(doc(db, 'users', 'fdr'), member('fdr', { createdAt: OLD, badges: badge }));
+    await setDoc(doc(db, 'users', 'fdrTeen'), member('fdrTeen', { ageGroup: '13-17', createdAt: OLD, badges: badge }));
+    await setDoc(doc(db, 'users', 'fdrCo'), member('fdrCo', { isCompany: true, createdAt: OLD, badges: badge }));
+    await setDoc(doc(db, 'users', 'fdrAcc'), member('fdrAcc', { createdAt: OLD, badges: badge }));
+    const p = { name: 'x', ideaName: 'Clinic Buddy', problem: 'Patients forget their appointments.', audience: 'Small clinics', solution: 'Text reminders that patients can answer.', stage: 'idea', tracksNeeded: ['TechDev'], rolesNeeded: 'A developer', why: 'I work at a clinic and see it daily.', createdAt: OLD, updatedAt: OLD };
+    await setDoc(doc(db, 'founder_pitches', 'fdrAcc'), { ...p, uid: 'fdrAcc', name: 'fdrAcc', status: 'accepted' });
+    await setDoc(doc(db, 'founder_pitches', 'bob'), { ...p, uid: 'bob', name: 'bob', status: 'pending' });
+  });
+  const as = (uid) => ctxFor(uid, true).firestore();
+  const pitch = (uid, extra = {}) => ({ uid, name: uid, ideaName: 'Study Buddy', problem: 'Students study alone and give up.', audience: 'College students',
+    solution: 'An app that matches study partners by course.', stage: 'prototype', tracksNeeded: ['TechDev', 'TechQA'], rolesNeeded: 'A frontend developer and a tester',
+    why: 'I built the first version for my class.', status: 'pending', createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
+  const cases = [
+    ['founders: member with a badge pitches', 'fdr', () => setDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), pitch('fdr')), 'allowed'],
+    ['founders: teen with a badge pitches', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen')), 'allowed'],
+    ['founders: member without a badge pitches', 'verU', () => setDoc(doc(as('verU'), 'founder_pitches', 'verU'), pitch('verU')), 'denied'],
+    ['founders: company pitches', 'fdrCo', () => setDoc(doc(as('fdrCo'), 'founder_pitches', 'fdrCo'), pitch('fdrCo')), 'denied'],
+    ['founders: pitches as already accepted', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen', { status: 'accepted' })), 'denied'],
+    ['founders: pitch for someone else', 'fdr', () => setDoc(doc(as('fdr'), 'founder_pitches', 'verU'), pitch('verU')), 'denied'],
+    ['founders: a link in the pitch', 'fdr', () => updateDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), { solution: 'See the demo at bit.ly/my-demo before you decide.', updatedAt: serverTimestamp() }), 'denied'],
+    ['founders: founder accepts her own pitch', 'fdr', () => updateDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), { status: 'accepted' }), 'denied'],
+    ['founders: member reads an accepted pitch', 'verU', () => getDoc(doc(as('verU'), 'founder_pitches', 'fdrAcc')), 'allowed'],
+    ['founders: member reads a pitch under review', 'verU', () => getDoc(doc(as('verU'), 'founder_pitches', 'bob')), 'denied'],
+    ['founders: accepted founder updates team needs', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { tracksNeeded: ['TechQA'], rolesNeeded: 'A tester', updatedAt: serverTimestamp() }), 'allowed'],
+    ['founders: accepted founder rewrites her pitch', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { ideaName: 'Something else' }), 'denied'],
+    ['founders: staff accepts a pitch', 'staff1', () => updateDoc(doc(ctxFor('staff1', false).firestore(), 'founder_pitches', 'bob'), { status: 'accepted', decisionNote: null, decidedBy: 'staff1@x.test', decidedAt: serverTimestamp() }), 'allowed'],
+    ['founders: founder withdraws her pitch', 'fdr', () => deleteDoc(doc(as('fdr'), 'founder_pitches', 'fdr')), 'allowed'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);

@@ -49,6 +49,7 @@ import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
 import FeedbackSummary from '../../components/admin/FeedbackSummary';
 import { ADMIN_SECTIONS } from '../../config/adminSections';
 import TeamApplicationsAdmin from '../../components/admin/TeamApplicationsAdmin';
+import FoundersAdmin from '../../components/admin/FoundersAdmin';
 import { UserFilters, UsersCsvButton, matchesUserFilters } from '../../components/admin/UsersExport';
 
 const fmtDate = (ts) => {
@@ -1069,6 +1070,7 @@ const AdminPanel = ({ only = null, bare = false }) => {
       )}
       {!loadingData && tab === 'announcements' && isAdmin && <AnnouncementsAdmin />}
       {!loadingData && tab === 'team' && isAdmin && <TeamApplicationsAdmin />}
+      {!loadingData && tab === 'founders' && isReviewer && <FoundersAdmin />}
       {!loadingData && tab === 'feedback' && isAdmin && <FeedbackSummary />}
       {!loadingData && tab === 'proofwall' && isAdmin && <ProofWallAdmin />}
       {!loadingData && tab === 'overview' && (

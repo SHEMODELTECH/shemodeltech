@@ -80,6 +80,7 @@ const MyProjects = lazy(() => import('./Pages/projects/MyProjects'));
 const ProjectWorkspace = lazy(() => import('./Pages/projects/ProjectWorkspace'));
 const MyWorkspaces = lazy(() => import('./Pages/projects/MyWorkspaces'));
 const TalentBoard = lazy(() => import('./Pages/TalentBoard'));
+const Founders = lazy(() => import('./Pages/Founders'));
 const ProofWall = lazy(() => import('./Pages/ProofWall'));
 const ProjectVault = lazy(() => import('./Pages/ProjectVault'));
 const ProjectFeedback = lazy(() => import('./Pages/projects/ProjectFeedback'));
@@ -466,6 +467,14 @@ function App() {
                   element={
                     <SidebarRoute>
                       <TalentBoard />
+                    </SidebarRoute>
+                  }
+                />
+                <Route
+                  path="/founders"
+                  element={
+                    <SidebarRoute>
+                      <Founders />
                     </SidebarRoute>
                   }
                 />

@@ -858,6 +858,53 @@ service cloud.firestore {
  allow read, update, delete: if isAdmin();
  }
 
+ // Founders (Founders page): members 13+ (not companies) with at least one
+ // badge pitch an idea for She Model Tech Conference; one pitch per member, at
+ // founder_pitches/{uid}. Staff (admins and editors) accept or decline. Accepted
+ // pitches are readable by any signed-in member (the Founders page); others
+ // only by their owner and staff. No web links in any text.
+ function canPitch() {
+ return isVerified() && hasProfile()
+ && myUserDoc().get('isCompany', false) != true
+ && myUserDoc().get('ageGroup', null) in ['18plus', '13-17']
+ && myUserDoc().get('badges', []).size() > 0;
+ }
+ function validPitch(d) {
+ return d.uid == myUid()
+ && d.name is string && d.name.size() > 0 && d.name.size() <= 120
+ && d.ideaName is string && d.ideaName.size() >= 2 && d.ideaName.size() <= 80
+ && d.problem is string && d.problem.size() >= 20 && d.problem.size() <= 600
+ && d.audience is string && d.audience.size() >= 5 && d.audience.size() <= 300
+ && d.solution is string && d.solution.size() >= 20 && d.solution.size() <= 800
+ && d.stage in ['idea', 'prototype', 'live']
+ && d.tracksNeeded is list && d.tracksNeeded.size() >= 1 && d.tracksNeeded.size() <= 6
+ && d.rolesNeeded is string && d.rolesNeeded.size() <= 300
+ && d.why is string && d.why.size() >= 20 && d.why.size() <= 800
+ && noLink(d.name) && noLink(d.ideaName) && noLink(d.problem) && noLink(d.audience)
+ && noLink(d.solution) && noLink(d.rolesNeeded) && noLink(d.why);
+ }
+ match /founder_pitches/{uid} {
+ allow read: if isSignedIn() && (uid == myUid() || isReviewer() || resource.data.get('status', '') == 'accepted');
+ allow create: if isSignedIn() && uid == myUid() && canPitch()
+ && validPitch(request.resource.data) && request.resource.data.status == 'pending'
+ && request.resource.data.keys().hasOnly(['uid', 'name', 'ideaName', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'createdAt', 'updatedAt']);
+ allow update: if isSignedIn() && (
+ // The founder sends a pending or declined pitch again (back to review).
+ (uid == myUid() && canPitch() && resource.data.status in ['pending', 'declined']
+ && validPitch(request.resource.data) && request.resource.data.status == 'pending'
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ideaName', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'updatedAt']))
+ // An accepted founder updates the tracks and roles she needs.
+ || (uid == myUid() && resource.data.status == 'accepted'
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'updatedAt'])
+ && request.resource.data.tracksNeeded is list && request.resource.data.tracksNeeded.size() >= 1 && request.resource.data.tracksNeeded.size() <= 6
+ && request.resource.data.rolesNeeded is string && request.resource.data.rolesNeeded.size() <= 300 && noLink(request.resource.data.rolesNeeded))
+ // Staff decide.
+ || (isReviewer() && request.resource.data.status in ['pending', 'accepted', 'declined']
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'decisionNote', 'decidedBy', 'decidedAt'])));
+ // The founder withdraws her pitch; admins remove spam.
+ allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
+ }
+
  // Funding requests from the "Fund a cohort" form on Support our mission.
  // Anyone can send one (signed in or not); only admins read and manage them
  // (Admin → Sponsors). The server sends the alert emails (api/public-request).
