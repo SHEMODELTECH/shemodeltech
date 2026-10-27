@@ -20,7 +20,7 @@ const KINDS = {
   contact: { col: 'contact_messages', title: (d) => `New message (${CONTACT_TOPICS[d.topic] || 'General'}): ${headerSafe(d.name).slice(0, 100) || 'someone'}` },
 };
 // Contact us topics (src/Pages/Contact.jsx).
-const CONTACT_TOPICS = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', other: 'Something else' };
+const CONTACT_TOPICS = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', partner: 'Conference partnership', judge: 'Conference judge application', other: 'Something else' };
 const FUNDING_LABELS = {
   giverType: { company: 'Company', foundation: 'Foundation or trust', individual: 'Individual', other: 'Other' },
   fundingFor: { cohort: 'A whole cohort', team: 'One team', laptops: 'Laptops and internet', unsure: 'Not sure yet' },

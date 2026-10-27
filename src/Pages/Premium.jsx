@@ -86,6 +86,15 @@ const Premium = () => {
         Free companies can browse the Talent Board and start up to 5 new conversations a month.
       </p>
 
+      <div className="mt-8 bg-gray-950 text-white rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-pink-400">She Model Tech Conference</p>
+          <h2 className="text-lg font-bold mt-1">Conference partner packages</h2>
+          <p className="text-sm text-gray-300 mt-1">Separate from tiers: community, session, pitch competition, and founders partner packages. Companies on a tier get first choice of slots.</p>
+        </div>
+        <Link to="/conference#partner" className="flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2.5 rounded-lg text-center">See the packages</Link>
+      </div>
+
       <div className="mt-8 bg-white border border-pink-200 rounded-2xl p-6">
         <h2 className="text-lg font-bold text-gray-900">Where the money goes</h2>
         <p className="text-sm text-gray-700 mt-2">

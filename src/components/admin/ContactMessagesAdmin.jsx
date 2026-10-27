@@ -16,7 +16,7 @@ const STATUS = {
   replied: ['Replied', 'bg-gray-900 text-white'],
   closed: ['Closed', 'bg-gray-100 text-gray-700'],
 };
-const TOPIC = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', other: 'Something else' };
+const TOPIC = { general: 'General question', letter: 'Letter request', certificate: 'Certificate check', account: 'Sign-in or account help', privacy: 'Privacy or my data', partner: 'Conference partnership', judge: 'Conference judge application', other: 'Something else' };
 
 const ContactMessagesAdmin = () => {
   const { currentUser } = useAuth();

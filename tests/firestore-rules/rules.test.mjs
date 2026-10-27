@@ -496,6 +496,7 @@ if (MODE !== 'orig') {
     ['conference page: staff saves it', 'staff1', () => setDoc(doc(staff(), 'conference_page', 'info'), { dateText: 'TBA', speakers: [] }), 'allowed'],
     ['conference page: member edits it', 'verU', () => setDoc(doc(as('verU'), 'conference_page', 'info'), { dateText: 'Tomorrow' }), 'denied'],
     ['conference page: visitor reads it', 'anon', () => getDoc(doc(anon(), 'conference_page', 'info')), 'allowed'],
+    ['contact: conference partnership message', 'anon', () => addDoc(collection(anon(), 'contact_messages'), { name: 'Ada Partner', email: 'ada@acme.test', topic: 'partner', reference: '', message: 'We would like the Session partner package.', status: 'new', createdAt: serverTimestamp() }), 'allowed'],
     ['notify me: member adds herself', 'verU', () => setDoc(doc(as('verU'), 'conference_notify', 'verU'), { uid: 'verU', createdAt: serverTimestamp() }), 'allowed'],
     ['notify me: member adds someone else', 'verU', () => setDoc(doc(as('verU'), 'conference_notify', 'bob'), { uid: 'bob', createdAt: serverTimestamp() }), 'denied'],
     ['notify me: member reads someone else', 'verU', () => getDoc(doc(as('verU'), 'conference_notify', 'bob')), 'denied'],

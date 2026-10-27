@@ -1061,7 +1061,7 @@ service cloud.firestore {
  allow create: if request.resource.data.status == 'new'
  && request.resource.data.name is string && request.resource.data.name.size() > 1 && request.resource.data.name.size() <= 120
  && request.resource.data.email is string && request.resource.data.email.size() <= 200 && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
- && request.resource.data.topic in ['general', 'letter', 'certificate', 'account', 'privacy', 'other']
+ && request.resource.data.topic in ['general', 'letter', 'certificate', 'account', 'privacy', 'partner', 'judge', 'other']
  && request.resource.data.reference is string && request.resource.data.reference.size() <= 120
  && request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 3000
  && request.resource.data.createdAt == request.time

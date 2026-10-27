@@ -14,6 +14,14 @@ import { db } from '../firebase/config';
 
 export const SPEAKER_ROLES = ['Tech talk', 'Panelist', 'Workshop', 'Leadership Development', 'Ministration', 'Host'];
 
+// Conference partner packages (separate from the year-round company tiers).
+export const PARTNER_PACKAGES = [
+  ['Community partner', 'Meet our community at the networking and career fair, with a table and your logo on the conference page.'],
+  ['Session partner', 'Lead a workshop, take a panel seat, or run a Leadership Development session. Content is agreed with She Model Tech.'],
+  ['Pitch competition partner', 'Fund or co-fund the prize, present the award on stage, and see your logo on the pitch competition.'],
+  ['Founders partner', 'For investors, incubators, and accelerators: meet founders who’ve agreed to be introduced, run office hours, and help ideas grow toward seed stage.'],
+];
+
 export const PROGRAM = [
   ['talks', 'Tech Talks', 'Practical talks from people building with technology today: AI, product, security, careers, and more.'],
   ['panel', 'Panel Discussion', 'Honest conversations with leaders and founders about building a career in tech.'],

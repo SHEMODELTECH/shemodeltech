@@ -11,7 +11,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 import { signInAndReturn } from './learning/LearningLayout';
-import { PROGRAM, getConferencePage, isNotified, notifyMe, stopNotify } from '../utils/conference';
+import { PARTNER_PACKAGES, PROGRAM, getConferencePage, isNotified, notifyMe, stopNotify } from '../utils/conference';
 
 const ICONS = {
   talks: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z',
@@ -69,6 +69,12 @@ const RegisterCta = ({ conf, dark = false }) => {
 const Conference = () => {
   const [conf, setConf] = useState(null);
   useEffect(() => { getConferencePage().then(setConf); }, []);
+  // Links like /conference#partner: scroll there once the page has loaded.
+  useEffect(() => {
+    if (!conf || !window.location.hash) return;
+    const el = document.getElementById(window.location.hash.slice(1));
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }, [conf]);
   const c = conf || {};
   const speakers = (c.speakers || []).filter((s) => s && s.name);
   const partners = (c.partners || []).filter((p) => p && p.name);
@@ -182,7 +188,37 @@ const Conference = () => {
             ) : (
               <p className="text-lg text-gray-700">Partner organizations to be announced.</p>
             )}
-            <p className="mt-8 text-sm text-gray-600">Want to partner with us, host a career fair table, or support the conference? <Link to="/contact" className="font-semibold text-pink-700 hover:underline">Contact us</Link>.</p>
+          </div>
+        </section>
+
+        {/* Partner with us: conference packages, and judges */}
+        <section id="partner" className="py-16 sm:py-24 bg-gray-950 text-white scroll-mt-20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <p className="text-pink-400 text-sm font-semibold uppercase tracking-widest mb-3">Partner with us</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold">Help our community grow</h2>
+              <p className="mt-4 text-gray-300 max-w-2xl mx-auto">Conference packages for organizations, companies, investors, and incubators. Companies on a She Model Tech tier get first choice of slots.</p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {PARTNER_PACKAGES.map(([t, d]) => (
+                <div key={t} className="rounded-2xl bg-white/5 border border-white/10 p-6">
+                  <h3 className="text-lg font-bold">{t}</h3>
+                  <p className="mt-2 text-sm text-gray-300 leading-relaxed">{d}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link to="/contact?topic=partner" className="w-full sm:w-auto text-center bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Talk to us about partnering</Link>
+            </div>
+            <div className="mt-12 rounded-2xl border border-pink-400/40 p-6 sm:p-8 grid md:grid-cols-3 gap-6 items-center">
+              <div className="md:col-span-2">
+                <h3 className="text-xl font-bold">Be a judge</h3>
+                <p className="mt-2 text-sm text-gray-300 leading-relaxed">Judges score the pitch competition on clear criteria. Anyone with relevant experience can apply, and She Model Tech chooses the panel. Partners may nominate a judge, and no judge scores a founder they’re connected to.</p>
+              </div>
+              <div className="md:text-right">
+                <Link to="/contact?topic=judge" className="inline-block bg-white text-gray-900 hover:bg-pink-50 font-semibold px-5 py-3 rounded-lg">Apply to be a judge</Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -195,6 +231,7 @@ const Conference = () => {
                 ['Who can attend?', 'The conference is free for She Model Tech members. Joining is free too: create an account, and you can register once registration opens.'],
                 ['When and where is it?', `${c.dateText ? `Date: ${c.dateText}.` : 'The date will be announced here soon.'} ${c.venue ? `Venue: ${c.venue}.` : 'The venue will be announced too.'}`],
                 ['How do I register?', 'Registration opens once the date is confirmed. Tap “Notify me” and we’ll let you know. You’ll register from the conference event in Events, where you’ll also get reminders.'],
+                ['Can I be a judge or a partner?', 'Yes. Anyone with relevant experience can apply to be a judge, and organizations can choose a partner package. See “Partner with us” above.'],
                 ['Do I have to pitch?', 'No. The pitch competition is for accepted founders. Everyone else can enjoy the talks, workshops, and networking, and cheer the founders on.'],
               ].map(([q, a]) => (
                 <details key={q} className="group bg-white border border-gray-200 rounded-xl p-5">

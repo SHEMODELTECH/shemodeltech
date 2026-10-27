@@ -21,6 +21,8 @@ export const CONTACT_TOPICS = [
   ['certificate', 'Check a certificate'],
   ['account', 'Sign-in or account help'],
   ['privacy', 'Privacy or my data'],
+  ['partner', 'Conference partnership'],
+  ['judge', 'Apply to be a conference judge'],
   ['other', 'Something else'],
 ];
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim());
@@ -105,7 +107,7 @@ const Contact = () => {
               )}
               <label className={label}>Message * <span className="font-normal text-gray-500">(no web links, please)</span>
                 <textarea rows={5} value={f.message} onChange={set('message')} maxLength={3000} className={input}
-                  placeholder={f.topic === 'letter' ? 'Which letter you need, what it’s for, and when you need it by.' : 'How can we help?'} />
+                  placeholder={f.topic === 'letter' ? 'Which letter you need, what it’s for, and when you need it by.' : f.topic === 'partner' ? 'Your organization, which package interests you (Community, Session, Pitch competition, or Founders partner), and anything you’d like to offer.' : f.topic === 'judge' ? 'Your current role and organization, your expertise, any judging or investing experience, and your LinkedIn name (no links).' : 'How can we help?'} />
               </label>
               {/* Spam trap: hidden from people */}
               <input type="text" name="website" value={f.website} onChange={set('website')} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />

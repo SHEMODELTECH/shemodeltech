@@ -78,6 +78,7 @@ const Navbar = ({ cta = null }) => {
         { path: '/about', label: 'About' },
         { path: '/projects', label: 'Projects' },
         { path: '/events', label: 'Events' },
+        { path: '/conference', label: 'Conference' },
         { path: '/learning', label: 'Learning' },
       ];
 
