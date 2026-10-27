@@ -395,7 +395,7 @@ if (MODE !== 'orig') {
     await setDoc(doc(db, 'founder_pitches', 'bob'), { ...p, uid: 'bob', name: 'bob', status: 'pending' });
   });
   const as = (uid) => ctxFor(uid, true).firestore();
-  const pitch = (uid, extra = {}) => ({ uid, name: uid, ideaName: 'Study Buddy', problem: 'Students study alone and give up.', audience: 'College students',
+  const pitch = (uid, extra = {}) => ({ uid, name: uid, ideaName: 'Study Buddy', tagline: 'Study partners matched by course', problem: 'Students study alone and give up.', audience: 'College students',
     solution: 'An app that matches study partners by course.', stage: 'prototype', tracksNeeded: ['TechDev', 'TechQA'], rolesNeeded: 'A frontend developer and a tester',
     why: 'I built the first version for my class.', status: 'pending', createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
   const cases = [
@@ -407,7 +407,8 @@ if (MODE !== 'orig') {
     ['founders: pitch for someone else', 'fdr', () => setDoc(doc(as('fdr'), 'founder_pitches', 'verU'), pitch('verU')), 'denied'],
     ['founders: a link in the pitch', 'fdr', () => updateDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), { solution: 'See the demo at bit.ly/my-demo before you decide.', updatedAt: serverTimestamp() }), 'denied'],
     ['founders: founder accepts her own pitch', 'fdr', () => updateDoc(doc(as('fdr'), 'founder_pitches', 'fdr'), { status: 'accepted' }), 'denied'],
-    ['founders: member reads an accepted pitch', 'verU', () => getDoc(doc(as('verU'), 'founder_pitches', 'fdrAcc')), 'allowed'],
+    ['founders: member reads an accepted pitch (now private)', 'verU', () => getDoc(doc(as('verU'), 'founder_pitches', 'fdrAcc')), 'denied'],
+    ['founders: pitch without a tagline', 'fdrTeen', () => setDoc(doc(as('fdrTeen'), 'founder_pitches', 'fdrTeen'), pitch('fdrTeen', { tagline: '' })), 'denied'],
     ['founders: member reads a pitch under review', 'verU', () => getDoc(doc(as('verU'), 'founder_pitches', 'bob')), 'denied'],
     ['founders: accepted founder updates team needs', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { tracksNeeded: ['TechQA'], rolesNeeded: 'A tester', updatedAt: serverTimestamp() }), 'allowed'],
     ['founders: accepted founder rewrites her pitch', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { ideaName: 'Something else' }), 'denied'],
@@ -448,6 +449,22 @@ if (MODE !== 'orig') {
     ['groups: founder archives the group', 'fdrAcc', () => updateDoc(g('fdrAcc'), { status: 'archived', updatedAt: serverTimestamp() }), 'allowed'],
     ['groups: message in an archived group', 'gMate', () => addDoc(collection(as('gMate'), 'founder_groups', 'fdrAcc', 'messages'), { senderUid: 'gMate', senderName: 'gMate', text: 'Still here?', images: [], createdAt: serverTimestamp() }), 'denied'],
     ['groups: member leaves', 'gMate', () => updateDoc(g('gMate'), { members: ['fdrAcc'], 'memberNames.gMate': deleteField(), updatedAt: serverTimestamp() }), 'allowed'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
+// ---- Founder cards (the public part of an accepted pitch) ----
+if (MODE !== 'orig') {
+  const as = (uid) => ctxFor(uid, true).firestore();
+  const staff = () => ctxFor('staff1', false).firestore();
+  const card = { uid: 'fdrAcc', name: 'fdrAcc', ideaName: 'Clinic Buddy', tagline: 'Reminders for small clinics', stage: 'idea', tracksNeeded: ['TechDev'], rolesNeeded: 'A developer', acceptingTeam: true };
+  const cases = [
+    ['cards: staff publishes a founder card', 'staff1', () => setDoc(doc(staff(), 'founder_cards', 'fdrAcc'), card), 'allowed'],
+    ['cards: member publishes her own card', 'fdr', () => setDoc(doc(as('fdr'), 'founder_cards', 'fdr'), { ...card, uid: 'fdr' }), 'denied'],
+    ['cards: member reads a founder card', 'verU', () => getDoc(doc(as('verU'), 'founder_cards', 'fdrAcc')), 'allowed'],
+    ['cards: founder updates her team needs and tagline', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_cards', 'fdrAcc'), { tracksNeeded: ['TechQA'], rolesNeeded: 'A tester', tagline: 'Text reminders for clinics', updatedAt: serverTimestamp() }), 'allowed'],
+    ['cards: founder renames her idea on the card', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_cards', 'fdrAcc'), { ideaName: 'Something else' }), 'denied'],
+    ['cards: someone edits another founder\'s card', 'verU', () => updateDoc(doc(as('verU'), 'founder_cards', 'fdrAcc'), { rolesNeeded: 'Nobody', updatedAt: serverTimestamp() }), 'denied'],
   ];
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }

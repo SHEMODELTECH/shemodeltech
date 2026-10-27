@@ -4,9 +4,11 @@
 // Admin → Founders. Accepted founders are listed on the Founders page with the
 // roles they need, and build their team by messaging members (Talent Board).
 // Teammates also need at least one badge ("I'm interested" shows only then).
-// One pitch per member: founder_pitches/{uid}. The database rules check the
-// same limits (firestore.rules: founder_pitches).
-import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+// One pitch per member: founder_pitches/{uid}, private to the founder and
+// staff. Members see only the short public card (founder_cards/{uid}): the
+// idea's name, tagline, stage, and the tracks and roles needed. The database
+// rules check the same limits (firestore.rules: founder_pitches, founder_cards).
+import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export const FOUNDER_STAGES = [
@@ -19,6 +21,7 @@ export const stageLabel = (s) => (FOUNDER_STAGES.find(([k]) => k === s) || [null
 // Character limits: [minimum, maximum]. Shown on the form up front.
 export const PITCH_LIMITS = {
   ideaName: [2, 80],
+  tagline: [5, 100],
   problem: [20, 600],
   audience: [5, 300],
   solution: [20, 800],
@@ -39,9 +42,10 @@ export const founderBlocker = (profile) => {
 };
 
 const ref = (uid) => doc(db, 'founder_pitches', uid);
-const FIELDS = ['ideaName', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why'];
+const FIELDS = ['ideaName', 'tagline', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why'];
 const clean = (f) => ({
   ideaName: f.ideaName.trim(),
+  tagline: f.tagline.trim(),
   problem: f.problem.trim(),
   audience: f.audience.trim(),
   solution: f.solution.trim(),
@@ -69,21 +73,48 @@ export const submitPitch = async (uid, name, form, existing) => {
 };
 
 // Accepted founders keep their team needs up to date (no new review).
-export const updateTeamNeeds = (uid, { tracksNeeded, rolesNeeded }) =>
-  updateDoc(ref(uid), { tracksNeeded: (tracksNeeded || []).slice(0, MAX_TRACKS), rolesNeeded: String(rolesNeeded || '').trim(), updatedAt: serverTimestamp() });
+const cardRef = (uid) => doc(db, 'founder_cards', uid);
 
-export const withdrawPitch = (uid) => deleteDoc(ref(uid));
+// Accepted founders keep their team needs up to date (no new review): the
+// private pitch and the public card both change.
+export const updateTeamNeeds = async (uid, { tracksNeeded, rolesNeeded, tagline }) => {
+  const d = { tracksNeeded: (tracksNeeded || []).slice(0, MAX_TRACKS), rolesNeeded: String(rolesNeeded || '').trim(), updatedAt: serverTimestamp() };
+  if (typeof tagline === 'string') d.tagline = tagline.trim().slice(0, 100);
+  await updateDoc(ref(uid), d);
+  await updateDoc(cardRef(uid), d).catch(() => {});
+};
+export const setAcceptingTeam = async (uid, on) => {
+  await updateDoc(ref(uid), { acceptingTeam: !!on, updatedAt: serverTimestamp() });
+  await updateDoc(cardRef(uid), { acceptingTeam: !!on, updatedAt: serverTimestamp() }).catch(() => {});
+};
 
+export const withdrawPitch = async (uid) => {
+  await deleteDoc(cardRef(uid)).catch(() => {});
+  await deleteDoc(ref(uid));
+};
+
+// The public card for an accepted pitch (staff write it when they accept).
+export const cardFromPitch = (p) => ({
+  uid: p.uid, name: p.name || 'Member', ideaName: p.ideaName || '', tagline: p.tagline || '', stage: p.stage || 'idea',
+  tracksNeeded: p.tracksNeeded || [], rolesNeeded: p.rolesNeeded || '', acceptingTeam: p.acceptingTeam !== false,
+  acceptedAt: serverTimestamp(), updatedAt: serverTimestamp(),
+});
+export const publishCard = (p) => setDoc(cardRef(p.uid), cardFromPitch(p));
+export const removeCard = (uid) => deleteDoc(cardRef(uid));
+
+// The Founders page list: public cards only.
 export const listFounders = async () => {
-  const s = await getDocs(query(collection(db, 'founder_pitches'), where('status', '==', 'accepted')));
+  const s = await getDocs(collection(db, 'founder_cards'));
   return s.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
-// An accepted founder's pitch, or null (others aren't readable).
+// An accepted founder's public card, or null.
 export const founderOf = async (uid) => {
   if (!uid) return null;
-  const p = await getMyPitch(uid);
-  return p && p.status === 'accepted' ? p : null;
+  try {
+    const s = await getDoc(cardRef(uid));
+    return s.exists() ? { id: s.id, ...s.data() } : null;
+  } catch (_) { return null; }
 };
 
 export const PITCH_FIELDS = FIELDS;

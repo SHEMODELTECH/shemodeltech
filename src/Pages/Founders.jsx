@@ -14,13 +14,13 @@ import { alertStaff } from '../utils/staffAlerts';
 import {
   CONFERENCE_NOTE, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
   listFounders, stageLabel, submitPitch, updateTeamNeeds, withdrawPitch,
-  CONFERENCE_FIELDS, getConference, setAttendance, slotLabel,
+  CONFERENCE_FIELDS, getConference, setAcceptingTeam, setAttendance, slotLabel,
 } from '../utils/founders';
 import { acceptInvite, createGroup, declineInvite, groupsOf, invitesFor } from '../utils/founderGroups';
-import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 const trackLabel = (name) => BADGE_TRACKS.find((t) => t.name === name)?.label || name;
-const EMPTY = { ideaName: '', problem: '', audience: '', solution: '', stage: 'idea', tracksNeeded: [], rolesNeeded: '', why: '' };
+const EMPTY = { ideaName: '', tagline: '', problem: '', audience: '', solution: '', stage: 'idea', tracksNeeded: [], rolesNeeded: '', why: '' };
 const input = 'mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm font-normal text-gray-900 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200';
 const labelCls = 'block text-sm font-semibold text-gray-800';
 
@@ -72,7 +72,9 @@ const PitchForm = ({ initial, onCancel, onSubmit, busy }) => {
   };
   return (
     <form onSubmit={submit} className="mt-4 bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-4" noValidate>
+      <p className="text-sm text-gray-700 bg-pink-50/60 border border-pink-100 rounded-lg px-3 py-2">Members see only your idea’s name, tagline, stage, and the roles you need. The rest of your pitch is private to you and She Model Tech. Don’t put anything secret in the name or tagline.</p>
       <Counted label="Name of your idea" hint="A short name people will remember." k="ideaName" f={f} set={set} />
+      <Counted label="Tagline" hint="One line members will see, e.g. “Appointment reminders for small clinics”." k="tagline" f={f} set={set} />
       <Counted label="The problem" hint="What problem are you solving, and why does it matter?" k="problem" f={f} set={set} rows={3} />
       <Counted label="Who it’s for" hint="The people who have this problem." k="audience" f={f} set={set} rows={2} />
       <Counted label="Your solution" hint="What you want to build, and how it solves the problem." k="solution" f={f} set={set} rows={4} />
@@ -105,20 +107,27 @@ const PitchForm = ({ initial, onCancel, onSubmit, busy }) => {
 const TeamNeedsForm = ({ pitch, onSaved }) => {
   const [tracks, setTracks] = useState(pitch.tracksNeeded || []);
   const [roles, setRoles] = useState(pitch.rolesNeeded || '');
+  const [tagline, setTagline] = useState(pitch.tagline || '');
   const [busy, setBusy] = useState(false);
   const save = async () => {
     if (!tracks.length) return toast.error('Choose at least one track your team needs.');
-    if (hasLink(roles)) return toast.error(NO_LINKS_MSG);
+    if (tagline.trim().length < PITCH_LIMITS.tagline[0]) return toast.error(`Add a tagline of at least ${PITCH_LIMITS.tagline[0]} characters.`);
+    if (hasLink(roles) || hasLink(tagline)) return toast.error(NO_LINKS_MSG);
     setBusy(true);
     try {
-      await updateTeamNeeds(pitch.uid, { tracksNeeded: tracks, rolesNeeded: roles });
-      toast.success('Team needs updated.');
-      onSaved({ tracksNeeded: tracks, rolesNeeded: roles.trim() });
+      await updateTeamNeeds(pitch.uid, { tracksNeeded: tracks, rolesNeeded: roles, tagline });
+      toast.success('Your card is updated.');
+      onSaved({ tracksNeeded: tracks, rolesNeeded: roles.trim(), tagline: tagline.trim() });
     } catch (_) { toast.error('Could not save. Please try again.'); }
     setBusy(false);
   };
   return (
     <div className="mt-3 space-y-3">
+      <label className={labelCls}>Tagline
+        <span className="block text-xs font-normal text-gray-500">The one line members see. At least {PITCH_LIMITS.tagline[0]} characters, up to {PITCH_LIMITS.tagline[1]}. Nothing secret.</span>
+        <input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={PITCH_LIMITS.tagline[1]} className={input} />
+        <span className="block text-xs font-normal text-gray-500 mt-1">{tagline.trim().length} / {PITCH_LIMITS.tagline[1]}</span>
+      </label>
       <div>
         <p className={labelCls}>Tracks your team needs</p>
         <TrackChips value={tracks} onChange={setTracks} />
@@ -128,7 +137,7 @@ const TeamNeedsForm = ({ pitch, onSaved }) => {
         <textarea rows={2} value={roles} onChange={(e) => setRoles(e.target.value)} maxLength={PITCH_LIMITS.rolesNeeded[1]} className={input} />
         <span className="block text-xs font-normal text-gray-500 mt-1">{roles.trim().length} / {PITCH_LIMITS.rolesNeeded[1]}</span>
       </label>
-      <button type="button" onClick={save} disabled={busy} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Saving…' : 'Save team needs'}</button>
+      <button type="button" onClick={save} disabled={busy} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Saving…' : 'Save my card'}</button>
     </div>
   );
 };
@@ -217,7 +226,7 @@ const Founders = () => {
   const toggleAccepting = async () => {
     const next = mine.acceptingTeam === false;
     try {
-      await updateDoc(doc(db, 'founder_pitches', currentUser.uid), { acceptingTeam: next, updatedAt: serverTimestamp() });
+      await setAcceptingTeam(currentUser.uid, next);
       setMine((m) => ({ ...m, acceptingTeam: next }));
       setFounders((xs) => (xs || []).map((x) => (x.uid === currentUser.uid ? { ...x, acceptingTeam: next } : x)));
       toast.success(next ? 'You’re accepting teammates.' : 'Your team is closed to new teammates.');
@@ -229,7 +238,7 @@ const Founders = () => {
   const hasBadge = !!(profile?.badges || []).length;
   const shown = useMemo(() => (founders || [])
     .filter((p) => !track || (p.tracksNeeded || []).includes(track))
-    .sort((a, b) => (b.decidedAt?.seconds || 0) - (a.decidedAt?.seconds || 0)), [founders, track]);
+    .sort((a, b) => (b.acceptedAt?.seconds || 0) - (a.acceptedAt?.seconds || 0)), [founders, track]);
 
   const send = async (form) => {
     setBusy(true);
@@ -313,10 +322,12 @@ const Founders = () => {
         <p className="font-bold text-gray-900 mt-1">{mine.ideaName}</p>
         <p className="text-sm text-gray-700 mt-1">{CONFERENCE_NOTE}</p>
         <p className="text-sm text-gray-700 mt-1">Your teammates need at least one badge. You’ll see each member’s badges on the Talent Board and their profile.</p>
+        <p className="text-sm text-gray-700 mt-1">Members see only your card: the idea’s name, tagline, stage, and the roles you need. Share the details with people you trust, in messages or your team group.</p>
+        {!mine.tagline && <p className="text-sm font-semibold text-pink-700 mt-1">Add a tagline so members know what you’re building: tap “Edit my card”.</p>}
         {mine.decisionNote && <p className="text-sm text-gray-600 mt-1">Note from She Model Tech: “{mine.decisionNote}”</p>}
         <div className="mt-3 flex flex-wrap gap-2">
           <Link to="/talent-board" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find teammates on the Talent Board</Link>
-          <button type="button" onClick={() => setEditingNeeds((v) => !v)} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">{editingNeeds ? 'Close' : 'Update team needs'}</button>
+          <button type="button" onClick={() => setEditingNeeds((v) => !v)} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">{editingNeeds ? 'Close' : 'Edit my card'}</button>
           <button type="button" onClick={withdraw} className="text-sm font-semibold text-gray-500 hover:text-red-600 px-2">Remove my pitch</button>
         </div>
         <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
@@ -345,7 +356,7 @@ const Founders = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Founders</h1>
-      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Founders pitch at She Model Tech Conference and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
+      <p className="text-gray-500 text-sm mb-6 max-w-3xl">Members with ideas worth building. Each card shows the idea in one line; founders share the details with their team. Founders pitch at She Model Tech Conference and build their teams here. See an idea you’d love to work on? Members with at least one badge can tap “I’m interested” to message the founder and join the team.</p>
 
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
         {[['1', 'Earn a badge', 'Finish a She Model Tech project and earn at least one badge.'],
@@ -412,9 +423,7 @@ const Founders = () => {
                 </div>
                 <span className="flex-shrink-0 text-xs font-semibold bg-pink-50 text-pink-700 px-2.5 py-1 rounded-full">{stageLabel(p.stage)}</span>
               </div>
-              <p className="text-sm text-gray-800 mt-3"><span className="font-semibold">Problem: </span>{p.problem}</p>
-              <p className="text-sm text-gray-800 mt-2"><span className="font-semibold">For: </span>{p.audience}</p>
-              <p className="text-sm text-gray-800 mt-2"><span className="font-semibold">Solution: </span>{p.solution}</p>
+              {p.tagline && <p className="text-base text-gray-800 mt-3">{p.tagline}</p>}
               <div className="mt-3">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Looking for</p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -437,7 +446,7 @@ const Founders = () => {
         </div>
       )}
 
-      <p className="text-xs text-gray-500 mt-8 max-w-3xl">Founders own their ideas and ventures. She Model Tech helps founders pitch and meet teammates, but doesn’t own, fund, or run founder ventures, or handle any payments between members. Agree together how you’ll work before you start.</p>
+      <p className="text-xs text-gray-500 mt-8 max-w-3xl">Founders own their ideas and ventures. She Model Tech helps founders pitch and meet teammates, but doesn’t own, fund, or run founder ventures, or handle any payments between members. Share sensitive details only with people you trust, and agree together how you’ll work before you start.</p>
     </div>
   );
 };

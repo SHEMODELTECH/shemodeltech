@@ -11,7 +11,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { notifyMember, sendEmailNow } from '../../utils/staffAlerts';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
-import { CONFERENCE_FIELDS, CONFERENCE_NOTE, getConference, saveConference, setPitchSlot, slotLabel, stageLabel } from '../../utils/founders';
+import { CONFERENCE_FIELDS, CONFERENCE_NOTE, getConference, publishCard, removeCard, saveConference, setPitchSlot, slotLabel, stageLabel } from '../../utils/founders';
 import { closeReport } from '../../utils/founderGroups';
 
 const STATUS = { pending: ['To review', 'bg-pink-50 text-pink-700'], accepted: ['Accepted', 'bg-pink-600 text-white'], declined: ['Declined', 'bg-gray-100 text-gray-700'] };
@@ -129,6 +129,18 @@ const FoundersAdmin = () => {
       .catch(() => setRows([]));
   }, []);
 
+  // Founders accepted before public cards existed: give each one a card, so
+  // they stay on the Founders page now that full pitches are private.
+  useEffect(() => {
+    if (!rows) return;
+    const accepted = rows.filter((p) => p.status === 'accepted');
+    if (!accepted.length) return;
+    getDocs(collection(db, 'founder_cards')).then((s) => {
+      const have = new Set(s.docs.map((d) => d.id));
+      accepted.filter((p) => !have.has(p.uid || p.id)).forEach((p) => publishCard({ ...p, uid: p.uid || p.id }).catch(() => {}));
+    }).catch(() => {});
+  }, [rows === null]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const decide = async (p, status) => {
     const note = (notes[p.id] || '').trim();
     if (status === 'declined' && words(note) < MIN_DECLINE_WORDS) {
@@ -139,6 +151,9 @@ const FoundersAdmin = () => {
     try {
       const data = { status, decisionNote: note || null, decidedBy: currentUser.email, decidedAt: serverTimestamp() };
       await updateDoc(doc(db, 'founder_pitches', p.id), data);
+      // The public card on the Founders page: shown when accepted, removed otherwise.
+      if (status === 'accepted') await publishCard({ ...p, uid: p.uid || p.id });
+      else await removeCard(p.uid || p.id).catch(() => {});
       setRows((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data, decidedAt: { seconds: Date.now() / 1000 } } : x)));
       const first = (p.name || '').split(' ')[0] || 'there';
       const msg = status === 'accepted'
@@ -208,6 +223,7 @@ const FoundersAdmin = () => {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-bold text-gray-900">{p.ideaName}</p>
+                  {p.tagline && <p className="text-sm text-gray-700">{p.tagline} <span className="text-xs text-gray-400">(public tagline)</span></p>}
                   <p className="text-sm text-gray-600">by <Link to={`/profile/${encodeURIComponent(p.uid)}`} className="font-semibold text-pink-700 hover:underline">{p.name}</Link> · {stageLabel(p.stage)}</p>
                 </div>
                 <span className="flex flex-wrap gap-1.5">
