@@ -1,14 +1,12 @@
 // src/components/ProjectTabs.jsx
-// The tab row at the top of the project pages (like the Events filters), in
-// place of the old Projects dropdown in the sidebar:
-//   All projects · My projects · Project Vault · Payment disputes · Manage
-// Manage is staff-only: it opens the project tools, which have their own
-// smaller row (Manage projects · Lead applications · Create a project).
-// On phones Vault and Disputes use short labels, so every tab (including
-// Manage for staff) fits without scrolling sideways.
-// Payment disputes only shows for members who've had paid work (approved on a
-// paid project, or leading one); staff always see it. Companies don't run
-// projects, so they get no tabs.
+// The tab row at the top of the project pages:
+//   All projects · My projects · Project Vault · Manage (staff)
+// My projects has its own smaller row: My projects · Workspaces · Payment
+// disputes (Payment disputes only for members who've had paid work: approved
+// on a paid project, or leading one). These used to be separate menu items.
+// Manage is staff-only: it opens the project tools, with their own smaller row
+// (Manage projects · Create a project · Workspaces · Payment disputes).
+// Companies don't run projects, so they get no tabs.
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
@@ -44,6 +42,14 @@ const hasPaidWork = async (uid) => {
 const MANAGE = [
   { to: '/admin/projects', label: 'Manage projects' },
   { to: '/admin/cohorts', label: 'Create a project' },
+  { to: '/my-workspaces', label: 'Workspaces' },
+  { to: '/disputes', label: 'Payment disputes' },
+];
+// Members: My projects has its own smaller row (Projects · Workspaces ·
+// Payment disputes), in place of separate menu items.
+const MINE = [
+  { to: '/projects/owner-dashboard', label: 'Projects' },
+  { to: '/my-workspaces', label: 'Workspaces' },
 ];
 
 const ProjectTabs = () => {
@@ -77,13 +83,14 @@ const ProjectTabs = () => {
   // also set up as a company.
   if (!currentUser || role === null || (isCompany && !staff)) return null;
   const inManage = staff && MANAGE.some((m) => pathname === m.to || pathname.startsWith(`${m.to}/`));
+  const mine = [...MINE, ...(paid || pathname.startsWith('/disputes') ? [{ to: '/disputes', label: 'Payment disputes' }] : [])];
+  const inMine = !staff && mine.some((m) => pathname === m.to || pathname.startsWith(`${m.to}/`));
+  const sub = inManage ? MANAGE : inMine ? mine : null;
 
   const tabs = [
     { to: '/projects', label: 'All projects', active: pathname === '/projects' },
-    ...(!staff ? [{ to: '/projects/owner-dashboard', label: 'My projects' }] : []),
+    ...(!staff ? [{ to: '/projects/owner-dashboard', label: 'My projects', active: inMine }] : []),
     { to: '/project-vault', label: 'Project Vault', short: 'Vault' },
-    // Only for members with paid work (and staff); also kept while she's on it.
-    ...(staff || paid || pathname === '/disputes' ? [{ to: '/disputes', label: 'Payment disputes', short: 'Disputes' }] : []),
     ...(staff ? [{ to: '/admin/projects', label: 'Manage', active: inManage }] : []),
   ];
 
@@ -111,9 +118,9 @@ const ProjectTabs = () => {
           );
         })}
       </div>
-      {inManage && (
+      {sub && (
         <div className="flex gap-2 overflow-x-auto py-3">
-          {MANAGE.map((m) => {
+          {sub.map((m) => {
             const on = pathname === m.to || pathname.startsWith(`${m.to}/`);
             return (
               <Link

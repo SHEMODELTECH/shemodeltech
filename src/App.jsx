@@ -456,6 +456,7 @@ function App() {
                   path="/my-workspaces"
                   element={
                     <SidebarRoute>
+                      <ProjectTabs />
                       <MyWorkspaces />
                     </SidebarRoute>
                   }

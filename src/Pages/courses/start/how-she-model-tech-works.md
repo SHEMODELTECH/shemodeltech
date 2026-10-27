@@ -19,7 +19,7 @@ The menu on the left (on a phone, tap the menu icon) has everything else:
 
 - **Home**: your dashboard, with your projects, courses, and badges in one place.
 - **Projects**: **All Projects** to find a project to join, **My Projects** for the projects you're part of, and **Project Vault** for finished projects.
-- **Workspace**: the team space for each project you're on.
+- **Workspaces** (inside **Projects**, under **My Projects**): the team space for each project you're on.
 - **Learning**: all the free courses.
 - **Jobs**: roles posted by verified companies.
 - **Conference**: She Model Tech Conference, our yearly gathering with tech talks, workshops, and the pitch competition.
@@ -134,8 +134,8 @@ When a new version of She Model Tech is out, a small notice says so and offers *
      "All, My, Project Vault"
     ],
     [
-     "Workspace",
-     "Your team spaces"
+     "Workspaces",
+     "Inside My Projects"
     ],
     [
      "Learning",
@@ -164,7 +164,7 @@ When a new version of She Model Tech is out, a small notice says so and offers *
      "hl": 1
     },
     {
-     "say": "Workspace is the team space for each project you're on.",
+     "say": "Workspaces, the team space for each project you're on, are inside Projects, under My Projects.",
      "hl": 2
     },
     {
@@ -218,7 +218,7 @@ When a new version of She Model Tech is out, a small notice says so and offers *
     ],
     [
      "Workspace",
-     "Left menu",
+     "Projects, My Projects",
      "Bottom bar"
     ]
    ],
@@ -1049,7 +1049,7 @@ Members 13 and older can join free projects. Tap **Join the Project** on a proje
 2. Choose the **badge track** this project should count toward.
 3. Share your skills, why you're interested, a portfolio or résumé link, and your LinkedIn.
 
-The project lead reviews applications. When you're approved, you'll get a notification and the project appears in your **Workspace**. Every role is open to every level. Roles marked **Good for beginners** are a great start; roles marked **Stretch role** are best with some experience, but you can still apply and challenge yourself.
+The project lead reviews applications. When you're approved, you'll get a notification and the project appears in your **Workspaces** (Projects, then My Projects). Every role is open to every level. Roles marked **Good for beginners** are a great start; roles marked **Stretch role** are best with some experience, but you can still apply and challenge yourself.
 
 **On a project that needs a lead**, tap **Join** on its page, then choose how to join:
 
@@ -1935,7 +1935,7 @@ Leads of free projects earn a TechPO (Product / Project Owner) badge when the pr
 
 **Goal:** Know how a team works together day to day.
 
-Every project you join has a workspace. Open **Workspace** in the menu and choose the project.
+Every project you join has a workspace. Go to **Projects**, then **My Projects**, then **Workspaces**, and choose the project.
 
 - **Discussion**: talk with your team, share progress, and ask questions. Check it often.
 - **Resources**: the submission link, meeting link, and project details your lead has added. Your work goes in the submission link, so the team's work can be reviewed.
@@ -1956,7 +1956,7 @@ Projects run in 6-week cohorts. Deliver your part, keep your team updated, and s
      "say": "Welcome to Section 6."
     },
     {
-     "say": "Every project you join has a workspace. Open Workspace in the menu and choose the project."
+     "say": "Every project you join has a workspace. Go to Projects, then My Projects, then Workspaces, and choose the project."
     }
    ]
   },
@@ -2014,7 +2014,7 @@ Projects run in 6-week cohorts. Deliver your part, keep your team updated, and s
    ],
    "beats": [
     {
-     "say": "Open Workspace in the menu, and choose the project.",
+     "say": "Go to Projects, then My Projects, then Workspaces, and choose the project.",
      "show": 1,
      "on": "ws"
     },
