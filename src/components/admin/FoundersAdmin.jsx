@@ -9,15 +9,104 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
-import { sendEmailNow } from '../../utils/staffAlerts';
+import { notifyMember, sendEmailNow } from '../../utils/staffAlerts';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
-import { CONFERENCE_NOTE, stageLabel } from '../../utils/founders';
+import { CONFERENCE_FIELDS, CONFERENCE_NOTE, getConference, saveConference, setPitchSlot, slotLabel, stageLabel } from '../../utils/founders';
 import { closeReport } from '../../utils/founderGroups';
 
 const STATUS = { pending: ['To review', 'bg-pink-50 text-pink-700'], accepted: ['Accepted', 'bg-pink-600 text-white'], declined: ['Declined', 'bg-gray-100 text-gray-700'] };
 const MIN_DECLINE_WORDS = 10;
 const words = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 const trackLabel = (name) => BADGE_TRACKS.find((t) => t.name === name)?.label || name;
+
+// ISO time ⇄ the value a datetime-local box needs (in this computer's time zone).
+const toLocalInput = (iso) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
+// One founder's pitch slot: set or change it, and she's notified (bell, phone, email).
+const SlotEditor = ({ p, onSaved }) => {
+  const [when, setWhen] = useState(toLocalInput(p.pitchSlot));
+  const [note, setNote] = useState(p.slotNote || '');
+  const [busy, setBusy] = useState(false);
+  const save = async () => {
+    const iso = when ? new Date(when).toISOString() : null;
+    setBusy(true);
+    try {
+      await setPitchSlot(p.uid, iso, note);
+      onSaved({ pitchSlot: iso, slotNote: note.trim() || null });
+      if (iso) {
+        notifyMember(p.uid, {
+          type: 'founder_slot', title: p.pitchSlot ? 'Your pitch time has changed' : 'Your pitch time is set',
+          body: `Your pitch for ${p.ideaName} at She Model Tech Conference: ${slotLabel(iso)}.${note.trim() ? ` ${note.trim()}` : ''} Please confirm on the Founders page.`,
+          link: '/founders', ctaLabel: 'See your pitch',
+        });
+      }
+      toast.success(iso ? `Slot saved. ${p.name} was notified.` : 'Slot cleared.');
+    } catch (_) { toast.error('Could not save the slot.'); }
+    setBusy(false);
+  };
+  return (
+    <div className="mt-3 rounded-lg bg-gray-50 p-3">
+      <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Pitch slot (your time zone)</p>
+      <div className="mt-2 flex flex-wrap items-end gap-2">
+        <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white" aria-label="Pitch date and time" />
+        <input value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder="Optional note, e.g. Room B, arrive 15 minutes early" className="flex-1 min-w-[200px] border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white" />
+        <button type="button" disabled={busy} onClick={save} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded-lg disabled:opacity-50">Save and notify</button>
+      </div>
+    </div>
+  );
+};
+
+// Conference details every accepted founder sees in "Your pitch".
+const ConferenceForm = ({ founders, by }) => {
+  const [f, setF] = useState(null);
+  const [tell, setTell] = useState(true);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { getConference().then((c) => setF(Object.fromEntries(CONFERENCE_FIELDS.map(([k]) => [k, c[k] || ''])))); }, []);
+  if (!f) return <p className="py-10 text-center text-gray-400 text-sm">Loading…</p>;
+  const save = async () => {
+    if (f.joinLink && !/^https:\/\//i.test(f.joinLink.trim())) return toast.error('The joining link should start with https://');
+    setBusy(true);
+    try {
+      await saveConference(Object.fromEntries(Object.entries(f).map(([k, v]) => [k, String(v).trim()])), by);
+      if (tell) {
+        founders.forEach((p) => notifyMember(p.uid, {
+          type: 'founder_conference', title: 'She Model Tech Conference: details updated',
+          body: 'The details for your pitch were updated: date, venue, format, and deadlines. Open Founders to see them.',
+          link: '/founders', ctaLabel: 'See your pitch',
+        }));
+      }
+      toast.success(tell ? `Saved. ${founders.length} founder${founders.length === 1 ? ' was' : 's were'} notified.` : 'Saved.');
+    } catch (_) { toast.error('Could not save.'); }
+    setBusy(false);
+  };
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 max-w-3xl">
+      <p className="text-sm text-gray-600">Accepted founders see these details in the “Your pitch” box on the Founders page. Leave a field empty to hide it.</p>
+      {CONFERENCE_FIELDS.map(([k, label, hint]) => (
+        <label key={k} className="block text-sm font-semibold text-gray-800">{label}
+          {['format', 'notes', 'slidesDue'].includes(k) ? (
+            <textarea rows={2} maxLength={800} value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} placeholder={hint} className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-normal" />
+          ) : (
+            <input maxLength={300} value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} placeholder={hint} className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-normal" />
+          )}
+        </label>
+      ))}
+      <label className="flex items-center gap-2 text-sm text-gray-800">
+        <input type="checkbox" checked={tell} onChange={(e) => setTell(e.target.checked)} className="accent-pink-600" />
+        Tell all {founders.length} accepted founder{founders.length === 1 ? '' : 's'} (bell, phone, and email)
+      </label>
+      <button type="button" disabled={busy} onClick={save} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Saving…' : 'Save conference details'}</button>
+    </div>
+  );
+};
+
+const ATTEND = { yes: ['Coming', 'bg-pink-600 text-white'], no: ['Can’t make it', 'bg-gray-900 text-white'] };
 
 const FoundersAdmin = () => {
   const { currentUser } = useAuth();
@@ -99,12 +188,15 @@ const FoundersAdmin = () => {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        {[['pending', `To review (${count('pending')})`], ['accepted', `Accepted (${count('accepted')})`], ['declined', `Declined (${count('declined')})`], ['all', `All (${rows.length})`], ['reported', `Reported groups (${reported.length})`]].map(([k, l]) => (
+        {[['pending', `To review (${count('pending')})`], ['accepted', `Accepted (${count('accepted')})`], ['declined', `Declined (${count('declined')})`], ['all', `All (${rows.length})`], ['reported', `Reported groups (${reported.length})`], ['conference', 'Conference details']].map(([k, l]) => (
           <button key={k} type="button" onClick={() => setFilter(k)} className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${filter === k ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-gray-700 border-gray-300'}`}>{l}</button>
         ))}
       </div>
 
-      {filter === 'reported' ? reportedView : (<>
+      {filter === 'accepted' && count('accepted') > 0 && (
+        <p className="text-sm text-gray-600 mb-3">Coming: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'yes').length} · Can’t make it: {rows.filter((p) => p.status === 'accepted' && p.attendance === 'no').length} · No answer yet: {rows.filter((p) => p.status === 'accepted' && !p.attendance).length}</p>
+      )}
+      {filter === 'conference' ? <ConferenceForm founders={rows.filter((p) => p.status === 'accepted')} by={currentUser?.email} /> : filter === 'reported' ? reportedView : (<>
       {shown.length === 0 && <p className="text-sm text-gray-500 py-8 text-center">No pitches here yet. Members with a badge apply from the Founders page.</p>}
 
       <div className="space-y-3">
@@ -118,7 +210,10 @@ const FoundersAdmin = () => {
                   <p className="font-bold text-gray-900">{p.ideaName}</p>
                   <p className="text-sm text-gray-600">by <Link to={`/profile/${encodeURIComponent(p.uid)}`} className="font-semibold text-pink-700 hover:underline">{p.name}</Link> · {stageLabel(p.stage)}</p>
                 </div>
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${cls}`}>{label}{when ? ` · ${when}` : ''}</span>
+                <span className="flex flex-wrap gap-1.5">
+                  {p.status === 'accepted' && <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${(ATTEND[p.attendance] || ['No answer yet', 'bg-gray-100 text-gray-600'])[1]}`}>{(ATTEND[p.attendance] || ['No answer yet'])[0]}</span>}
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${cls}`}>{label}{when ? ` · ${when}` : ''}</span>
+                </span>
               </div>
               <dl className="mt-3 space-y-2 text-sm text-gray-800">
                 <div><dt className="inline font-semibold">Problem: </dt><dd className="inline">{p.problem}</dd></div>
@@ -139,10 +234,13 @@ const FoundersAdmin = () => {
                   </div>
                 </div>
               ) : p.status === 'accepted' ? (
+                <>
+                <SlotEditor p={p} onSaved={(d) => setRows((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...d } : x)))} />
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <p className="text-xs text-gray-600">{p.decisionNote ? `Note sent: “${p.decisionNote}” · ` : ''}Accepted by {p.decidedBy}</p>
                   <button type="button" onClick={() => setNotes((m) => ({ ...m, [`open_${p.id}`]: true }))} className="text-xs font-semibold text-gray-500 hover:text-red-600">Remove from Founders…</button>
                 </div>
+                </>
               ) : p.decisionNote ? (
                 <p className="mt-3 text-xs text-gray-600">Note sent: “{p.decisionNote}” · by {p.decidedBy}</p>
               ) : p.decidedBy ? (

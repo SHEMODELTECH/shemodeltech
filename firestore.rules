@@ -895,15 +895,23 @@ service cloud.firestore {
  && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ideaName', 'problem', 'audience', 'solution', 'stage', 'tracksNeeded', 'rolesNeeded', 'why', 'status', 'updatedAt']))
  // An accepted founder updates the tracks and roles she needs.
  || (uid == myUid() && resource.data.status == 'accepted'
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'acceptingTeam', 'updatedAt'])
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tracksNeeded', 'rolesNeeded', 'acceptingTeam', 'attendance', 'attendanceAt', 'updatedAt'])
  && request.resource.data.get('acceptingTeam', true) is bool
+ && request.resource.data.get('attendance', 'yes') in ['yes', 'no']
  && request.resource.data.tracksNeeded is list && request.resource.data.tracksNeeded.size() >= 1 && request.resource.data.tracksNeeded.size() <= 6
  && request.resource.data.rolesNeeded is string && request.resource.data.rolesNeeded.size() <= 300 && noLink(request.resource.data.rolesNeeded))
  // Staff decide.
  || (isReviewer() && request.resource.data.status in ['pending', 'accepted', 'declined']
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'decisionNote', 'decidedBy', 'decidedAt'])));
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'decisionNote', 'decidedBy', 'decidedAt', 'pitchSlot', 'slotNote', 'slotSetAt'])));
  // The founder withdraws her pitch; admins remove spam.
  allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
+ }
+
+ // Conference details for founders (Founders page → Your pitch): the date,
+ // venue or link, pitch format, deadlines. Staff write; signed-in members read.
+ match /founders_conference/{id} {
+ allow read: if isSignedIn();
+ allow write: if isReviewer();
  }
 
  // Founder team groups: founder_groups/{founderUid}, one per accepted founder.

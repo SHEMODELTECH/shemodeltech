@@ -17,6 +17,8 @@ const AUDIENCES = [
   ['all', 'All members'],
   ['adults', 'Members 18 and older'],
   ['leads', 'Project leads only'],
+  ['founders', 'Accepted founders'],
+  ['founder_teams', 'Founders and their teams'],
 ];
 const EMAIL_CAP = 400;
 
@@ -51,6 +53,16 @@ const AnnouncementsAdmin = () => {
       const ps = (await getDocs(query(collection(db, 'projects'), where('status', 'in', ['setup', 'active', 'overdue'])))).docs.map((d) => d.data());
       const leads = new Set(ps.map((p) => p.submitterId).filter(Boolean));
       return users.filter((u) => leads.has(u.uid));
+    }
+    if (f.audience === 'founders' || f.audience === 'founder_teams') {
+      // Accepted founders (Founders page), and with teams: everyone in their team groups.
+      const founders = (await getDocs(query(collection(db, 'founder_pitches'), where('status', '==', 'accepted')))).docs.map((d) => d.id);
+      const ids = new Set(founders);
+      if (f.audience === 'founder_teams') {
+        const groups = (await getDocs(collection(db, 'founder_groups'))).docs.map((d) => d.data());
+        groups.filter((g) => ids.has(g.founderUid)).forEach((g) => (g.members || []).forEach((m) => ids.add(m)));
+      }
+      return users.filter((u) => ids.has(u.uid));
     }
     return users;
   };

@@ -87,3 +87,32 @@ export const founderOf = async (uid) => {
 };
 
 export const PITCH_FIELDS = FIELDS;
+
+// ---- Conference details and pitch slots ----
+// founders_conference/info: the same for every founder (staff set it).
+export const CONFERENCE_FIELDS = [
+  ['dateText', 'Date and time', 'For example: Saturday, March 20, 2027, 10:00 AM to 4:00 PM EDT'],
+  ['venue', 'Venue', 'The address, or “Online”'],
+  ['joinLink', 'Joining link (if online)', 'https://…'],
+  ['format', 'Pitch format', 'For example: 5-minute pitch, then 3 minutes of questions. Up to 10 slides.'],
+  ['slidesDue', 'Slides due', 'For example: Friday, March 12. Send them in your team group or by email.'],
+  ['notes', 'Anything else', 'Dress code, what to bring, rehearsal times…'],
+];
+export const getConference = async () => {
+  try {
+    const s = await getDoc(doc(db, 'founders_conference', 'info'));
+    return s.exists() ? s.data() : {};
+  } catch (_) { return {}; }
+};
+export const saveConference = (data, by) => setDoc(doc(db, 'founders_conference', 'info'), { ...data, updatedAt: serverTimestamp(), updatedBy: by || null }, { merge: true });
+
+// A founder's own pitch slot (ISO date-time), set by staff.
+export const setPitchSlot = (uid, iso, note) => updateDoc(doc(db, 'founder_pitches', uid), { pitchSlot: iso || null, slotNote: String(note || '').trim().slice(0, 300) || null, slotSetAt: serverTimestamp() });
+export const slotLabel = (iso) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+};
+// The founder says whether she'll be there.
+export const setAttendance = (uid, answer) => updateDoc(doc(db, 'founder_pitches', uid), { attendance: answer, attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() });

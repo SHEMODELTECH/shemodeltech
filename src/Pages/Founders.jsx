@@ -14,6 +14,7 @@ import { alertStaff } from '../utils/staffAlerts';
 import {
   CONFERENCE_NOTE, FOUNDER_STAGES, MAX_TRACKS, PITCH_LIMITS, founderBlocker, getMyPitch,
   listFounders, stageLabel, submitPitch, updateTeamNeeds, withdrawPitch,
+  CONFERENCE_FIELDS, getConference, setAttendance, slotLabel,
 } from '../utils/founders';
 import { acceptInvite, createGroup, declineInvite, groupsOf, invitesFor } from '../utils/founderGroups';
 import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -128,6 +129,50 @@ const TeamNeedsForm = ({ pitch, onSaved }) => {
         <span className="block text-xs font-normal text-gray-500 mt-1">{roles.trim().length} / {PITCH_LIMITS.rolesNeeded[1]}</span>
       </label>
       <button type="button" onClick={save} disabled={busy} className="text-sm font-semibold bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Saving…' : 'Save team needs'}</button>
+    </div>
+  );
+};
+
+// Accepted founders: the conference details, her pitch slot, and "I'll be there".
+const YourPitch = ({ pitch, onAttendance }) => {
+  const [conf, setConf] = useState(null);
+  useEffect(() => { getConference().then(setConf); }, []);
+  const filled = conf ? CONFERENCE_FIELDS.filter(([k]) => conf[k]) : [];
+  const answer = async (a) => {
+    try { await setAttendance(pitch.uid, a); onAttendance(a); toast.success(a === 'yes' ? 'Thanks! We’ve noted that you’ll be there.' : 'Thanks for letting us know.'); } catch (_) { toast.error('Could not save. Please try again.'); }
+  };
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+      <p className="text-xs font-bold uppercase tracking-wider text-pink-700">Your pitch</p>
+      <p className="font-bold text-gray-900 mt-1">She Model Tech Conference</p>
+      {pitch.pitchSlot ? (
+        <p className="mt-2 text-sm text-gray-900 bg-pink-50 border border-pink-100 rounded-lg px-3 py-2">
+          <b>Your slot:</b> {slotLabel(pitch.pitchSlot)}{pitch.slotNote ? <span className="block text-gray-700 mt-0.5">{pitch.slotNote}</span> : null}
+        </p>
+      ) : (
+        <p className="mt-2 text-sm text-gray-600">Your pitch time will appear here once it’s set. We’ll notify you.</p>
+      )}
+      {conf === null ? null : filled.length ? (
+        <dl className="mt-3 space-y-1.5 text-sm">
+          {filled.map(([k, label]) => (
+            <div key={k}>
+              <dt className="inline font-semibold text-gray-900">{label}: </dt>
+              <dd className="inline text-gray-700 whitespace-pre-wrap">
+                {k === 'joinLink' && /^https:\/\//i.test(conf[k]) ? <a href={conf[k]} target="_blank" rel="noopener noreferrer" className="text-pink-700 underline break-all">{conf[k]}</a> : conf[k]}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p className="mt-2 text-sm text-gray-600">Date, venue, and pitch format: to be announced.</p>
+      )}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-gray-800">Will you be there?</span>
+        <button type="button" aria-pressed={pitch.attendance === 'yes'} onClick={() => answer('yes')}
+          className={`text-sm font-semibold px-4 py-1.5 rounded-lg border ${pitch.attendance === 'yes' ? 'bg-pink-600 text-white border-pink-600' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>I’ll be there</button>
+        <button type="button" aria-pressed={pitch.attendance === 'no'} onClick={() => answer('no')}
+          className={`text-sm font-semibold px-4 py-1.5 rounded-lg border ${pitch.attendance === 'no' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>I can’t make it</button>
+      </div>
     </div>
   );
 };
@@ -335,6 +380,9 @@ const Founders = () => {
             ))}
           </div>
         </div>
+      )}
+      {mine?.status === 'accepted' && !blocker && (
+        <div className="mb-4 max-w-3xl"><YourPitch pitch={mine} onAttendance={(a) => setMine((m) => ({ ...m, attendance: a }))} /></div>
       )}
       {myBox && <div className="mb-8 max-w-3xl">{myBox}</div>}
 

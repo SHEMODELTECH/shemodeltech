@@ -452,6 +452,22 @@ if (MODE !== 'orig') {
   for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
 }
 
+// ---- Founders: conference details, pitch slots, attendance ----
+if (MODE !== 'orig') {
+  const as = (uid) => ctxFor(uid, true).firestore();
+  const staff = () => ctxFor('staff1', false).firestore();
+  const cases = [
+    ['conference: staff saves the details', 'staff1', () => setDoc(doc(staff(), 'founders_conference', 'info'), { dateText: 'March 20, 2027', venue: 'Online', joinLink: 'https://meet.google.com/abc' }), 'allowed'],
+    ['conference: member edits the details', 'verU', () => setDoc(doc(as('verU'), 'founders_conference', 'info'), { venue: 'Somewhere else' }), 'denied'],
+    ['conference: member reads the details', 'verU', () => getDoc(doc(as('verU'), 'founders_conference', 'info')), 'allowed'],
+    ['founders: staff sets a pitch slot', 'staff1', () => updateDoc(doc(staff(), 'founder_pitches', 'fdrAcc'), { pitchSlot: '2027-03-20T14:15:00.000Z', slotNote: 'Room B', slotSetAt: serverTimestamp() }), 'allowed'],
+    ['founders: founder sets her own pitch slot', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { pitchSlot: '2027-03-20T09:00:00.000Z' }), 'denied'],
+    ['founders: founder confirms she will be there', 'fdrAcc', () => updateDoc(doc(as('fdrAcc'), 'founder_pitches', 'fdrAcc'), { attendance: 'yes', attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() }), 'allowed'],
+    ['founders: someone else answers for the founder', 'verU', () => updateDoc(doc(as('verU'), 'founder_pitches', 'fdrAcc'), { attendance: 'no', attendanceAt: serverTimestamp(), updatedAt: serverTimestamp() }), 'denied'],
+  ];
+  for (const [name, who, fn, want] of cases) check(name, who, await attempt(fn), want);
+}
+
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);
