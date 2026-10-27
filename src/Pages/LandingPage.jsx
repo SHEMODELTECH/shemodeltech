@@ -96,18 +96,23 @@ const LandingPage = () => {
   const steps = [
     {
       num: '01',
-      title: 'Create Your Profile and Learn',
-      desc: 'Sign in with Google or email, choose your skill track, and build the basics with free, hands-on courses in Learning.',
+      title: 'Learn',
+      desc: 'Sign in with Google or email, choose your track, and build the basics with free, hands-on courses.',
     },
     {
       num: '02',
-      title: 'Build Real Products',
-      desc: 'Join or post collaborative projects and ship real products with a team, start to finish - gaining experience that counts.',
+      title: 'Build',
+      desc: 'Join or lead a team project in a She Model Tech cohort, and ship a real product from start to finish.',
     },
     {
       num: '03',
-      title: 'Earn Badges & Build Your Portfolio',
-      desc: 'Complete projects to earn TechTalent Badges and a verified portfolio, clear proof of the skills you build through real work.',
+      title: 'Prove',
+      desc: 'Earn verified badges and a portfolio from real work, clear proof of what you can do.',
+    },
+    {
+      num: '04',
+      title: 'Grow',
+      desc: 'Show companies your verified work on the Talent Board and explore jobs, or pitch your own idea as a founder.',
     },
   ];
 
@@ -199,9 +204,9 @@ const LandingPage = () => {
             data-animate
             className={`fade-up delay-2 text-gray-600 text-lg max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
-            She Model Tech helps women build their tech careers through free courses, mentorship,
-            team projects, and verified badges that showcase what they can create, contribute, and
-            lead.
+            She Model Tech helps you build a tech career through real team projects. Learn for free,
+            prove your skills with verified badges, and get ready for your next step, whether that’s
+            a tech role or a company of your own.
           </p>
 
           <div
@@ -271,11 +276,11 @@ const LandingPage = () => {
             Simple Process
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-800 text-gray-900 mb-4">
-            Up and running in minutes
+            One path, from learning to your next step
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((s, i) => (
             <div
               key={i}
@@ -285,7 +290,7 @@ const LandingPage = () => {
             >
               {i < steps.length - 1 && (
                 <div
-                  className="hidden md:block absolute top-10 left-full w-full h-px bg-gray-200 z-0"
+                  className="hidden lg:block absolute top-10 left-full w-full h-px bg-gray-200 z-0"
                   style={{ width: 'calc(100% - 2rem)' }}
                 />
               )}
@@ -352,6 +357,29 @@ const LandingPage = () => {
             <Link to="/teach" className="w-full sm:w-auto border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium px-8 py-4 rounded-lg text-center">
               Become a mentor
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ONE PATH, YOUR CHOICE: a tech role or a company of your own */}
+      <section className="py-20 sm:py-28 bg-gray-50 border-y border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <p className="text-pink-600 text-sm font-semibold uppercase tracking-widest mb-3">Your next step</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-800 text-gray-900 mb-4">One path, your choice</h2>
+            <p className="text-gray-500 max-w-xl mx-auto text-lg leading-relaxed">Both start the same way: real work, done in a team.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white border border-gray-200 rounded-2xl p-7">
+              <h3 className="text-xl font-bold text-gray-900">Pursue a tech role</h3>
+              <p className="text-gray-600 mt-3 leading-relaxed">Your badges and project history show on the Talent Board, where companies can see what you’ve built.</p>
+              <Link to="/talent-board" className="inline-block mt-5 text-sm font-semibold text-pink-700 hover:underline">See the Talent Board →</Link>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-7">
+              <h3 className="text-xl font-bold text-gray-900">Build your own</h3>
+              <p className="text-gray-600 mt-3 leading-relaxed">Have an idea? Pitch it at She Model Tech Conference for prize money, and build your team from members with verified skills. Selected founders may also pitch at our partner organizations’ events.</p>
+              <Link to="/founders" className="inline-block mt-5 text-sm font-semibold text-pink-700 hover:underline">Learn about Founders →</Link>
+            </div>
           </div>
         </div>
       </section>
@@ -457,8 +485,8 @@ const LandingPage = () => {
             Your career starts here.
           </h2>
           <p className="text-gray-500 text-lg mb-10 leading-relaxed">
-            Build real experience and earn verified badges through real product work, wherever you
-            are in the world.
+            Build real experience, earn verified badges, and get ready for your next step: a tech
+            role, or a company of your own.
           </p>
           <button
             onClick={handleSignIn}

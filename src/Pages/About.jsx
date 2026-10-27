@@ -20,8 +20,9 @@ const About = () => {
             <span className="text-pink-600">She Model Tech</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
-            She Model Tech is where women build real tech careers by joining teams, shipping real
-            products, and earning verified badges that showcase what they built.
+            She Model Tech helps you build a tech career, whether you want a tech role or a company of
+            your own. You learn, build real products in a team, and earn verified badges that show
+            what you can do.
           </p>
         </section>
 
@@ -59,7 +60,7 @@ const About = () => {
               </div>
               <h3 className="text-gray-900 font-bold text-lg mb-2">Advance</h3>
               <p className="text-gray-500 text-sm">
-                Grow your career. Level up from Novice to Expert and lead teams.
+                Grow your career. Let your verified badges speak for you, lead teams, or pitch your own idea as a founder.
               </p>
             </div>
           </div>
@@ -81,7 +82,7 @@ const About = () => {
             {[
               ['Mentorship', 'Experienced mentors create courses in the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
               ['IT skills training', 'Hands-on, real-world projects built in teams, plus free courses in She Model Tech Learning with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
-              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-gray-50 text-gray-800 border-gray-200'],
+              ['Leadership development', 'Lead a project team from planning to delivery and earn a leadership badge, or pitch your idea and lead your own team as a founder.', 'bg-gray-50 text-gray-800 border-gray-200'],
               ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-pink-50 text-pink-700 border-pink-100'],
             ].map(([t, d, c]) => (
               <div key={t} className="bg-white rounded-xl border border-gray-200 p-5">
@@ -126,7 +127,7 @@ const About = () => {
               },
               {
                 title: 'Real-World Projects',
-                desc: 'Join or post collaborative projects and build real products with real teams across development, QA, architecture, security, and more - from start to finish.',
+                desc: 'Join or lead team projects in She Model Tech cohorts, and build real products across development, QA, low/no-code, security, and more, from start to finish.',
               },
               {
                 title: 'TechTalent Badges',
@@ -143,6 +144,14 @@ const About = () => {
               {
                 title: 'Community & Messaging',
                 desc: 'Post updates, follow professionals, and message anyone on the platform. Build a network through collaboration, not just connections.',
+              },
+              {
+                title: 'Founders',
+                desc: 'Pitch your idea at She Model Tech Conference for prize money, and build a team of members with verified skills. Selected founders may also pitch at our partner organizations’ events.',
+              },
+              {
+                title: 'Events',
+                desc: 'Workshops, tech talks, conferences, and demo days, all online. Members 18 and over can host their own events too.',
               },
               {
                 title: 'Verified by Contribution',
